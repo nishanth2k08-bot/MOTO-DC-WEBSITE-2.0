@@ -1,47 +1,30 @@
-import React,{useEffect,useState} from 'react';
-import {createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword,signOut,updateProfile} from 'firebase/auth';
+import React,{useEffect,useRef,useState} from 'react';
+import {GoogleAuthProvider,OAuthProvider,RecaptchaVerifier,createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword,signInWithPopup,signInWithPhoneNumber,signOut,updateProfile} from 'firebase/auth';
 import {doc,getDoc,setDoc,serverTimestamp} from 'firebase/firestore';
-import {User,Mail,Lock,LogOut,ArrowRight} from 'lucide-react';
+import {User,Mail,Lock,LogOut,ArrowRight,Phone,Chrome,Apple,ShieldCheck} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {auth,db} from './firebase';
 import './auth.css';
 
+async function saveUserProfile(user,name=''){
+ const ref=doc(db,'users',user.uid),snap=await getDoc(ref),profileName=(name||user.displayName||'').trim();
+ const data={uid:user.uid,email:user.email||'',phoneNumber:user.phoneNumber||'',provider:user.providerData?.[0]?.providerId||'unknown',updatedAt:serverTimestamp()};
+ if(profileName)data.name=profileName;if(!snap.exists())data.createdAt=serverTimestamp();
+ await setDoc(ref,data,{merge:true});
+ if(profileName&&!user.displayName)await updateProfile(user,{displayName:profileName});
+}
+
 export default function Auth(){
- const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[mode,setMode]=useState('signin'),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[busy,setBusy]=useState(false);
- useEffect(()=>onAuthStateChanged(auth,u=>{setUser(u);setChecking(false)}),[]);
- async function submit(e){
-  e.preventDefault();
-  if(password.length<6){toast.error('Password must be at least 6 characters');return}
-  setBusy(true);
-  try{
-   if(mode==='signup'){
-    if(!name.trim()){toast.error('Please enter your name');return}
-    const cred=await createUserWithEmailAndPassword(auth,email.trim(),password);
-    await updateProfile(cred.user,{displayName:name.trim()});
-    await setDoc(doc(db,'users',cred.user.uid),{uid:cred.user.uid,name:name.trim(),email:email.trim(),createdAt:serverTimestamp(),updatedAt:serverTimestamp()},{merge:true});
-    toast.success('Account created successfully');
-   }else{
-    await signInWithEmailAndPassword(auth,email.trim(),password);
-    const u=auth.currentUser;
-    const snap=await getDoc(doc(db,'users',u.uid));
-    if(!snap.exists()) await setDoc(doc(db,'users',u.uid),{uid:u.uid,name:u.displayName||'',email:u.email||email.trim(),createdAt:serverTimestamp(),updatedAt:serverTimestamp()},{merge:true});
-    toast.success('Welcome back');
-   }
-   setPassword('');
-  }catch(e){
-   console.error(e);
-   const messages={
-    'auth/email-already-in-use':'An account with this email already exists',
-    'auth/invalid-email':'Please enter a valid email address',
-    'auth/invalid-credential':'Invalid email or password',
-    'auth/weak-password':'Password is too weak',
-    'auth/network-request-failed':'Network error. Please try again'
-   };
-   toast.error(messages[e.code]||e.message||'Authentication failed');
-  }finally{setBusy(false)}
- }
- async function logout(){try{await signOut(auth);toast.success('Signed out')}catch(e){toast.error('Could not sign out')}}
+ const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[mode,setMode]=useState('signin'),[method,setMethod]=useState('email'),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[phone,setPhone]=useState(''),[code,setCode]=useState(''),[confirmation,setConfirmation]=useState(null),[busy,setBusy]=useState(false);const recaptcha=useRef(null);
+ useEffect(()=>onAuthStateChanged(auth,u=>{setUser(u);setChecking(false)}),[]);useEffect(()=>()=>{if(recaptcha.current)try{recaptcha.current.clear()}catch{}},[]);
+ function setupRecaptcha(){if(recaptcha.current)return recaptcha.current;recaptcha.current=new RecaptchaVerifier(auth,'recaptcha-container',{size:'invisible'});return recaptcha.current}
+ async function social(provider){setBusy(true);try{const cred=await signInWithPopup(auth,provider);await saveUserProfile(cred.user);toast.success('Welcome to MotoDC')}catch(e){console.error(e);const m={'auth/popup-closed-by-user':'Sign-in window was closed','auth/popup-blocked':'Your browser blocked the sign-in popup','auth/account-exists-with-different-credential':'This email is already registered with another sign-in method'};toast.error(m[e.code]||e.message||'Social sign-in failed')}finally{setBusy(false)}}
+ async function submitEmail(e){e.preventDefault();if(password.length<6){toast.error('Password must be at least 6 characters');return}setBusy(true);try{if(mode==='signup'){if(!name.trim()){toast.error('Please enter your name');return}const cred=await createUserWithEmailAndPassword(auth,email.trim(),password);await updateProfile(cred.user,{displayName:name.trim()});await saveUserProfile(cred.user,name.trim());toast.success('Account created successfully')}else{const cred=await signInWithEmailAndPassword(auth,email.trim(),password);await saveUserProfile(cred.user);toast.success('Welcome back')}setPassword('')}catch(e){console.error(e);const messages={'auth/email-already-in-use':'An account with this email already exists','auth/invalid-email':'Please enter a valid email address','auth/invalid-credential':'Invalid email or password','auth/weak-password':'Password is too weak','auth/network-request-failed':'Network error. Please try again'};toast.error(messages[e.code]||e.message||'Authentication failed')}finally{setBusy(false)}}
+ async function sendCode(e){e.preventDefault();if(!/^\+[1-9]\d{7,14}$/.test(phone.trim())){toast.error('Enter your number with country code, e.g. +919876543210');return}setBusy(true);try{const result=await signInWithPhoneNumber(auth,phone.trim(),setupRecaptcha());setConfirmation(result);toast.success('Verification code sent')}catch(e){console.error(e);if(recaptcha.current){try{recaptcha.current.clear()}catch{}recaptcha.current=null}const m={'auth/invalid-phone-number':'Enter a valid phone number','auth/too-many-requests':'Too many attempts. Please try again later','auth/quota-exceeded':'SMS quota exceeded for this Firebase project'};toast.error(m[e.code]||e.message||'Could not send verification code')}finally{setBusy(false)}}
+ async function verifyCode(e){e.preventDefault();if(!confirmation)return;setBusy(true);try{const cred=await confirmation.confirm(code.trim());await saveUserProfile(cred.user);toast.success('Phone verified. Welcome to MotoDC');setCode('');setConfirmation(null)}catch(e){console.error(e);toast.error(e.code==='auth/invalid-verification-code'?'Incorrect verification code':e.message||'Verification failed')}finally{setBusy(false)}}
+ async function logout(){try{await signOut(auth);toast.success('Signed out')}catch{toast.error('Could not sign out')}}
  if(checking)return <section className="auth page"><div className="authcard"><p>Loading account...</p></div></section>;
- if(user)return <section className="auth page"><div className="accountcard"><div className="accounticon"><User size={30}/></div><p className="eyebrow">MOTODC ACCOUNT</p><h1>Welcome, <span>{user.displayName||'Rider'}.</span></h1><p className="accountmuted">Your customer account is connected to Firebase.</p><div className="accountinfo"><div><small>Name</small><b>{user.displayName||'Not set'}</b></div><div><small>Email</small><b>{user.email}</b></div></div><button className="heroBtn" onClick={logout}><LogOut size={17}/> Sign out</button></div></section>;
- return <section className="auth page"><div className="authcard"><div className="authintro"><p className="eyebrow">MOTODC ACCOUNT</p><h1>{mode==='signin'?<>Welcome <span>back.</span></>:<>Join the <span>ride.</span></>}</h1><p>{mode==='signin'?'Sign in to keep your cart, orders and wishlist connected to your account.':'Create your customer account to shop faster and keep your purchases connected.'}</p></div><div className="authswitch"><button className={mode==='signin'?'active':''} onClick={()=>setMode('signin')}>Sign in</button><button className={mode==='signup'?'active':''} onClick={()=>setMode('signup')}>Create account</button></div><form className="authform" onSubmit={submit}>{mode==='signup'&&<label><span>Name</span><div><User size={17}/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" autoComplete="name" required/></div></label>}<label><span>Email</span><div><Mail size={17}/><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required/></div></label><label><span>Password</span><div><Lock size={17}/><input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 6 characters" autoComplete={mode==='signin'?'current-password':'new-password'} minLength="6" required/></div></label><button className="heroBtn" disabled={busy}>{busy?(mode==='signin'?'Signing in...':'Creating account...'):(mode==='signin'?'Sign in':'Create account')}<ArrowRight size={17}/></button></form></div></section>;
+ if(user)return <section className="auth page"><div className="accountcard"><div className="accounticon"><User size={30}/></div><p className="eyebrow">MOTODC ACCOUNT</p><h1>Welcome, <span>{user.displayName||'Rider'}.</span></h1><p className="accountmuted">Your customer account is connected to Firebase.</p><div className="accountinfo"><div><small>Name</small><b>{user.displayName||'Not set'}</b></div><div><small>Email</small><b>{user.email||'Phone account'}</b></div>{user.phoneNumber&&<div><small>Phone</small><b>{user.phoneNumber}</b></div>}</div><button className="heroBtn" onClick={logout}><LogOut size={17}/> Sign out</button></div></section>;
+ const google=new GoogleAuthProvider(),apple=new OAuthProvider('apple.com');
+ return <section className="auth page"><div className="authcard"><div className="authintro"><p className="eyebrow">MOTODC ACCOUNT</p><h1>{mode==='signin'?<>Welcome <span>back.</span></>:<>Join the <span>ride.</span></>}</h1><p>{mode==='signin'?'Sign in to keep your cart, orders and wishlist connected to your account.':'Create your customer account to shop faster and keep your purchases connected.'}</p></div><div className="authswitch"><button className={mode==='signin'?'active':''} onClick={()=>{setMode('signin');setConfirmation(null)}}>Sign in</button><button className={mode==='signup'?'active':''} onClick={()=>{setMode('signup');setConfirmation(null)}}>Create account</button></div><div className="authsocial"><button onClick={()=>social(google)} disabled={busy}><Chrome size={18}/> Continue with Google</button><button onClick={()=>social(apple)} disabled={busy}><Apple size={19}/> Continue with Apple</button></div><div className="authdivider"><span>or use</span></div><div className="methodswitch"><button className={method==='email'?'active':''} onClick={()=>{setMethod('email');setConfirmation(null)}}><Mail size={15}/> Email</button><button className={method==='phone'?'active':''} onClick={()=>setMethod('phone')}><Phone size={15}/> Phone</button></div>{method==='email'?<form className="authform" onSubmit={submitEmail}>{mode==='signup'&&<label><span>Name</span><div><User size={17}/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" autoComplete="name" required/></div></label>}<label><span>Email</span><div><Mail size={17}/><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required/></div></label><label><span>Password</span><div><Lock size={17}/><input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 6 characters" autoComplete={mode==='signin'?'current-password':'new-password'} minLength="6" required/></div></label><button className="heroBtn" disabled={busy}>{busy?(mode==='signin'?'Signing in...':'Creating account...'):(mode==='signin'?'Sign in':'Create account')}<ArrowRight size={17}/></button></form>:<>{!confirmation?<form className="authform" onSubmit={sendCode}><label><span>Phone number</span><div><Phone size={17}/><input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+91 9876543210" autoComplete="tel" required/></div></label><div id="recaptcha-container"></div><p className="authhint"><ShieldCheck size={15}/> We'll send a verification code by SMS.</p><button className="heroBtn" disabled={busy}>{busy?'Sending code...':'Send verification code'}<ArrowRight size={17}/></button></form>:<form className="authform" onSubmit={verifyCode}><label><span>Verification code</span><div><ShieldCheck size={17}/><input inputMode="numeric" value={code} onChange={e=>setCode(e.target.value.replace(/\D/g,'').slice(0,6))} placeholder="6-digit code" autoComplete="one-time-code" required/></div></label><p className="authhint">Code sent to <b>{phone}</b></p><button className="heroBtn" disabled={busy}>{busy?'Verifying...':'Verify & continue'}<ArrowRight size={17}/></button><button type="button" className="textBtn" onClick={()=>{setConfirmation(null);setCode('')}}>Use a different number</button></form>}</>}</div></section>;
 }
