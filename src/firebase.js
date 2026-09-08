@@ -12,4 +12,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// MotoDC uses the named Firestore database created in the Firebase console.
+export const db = getFirestore(app, 'asia-south1');
