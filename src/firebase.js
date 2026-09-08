@@ -15,3 +15,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, 'asia-south1');
 export const auth = getAuth(app);
+
+// Admin uses a separate Firebase Auth/Firestore instance so an admin session
+// can stay signed in while a customer uses the normal account session.
+const adminApp = initializeApp(firebaseConfig, 'motodc-admin');
+export const adminAuth = getAuth(adminApp);
+export const adminDb = getFirestore(adminApp, 'asia-south1');
