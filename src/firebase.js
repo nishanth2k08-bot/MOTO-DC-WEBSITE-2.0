@@ -3,7 +3,7 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDfGpxwKeVwsgqoY7Kbv89Ms6d28--wAHA',
+  apiKey: 'AIzaSyDfGpxwKeVwsgqoY7kBV89Ms6d28--wAHA',
   authDomain: 'moto-dc-6e049.firebaseapp.com',
   projectId: 'moto-dc-6e049',
   storageBucket: 'moto-dc-6e049.firebasestorage.app',
