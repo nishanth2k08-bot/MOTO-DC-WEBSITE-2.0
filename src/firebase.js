@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDfGpxwKeVwsgqoY7Kbv89Ms6d28--wAHA',
@@ -12,5 +13,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// MotoDC uses the named Firestore database created in the Firebase console.
 export const db = getFirestore(app, 'asia-south1');
+export const auth = getAuth(app);
