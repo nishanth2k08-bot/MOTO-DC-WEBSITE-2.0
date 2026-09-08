@@ -9,6 +9,7 @@ import Auth from './Auth';
 import {ShoppingCart,Search,Heart,Star,ArrowRight,Menu,X,Plus,Minus,Trash2,User,Sun,Moon,LogOut} from 'lucide-react';
 import {Toaster,toast} from 'react-hot-toast';
 import './index.css';
+import './account-hover.css';
 const fallbackProducts=[
 {id:'p1',name:'Performance Brake Disc Set',category:'Automobile',price:4599,rating:4.8,stock:24,image:'/products/brake-disc.svg'},
 {id:'p2',name:'Racing Exhaust Muffler',category:'Motorcycle',price:6299,rating:4.6,stock:12,image:'/products/exhaust.svg'},
