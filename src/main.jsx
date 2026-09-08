@@ -5,14 +5,14 @@ import {ShoppingCart,Search,Heart,Star,ArrowRight,Menu,X,Plus,Minus,Trash2} from
 import {Toaster,toast} from 'react-hot-toast';
 import './index.css';
 const products=[
-{id:'p1',name:'Performance Brake Disc Set',category:'Automobile',price:4599,rating:4.8,stock:24,image:'https://images.unsplash.com/photo-1600661653561-629509216228?q=80&w=900&auto=format&fit=crop'},
-{id:'p2',name:'Racing Exhaust Muffler',category:'Motorcycle',price:6299,rating:4.6,stock:12,image:'https://images.unsplash.com/photo-1558980664-10e7170b5df9?q=80&w=900&auto=format&fit=crop'},
-{id:'p3',name:'LED Headlamp Assembly',category:'Automobile',price:3199,rating:4.7,stock:40,image:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=900&auto=format&fit=crop'},
-{id:'p4',name:'Alloy Wheel Rim 17"',category:'Automobile',price:8999,rating:4.9,stock:8,image:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=900&auto=format&fit=crop'},
-{id:'p5',name:'Chain & Sprocket Kit',category:'Motorcycle',price:2799,rating:4.5,stock:33,image:'https://images.unsplash.com/photo-1580310614729-ccd69652491d?q=80&w=900&auto=format&fit=crop'},
-{id:'p6',name:'Turbocharger Unit',category:'Automobile',price:24999,rating:4.9,stock:5,image:'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?q=80&w=900&auto=format&fit=crop'},
-{id:'p7',name:'Sports Bike Fairing Kit',category:'Motorcycle',price:15999,rating:4.4,stock:6,image:'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=900&auto=format&fit=crop'},
-{id:'p8',name:'High-Performance Air Filter',category:'Automobile',price:999,rating:4.3,stock:60,image:'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?q=80&w=900&auto=format&fit=crop'}];
+{id:'p1',name:'Performance Brake Disc Set',category:'Automobile',price:4599,rating:4.8,stock:24,image:'/products/brake-disc.svg'},
+{id:'p2',name:'Racing Exhaust Muffler',category:'Motorcycle',price:6299,rating:4.6,stock:12,image:'/products/exhaust.svg'},
+{id:'p3',name:'LED Headlamp Assembly',category:'Automobile',price:3199,rating:4.7,stock:40,image:'/products/headlamp.svg'},
+{id:'p4',name:'Alloy Wheel Rim 17"',category:'Automobile',price:8999,rating:4.9,stock:8,image:'/products/wheel.svg'},
+{id:'p5',name:'Chain & Sprocket Kit',category:'Motorcycle',price:2799,rating:4.5,stock:33,image:'/products/chain.svg'},
+{id:'p6',name:'Turbocharger Unit',category:'Automobile',price:24999,rating:4.9,stock:5,image:'/products/turbo.svg'},
+{id:'p7',name:'Sports Bike Fairing Kit',category:'Motorcycle',price:15999,rating:4.4,stock:6,image:'/products/fairing.svg'},
+{id:'p8',name:'High-Performance Air Filter',category:'Automobile',price:999,rating:4.3,stock:60,image:'/products/air-filter.svg'}];
 const money=n=>'₹'+n.toLocaleString('en-IN');
 function getCart(){try{return JSON.parse(localStorage.getItem('motodc-cart')||'[]')}catch{return[]}}
 function saveCart(c){localStorage.setItem('motodc-cart',JSON.stringify(c));window.dispatchEvent(new Event('cartchange'))}
