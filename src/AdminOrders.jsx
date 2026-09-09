@@ -1,0 +1,16 @@
+import React,{useEffect,useState} from 'react';
+import {collection,getDocs,orderBy,query,updateDoc,doc} from 'firebase/firestore';
+import {adminDb} from './firebase';
+import {Package,RefreshCw,ChevronDown,MapPin,Phone,Mail} from 'lucide-react';
+import {toast} from 'react-hot-toast';
+
+const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
+const statuses=['placed','confirmed','packed','shipped','delivered','cancelled'];
+
+export default function AdminOrders(){
+ const [orders,setOrders]=useState([]),[loading,setLoading]=useState(true),[busy,setBusy]=useState(''),[selected,setSelected]=useState(null);
+ const load=async()=>{setLoading(true);try{const snap=await getDocs(query(collection(adminDb,'orders'),orderBy('createdAt','desc')));setOrders(snap.docs.map(d=>({id:d.id,...d.data()})))}catch(e){console.error(e);toast.error(e.code==='failed-precondition'?'Create the Firestore index for orders.createdAt first':'Could not load orders')}finally{setLoading(false)}};
+ useEffect(()=>{load()},[]);
+ const updateStatus=async(o,status)=>{setBusy(o.id);try{await updateDoc(doc(adminDb,'orders',o.id),{orderStatus:status});setOrders(xs=>xs.map(x=>x.id===o.id?{...x,orderStatus:status}:x));toast.success(`Order ${o.orderId||o.id} marked ${status}`)}catch(e){console.error(e);toast.error('Could not update order')}finally{setBusy('')}};
+ return <div className="adminOrders"><div className="ordersHead"><div><p className="eyebrow">CUSTOMER ORDERS</p><h2>Order <span>management.</span></h2><p>Review orders and update their delivery status.</p></div><button className="adminsignout" onClick={load} disabled={loading}><RefreshCw size={16}/> {loading?'Loading...':'Refresh'}</button></div>{loading?<div className="empty">Loading orders...</div>:!orders.length?<div className="ordersEmpty"><Package size={40}/><h3>No orders yet</h3><p>Orders placed through checkout will appear here.</p></div>:<div className="ordersList">{orders.map(o=><div className={`orderCard ${selected===o.id?'expanded':''}`} key={o.id}><div className="orderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.customer?.phone||'No phone'}</small></div><strong>{money(o.total)}</strong><select value={o.orderStatus||'placed'} disabled={busy===o.id} onChange={e=>updateStatus(o,e.target.value)}>{statuses.map(s=><option key={s}>{s}</option>)}</select><button className="orderToggle" onClick={()=>setSelected(selected===o.id?null:o.id)}><ChevronDown size={18}/></button></div>{selected===o.id&&<div className="orderDetails"><div className="detailGrid"><div><h4>Customer</h4><p><Mail size={14}/> {o.customer?.email||'—'}</p><p><Phone size={14}/> {o.customer?.phone||'—'}</p></div><div><h4>Delivery address</h4><p><MapPin size={14}/> {o.shipping?.address||'—'}, {o.shipping?.city||''}, {o.shipping?.state||''} - {o.shipping?.pincode||''}</p></div><div><h4>Payment</h4><p>{o.paymentMethod==='cod'?'Cash on Delivery':'Online Payment'} · {o.paymentStatus||'pending'}</p></div></div><div className="orderedItems"><h4>Items</h4>{(o.items||[]).map((x,i)=><div key={i}><img src={x.image} alt=""/><span><b>{x.name}</b><small>Qty {x.qty} · {money(x.price)} each</small></span><strong>{money(x.price*x.qty)}</strong></div>)}</div></div>}</div>)}</div>}</div>;
+}
