@@ -4,6 +4,7 @@ import {auth,db} from './firebase';
 import {Package,ChevronDown,MapPin,Truck,CheckCircle,Clock,XCircle} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-hot-toast';
+import './orders.css';
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const steps=['placed','confirmed','packed','shipped','delivered'];
 const labels={placed:'Order placed',confirmed:'Confirmed',packed:'Packed',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'};
