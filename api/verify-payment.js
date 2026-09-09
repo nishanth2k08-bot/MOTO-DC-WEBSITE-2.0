@@ -32,14 +32,31 @@ export default async function handler(req,res){
     const payment=await paymentResponse.json().catch(()=>({}));
     if(!paymentResponse.ok||payment.order_id!==razorpay_order_id||Number(payment.amount)!==Math.round(Number(intent.amount)*100)||payment.currency!=='INR'||payment.status!=='captured')return send(res,400,{error:'Payment could not be verified'});
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
-    const ref=await db.collection('orders').add({orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:intent.items,subtotal:Number(intent.amount),total:Number(intent.amount),delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',createdAt:admin.firestore.FieldValue.serverTimestamp()});
-    await intentRef.update({status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:ref.id});
-    return send(res,200,{ok:true,orderId,docId:ref.id,total:Number(intent.amount)});
+    const orderRef=db.collection('orders').doc();
+    let total=0;
+    const finalItems=[];
+    await db.runTransaction(async tx=>{
+      for(const item of intent.items||[]){
+        const productRef=db.collection('products').doc(String(item.id));
+        const snap=await tx.get(productRef);
+        if(!snap.exists)throw new Error('A product is no longer available');
+        const p=snap.data(),qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
+        if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
+        const price=Number(p.price||0);total+=price*qty;
+        finalItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty,image:p.image||''});
+        tx.update(productRef,{stock:stock-qty});
+      }
+      if(Math.round(total*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
+      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',createdAt:admin.firestore.FieldValue.serverTimestamp()});
+      tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
+    });
+    return send(res,200,{ok:true,orderId,docId:orderRef.id,total});
   }catch(e){
     console.error('verify-payment error:',e);
     const message=String(e?.message||'');
     if(message.includes('NOT_FOUND'))return send(res,500,{error:'Firebase Firestore database was not found. The payment server is targeting asia-south1.'});
     if(message.includes('FIREBASE_SERVICE_ACCOUNT_JSON')||message.includes('private key'))return send(res,500,{error:'Firebase server credentials are invalid. Check FIREBASE_SERVICE_ACCOUNT_JSON in Vercel.'});
+    if(message.startsWith('Insufficient stock')||message.includes('no longer available'))return send(res,409,{error:message});
     return send(res,500,{error:'Could not verify payment'});
   }
 }
