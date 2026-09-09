@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDfGpxwKeVwsgqoY7kBV89Ms6d28--wAHA',
@@ -16,8 +16,13 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, 'asia-south1');
 export const auth = getAuth(app);
 
+// Keep the customer session across page refreshes/browser restarts until the
+// customer explicitly signs out.
+setPersistence(auth, browserLocalPersistence).catch(e=>console.error('Auth persistence setup failed:',e));
+
 // Admin uses a separate Firebase Auth/Firestore instance so an admin session
 // can stay signed in while a customer uses the normal account session.
 const adminApp = initializeApp(firebaseConfig, 'motodc-admin');
 export const adminAuth = getAuth(adminApp);
 export const adminDb = getFirestore(adminApp, 'asia-south1');
+setPersistence(adminAuth, browserLocalPersistence).catch(e=>console.error('Admin auth persistence setup failed:',e));
