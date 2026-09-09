@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 function send(res,status,body){res.status(status).json(body)}
 function getAdmin(){
   if(admin.apps.length)return admin;
@@ -24,7 +25,7 @@ export default async function handler(req,res){
     if(!idToken)return send(res,401,{error:'Authentication required'});
     if(!Array.isArray(items)||!items.length)return send(res,400,{error:'Cart is empty'});
     if(!Number.isFinite(Number(amount))||Number(amount)<=0)return send(res,400,{error:'Invalid amount'});
-    const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=a.firestore();
+    const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
     const refs=items.map(x=>db.collection('products').doc(String(x.id)));
     const snaps=await db.getAll(...refs);
     let total=0;const safeItems=[];
@@ -51,6 +52,7 @@ export default async function handler(req,res){
     if(message.includes('FIREBASE_SERVICE_ACCOUNT_JSON'))return send(res,500,{error:message});
     if(message.includes('credential')||message.includes('private key'))return send(res,500,{error:'Firebase server credentials are invalid. Check FIREBASE_SERVICE_ACCOUNT_JSON in Vercel.'});
     if(message.includes('verifyIdToken'))return send(res,401,{error:'Firebase authentication could not be verified'});
+    if(message.includes('NOT_FOUND'))return send(res,500,{error:'Firebase Firestore database was not found. The payment server is now targeting the same asia-south1 database used by the website.'});
     return send(res,500,{error:'Payment server could not create the order'});
   }
 }
