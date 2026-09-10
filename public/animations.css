@@ -5,14 +5,15 @@
 @keyframes motoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes motoPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,49,87,.28)}50%{box-shadow:0 0 0 10px rgba(255,49,87,0)}}
 @keyframes motoShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* Keep the page shell untransformed so fixed overlays remain viewport-relative. */
+/* Do not transform body or .page: transformed ancestors break fixed-position overlays and can make route transitions appear stuck. */
 body{animation:none}
 .hero>div:first-child{animation:motoFadeRight .7s cubic-bezier(.22,1,.36,1) both}
 .heroVisual{animation:motoScaleIn .8s .12s cubic-bezier(.22,1,.36,1) both}
 .orb{animation:motoFloat 4.5s ease-in-out infinite}
 .stats div{animation:motoFadeUp .55s ease both}
 .stats div:nth-child(2){animation-delay:.06s}.stats div:nth-child(3){animation-delay:.12s}.stats div:nth-child(4){animation-delay:.18s}
-.section,.page{animation:motoFadeUp .6s cubic-bezier(.22,1,.36,1) both}
+.section{animation:motoFadeUp .6s cubic-bezier(.22,1,.36,1) both}
+.page{animation:none!important;opacity:1!important;transform:none!important}
 .grid .card{animation:motoFadeUp .55s cubic-bezier(.22,1,.36,1) both;transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s,box-shadow .28s}
 .grid .card:nth-child(2){animation-delay:.06s}.grid .card:nth-child(3){animation-delay:.12s}.grid .card:nth-child(4){animation-delay:.18s}
 .card:hover{transform:translateY(-8px) scale(1.012);box-shadow:0 18px 40px rgba(0,0,0,.22)}
