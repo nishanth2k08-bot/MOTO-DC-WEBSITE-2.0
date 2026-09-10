@@ -25,6 +25,8 @@ function normalizePhone(value){
   return raw;
 }
 
+function digits(value){return String(value||'').replace(/\D/g,'')}
+
 export default async function handler(req,res){
   if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});
   try{
@@ -38,8 +40,8 @@ export default async function handler(req,res){
 
     const response=await fetch('https://control.msg91.com/api/v5/widget/verifyAccessToken',{
       method:'POST',
-      headers:{accept:'application/json','content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({authkey,'access-token':accessToken}).toString()
+      headers:{accept:'application/json','content-type':'application/json'},
+      body:JSON.stringify({authkey,'access-token':accessToken})
     });
     const text=await response.text();
     let data={};
@@ -48,6 +50,9 @@ export default async function handler(req,res){
     console.log('MSG91 access-token verification:',response.status,data?.type||data?.message||'response');
     if(!response.ok)return send(res,response.status,{error:data?.message||data?.type||'MSG91 access-token verification failed'});
     if(String(data?.type||'').toLowerCase()==='error')return send(res,401,{error:data?.message||'MSG91 access-token verification failed'});
+
+    const verifiedPhone=data?.mobile||data?.phone||data?.identifier||data?.data?.mobile||data?.data?.phone||data?.data?.identifier;
+    if(verifiedPhone&&digits(verifiedPhone)!==digits(phone))return send(res,401,{error:'The verified phone number does not match this login request'});
 
     const a=getAdmin();
     let user;
