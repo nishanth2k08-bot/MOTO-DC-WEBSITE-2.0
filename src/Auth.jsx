@@ -47,7 +47,7 @@ export default function Auth(){
   let alive=true;
   loadMsg91Widget().then(()=>{
    if(!alive)return;
-   window.initSendOTP({widgetId:MSG91_WIDGET_ID,tokenAuth:MSG91_WIDGET_TOKEN,exposeMethods:true,identifier:'',captchaRenderId:'msg91-captcha',success:()=>{},failure:()=>{}});
+   window.initSendOTP({widgetId:MSG91_WIDGET_ID,tokenAuth:MSG91_WIDGET_TOKEN,exposeMethods:true,identifier:'',success:()=>{},failure:()=>{}});
    setWidgetReady(true);
   }).catch(e=>{
    console.error(e);
@@ -228,9 +228,8 @@ export default function Auth(){
   <div className="authintro"><p className="eyebrow">MOTODC ACCOUNT</p><h1>{mode==='signin'?<>Welcome <span>back.</span></>:<>Join the <span>ride.</span></>}</h1><p>{mode==='signin'?'Sign in to keep your cart, orders and wishlist connected to your account.':'Create your customer account to shop faster and keep your purchases connected.'}</p></div>
   <div className="authswitch"><button type="button" className={mode==='signin'?'active':''} onClick={()=>{setMode('signin');resetOtp()}}>Sign in</button><button type="button" className={mode==='signup'?'active':''} onClick={()=>{setMode('signup');resetOtp()}}>Create account</button></div>
   <div className="authsocial"><button onClick={()=>social(google)} disabled={busy}><Chrome size={18}/> Continue with Google</button><button onClick={()=>social(apple)} disabled={busy}><Apple size={19}/> Continue with Apple</button></div>
-  <div className="authdivider"><span>or use</span></div>
-  <div className="methodswitch"><button type="button" className={method==='email'?'active':''} onClick={()=>{setMethod('email');resetOtp()}}><Mail size={15}/> Email</button><button type="button" className={method==='phone'?'active':''} onClick={()=>{setMethod('phone');resetOtp()}}><Phone size={15}/> Phone</button></div>
-  <div id="msg91-captcha" aria-hidden="true"></div>
+  <div className="authdivider"><span>or continue with</span></div>
+  <div className="authmethods"><button type="button" className={method==='email'?'active':''} onClick={()=>{setMethod('email');resetOtp()}}><Mail size={16}/> Email</button><button type="button" className={method==='phone'?'active':''} onClick={()=>{setMethod('phone');resetOtp()}}><Phone size={16}/> Mobile</button></div>
   {methodForm}
  </div></section>;
 }
