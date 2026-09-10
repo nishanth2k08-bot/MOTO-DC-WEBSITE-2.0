@@ -1,0 +1,19 @@
+/* Header interaction fixes */
+.logo{color:#fff!important}
+.logo span{color:#ff3157!important}
+.light-theme .logo{color:#171a21!important}
+.light-theme .logo span{color:#ff3157!important}
+
+/* Prevent touch devices from keeping the theme button in its hover/focus visual state. */
+.themeToggle{-webkit-tap-highlight-color:transparent;outline:none!important}
+.themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{outline:none!important}
+
+@media(max-width:850px){
+  .themeToggle:hover,.themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{
+    transform:none!important;
+    outline:none!important;
+    box-shadow:0 8px 30px rgba(0,0,0,.25)!important;
+  }
+  .themeToggle:hover{border-color:#30343d!important}
+  .light-theme .themeToggle:hover{border-color:#dfe2e8!important}
+}
