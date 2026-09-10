@@ -1,52 +1,38 @@
 import admin from 'firebase-admin';
 
 function send(res,status,body){return res.status(status).json(body)}
-
 function getAdmin(){
   if(admin.apps.length)return admin;
   const raw=process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if(!raw)throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_JSON');
   let serviceAccount;
-  try{
-    serviceAccount=JSON.parse(raw);
-    if(typeof serviceAccount==='string')serviceAccount=JSON.parse(serviceAccount);
-  }catch{
-    try{serviceAccount=JSON.parse(Buffer.from(raw,'base64').toString('utf8'));}
-    catch{throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_JSON');}
-  }
+  try{serviceAccount=JSON.parse(raw);if(typeof serviceAccount==='string')serviceAccount=JSON.parse(serviceAccount)}
+  catch{try{serviceAccount=JSON.parse(Buffer.from(raw,'base64').toString('utf8'))}catch{throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_JSON')}}
   if(!serviceAccount?.project_id||!serviceAccount?.client_email||!serviceAccount?.private_key)throw new Error('Incomplete Firebase service account');
   admin.initializeApp({credential:admin.credential.cert(serviceAccount)});
   return admin;
 }
-
-function normalizePhone(value){
-  const raw=String(value||'').trim();
-  if(!/^\+[1-9]\d{7,14}$/.test(raw))return null;
-  return raw;
-}
-
+function normalizePhone(value){const raw=String(value||'').trim();return /^\+[1-9]\d{7,14}$/.test(raw)?raw:null}
 function digits(value){return String(value||'').replace(/\D/g,'')}
+function cleanName(value){const name=String(value||'').trim();return name.length>=2&&name.length<=80?name:null}
 
 export default async function handler(req,res){
   if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});
   try{
     const authkey=process.env.MSG91_AUTHKEY;
     if(!authkey)return send(res,500,{error:'MSG91_AUTHKEY is not configured in Vercel'});
-
     const accessToken=String(req.body?.accessToken||'').trim();
     const phone=normalizePhone(req.body?.phone);
+    const name=cleanName(req.body?.name);
     if(!accessToken)return send(res,400,{error:'Missing MSG91 access token'});
     if(!phone)return send(res,400,{error:'Invalid phone number'});
 
     const response=await fetch('https://control.msg91.com/api/v5/widget/verifyAccessToken',{
-      method:'POST',
-      headers:{accept:'application/json','content-type':'application/json'},
+      method:'POST',headers:{accept:'application/json','content-type':'application/json'},
       body:JSON.stringify({authkey,'access-token':accessToken})
     });
     const text=await response.text();
-    let data={};
-    try{data=text?JSON.parse(text):{}}catch{data={message:text};}
-
+    let data={};try{data=text?JSON.parse(text):{}}catch{data={message:text}}
     console.log('MSG91 access-token verification:',response.status,data?.type||data?.message||'response');
     if(!response.ok)return send(res,response.status,{error:data?.message||data?.type||'MSG91 access-token verification failed'});
     if(String(data?.type||'').toLowerCase()==='error')return send(res,401,{error:data?.message||'MSG91 access-token verification failed'});
@@ -56,15 +42,23 @@ export default async function handler(req,res){
 
     const a=getAdmin();
     let user;
-    try{
-      user=await a.auth().getUserByPhoneNumber(phone);
-    }catch(e){
+    let isNewUser=false;
+    try{user=await a.auth().getUserByPhoneNumber(phone)}
+    catch(e){
       if(e?.code!=='auth/user-not-found')throw e;
-      user=await a.auth().createUser({phoneNumber:phone});
+      isNewUser=true;
+    }
+
+    if(isNewUser&&!name)return send(res,200,{ok:false,needsName:true,phone});
+
+    if(isNewUser){
+      user=await a.auth().createUser({phoneNumber:phone,displayName:name});
+    }else if(name&&user.displayName!==name){
+      user=await a.auth().updateUser(user.uid,{displayName:name});
     }
 
     const customToken=await a.auth().createCustomToken(user.uid,{phone_verified:true});
-    return send(res,200,{ok:true,customToken,uid:user.uid,phone});
+    return send(res,200,{ok:true,customToken,uid:user.uid,phone,name:user.displayName||name||''});
   }catch(e){
     console.error('verify-msg91-token error:',e);
     const message=String(e?.message||'');
