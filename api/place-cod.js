@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
+import { sendCustomerTemplateEmail } from './_send-email.js';
 function send(res,status,body){res.status(status).json(body)}
 function getAdmin(){
   if(admin.apps.length)return admin;
@@ -36,6 +37,12 @@ export default async function handler(req,res){
       }
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });
+    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
+    const templateId=process.env.MSG91_TEMPLATE_COD_ORDER;
+    if(templateId){
+      try{await sendCustomerTemplateEmail({order,templateId});}
+      catch(emailError){console.error('COD order email error:',emailError);}
+    }else console.error('COD order email skipped: MSG91_TEMPLATE_COD_ORDER is not configured');
     return send(res,200,{ok:true,orderId,total});
   }catch(e){
     console.error('place-cod error:',e);
