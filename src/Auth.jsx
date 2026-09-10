@@ -3,6 +3,7 @@ import {GoogleAuthProvider,OAuthProvider,createUserWithEmailAndPassword,onAuthSt
 import {doc,getDoc,setDoc,serverTimestamp} from 'firebase/firestore';
 import {useNavigate} from 'react-router-dom';
 import {User,Mail,Lock,LogOut,ArrowRight,Phone,Chrome,Apple,ShieldCheck} from 'lucide-react';
+import {toast} from 'react-hot-toast';
 import {auth,db} from './firebase';
 import './auth.css';
 
