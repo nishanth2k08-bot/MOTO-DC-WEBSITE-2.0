@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
+import { sendCustomerTemplateEmail } from './_send-email.js';
 function getAdmin(){
   if(admin.apps.length)return admin;
   const raw=process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
@@ -50,6 +51,12 @@ export default async function handler(req,res){
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
+    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
+    const templateId=process.env.MSG91_TEMPLATE_ONLINE_ORDER;
+    if(templateId){
+      try{await sendCustomerTemplateEmail({order,templateId});}
+      catch(emailError){console.error('Online order email error:',emailError);}
+    }else console.error('Online order email skipped: MSG91_TEMPLATE_ONLINE_ORDER is not configured');
     return send(res,200,{ok:true,orderId,docId:orderRef.id,total});
   }catch(e){
     console.error('verify-payment error:',e);
