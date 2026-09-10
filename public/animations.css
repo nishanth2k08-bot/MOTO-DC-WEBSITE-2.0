@@ -5,7 +5,8 @@
 @keyframes motoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes motoPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,49,87,.28)}50%{box-shadow:0 0 0 10px rgba(255,49,87,0)}}
 @keyframes motoShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-body{animation:motoPageIn .55s ease both}
+/* Keep the page shell untransformed so fixed overlays remain viewport-relative. */
+body{animation:none}
 .hero>div:first-child{animation:motoFadeRight .7s cubic-bezier(.22,1,.36,1) both}
 .heroVisual{animation:motoScaleIn .8s .12s cubic-bezier(.22,1,.36,1) both}
 .orb{animation:motoFloat 4.5s ease-in-out infinite}
