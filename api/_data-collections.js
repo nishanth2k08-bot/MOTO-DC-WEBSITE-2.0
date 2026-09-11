@@ -1,0 +1,4 @@
+export const COLLECTIONS={orders:{cod:'codOrders',online:'onlineOrders'},paymentIntents:{cod:'codPaymentIntents',online:'onlinePaymentIntents'},returnRequests:{codReturn:'cod return',codReplacement:'cod replacement',onlineReturn:'online return',onlineReplacement:'online replacement'}};
+export const orderCollection=method=>String(method||'').toLowerCase()==='online'?COLLECTIONS.orders.online:COLLECTIONS.orders.cod;
+export const paymentIntentCollection=method=>String(method||'').toLowerCase()==='online'?COLLECTIONS.paymentIntents.online:COLLECTIONS.paymentIntents.cod;
+export const returnRequestDoc=(method,type)=>{const online=String(method||'').toLowerCase()==='online';return online?(type==='replacement'?COLLECTIONS.returnRequests.onlineReplacement:COLLECTIONS.returnRequests.onlineReturn):(type==='replacement'?COLLECTIONS.returnRequests.codReplacement:COLLECTIONS.returnRequests.codReturn)};
