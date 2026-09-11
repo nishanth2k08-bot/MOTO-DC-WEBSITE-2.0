@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
+import { waitUntil } from '@vercel/functions';
 import { sendCustomerTemplateEmail } from './_send-email.js';
 function getAdmin(){
   if(admin.apps.length)return admin;
@@ -37,25 +38,30 @@ export default async function handler(req,res){
     let total=0;
     const finalItems=[];
     await db.runTransaction(async tx=>{
-      for(const item of intent.items||[]){
-        const productRef=db.collection('products').doc(String(item.id));
-        const snap=await tx.get(productRef);
-        if(!snap.exists)throw new Error('A product is no longer available');
-        const p=snap.data(),qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
+      const requestedItems=(intent.items||[]).map(item=>({id:String(item.id),qty:Math.max(1,Math.floor(Number(item.qty||1)))}));
+      const productRefs=requestedItems.map(item=>db.collection('products').doc(item.id));
+      const productSnaps=productRefs.length?await tx.getAll(...productRefs):[];
+      const productMap=new Map(productSnaps.map(snap=>[snap.id,snap]));
+      for(const item of requestedItems){
+        const snap=productMap.get(item.id);
+        if(!snap?.exists)throw new Error('A product is no longer available');
+        const p=snap.data(),qty=item.qty,stock=Number(p.stock||0);
         if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
         const price=Number(p.price||0);total+=price*qty;
         finalItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty,image:p.image||''});
-        tx.update(productRef,{stock:stock-qty});
       }
       if(Math.round(total*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
+      for(const item of requestedItems){
+        const snap=productMap.get(item.id),p=snap.data();
+        tx.update(snap.ref,{stock:Number(p.stock||0)-item.qty});
+      }
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
     const templateId=process.env.MSG91_TEMPLATE_ONLINE_ORDER;
     if(templateId){
-      try{await sendCustomerTemplateEmail({order,templateId});}
-      catch(emailError){console.error('Online order email error:',emailError);}
+      waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('Online order email error:',emailError);}})());
     }else console.error('Online order email skipped: MSG91_TEMPLATE_ONLINE_ORDER is not configured');
     return send(res,200,{ok:true,orderId,docId:orderRef.id,total});
   }catch(e){
