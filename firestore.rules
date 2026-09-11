@@ -23,12 +23,45 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /orders/{category} {
+      allow read: if isAdmin();
+      allow write: if false;
+      match /records/{orderId} {
+        allow read: if request.auth != null
+          && (resource.data.userId == request.auth.uid || isAdmin());
+        allow create: if request.auth != null
+          && request.resource.data.userId == request.auth.uid;
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    match /paymentIntents/{category} {
+      allow read, write: if false;
+      match /records/{intentId} {
+        allow read, write: if false;
+      }
+    }
+
+    match /request/{category} {
+      allow read: if isAdmin();
+      allow create, update: if request.auth != null
+        && !isAdmin();
+      allow delete: if false;
+      match /requests/{requestId} {
+        allow create: if request.auth != null
+          && request.resource.data.userId == request.auth.uid;
+        allow read: if request.auth != null
+          && (resource.data.userId == request.auth.uid || isAdmin());
+        allow update: if isAdmin();
+        allow delete: if false;
+      }
+    }
+
+    // Legacy collections are intentionally left untouched for historical data.
     match /orders/{orderId} {
-      allow create: if request.auth != null
-        && request.resource.data.userId == request.auth.uid;
       allow read: if request.auth != null
         && (resource.data.userId == request.auth.uid || isAdmin());
-      allow update: if isAdmin();
+      allow create, update: if isAdmin();
       allow delete: if isAdmin() && resource.data.orderStatus == 'delivered';
     }
 
