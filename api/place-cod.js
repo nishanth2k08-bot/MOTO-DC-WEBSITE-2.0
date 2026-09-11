@@ -21,6 +21,7 @@ export default async function handler(req,res){
     if(!Array.isArray(items)||!items.length)return send(res,400,{error:'Cart is empty'});
     const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
     const categoryRef=db.collection('orders').doc('cod orders');
+    const paymentCategoryRef=db.collection('paymentIntents').doc('cod payment intents');
     const orderRef=categoryRef.collection('records').doc();
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
     let total=0;
@@ -37,6 +38,7 @@ export default async function handler(req,res){
         tx.update(productRef,{stock:stock-qty});
       }
       tx.set(categoryRef,{name:'cod orders',paymentMethod:'cod',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
+      tx.set(paymentCategoryRef,{name:'cod payment intents',paymentMethod:'cod',note:'COD does not use a Razorpay payment intent.',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
