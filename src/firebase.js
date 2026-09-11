@@ -8,8 +8,8 @@ const firebaseConfig = {
   authDomain: 'moto-dc-6e049.firebaseapp.com',
   projectId: 'moto-dc-6e049',
   storageBucket: 'moto-dc-6e049.firebasestorage.app',
-  messagingSenderId: '278997563172',
-  appId: '1:278997563172:web:ea273440de25fcf829e5b1',
+  messagingSenderId: '278997563',
+  appId: '1:278997563:web:ea273440de25fcf829e5b1',
   measurementId: 'G-CQSSJ222H0'
 };
 
