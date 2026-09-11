@@ -6,12 +6,7 @@ function getAdmin(){
   const raw=process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if(!raw)throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_JSON');
   let serviceAccount;
-  try{
-    serviceAccount=JSON.parse(raw);
-    if(typeof serviceAccount==='string')serviceAccount=JSON.parse(serviceAccount);
-  }catch(e){
-    try{serviceAccount=JSON.parse(Buffer.from(raw,'base64').toString('utf8'));}catch{throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_JSON');}
-  }
+  try{serviceAccount=JSON.parse(raw);if(typeof serviceAccount==='string')serviceAccount=JSON.parse(serviceAccount);}catch(e){try{serviceAccount=JSON.parse(Buffer.from(raw,'base64').toString('utf8'));}catch{throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_JSON');}}
   if(!serviceAccount?.project_id||!serviceAccount?.client_email||!serviceAccount?.private_key)throw new Error('Incomplete Firebase service account');
   admin.initializeApp({credential:admin.credential.cert(serviceAccount)});
   return admin;
@@ -44,7 +39,9 @@ export default async function handler(req,res){
     const response=await fetch('https://api.razorpay.com/v1/orders',{method:'POST',headers:{Authorization:`Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`,'Content-Type':'application/json'},body:JSON.stringify({amount:Math.round(total*100),currency:'INR',receipt,notes:{userId:decoded.uid}})});
     const data=await response.json().catch(()=>({}));
     if(!response.ok)return send(res,502,{error:data.error?.description||'Razorpay rejected the server credentials or request'});
-    await db.collection('paymentIntents').doc(data.id).set({userId:decoded.uid,amount:total,currency:'INR',items:safeItems,status:'created',createdAt:admin.firestore.FieldValue.serverTimestamp()});
+    const categoryRef=db.collection('paymentIntents').doc('online payment intents');
+    await categoryRef.set({name:'online payment intents',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
+    await categoryRef.collection('records').doc(data.id).set({userId:decoded.uid,amount:total,currency:'INR',items:safeItems,status:'created',createdAt:admin.firestore.FieldValue.serverTimestamp()});
     return send(res,200,{keyId,orderId:data.id,amount:data.amount,currency:data.currency});
   }catch(e){
     console.error('create-payment error:',e);
