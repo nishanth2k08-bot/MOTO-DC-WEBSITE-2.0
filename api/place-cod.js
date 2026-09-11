@@ -20,7 +20,8 @@ export default async function handler(req,res){
     if(!idToken)return send(res,401,{error:'Authentication required'});
     if(!Array.isArray(items)||!items.length)return send(res,400,{error:'Cart is empty'});
     const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
-    const orderRef=db.collection('orders').doc();
+    const categoryRef=db.collection('orders').doc('cod orders');
+    const orderRef=categoryRef.collection('records').doc();
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
     let total=0;
     const safeItems=[];
@@ -35,15 +36,14 @@ export default async function handler(req,res){
         safeItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty,image:p.image||''});
         tx.update(productRef,{stock:stock-qty});
       }
+      tx.set(categoryRef,{name:'cod orders',paymentMethod:'cod',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
     const templateId=process.env.MSG91_TEMPLATE_COD_ORDER;
-    if(templateId){
-      try{await sendCustomerTemplateEmail({order,templateId});}
-      catch(emailError){console.error('COD order email error:',emailError);}
-    }else console.error('COD order email skipped: MSG91_TEMPLATE_COD_ORDER is not configured');
-    return send(res,200,{ok:true,orderId,total});
+    if(templateId){try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('COD order email error:',emailError);}}
+    else console.error('COD order email skipped: MSG91_TEMPLATE_COD_ORDER is not configured');
+    return send(res,200,{ok:true,orderId,total,docId:orderRef.id});
   }catch(e){
     console.error('place-cod error:',e);
     const message=String(e?.message||'');
