@@ -25,7 +25,7 @@ export default async function handler(req,res){
     if(!secret)return send(res,503,{error:'Payment verification is not configured'});
     const signature=String(razorpay_signature),expected=crypto.createHmac('sha256',secret).update(`${razorpay_order_id}|${razorpay_payment_id}`).digest('hex');
     if(signature.length!==expected.length||!crypto.timingSafeEqual(Buffer.from(expected),Buffer.from(signature)))return send(res,400,{error:'Payment verification failed'});
-    const db=getFirestore(a.app(),'asia-south1'),intentRef=db.collection('paymentIntents').doc(razorpay_order_id),intentSnap=await intentRef.get();
+    const db=getFirestore(a.app(),'asia-south1'),intentRef=db.collection('paymentIntents').doc('online payment intents').collection('records').doc(razorpay_order_id),intentSnap=await intentRef.get();
     if(!intentSnap.exists)return send(res,400,{error:'Payment session expired or invalid'});
     const intent=intentSnap.data();
     if(intent.userId!==decoded.uid||intent.status!=='created')return send(res,400,{error:'Invalid payment session'});
@@ -34,7 +34,8 @@ export default async function handler(req,res){
     const payment=await paymentResponse.json().catch(()=>({}));
     if(!paymentResponse.ok||payment.order_id!==razorpay_order_id||Number(payment.amount)!==Math.round(Number(intent.amount)*100)||payment.currency!=='INR'||payment.status!=='captured')return send(res,400,{error:'Payment could not be verified'});
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
-    const orderRef=db.collection('orders').doc();
+    const orderCategoryRef=db.collection('orders').doc('online orders');
+    const orderRef=orderCategoryRef.collection('records').doc();
     let total=0;
     const finalItems=[];
     await db.runTransaction(async tx=>{
@@ -51,18 +52,15 @@ export default async function handler(req,res){
         finalItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty,image:p.image||''});
       }
       if(Math.round(total*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
-      for(const item of requestedItems){
-        const snap=productMap.get(item.id),p=snap.data();
-        tx.update(snap.ref,{stock:Number(p.stock||0)-item.qty});
-      }
+      for(const item of requestedItems){const snap=productMap.get(item.id),p=snap.data();tx.update(snap.ref,{stock:Number(p.stock||0)-item.qty});}
+      tx.set(orderCategoryRef,{name:'online orders',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
     const templateId=process.env.MSG91_TEMPLATE_ONLINE_ORDER;
-    if(templateId){
-      waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('Online order email error:',emailError);}})());
-    }else console.error('Online order email skipped: MSG91_TEMPLATE_ONLINE_ORDER is not configured');
+    if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('Online order email error:',emailError);}})());
+    else console.error('Online order email skipped: MSG91_TEMPLATE_ONLINE_ORDER is not configured');
     return send(res,200,{ok:true,orderId,docId:orderRef.id,total});
   }catch(e){
     console.error('verify-payment error:',e);
