@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import {collection,getDocs,query,where,orderBy,deleteDoc} from 'firebase/firestore';
+import {collection,getDocs,query,where,orderBy,deleteDoc,doc} from 'firebase/firestore';
 import {adminDb} from './firebase';
 import {Package,ChevronDown,Trash2,MapPin,Phone,Mail} from 'lucide-react';
 import {toast} from 'react-hot-toast';
