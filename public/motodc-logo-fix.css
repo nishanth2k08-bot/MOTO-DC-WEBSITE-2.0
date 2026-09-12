@@ -1,6 +1,15 @@
-/* Final MotoDC logo override: use the real binary logo asset already in public/. */
-.logo{background-image:url('/motodc-logo.webp?v=6')!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;color:transparent!important}
-.light-theme .logo{background-image:url('/motodc-logo.webp?v=6')!important;color:transparent!important}
+/* FINAL LOGO FIX
+   Primary: exact processed logo asset.
+   Fallback: guaranteed-valid SVG already in public/ so the header can never be blank. */
+.logo,
+.light-theme .logo{
+  color:transparent!important;
+  display:block!important;
+  font-size:0!important;
+  line-height:0!important;
+  background-image:url('/motodc-logo.webp?v=7'),url('/motodc-logo.svg?v=7')!important;
+  background-position:center,center!important;
+  background-size:contain,contain!important;
+  background-repeat:no-repeat,no-repeat!important;
+}
 .logo span,.logo::before,.logo::after{display:none!important;content:none!important}
-/* The admin page already uses the shared Header; remove the old temporary pseudo-logo. */
-.admin::before{display:none!important;content:none!important}
