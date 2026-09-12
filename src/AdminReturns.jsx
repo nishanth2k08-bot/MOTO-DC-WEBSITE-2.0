@@ -1,16 +1,14 @@
 import React,{useEffect,useState} from 'react';
-import {collection,getDocs,orderBy,query,updateDoc,doc} from 'firebase/firestore';
+import {doc,updateDoc} from 'firebase/firestore';
 import {adminAuth,adminDb} from './firebase';
 import {RotateCcw,RefreshCw,ChevronDown,MapPin,Phone,Mail,Package} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import './admin-dashboard.css';
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const requestStatuses=['requested','approved','processing','completed','rejected'];
-const groups=[['cod request','return'],['cod request','replacement'],['online request','return'],['online request','replacement']];
-const subcollection=(type)=>type==='replacement'?'cod replacement':'cod return';
 export default function AdminReturns(){
  const [requests,setRequests]=useState([]),[loading,setLoading]=useState(true),[open,setOpen]=useState(null),[busy,setBusy]=useState('');
- const load=async()=>{setLoading(true);try{const paths=groups.map(([group,type])=>[group,type==='replacement'?`${group.split(' ')[0]} replacement`:`${group.split(' ')[0]} return`]);const snaps=await Promise.all(paths.map(([group,sub])=>getDocs(query(collection(adminDb,'request',group,sub),orderBy('createdAt','desc')))));setRequests(snaps.flatMap((snap,i)=>snap.docs.map(d=>({id:d.id,requestGroup:paths[i][0],requestCollection:paths[i][1],...d.data()}))).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0)))}catch(e){console.error(e);toast.error(e.code==='failed-precondition'?'Create the Firestore indexes for request records first':'Could not load return requests')}finally{setLoading(false)}};
+ const load=async()=>{setLoading(true);try{const u=adminAuth.currentUser;if(!u)throw new Error('Admin session expired');const token=await u.getIdToken();const response=await fetch('/api/admin-returns',{headers:{Authorization:`Bearer ${token}`}});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Could not load return requests');setRequests(Array.isArray(data.requests)?data.requests:[])}catch(e){console.error(e);toast.error(e.message||'Could not load return requests')}finally{setLoading(false)}};
  useEffect(()=>{load()},[]);
  const sendCompletedEmail=async(returnId,requestCollection,requestGroup)=>{try{const u=adminAuth.currentUser;if(!u)throw new Error('Admin session expired');const token=await u.getIdToken();const response=await fetch('/api/send-order-email',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({event:'return-completed',returnId,requestCollection,requestGroup})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Email could not be sent');return data}catch(e){console.error(e);toast.error(e.message||'Could not send customer email');return null}};
  const updateStatus=async(r,status)=>{setBusy(r.id);try{await updateDoc(doc(adminDb,'request',r.requestGroup,r.requestCollection,r.id),{status,updatedAt:new Date()});setRequests(xs=>xs.map(x=>x.id===r.id?{...x,status}:x));toast.success('Request status updated');if(status==='completed')await sendCompletedEmail(r.id,r.requestCollection,r.requestGroup)}catch(e){console.error(e);toast.error('Could not update request')}finally{setBusy('')}};
