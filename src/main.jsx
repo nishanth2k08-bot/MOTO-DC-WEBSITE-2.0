@@ -27,7 +27,7 @@ const fallbackProducts=[
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 function getCart(){try{return JSON.parse(localStorage.getItem('motodc-cart')||'[]')}catch{return[]}}
 function saveCart(c){localStorage.setItem('motodc-cart',JSON.stringify(c));window.dispatchEvent(new Event('cartchange'))}
-function addToCart(p,qty=1){if(Number(p.stock)<=0){toast.error(`${p.name} is out of stock`);return}const c=getCart(),i=c.findIndex(x=>x.id===p.id);if(i>=0)c[i].qty=Math.min(c[i].qty+qty,p.stock);else c.push({...p,qty:Math.min(qty,p.stock)});saveCart(c);toast.success(`${p.name} added to cart`)}
+function addToCart(p,qty=1){if(Number(p.stock)<=0){toast.error('Out of stock');return}const c=getCart(),i=c.findIndex(x=>x.id===p.id);if(i>=0)c[i].qty=Math.min(c[i].qty+qty,p.stock);else c.push({...p,qty:Math.min(qty,p.stock)});saveCart(c);toast.success(`${qty>1?`${qty} items`:'1 item'} added to cart`)}
 function getWishlist(){try{return JSON.parse(localStorage.getItem('motodc-wishlist')||'[]')}catch{return[]}}
 function saveWishlist(w){localStorage.setItem('motodc-wishlist',JSON.stringify(w));window.dispatchEvent(new Event('wishlistchange'))}
 function toggleWishlist(p){const w=getWishlist(),exists=w.some(x=>x.id===p.id),next=exists?w.filter(x=>x.id!==p.id):[...w,{...p}];saveWishlist(next);toast.success(exists?'Removed from wishlist':'1 item added to wishlist');return !exists}
