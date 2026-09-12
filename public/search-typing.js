@@ -1,5 +1,11 @@
 (()=>{
-  const phrases=['Search parts...','Search brake pads...','Search bike parts...','Search air filters...','Search auto parts...'];
+  const phrases=[
+    "Type your part. Skip the guesswork.",
+    "Search parts... find your next 100 km/h.",
+    "From bolts to beasts — what are we hunting today?",
+    "Type it. We'll track it down.",
+    "Every great ride starts with the right part."
+  ];
   const speed=85,eraseSpeed=45,pause=1500;
   let timer=null,stopped=false;
   function start(){
