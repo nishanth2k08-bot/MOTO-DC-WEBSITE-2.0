@@ -13,7 +13,7 @@
 .light-theme .nav nav a.currentPage{color:#ff3157!important}
 @media(min-width:851px){
   .nav nav{isolation:isolate}
-  .nav nav a{position:relative!important;display:inline-flex!important;align-items:center!important;transition:color .22s ease,transform .22s cubic-bezier(.22,1,.36,1),background-color .22s ease!important}
+  .nav nav a{position:relative!important;display:inline-flex!important;align-items:center!important;white-space:nowrap!important;flex-shrink:0!important;min-width:max-content!important;transition:color .22s ease,transform .22s cubic-bezier(.22,1,.36,1),background-color .22s ease!important}
   .nav nav a::before{content:"";position:absolute;left:50%;right:50%;bottom:-9px;height:2px;border-radius:99px;background:#ff3157;opacity:0;transform:translateX(-50%) scaleX(.2);transform-origin:center;transition:all .25s cubic-bezier(.22,1,.36,1);box-shadow:0 0 10px rgba(255,49,87,.4);pointer-events:none}
   .nav nav a:hover{color:#ff3157!important;transform:translateY(-2px)}
   .nav nav a:hover::before{left:8px;right:8px;opacity:1;transform:translateX(0) scaleX(1)}
