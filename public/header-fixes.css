@@ -1,8 +1,12 @@
-/* Header interaction fixes */
-.logo{color:#fff!important}
-.logo span{color:#ff3157!important}
+/* Header interaction fixes + modern MotoDC branding */
+.logo{color:#fff!important;display:inline-flex!important;align-items:center!important;gap:9px!important;font:800 22px/1 Sora,Inter,sans-serif!important;letter-spacing:-1.2px!important;white-space:nowrap!important;text-decoration:none!important;position:relative!important;transition:transform .2s ease,filter .2s ease!important}
+.logo::before{content:"M";width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(135deg,#ff3157 0%,#ff3157 58%,#b80f32 100%);color:#fff;font:800 15px/1 Sora,Inter,sans-serif;letter-spacing:-1px;box-shadow:0 5px 18px rgba(255,49,87,.28),inset 0 1px 0 rgba(255,255,255,.3);transform:skew(-7deg);position:relative}
+.logo::after{content:"";position:absolute;left:21px;top:5px;width:8px;height:8px;border-radius:50%;border:2px solid rgba(255,255,255,.9);box-shadow:0 17px 0 rgba(255,255,255,.9);opacity:.9;pointer-events:none}
+.logo span{color:#ff3157!important;font-weight:800!important}
+.logo:hover{transform:translateY(-1px);filter:brightness(1.08)}
 .light-theme .logo{color:#171a21!important}
 .light-theme .logo span{color:#ff3157!important}
+.light-theme .logo::before{box-shadow:0 5px 18px rgba(255,49,87,.22),inset 0 1px 0 rgba(255,255,255,.55)}
 .themeToggle{-webkit-tap-highlight-color:transparent;outline:none!important}
 .themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{outline:none!important}
 .nav nav a.currentPage{color:#ff3157!important;position:relative;font-weight:700}
@@ -11,6 +15,9 @@
 .wishlistNav.currentPage::after,.cart.currentPage::after,.account.currentPage::after{content:"";position:absolute;left:50%;bottom:-4px;width:5px;height:5px;border-radius:50%;background:#ff3157;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,49,87,.55)}
 .light-theme .nav nav a.currentPage{color:#ff3157!important}
 @media(max-width:850px){
+  .logo{gap:7px!important;font-size:19px!important;letter-spacing:-1px!important}
+  .logo::before{width:28px;height:28px;border-radius:8px;font-size:13px}
+  .logo::after{left:19px;top:4px;width:7px;height:7px;box-shadow:0 15px 0 rgba(255,255,255,.9)}
   .themeToggle:hover,.themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{transform:none!important;outline:none!important;box-shadow:0 8px 30px rgba(0,0,0,.25)!important}
   .themeToggle:hover{border-color:#30343d!important}
   .light-theme .themeToggle:hover{border-color:#dfe2e8!important}
