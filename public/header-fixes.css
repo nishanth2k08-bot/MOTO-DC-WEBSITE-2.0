@@ -1,9 +1,9 @@
 /* Header interaction fixes + MotoDC logo */
-.logo{color:transparent!important;display:block!important;width:205px!important;height:59px!important;flex:0 0 205px!important;font-size:0!important;line-height:0!important;letter-spacing:0!important;white-space:nowrap!important;text-decoration:none!important;position:relative!important;overflow:visible!important;background-image:url('/motodc-logo.webp?v=3'),url('/motodc-logo.svg')!important;background-position:center,center!important;background-size:contain,contain!important;background-repeat:no-repeat,no-repeat!important;transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s ease!important}
+.logo{color:transparent!important;display:block!important;width:205px!important;height:59px!important;flex:0 0 205px!important;font-size:0!important;line-height:0!important;letter-spacing:0!important;white-space:nowrap!important;text-decoration:none!important;position:relative!important;overflow:visible!important;background-image:url('/motodc-logo.svg?v=4')!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s ease!important}
 .logo span{display:none!important}
 .logo::before,.logo::after{content:none!important;display:none!important}
 .logo:hover{transform:translateY(-2px);filter:brightness(1.08) drop-shadow(0 7px 18px rgba(255,49,87,.18))}
-.light-theme .logo{color:transparent!important;background-image:url('/motodc-logo.webp?v=3'),url('/motodc-logo.svg')!important}
+.light-theme .logo{color:transparent!important;background-image:url('/motodc-logo.svg?v=4')!important}
 .themeToggle{-webkit-tap-highlight-color:transparent;outline:none!important}
 .themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{outline:none!important}
 .nav nav a.currentPage{color:#ff3157!important;position:relative;font-weight:700}
