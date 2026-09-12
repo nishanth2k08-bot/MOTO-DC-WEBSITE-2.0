@@ -2,13 +2,15 @@
 (function(){
   const update=()=>{
     const path=window.location.pathname.replace(/\/$/,'')||'/';
-    document.querySelectorAll('.nav nav a').forEach((link,index)=>{
+    const params=new URLSearchParams(window.location.search);
+    const category=params.get('category')||'';
+    document.querySelectorAll('.nav nav a').forEach(link=>{
       const label=(link.textContent||'').trim().toLowerCase();
       let active=false;
       if(label==='home')active=path==='/';
-      else if(label==='products')active=path==='/products'||(path.startsWith('/products/')&&!['/products/auto','/products/bike'].includes(path));
-      else if(label==='automobile')active=path==='/products/auto';
-      else if(label==='motorcycle')active=path==='/products/bike';
+      else if(label==='products')active=path==='/products'&&!['Automobile','Motorcycle'].includes(category)||(path.startsWith('/products/')&&!['/products/auto','/products/bike'].includes(path));
+      else if(label==='automobile')active=(path==='/products/auto')||(path==='/products'&&category==='Automobile');
+      else if(label==='motorcycle')active=(path==='/products/bike')||(path==='/products'&&category==='Motorcycle');
       else if(label==='my orders')active=path==='/orders';
       link.classList.toggle('currentPage',active);
       if(active)link.setAttribute('aria-current','page');
