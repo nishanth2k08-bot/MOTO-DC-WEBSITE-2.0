@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img" aria-label="Moto DC">
+<defs>
+ <linearGradient id="r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3157"/><stop offset="1" stop-color="#c80f35"/></linearGradient>
+ <linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff"/><stop offset="1" stop-color="#cfd3da"/></linearGradient>
+ <filter id="g" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<!-- speedometer -->
+<path d="M42 48 A78 78 0 0 1 171 38" fill="none" stroke="url(#r)" stroke-width="9" stroke-linecap="round"/>
+<path d="M48 47 A70 70 0 0 1 163 39" fill="none" stroke="#fff" stroke-width="3" opacity=".9"/>
+<g stroke="#ff3157" stroke-width="5" stroke-linecap="round"><path d="M65 34l-5-12"/><path d="M91 25l-2-13"/><path d="M118 24l3-13"/><path d="M144 31l7-11"/></g>
+<!-- motorcycle -->
+<g fill="none" stroke="url(#w)" stroke-linecap="round" stroke-linejoin="round">
+ <circle cx="70" cy="111" r="28" stroke-width="7"/>
+ <circle cx="70" cy="111" r="9" stroke="#ff3157" stroke-width="3"/>
+ <circle cx="198" cy="111" r="28" stroke-width="7"/>
+ <circle cx="198" cy="111" r="9" stroke="#ff3157" stroke-width="3"/>
+ <path d="M68 106l36-40 34 8 28 37h32l-25-35-37-17-25 7-25 25-18 8z" stroke-width="8"/>
+ <path d="M105 66l-12-21 30-12 28 20" stroke-width="7"/>
+ <path d="M151 54l25-8 15 17" stroke-width="6"/>
+ <path d="M158 52l18-18" stroke-width="5"/>
+ <path d="M176 34l14 0" stroke="#ff3157" stroke-width="5"/>
+</g>
+<path d="M18 126h212" stroke="#ff3157" stroke-width="4" stroke-linecap="round" filter="url(#g)"/>
+<!-- speed trails -->
+<path d="M5 92h48M14 105h38M25 119h28" stroke="#ff3157" stroke-width="5" stroke-linecap="round" opacity=".95"/>
+<!-- wordmark -->
+<text x="238" y="100" font-family="Sora,Inter,Arial,sans-serif" font-size="68" font-weight="800" font-style="italic" letter-spacing="-4" fill="url(#w)">Moto</text>
+<text x="386" y="100" font-family="Sora,Inter,Arial,sans-serif" font-size="68" font-weight="900" font-style="italic" letter-spacing="-4" fill="url(#r)">DC</text>
+<path d="M390 115h105M397 124h88" stroke="#ff3157" stroke-width="5" stroke-linecap="round"/>
+</svg>
