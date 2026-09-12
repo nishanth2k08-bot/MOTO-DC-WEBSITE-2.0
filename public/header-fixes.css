@@ -14,6 +14,20 @@
 .wishlistNav.currentPage,.cart.currentPage,.account.currentPage{color:#ff3157!important}
 .wishlistNav.currentPage::after,.cart.currentPage::after,.account.currentPage::after{content:"";position:absolute;left:50%;bottom:-4px;width:5px;height:5px;border-radius:50%;background:#ff3157;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,49,87,.55)}
 .light-theme .nav nav a.currentPage{color:#ff3157!important}
+
+/* Desktop-only menu hover motion. Mobile keeps the separate hamburger menu untouched. */
+@media(min-width:851px){
+  .nav nav{isolation:isolate}
+  .nav nav a{position:relative!important;display:inline-flex!important;align-items:center!important;transition:color .22s ease,transform .22s cubic-bezier(.22,1,.36,1),background-color .22s ease!important}
+  .nav nav a::before{content:"";position:absolute;left:50%;right:50%;bottom:-9px;height:2px;border-radius:99px;background:#ff3157;opacity:0;transform:translateX(-50%) scaleX(.2);transform-origin:center;transition:all .25s cubic-bezier(.22,1,.36,1);box-shadow:0 0 10px rgba(255,49,87,.4);pointer-events:none}
+  .nav nav a:hover{color:#ff3157!important;transform:translateY(-2px)}
+  .nav nav a:hover::before{left:8px;right:8px;opacity:1;transform:translateX(0) scaleX(1)}
+  .nav nav a.currentPage:hover{transform:translateY(-2px)}
+  .nav nav a.currentPage::before{opacity:0!important}
+  .nav nav a.currentPage::after{transition:transform .22s ease,box-shadow .22s ease}
+  .nav nav a.currentPage:hover::after{box-shadow:0 0 14px rgba(255,49,87,.65);transform:scaleX(1.06)}
+}
+
 @media(max-width:850px){
   .logo{gap:7px!important;font-size:19px!important;letter-spacing:-1px!important}
   .logo::before{width:28px;height:28px;border-radius:8px;font-size:13px}
