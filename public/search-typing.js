@@ -1,10 +1,13 @@
 (()=>{
   const phrases=[
-    "Type your part. Skip the guesswork.",
-    "Search parts... find your next 100 km/h.",
-    "From bolts to beasts — what are we hunting today?",
-    "Type it. We'll track it down.",
-    "Every great ride starts with the right part."
+    "Find the right part.",
+    "Parts. Sorted.",
+    "Ride. Repair. Repeat.",
+    "Search. Find. Ride.",
+    "Built for every ride.",
+    "Your ride, your parts.",
+    "Parts for the road ahead.",
+    "Ready for the next ride?"
   ];
   const speed=85,eraseSpeed=45,pause=1500;
   let timer=null,stopped=false;
