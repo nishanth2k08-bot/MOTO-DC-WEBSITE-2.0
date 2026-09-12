@@ -1,0 +1,6 @@
+/* Final MotoDC logo override: use the real binary logo asset already in public/. */
+.logo{background-image:url('/motodc-logo.webp?v=6')!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;color:transparent!important}
+.light-theme .logo{background-image:url('/motodc-logo.webp?v=6')!important;color:transparent!important}
+.logo span,.logo::before,.logo::after{display:none!important;content:none!important}
+/* The admin page already uses the shared Header; remove the old temporary pseudo-logo. */
+.admin::before{display:none!important;content:none!important}
