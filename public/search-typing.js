@@ -1,13 +1,15 @@
 (()=>{
   const phrases=[
-    "Find the right part.",
-    "Parts. Sorted.",
-    "Ride. Repair. Repeat.",
-    "Search. Find. Ride.",
-    "Built for every ride.",
-    "Your ride, your parts.",
-    "Parts for the road ahead.",
-    "Ready for the next ride?"
+    "Find your part.",
+    "Ride starts here.",
+    "Parts made easy.",
+    "Keep riding.",
+    "Built to ride.",
+    "Ride. Ready.",
+    "Need a part?",
+    "Your ride. Sorted.",
+    "Power your ride.",
+    "Part found. Ride on."
   ];
   const speed=85,eraseSpeed=45,pause=1500;
   let timer=null,stopped=false;
