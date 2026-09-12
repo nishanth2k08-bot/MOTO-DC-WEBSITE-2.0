@@ -1,10 +1,9 @@
-/* Header interaction fixes + modern MotoDC branding */
-.logo{color:#fff!important;display:inline-flex!important;align-items:center!important;gap:0!important;font-size:0!important;line-height:0!important;letter-spacing:0!important;white-space:nowrap!important;text-decoration:none!important;position:relative!important;width:180px!important;height:52px!important;background:url('/motodc-logo.svg') center/contain no-repeat!important;transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s ease!important}
-.logo::before,.logo::after{content:none!important;display:none!important}
+/* Header interaction fixes + MotoDC logo */
+.logo{color:transparent!important;display:block!important;width:205px!important;height:59px!important;flex:0 0 205px!important;font-size:0!important;line-height:0!important;letter-spacing:0!important;white-space:nowrap!important;text-decoration:none!important;position:relative!important;overflow:visible!important;background:url('/motodc-logo.svg') center/contain no-repeat!important;transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s ease!important}
 .logo span{display:none!important}
+.logo::before,.logo::after{content:none!important;display:none!important}
 .logo:hover{transform:translateY(-2px);filter:brightness(1.08) drop-shadow(0 7px 18px rgba(255,49,87,.18))}
-.light-theme .logo{filter:none!important}
-.light-theme .logo:hover{filter:brightness(1.05) drop-shadow(0 7px 18px rgba(255,49,87,.12))!important}
+.light-theme .logo{color:transparent!important;background-image:url('/motodc-logo.svg')!important}
 .themeToggle{-webkit-tap-highlight-color:transparent;outline:none!important}
 .themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{outline:none!important}
 .nav nav a.currentPage{color:#ff3157!important;position:relative;font-weight:700}
@@ -12,8 +11,6 @@
 .wishlistNav.currentPage,.cart.currentPage,.account.currentPage{color:#ff3157!important}
 .wishlistNav.currentPage::after,.cart.currentPage::after,.account.currentPage::after{content:"";position:absolute;left:50%;bottom:-4px;width:5px;height:5px;border-radius:50%;background:#ff3157;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,49,87,.55)}
 .light-theme .nav nav a.currentPage{color:#ff3157!important}
-
-/* Desktop-only menu hover motion. Mobile keeps the separate hamburger menu untouched. */
 @media(min-width:851px){
   .nav nav{isolation:isolate}
   .nav nav a{position:relative!important;display:inline-flex!important;align-items:center!important;transition:color .22s ease,transform .22s cubic-bezier(.22,1,.36,1),background-color .22s ease!important}
@@ -25,7 +22,6 @@
   .nav nav a.currentPage::after{transition:transform .22s ease,box-shadow .22s ease}
   .nav nav a.currentPage:hover::after{box-shadow:0 0 14px rgba(255,49,87,.65);transform:scaleX(1.06)}
 }
-
 @media(max-width:850px){
   .logo{width:132px!important;height:40px!important;flex:0 0 132px!important}
   .themeToggle:hover,.themeToggle:focus,.themeToggle:focus-visible,.themeToggle:active{transform:none!important;outline:none!important;box-shadow:0 8px 30px rgba(0,0,0,.25)!important}
