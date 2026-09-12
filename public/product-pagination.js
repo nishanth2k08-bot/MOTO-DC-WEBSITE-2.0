@@ -3,7 +3,7 @@
  let scanTimer=0,lockedUntil=0;
  const getItems=(c,t)=>[...c.querySelectorAll(t==='admin'?':scope > .adminproduct':':scope > .card')];
  const signature=items=>items.map(x=>x.querySelector('h3')?.textContent?.trim()||x.textContent.trim().slice(0,120)).join('|');
- const findNav=c=>c.querySelector(':scope > .productPagination');
+ const findNav=c=>c.parentElement?.querySelector(`:scope > .productPagination[data-owner="${c.classList.contains('adminlist')?'admin':'catalog'}"]`);
  const applyPage=(c,items,type,page)=>{
   const size=PAGE_SIZE[type],total=Math.max(1,Math.ceil(items.length/size));
   page=Math.max(1,Math.min(page,total));c.dataset.paginationPage=page;
@@ -23,13 +23,13 @@
   const total=Math.max(1,Math.ceil(items.length/PAGE_SIZE[type]));page=Math.max(1,Math.min(page,total));
   let nav=findNav(c);
   if(!nav){
-   nav=document.createElement('div');nav.className='productPagination';nav.dataset.ownerType=type;
+   nav=document.createElement('div');nav.className='productPagination';nav.dataset.owner=type;
    const info=document.createElement('span');info.className='productPageInfo';nav.appendChild(info);
    const controls=document.createElement('div');controls.className='productPageControls';controls.appendChild(makeButton('‹','prev',true,false));
    const start=Math.max(1,Math.min(page-2,total-4)),end=Math.min(total,start+4);
    for(let p=start;p<=end;p++)controls.appendChild(makeButton(String(p),String(p),false,p===page));
    controls.appendChild(makeButton('›','next',true,false));nav.appendChild(controls);
-   c.appendChild(nav);
+   c.insertAdjacentElement('afterend',nav);
   }
   applyPage(c,items,type,page);
  };
@@ -42,10 +42,10 @@
   const b=e.target.closest('.productPageBtn');if(!b||b.disabled)return;
   e.preventDefault();e.stopPropagation();
   const nav=b.closest('.productPagination');if(!nav)return;
-  const type=nav.dataset.ownerType||'catalog';
-  const c=type==='admin'?nav.parentElement:nav.previousElementSibling;if(!c)return;
+  const c=nav.previousElementSibling;if(!c)return;
+  const type=nav.dataset.owner||'catalog';
   const items=getItems(c,type);if(!items.length)return;
-  const total=Math.ceil(items.length/PAGE_SIZE[type]);let page=Number(c.dataset.paginationPage||1),a=b.dataset.pageAction;
+  let page=Number(c.dataset.paginationPage||1),a=b.dataset.pageAction;
   if(a==='prev')page--;else if(a==='next')page++;else page=Number(a);
   lockedUntil=Date.now()+700;applyPage(c,items,type,page);
   setTimeout(()=>{if(Date.now()>=lockedUntil)scan()},800);
