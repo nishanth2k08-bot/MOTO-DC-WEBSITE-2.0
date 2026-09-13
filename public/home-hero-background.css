@@ -1,11 +1,12 @@
 .hero{position:relative;left:50%;transform:translateX(-50%);width:100vw;max-width:none!important;height:calc(100vh - 72px);min-height:560px;margin:0;padding:0 max(22px,calc((100vw - 1200px)/2 + 22px));display:flex;align-items:center;overflow:hidden;background:#101114 url('/motodc-hero.jpg') center center/cover no-repeat!important}
-.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,7,10,.72) 0%,rgba(5,7,10,.48) 28%,rgba(5,7,10,.12) 58%,rgba(5,7,10,.04) 100%);z-index:0;pointer-events:none}
+.hero::before{display:none!important}
 .heroVisual{display:none!important}
 .hero>div:first-child{position:relative;z-index:2;width:100%;max-width:650px;padding:0;margin:0;transform:translateY(-5px)}
 .hero h1{margin-bottom:20px}
 .hero p:not(.eyebrow){max-width:590px}
 .hero .eyebrow,.hero h1,.hero p:not(.eyebrow),.hero .heroBtn{position:relative;z-index:2}
-.stats{position:relative;z-index:5;max-width:1200px;margin:0 auto;background:rgba(7,9,13,.82);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden}
+.stats{position:relative;z-index:5;max-width:1200px;margin:0 auto;background:transparent!important;backdrop-filter:none!important;border:1px solid rgba(255,255,255,.09);border-radius:0;overflow:hidden}
 .stats div{padding:24px 10px;border-right:1px solid rgba(255,255,255,.08)}
+.search svg{display:block!important;visibility:visible!important;opacity:1!important;flex:0 0 17px;color:#c7cbd4!important;stroke:currentColor!important}
 @media(max-width:850px){.hero{left:50%;transform:translateX(-50%);width:100vw;height:calc(100svh - 72px);min-height:520px;padding:0 22px;background-position:58% center!important}.hero>div:first-child{max-width:100%;transform:translateY(5px)}.stats{margin:0 16px}.stats div{padding:20px 8px}}
-@media(max-width:520px){.hero{height:calc(100svh - 72px);min-height:500px;padding:0 16px;background-position:60% center!important}.hero>div:first-child{transform:translateY(0)}.stats{margin:0 10px;border-radius:12px}.stats div{padding:17px 5px}.stats b{font-size:18px}.stats span{font-size:10px}}
+@media(max-width:520px){.hero{height:calc(100svh - 72px);min-height:500px;padding:0 16px;background-position:60% center!important}.hero>div:first-child{transform:translateY(0)}.stats{margin:0 10px;border-radius:0}.stats div{padding:17px 5px}.stats b{font-size:18px}.stats span{font-size:10px}}
