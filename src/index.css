@@ -20,3 +20,15 @@
   object-position: center;
   border-radius: 24px;
 }
+
+/* Full-bleed homepage hero background: continues behind the navbar and stats. */
+body:has(.hero){background:#07090d}
+body:has(.hero) header{position:absolute;top:0;left:0;right:0;background:rgba(7,9,13,.18);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+main:has(.hero){position:relative;isolation:isolate}
+main:has(.hero)::before{content:"";position:absolute;z-index:-1;top:0;left:0;right:0;height:700px;background-image:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(0,0,0,.06) 45%,rgba(7,9,13,.34) 100%),url('/motodc-hero.jpg');background-size:cover;background-position:center top;background-repeat:no-repeat}
+main:has(.hero) .hero{max-width:1200px;min-height:540px;padding-top:120px;padding-bottom:65px;grid-template-columns:1fr;position:relative;z-index:1}
+main:has(.hero) .heroVisual{display:none}
+main:has(.hero) .hero p:not(.eyebrow){color:#e1e5eb}
+main:has(.hero) .stats{max-width:1200px;position:relative;z-index:1;background:rgba(7,9,13,.28);backdrop-filter:blur(7px);border-block-color:rgba(255,255,255,.16)}
+main:has(.hero) .stats div{border-right-color:rgba(255,255,255,.13)}
+@media(max-width:850px){body:has(.hero) header{background:rgba(7,9,13,.32)}main:has(.hero)::before{height:720px;background-position:center top}main:has(.hero) .hero{padding-top:105px;padding-bottom:55px}}
