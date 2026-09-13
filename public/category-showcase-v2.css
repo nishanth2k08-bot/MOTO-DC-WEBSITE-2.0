@@ -1,0 +1,10 @@
+.categories{grid-template-columns:1fr 1fr;gap:18px}
+.categories button{position:relative;min-height:274px;padding:30px;text-align:left;display:block;overflow:hidden;border:1px solid #252933;border-radius:18px;background-color:#0d1016;background-repeat:no-repeat;background-size:cover;background-position:center;box-shadow:inset 0 -90px 100px rgba(4,6,10,.35);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;cursor:pointer}
+.categories button:first-child{background-image:url('/category-automobile.svg')}
+.categories button:nth-child(2){background-image:url('/category-motorcycle.svg');border-color:#ff3157}
+.categories button:hover{transform:translateY(-4px);border-color:#ff3157;box-shadow:inset 0 -90px 100px rgba(4,6,10,.12),0 18px 45px rgba(255,49,87,.14)}
+.categories button>*{visibility:hidden!important}
+.categories button::after{content:'Explore Parts  →';position:absolute;left:30px;bottom:28px;color:#ff3157;font:700 14px Sora,sans-serif;visibility:visible;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.light-theme .categories button{background-color:#fff!important}
+@media(max-width:850px){.categories{grid-template-columns:1fr;gap:14px}.categories button{min-height:210px;padding:22px;background-size:cover}.categories button::after{left:22px;bottom:22px;font-size:13px}.categories button:nth-child(2){border-color:#ff3157}}
+@media(max-width:520px){.categories button{min-height:190px;border-radius:16px}.categories button::after{left:18px;bottom:18px;font-size:12px}}
