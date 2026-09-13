@@ -1,5 +1,13 @@
 (()=>{
   document.addEventListener('click',e=>{
+    const homeButton=e.target.closest('.orderSuccess .secondaryBtn');
+    if(homeButton){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      // Start a clean app load so the home page never inherits checkout state.
+      window.location.assign('/');
+      return;
+    }
     const link=e.target.closest('.nav nav a');
     if(!link)return;
     const label=link.textContent.trim().toLowerCase();
