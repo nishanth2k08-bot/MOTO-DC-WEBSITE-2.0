@@ -49,7 +49,11 @@ export default async function handler(req,res){
       isNewUser=true;
     }
 
-    if(isNewUser&&!name)return send(res,200,{ok:false,needsName:true,phone});
+    if(isNewUser&&!name){
+      user=await a.auth().createUser({phoneNumber:phone});
+      const customToken=await a.auth().createCustomToken(user.uid,{phone_verified:true});
+      return send(res,200,{ok:false,needsName:true,customToken,uid:user.uid,phone});
+    }
 
     if(isNewUser){
       user=await a.auth().createUser({phoneNumber:phone,displayName:name});
