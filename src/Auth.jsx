@@ -40,7 +40,7 @@ function loadMsg91Widget(){
 export default function Auth(){
  const nav=useNavigate();
  const otpRefs=useRef([]);
- const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[mode,setMode]=useState('signin'),[method,setMethod]=useState('email'),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[phone,setPhone]=useState(''),[code,setCode]=useState(''),[otpDigits,setOtpDigits]=useState(Array(6).fill('')),[confirmation,setConfirmation]=useState(false),[needsName,setNeedsName]=useState(false),[accessToken,setAccessToken]=useState(''),[reqId,setReqId]=useState(''),[busy,setBusy]=useState(false),[widgetReady,setWidgetReady]=useState(false);
+ const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[mode,setMode]=useState('signin'),[method,setMethod]=useState('email'),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[phone,setPhone]=useState(''),[code,setCode]=useState(''),[otpDigits,setOtpDigits]=useState(Array(6).fill('')),[confirmation,setConfirmation]=useState(false),[needsName,setNeedsName]=useState(false),[pendingCustomToken,setPendingCustomToken]=useState(''),[reqId,setReqId]=useState(''),[busy,setBusy]=useState(false),[widgetReady,setWidgetReady]=useState(false);
 
  useEffect(()=>onAuthStateChanged(auth,u=>{setUser(u);setChecking(false)}),[]);
  useEffect(()=>{
@@ -57,7 +57,7 @@ export default function Auth(){
  },[]);
  useEffect(()=>{if(confirmation)setTimeout(()=>otpRefs.current[0]?.focus(),50)},[confirmation]);
 
- function resetOtp(){setCode('');setOtpDigits(Array(6).fill(''));setConfirmation(false);setNeedsName(false);setAccessToken('');setReqId('')}
+ function resetOtp(){setCode('');setOtpDigits(Array(6).fill(''));setConfirmation(false);setNeedsName(false);setPendingCustomToken('');setReqId('')}
  function updateOtp(next){setOtpDigits(next);setCode(next.join(''))}
  function handleOtpChange(index,value){const digit=value.replace(/\D/g,'').slice(-1),next=[...otpDigits];next[index]=digit;updateOtp(next);if(digit&&index<5)otpRefs.current[index+1]?.focus()}
  function handleOtpKeyDown(index,e){
@@ -145,14 +145,20 @@ export default function Auth(){
   }finally{setBusy(false)}
  }
 
- async function finishPhoneSignIn(token,nameValue=''){
-  const response=await fetch('/api/verify-msg91-token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone.trim(),accessToken:token,name:nameValue.trim()})});
+ async function finishPhoneSignIn(token){
+  const response=await fetch('/api/verify-msg91-token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone.trim(),accessToken:token})});
   const data=await response.json().catch(()=>({}));
   if(!response.ok||(!data.ok&&!data.needsName))throw new Error(data.error||'Could not complete phone sign-in');
-  if(data.needsName){setAccessToken(token);setNeedsName(true);setName('');return false}
+  if(data.needsName){
+   if(!data.customToken)throw new Error('Could not prepare your account. Please try again.');
+   setPendingCustomToken(data.customToken);
+   setNeedsName(true);
+   setName('');
+   return false;
+  }
   await signInWithCustomToken(auth,data.customToken);
   const current=auth.currentUser;
-  if(current)await saveUserProfile(current,data.name||nameValue.trim());
+  if(current)await saveUserProfile(current,data.name||'');
   return true;
  }
 
@@ -177,10 +183,14 @@ export default function Auth(){
  async function submitPhoneName(e){
   e.preventDefault();
   if(!name.trim()){toast.error('Please enter your name');return}
-  if(!accessToken){toast.error('Verification session expired. Please request a new code.');resetOtp();return}
+  if(!pendingCustomToken){toast.error('Verification session expired. Please request a new code.');resetOtp();return}
   setBusy(true);
   try{
-   await finishPhoneSignIn(accessToken,name);
+   await signInWithCustomToken(auth,pendingCustomToken);
+   const current=auth.currentUser;
+   if(!current)throw new Error('Could not sign in to your new account');
+   await updateProfile(current,{displayName:name.trim()});
+   await saveUserProfile(current,name.trim());
    toast.success('Account created. Welcome to MotoDC!');
    resetOtp();
    setTimeout(()=>nav('/',{replace:true}),350);
