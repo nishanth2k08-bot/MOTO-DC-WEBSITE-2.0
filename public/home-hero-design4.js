@@ -1,15 +1,38 @@
 (()=>{
-  const css=`
-    .heroVisual .orb.heroPlaceholder{width:310px;height:310px;border-radius:50%;display:grid;place-items:center;font:800 70px Sora;color:#ff3157;background:radial-gradient(circle,#29202a,#0e1118 65%);box-shadow:0 0 100px rgba(255,49,87,.15);border:1px solid #302630}
-    @media(max-width:850px){.heroVisual .orb.heroPlaceholder{display:none}}
-  `;
-  const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
-  function mount(){
-    const o=document.querySelector('.heroVisual .orb');
-    if(!o)return setTimeout(mount,300);
-    o.className='orb heroPlaceholder';
-    o.removeAttribute('style');
-    o.innerHTML='MDC';
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+const css=`
+.heroVisual .orb.heroAdventure{width:min(680px,50vw);height:min(470px,35vw);min-width:500px;min-height:350px;position:relative;display:block;border:0;border-radius:24px;overflow:hidden;background:#17191b;box-shadow:0 28px 80px rgba(0,0,0,.55)}
+.heroAdventure .scene{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#d98a52 0%,#f2bd78 38%,#756052 60%,#202326 100%)}
+.heroAdventure .sun{position:absolute;width:82px;height:82px;left:48%;top:23%;border-radius:50%;background:#fff0bd;box-shadow:0 0 55px 18px rgba(255,221,146,.45)}
+.heroAdventure .mountain{position:absolute;left:-10%;right:-10%;bottom:25%;height:48%;background:#4a3b3b;clip-path:polygon(0 76%,15% 42%,27% 62%,42% 22%,54% 58%,67% 31%,80% 64%,91% 40%,100% 70%,100% 100%,0 100%)}
+.heroAdventure .mountain.back{bottom:31%;height:39%;opacity:.48;background:#795b50}
+.heroAdventure .road{position:absolute;left:-10%;right:-10%;bottom:-8%;height:43%;background:linear-gradient(180deg,#45403d,#111315);clip-path:polygon(29% 0,71% 0,100% 100%,0 100%)}
+.heroAdventure .road:after{content:"";position:absolute;left:49.5%;top:2%;width:5px;height:100%;background:repeating-linear-gradient(180deg,rgba(255,255,255,.65) 0 22px,transparent 22px 52px);transform:skewX(-2deg)}
+.heroAdventure .label{position:absolute;right:6%;top:7%;z-index:8;text-align:center;font:italic 700 28px Georgia;color:#151719;transform:rotate(-4deg)}
+.heroAdventure .label b{display:block;color:#ff3157;font:900 8px Arial;letter-spacing:4px;margin-top:8px}
+.heroAdventure .bike{position:absolute;right:21%;bottom:10%;width:49%;height:67%;z-index:5;filter:drop-shadow(0 20px 15px rgba(0,0,0,.8));transition:transform .2s ease}
+.heroAdventure .bw{position:absolute;bottom:0;width:30%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#b9bdbe 0 7%,#3b4042 9% 20%,#090a0b 22% 65%,#767a7b 67% 69%,#070809 71%);border:6px solid #090a0b}
+.heroAdventure .bw1{left:3%}.heroAdventure .bw2{right:0}
+.heroAdventure .frame{position:absolute;left:20%;top:44%;width:52%;height:23%;border:9px solid #25292b;border-top-color:#a92b35;border-radius:8px;transform:skewX(-12deg) rotate(-5deg)}
+.heroAdventure .tank{position:absolute;left:25%;top:25%;width:44%;height:26%;border-radius:55% 30% 45% 35%;background:linear-gradient(145deg,#555b5d,#090b0d 65%);border:2px solid #777b7b;transform:rotate(-7deg);box-shadow:inset 0 5px 12px rgba(255,255,255,.13)}
+.heroAdventure .tank:after{content:"MOTO DC";position:absolute;right:10%;bottom:16%;font:900 9px Arial;color:#ff3157;letter-spacing:1px}
+.heroAdventure .seat{position:absolute;left:38%;top:18%;width:31%;height:10%;border-radius:50%;background:#101214;border:1px solid #5a5d5e}
+.heroAdventure .fork{position:absolute;right:14%;top:28%;width:5%;height:48%;border-radius:4px;background:linear-gradient(90deg,#202427,#d6d8d7,#363a3b);transform:rotate(-13deg)}
+.heroAdventure .bar{position:absolute;right:7%;top:20%;width:30%;height:10%;border-top:5px solid #17191b;border-radius:50%;transform:rotate(-7deg)}
+.heroAdventure .lamp{position:absolute;right:2%;top:29%;width:12%;aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff,0 0 28px rgba(255,49,87,.75)}
+.heroAdventure .rider{position:absolute;right:35%;top:2%;width:23%;height:52%;z-index:6;filter:drop-shadow(0 10px 8px #000)}
+.heroAdventure .helmet{position:absolute;left:27%;top:0;width:43%;height:20%;border-radius:50%;background:linear-gradient(145deg,#4d5355,#08090a 70%);border:2px solid #777c7d}
+.heroAdventure .body{position:absolute;left:18%;top:17%;width:64%;height:50%;border-radius:28% 30% 14% 16%;background:linear-gradient(100deg,#202427,#050607);border:1px solid #474b4d}
+.heroAdventure .arm{position:absolute;top:27%;width:17%;height:35%;background:#111315;border-radius:12px}.heroAdventure .arm.a{left:8%;transform:rotate(24deg)}.heroAdventure .arm.b{right:8%;transform:rotate(-24deg)}
+.heroAdventure .leg{position:absolute;top:57%;width:20%;height:43%;background:#101214;border-radius:15px}.heroAdventure .leg.a{left:28%;transform:rotate(9deg)}.heroAdventure .leg.b{right:24%;transform:rotate(-10deg)}
+.heroAdventure .car{position:absolute;right:-3%;bottom:16%;width:58%;height:35%;z-index:4;filter:drop-shadow(0 20px 15px #000);transition:transform .2s ease}
+.heroAdventure .carbody{position:absolute;inset:23% 2% 8%;border-radius:30% 14% 12% 10%;background:linear-gradient(160deg,#42484b,#080a0c 68%);border:1px solid #85898a;box-shadow:inset 0 8px 16px rgba(255,255,255,.12)}
+.heroAdventure .roof{position:absolute;left:28%;top:0;width:49%;height:49%;background:linear-gradient(145deg,#303639,#050607);clip-path:polygon(14% 100%,27% 8%,72% 0,92% 100%)}
+.heroAdventure .window{position:absolute;left:34%;top:8%;width:38%;height:31%;background:linear-gradient(145deg,#53616a,#101418);clip-path:polygon(8% 100%,20% 8%,77% 2%,94% 100%)}
+.heroAdventure .light{position:absolute;right:1%;top:48%;width:15%;height:14%;border-radius:60% 20% 50% 20%;background:#f4fafc;box-shadow:0 0 13px #fff,0 0 24px rgba(255,49,87,.65)}
+.heroAdventure .cw{position:absolute;bottom:0;width:25%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#c5c8c8 0 8%,#44494b 10% 20%,#080a0b 22% 64%,#6b7071 66% 69%,#050607 71%);border:6px solid #070809}.heroAdventure .cw1{left:13%}.heroAdventure .cw2{right:10%}
+.heroAdventure .stats{position:absolute;z-index:9;left:4%;right:4%;bottom:3%;height:62px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(8,10,12,.84);backdrop-filter:blur(10px);display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}.heroAdventure .stats div{text-align:center;padding-top:10px;border-right:1px solid rgba(255,255,255,.1);font:800 19px Arial;color:#fff}.heroAdventure .stats div:last-child{border:0}.heroAdventure .stats small{display:block;font:500 9px Arial;color:#aab0b4;margin-top:4px}
+@media(max-width:850px){.heroVisual .orb.heroAdventure{display:none}}
+`;
+const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
+function mount(){const o=document.querySelector('.heroVisual .orb');if(!o)return setTimeout(mount,300);o.className='orb heroAdventure';o.innerHTML='<div class="scene"><div class="sun"></div><div class="mountain back"></div><div class="mountain"></div><div class="road"></div><div class="label">More Roads<br>More Stories<b>MOTO DC • ADVENTURE</b></div><div class="bike"><div class="bw bw1"></div><div class="bw bw2"></div><div class="frame"></div><div class="tank"></div><div class="seat"></div><div class="fork"></div><div class="bar"></div><div class="lamp"></div></div><div class="rider"><div class="helmet"></div><div class="body"></div><div class="arm a"></div><div class="arm b"></div><div class="leg a"></div><div class="leg b"></div></div><div class="car"><div class="carbody"></div><div class="roof"></div><div class="window"></div><div class="light"></div><div class="cw cw1"></div><div class="cw cw2"></div></div><div class="stats"><div>5,000+<small>Products</small></div><div>12,000+<small>Customers</small></div><div>150+<small>Brands</small></div><div>4.8/5<small>Average rating</small></div></div></div>';const v=o.closest('.heroVisual');if(v){v.addEventListener('pointermove',e=>{const r=v.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;o.querySelector('.bike').style.transform='translate('+x*7+'px,'+y*4+'px)';o.querySelector('.car').style.transform='translate('+x*-5+'px,'+y*-3+'px)'})}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
