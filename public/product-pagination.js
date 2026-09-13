@@ -3,7 +3,9 @@
  let scanTimer=0,lockedUntil=0;
  const getItems=(c,t)=>[...c.querySelectorAll(t==='admin'?':scope > .adminproduct':':scope > .card')];
  const signature=items=>items.map(x=>x.querySelector('h3')?.textContent?.trim()||x.textContent.trim().slice(0,120)).join('|');
- const findNav=c=>c.parentElement?.querySelector(`:scope > .productPagination[data-owner="${c.classList.contains('adminlist')?'admin':'catalog'}"]`);
+ const findNav=c=>c.classList.contains('adminlist')
+  ?c.querySelector(':scope > .productPagination[data-owner="admin"]')
+  :c.parentElement?.querySelector(`:scope > .productPagination[data-owner="catalog"]`);
  const applyPage=(c,items,type,page)=>{
   const size=PAGE_SIZE[type],total=Math.max(1,Math.ceil(items.length/size));
   page=Math.max(1,Math.min(page,total));c.dataset.paginationPage=page;
@@ -29,21 +31,23 @@
    const start=Math.max(1,Math.min(page-2,total-4)),end=Math.min(total,start+4);
    for(let p=start;p<=end;p++)controls.appendChild(makeButton(String(p),String(p),false,p===page));
    controls.appendChild(makeButton('›','next',true,false));nav.appendChild(controls);
-   c.insertAdjacentElement('afterend',nav);
+   c.appendChild(nav);
   }
   applyPage(c,items,type,page);
  };
  const scan=()=>{
   if(Date.now()<lockedUntil)return;
   const toolbar=document.querySelector('.filterToolbar'),grid=toolbar?.parentElement?.querySelector(':scope > .grid');
-  if(grid)render(grid,'catalog');document.querySelectorAll('.adminlist').forEach(x=>render(x,'admin'));
+  if(grid)render(grid,'catalog');
+  document.querySelectorAll('.adminlist').forEach(x=>render(x,'admin'));
  };
  document.addEventListener('click',e=>{
   const b=e.target.closest('.productPageBtn');if(!b||b.disabled)return;
   e.preventDefault();e.stopPropagation();
   const nav=b.closest('.productPagination');if(!nav)return;
-  const c=nav.previousElementSibling;if(!c)return;
   const type=nav.dataset.owner||'catalog';
+  const c=type==='admin'?nav.closest('.adminlist'):nav.previousElementSibling;
+  if(!c)return;
   const items=getItems(c,type);if(!items.length)return;
   let page=Number(c.dataset.paginationPage||1),a=b.dataset.pageAction;
   if(a==='prev')page--;else if(a==='next')page++;else page=Number(a);
