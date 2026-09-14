@@ -31,7 +31,7 @@
    const start=Math.max(1,Math.min(page-2,total-4)),end=Math.min(total,start+4);
    for(let p=start;p<=end;p++)controls.appendChild(makeButton(String(p),String(p),false,p===page));
    controls.appendChild(makeButton('›','next',true,false));nav.appendChild(controls);
-   c.appendChild(nav);
+   c.insertAdjacentElement('afterend', nav);
   }
   applyPage(c,items,type,page);
  };
