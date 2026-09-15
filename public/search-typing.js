@@ -29,7 +29,44 @@
   link.addEventListener('click',e=>{e.preventDefault();section.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','#about-us');nav.classList.remove('open')});
   nav.appendChild(link);
  }
- function init(){start();addAboutSection();addAboutNav()}
+ function addScrollAnimations(){
+  if(location.pathname!=='/'||document.documentElement.dataset.motodcScrollAnimations)return;
+  document.documentElement.dataset.motodcScrollAnimations='true';
+  const link=document.createElement('link');link.rel='stylesheet';link.href='/scroll-animations.css';document.head.appendChild(link);
+  const main=document.querySelector('main');if(!main)return;
+  main.classList.add('motodc-scroll-animations');
+  const hero=main.querySelector('.hero');
+  if(hero){
+   hero.classList.add('motodc-scroll-parallax');
+   let ticking=false;
+   const updateParallax=()=>{
+    ticking=false;
+    if(!hero.isConnected)return;
+    const rect=hero.getBoundingClientRect(),y=Math.max(-70,Math.min(0,-rect.top*.16));
+    main.style.setProperty('--hero-parallax-y',`${y}px`);
+   };
+   const onScroll=()=>{if(!ticking){ticking=true;requestAnimationFrame(updateParallax)}};
+   addEventListener('scroll',onScroll,{passive:true});updateParallax();
+  }
+  const selectors=[
+   '.hero ~ section:not(.stats):not(.aboutUsSection)',
+   '.featured','.newArrivals','.bestSellers','.services','.testimonials','.newsletter',
+   '.categoriesSection'
+  ];
+  const fadeTargets=[];
+  selectors.forEach(selector=>document.querySelectorAll(selector).forEach(el=>{if(!el.classList.contains('motodc-scroll-fade')){el.classList.add('motodc-scroll-fade');fadeTargets.push(el)}}));
+  document.querySelectorAll('.categories').forEach(el=>{
+   el.classList.add('motodc-scroll-stagger');
+   Array.from(el.children).forEach((child,i)=>child.style.setProperty('--stagger-delay',`${i*120}ms`));
+  });
+  const about=document.querySelector('.aboutUsSection');if(about)about.classList.add('motodc-scroll-scale');
+  const targets=[...fadeTargets,...document.querySelectorAll('.motodc-scroll-stagger,.aboutUsSection.motodc-scroll-scale')];
+  if(!targets.length)return;
+  if(!('IntersectionObserver' in window)){targets.forEach(el=>el.classList.add('is-visible'));return}
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.14,rootMargin:'0px 0px -8% 0px'});
+  targets.forEach(el=>observer.observe(el));
+ }
+ function init(){start();addAboutSection();addAboutNav();addScrollAnimations()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,300));else setTimeout(init,300);
- new MutationObserver(()=>{addAboutSection();addAboutNav()}).observe(document.documentElement,{childList:true,subtree:true});
+ new MutationObserver(()=>{addAboutSection();addAboutNav();addScrollAnimations()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
