@@ -1,10 +1,11 @@
 (()=>{
  const PAGE_SIZE={catalog:12,admin:10};
  let scanTimer=0,lockedUntil=0;
+ const isAdminPage=()=>location.pathname.replace(/\/$/,'')==='/admin';
  const getItems=(c,t)=>[...c.querySelectorAll(t==='admin'?':scope > .adminproduct':':scope > .card')];
  const signature=items=>items.map(x=>x.querySelector('h3')?.textContent?.trim()||x.textContent.trim().slice(0,120)).join('|');
  const findNav=c=>c.classList.contains('adminlist')
-  ?document.getElementById('adminProductPagination')
+  ?c.querySelector(':scope > #adminProductPagination')
   :c.parentElement?.querySelector(`:scope > .productPagination[data-owner="catalog"]`);
  const applyPage=(c,items,type,page)=>{
   const size=PAGE_SIZE[type],total=Math.max(1,Math.ceil(items.length/size));
@@ -26,8 +27,8 @@
   let nav=findNav(c);
   if(type==='admin'){
    document.querySelectorAll('.productPagination[data-owner="admin"]').forEach(n=>{if(n.id!=='adminProductPagination')n.remove()});
+   nav=findNav(c);
   }
-  nav=findNav(c);
   if(!nav){
    nav=document.createElement('div');nav.className='productPagination';nav.dataset.owner=type;
    if(type==='admin')nav.id='adminProductPagination';
@@ -36,22 +37,26 @@
    const start=Math.max(1,Math.min(page-2,total-4)),end=Math.min(total,start+4);
    for(let p=start;p<=end;p++)controls.appendChild(makeButton(String(p),String(p),false,p===page));
    controls.appendChild(makeButton('›','next',true,false));nav.appendChild(controls);
-   c.insertAdjacentElement('afterend',nav);
+   if(type==='admin')c.appendChild(nav);else c.insertAdjacentElement('afterend',nav);
   }
   applyPage(c,items,type,page);
  };
  const scan=()=>{
   if(Date.now()<lockedUntil)return;
+  if(isAdminPage()){
+   document.querySelectorAll('.productPagination[data-owner="catalog"]').forEach(n=>n.remove());
+   document.querySelectorAll('.adminlist').forEach(x=>render(x,'admin'));
+   return;
+  }
   const toolbar=document.querySelector('.filterToolbar'),grid=toolbar?.parentElement?.querySelector(':scope > .grid');
   if(grid)render(grid,'catalog');
-  document.querySelectorAll('.adminlist').forEach(x=>render(x,'admin'));
  };
  document.addEventListener('click',e=>{
   const b=e.target.closest('.productPageBtn');if(!b||b.disabled)return;
   e.preventDefault();e.stopPropagation();
   const nav=b.closest('.productPagination');if(!nav)return;
   const type=nav.dataset.owner||'catalog';
-  const c=type==='admin'?document.querySelector('.adminlist'):nav.previousElementSibling;
+  const c=type==='admin'?nav.closest('.adminlist'):nav.previousElementSibling;
   if(!c)return;
   const items=getItems(c,type);if(!items.length)return;
   let page=Number(c.dataset.paginationPage||1),a=b.dataset.pageAction;
