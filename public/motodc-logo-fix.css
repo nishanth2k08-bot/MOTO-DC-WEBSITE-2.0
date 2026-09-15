@@ -1,4 +1,8 @@
-/* MotoDC logo - exact logo supplied by the user. */
+/* MotoDC logo - preserve the existing logo everywhere. */
 .logo,.light-theme .logo{color:transparent!important;display:block!important;width:205px!important;height:59px!important;flex:0 0 205px!important;font-size:0!important;line-height:0!important;background-image:url('/motodc-new-logo.webp?v=1')!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important}
 .logo span,.logo::before,.logo::after{display:none!important;content:none!important}
+
+/* The homepage uses the clean transparent logo asset so the counter inside the D does not render as a black block. */
+main:has(.hero) .logo{background-image:url('/motodc-exact-logo.webp?v=2')!important}
+
 @media(max-width:850px){.logo{width:132px!important;height:40px!important;flex:0 0 132px!important}}
