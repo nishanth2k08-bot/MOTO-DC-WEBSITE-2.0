@@ -1,0 +1,12 @@
+/* MotoDC admin section navigation */
+.adminSectionNav{display:flex;align-items:center;gap:8px;margin:0 0 26px;padding:8px;border:1px solid rgba(255,255,255,.08);background:rgba(15,18,24,.92);border-radius:14px;position:sticky;top:12px;z-index:20;backdrop-filter:blur(14px)}
+.adminSectionNav button{border:0;background:transparent;color:#aeb4c0;padding:11px 16px;border-radius:9px;font:600 13px/1 inherit;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease;white-space:nowrap}
+.adminSectionNav button:hover{color:#fff;background:rgba(255,255,255,.06)}
+.adminSectionNav button.active{background:#ff3157;color:#fff;box-shadow:0 8px 22px rgba(255,49,87,.2)}
+.adminCustomerNav{display:none;gap:7px;margin:-12px 0 24px;padding:5px;border-radius:11px;background:rgba(255,255,255,.035);width:max-content;max-width:100%;overflow:auto}
+.adminCustomerNav.open{display:flex}
+.adminCustomerNav button{border:0;background:transparent;color:#8f96a3;padding:8px 12px;border-radius:7px;font:600 12px/1 inherit;cursor:pointer;white-space:nowrap}
+.adminCustomerNav button.active{color:#fff;background:rgba(255,49,87,.16)}
+.adminSectionHidden{display:none!important}
+@media(max-width:850px){.adminSectionNav{position:sticky;top:8px;overflow-x:auto;justify-content:flex-start;margin-bottom:20px}.adminSectionNav button{padding:10px 13px;font-size:12px}.adminCustomerNav{width:100%;margin:-6px 0 20px}.adminCustomerNav button{flex:1}}
+@media(prefers-reduced-motion:reduce){.adminSectionNav button{transition:none}}
