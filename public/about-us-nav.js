@@ -1,22 +1,21 @@
 (()=>{
  const init=()=>{
-  const section=document.querySelector('.aboutUsSection');
+  if(location.pathname==='/admin')return;
   const nav=document.querySelector('.nav nav');
-  if(!section||!nav||nav.querySelector('[data-about-us-link]'))return;
-  section.id='about-us';
+  if(!nav)return;
+  if(nav.querySelector('[data-about-us-link]'))return;
   const link=document.createElement('a');
-  link.href='#about-us';
+  link.href='/about-us';
   link.dataset.aboutUsLink='true';
   link.textContent='About Us';
   link.addEventListener('click',e=>{
    e.preventDefault();
-   section.scrollIntoView({behavior:'smooth',block:'start'});
-   history.replaceState(null,'','#about-us');
-   document.querySelector('.nav nav')?.classList.remove('open');
+   window.location.assign('/about-us');
+   nav.classList.remove('open');
   });
   nav.appendChild(link);
  };
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,100));
  else setTimeout(init,100);
- new MutationObserver(()=>init()).observe(document.documentElement,{childList:true,subtree:true});
+ new MutationObserver(init).observe(document.documentElement,{childList:true,subtree:true});
 })();
