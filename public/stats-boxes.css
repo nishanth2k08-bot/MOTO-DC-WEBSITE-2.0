@@ -1,7 +1,7 @@
 /* Individual stat boxes */
 .stats{gap:14px;padding:14px 0;border:0!important}
-.stats div{border:1px solid rgba(255,255,255,.14)!important;border-radius:12px;background:rgba(7,9,13,.58);padding:20px 10px!important;box-shadow:0 8px 24px rgba(0,0,0,.14)}
-.stats div:last-child{border:1px solid rgba(255,255,255,.14)!important}
-.light-theme .stats div{background:#fff;border-color:#dfe2e8!important;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.stats div{border:2px solid #ff3157!important;border-radius:12px;background:rgba(7,9,13,.58);padding:20px 10px!important;box-shadow:0 8px 24px rgba(255,49,87,.12)}
+.stats div:last-child{border:2px solid #ff3157!important}
+.light-theme .stats div{background:#fff;border-color:#ff3157!important;box-shadow:0 8px 24px rgba(255,49,87,.10)}
 @media(max-width:850px){.stats{gap:8px;padding:10px 8px}.stats div{padding:16px 6px!important;border-radius:10px}.stats b{font-size:20px!important}}
 @media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr);gap:8px}.stats div{padding:14px 6px!important}.stats b{font-size:18px!important}}
