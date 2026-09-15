@@ -19,17 +19,15 @@ const templateFor=(event,order,request,status)=>{
     if(String(status||order?.orderStatus||'').toLowerCase()==='delivered')return isOnline(order)?'motodc_online_order_delivery':'motodc_cod_order_delivery';
     return process.env.MSG91_TEMPLATE_ORDER_STATUS;
   }
-  if(event==='cancelled')return isOnline(order)?process.env.MSG91_TEMPLATE_ONLINE_CANCEL:process.env.MSG91_TEMPLATE_COD_CANCEL;
+  if(event==='cancelled')return isOnline(order)?(process.env.MSG91_TEMPLATE_ONLINE_CANCEL||process.env.MSG91_TEMPLATE_ORDER_STATUS):(process.env.MSG91_TEMPLATE_COD_CANCEL||process.env.MSG91_TEMPLATE_ORDER_STATUS);
   if(event==='return-completed'){if(request?.type==='replacement')return process.env.MSG91_TEMPLATE_REPLACEMENT;return isOnline(order)?process.env.MSG91_TEMPLATE_ONLINE_RETURN:process.env.MSG91_TEMPLATE_COD_RETURN}
   return '';
 };
 const statusKey=status=>String(status||'placed').replace(/[^a-z0-9]+/gi,'_').toLowerCase();
 function requiredConfig(event,order,status){
   const keys=['MSG91_AUTHKEY','MSG91_EMAIL_DOMAIN','MSG91_FROM_EMAIL'];
-  if(event==='status-update'){
-    const delivered=String(status||order?.orderStatus||'').toLowerCase()==='delivered';
-    if(!delivered)keys.push('MSG91_TEMPLATE_ORDER_STATUS');
-  }else keys.push('MSG91_TEMPLATE_ONLINE_CANCEL','MSG91_TEMPLATE_COD_CANCEL','MSG91_TEMPLATE_ONLINE_RETURN','MSG91_TEMPLATE_COD_RETURN','MSG91_TEMPLATE_REPLACEMENT');
+  if(event==='status-update'||event==='cancelled')keys.push('MSG91_TEMPLATE_ORDER_STATUS');
+  else keys.push('MSG91_TEMPLATE_ONLINE_RETURN','MSG91_TEMPLATE_COD_RETURN','MSG91_TEMPLATE_REPLACEMENT');
   return keys.filter(key=>!process.env[key]);
 }
 export default async function handler(req,res){
@@ -61,7 +59,7 @@ export default async function handler(req,res){
   const templateId=templateFor(event,order,request,currentStatus);if(!templateId)return send(res,503,{error:'No MSG91 template is configured for this email event'});
   const customerName=String(order.customer?.name||'Customer').trim(),orderId=String(order.orderId||order.id),amount=Number(request?.total??order.total??0).toLocaleString('en-IN');
   const deliveryDate=currentStatus==='delivered'?new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(new Date()):'';
-  const payload={recipients:[{to:[{name:customerName,email}],variables:{customer_name:customerName,order_id:orderId,amount:`₹${amount}`,order_amount:amount,delivery_date:deliveryDate,order_status:currentStatus,status:currentStatus.replaceAll('_',' ')}}],from:{name:process.env.MSG91_FROM_NAME||'MOTO DC',email:process.env.MSG91_FROM_EMAIL},domain:process.env.MSG91_EMAIL_DOMAIN,template_id:templateId,validate_before_send:true};
+  const payload={recipients:[{to:[{name:customerName,email}],variables:{customer_name:customerName,order_id:orderId,amount:`₹${amount}`,order_amount:amount,payment_method:isOnline(order)?'Online Payment':'Cash on Delivery',delivery_date:deliveryDate,order_status:currentStatus,status:currentStatus.replaceAll('_',' ')}}],from:{name:process.env.MSG91_FROM_NAME||'MOTO DC',email:process.env.MSG91_FROM_EMAIL},domain:process.env.MSG91_EMAIL_DOMAIN,template_id:templateId,validate_before_send:true};
   const response=await fetch('https://control.msg91.com/api/v5/email/send',{method:'POST',headers:{accept:'application/json',authkey:process.env.MSG91_AUTHKEY,'content-type':'application/json'},body:JSON.stringify(payload)});const data=await response.json().catch(()=>({}));if(!response.ok){const detail=data?.message||data?.error||data?.errors;throw new Error(`MSG91 rejected the email${detail?`: ${typeof detail==='string'?detail:JSON.stringify(detail)}`:''}`)}
   if(requestRefValue)await requestRefValue.update({'emailNotifications.completedSentAt':admin.firestore.FieldValue.serverTimestamp(),'emailNotifications.provider':'msg91'});
   else if(event==='status-update')await orderRefValue.update({[`emailNotifications.status_${statusKey(currentStatus)}_sentAt`]:admin.firestore.FieldValue.serverTimestamp(),'emailNotifications.provider':'msg91'});
