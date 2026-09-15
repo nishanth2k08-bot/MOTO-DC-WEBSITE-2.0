@@ -48,17 +48,10 @@
    const onScroll=()=>{if(!ticking){ticking=true;requestAnimationFrame(updateParallax)}};
    addEventListener('scroll',onScroll,{passive:true});updateParallax();
   }
-  const selectors=[
-   '.hero ~ section:not(.stats):not(.aboutUsSection)',
-   '.featured','.newArrivals','.bestSellers','.services','.testimonials','.newsletter',
-   '.categoriesSection'
-  ];
+  const selectors=['.hero ~ section:not(.stats):not(.aboutUsSection)','.featured','.newArrivals','.bestSellers','.services','.testimonials','.newsletter','.categoriesSection'];
   const fadeTargets=[];
   selectors.forEach(selector=>document.querySelectorAll(selector).forEach(el=>{if(!el.classList.contains('motodc-scroll-fade')){el.classList.add('motodc-scroll-fade');fadeTargets.push(el)}}));
-  document.querySelectorAll('.categories').forEach(el=>{
-   el.classList.add('motodc-scroll-stagger');
-   Array.from(el.children).forEach((child,i)=>child.style.setProperty('--stagger-delay',`${i*120}ms`));
-  });
+  document.querySelectorAll('.categories').forEach(el=>{el.classList.add('motodc-scroll-stagger');Array.from(el.children).forEach((child,i)=>child.style.setProperty('--stagger-delay',`${i*120}ms`))});
   const about=document.querySelector('.aboutUsSection');if(about)about.classList.add('motodc-scroll-scale');
   const targets=[...fadeTargets,...document.querySelectorAll('.motodc-scroll-stagger,.aboutUsSection.motodc-scroll-scale')];
   if(!targets.length)return;
@@ -66,7 +59,47 @@
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.14,rootMargin:'0px 0px -8% 0px'});
   targets.forEach(el=>observer.observe(el));
  }
- function init(){start();addAboutSection();addAboutNav();addScrollAnimations()}
+ function addAdminNavigation(){
+  if(location.pathname!=='/admin')return;
+  const admin=document.querySelector('.admin');
+  if(!admin||!document.querySelector('.adminlayout')||document.querySelector('.adminSectionNav'))return;
+  if(!document.querySelector('link[data-admin-navigation-css]')){
+   const css=document.createElement('link');css.rel='stylesheet';css.href='/admin-navigation.css';css.dataset.adminNavigationCss='true';document.head.appendChild(css);
+  }
+  const adminHead=admin.querySelector('.adminhead');
+  const product=document.querySelector('.adminlayout');
+  const dashboard=document.querySelector('.adminDash');
+  const orderHead=document.querySelector('.orderManagementHead');
+  const ordersList=orderHead?.nextElementSibling;
+  const completed=document.querySelector('.completedOrdersSection');
+  const afterSales=document.querySelector('.adminReturnSection');
+  if(!adminHead||!product||!dashboard||!orderHead||!ordersList||!completed||!afterSales)return;
+  dashboard.id='admin-dashboard';product.id='admin-products';orderHead.id='admin-order-management';completed.id='admin-completed-orders';afterSales.id='admin-after-sales';
+  const nav=document.createElement('div');nav.className='adminSectionNav';nav.innerHTML=`<button type="button" data-admin-tab="dashboard" class="active">Admin Dashboard</button><button type="button" data-admin-tab="products">Product Manager</button><button type="button" data-admin-tab="orders">Customer's Orders</button>`;
+  const sub=document.createElement('div');sub.className='adminCustomerNav';sub.innerHTML=`<button type="button" data-admin-sub="admin-order-management">Order Management</button><button type="button" data-admin-sub="admin-completed-orders">Completed Orders</button><button type="button" data-admin-sub="admin-after-sales">After Sales</button>`;
+  adminHead.insertAdjacentElement('afterend',nav);nav.insertAdjacentElement('afterend',sub);
+  const orderParts=[orderHead,ordersList,completed,afterSales];
+  const setVisible=(tab,scroll=false)=>{
+   const isDash=tab==='dashboard',isProducts=tab==='products',isOrders=tab==='orders';
+   dashboard.classList.toggle('adminSectionHidden',!isDash);
+   product.classList.toggle('adminSectionHidden',!isProducts);
+   orderParts.forEach(el=>el.classList.toggle('adminSectionHidden',!isOrders));
+   nav.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
+   sub.classList.toggle('open',isOrders);
+   if(isOrders&&!sub.querySelector('.active'))sub.querySelector('button')?.classList.add('active');
+   if(scroll)(isDash?dashboard:isProducts?product:orderHead).scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  nav.querySelector('[data-admin-tab="dashboard"]').addEventListener('click',()=>setVisible('dashboard',true));
+  nav.querySelector('[data-admin-tab="products"]').addEventListener('click',()=>setVisible('products',true));
+  nav.querySelector('[data-admin-tab="orders"]').addEventListener('click',()=>setVisible('orders',true));
+  sub.querySelectorAll('[data-admin-sub]').forEach(button=>button.addEventListener('click',()=>{
+   setVisible('orders',false);
+   sub.querySelectorAll('button').forEach(b=>b.classList.remove('active'));button.classList.add('active');
+   document.getElementById(button.dataset.adminSub)?.scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+  setVisible('dashboard',false);
+ }
+ function init(){start();addAboutSection();addAboutNav();addScrollAnimations();addAdminNavigation()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,300));else setTimeout(init,300);
- new MutationObserver(()=>{addAboutSection();addAboutNav();addScrollAnimations()}).observe(document.documentElement,{childList:true,subtree:true});
+ new MutationObserver(()=>{addAboutSection();addAboutNav();addScrollAnimations();addAdminNavigation()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
