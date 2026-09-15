@@ -1,4 +1,4 @@
-/* MotoDC logo - preserve the existing logo everywhere. */
+/* MotoDC logo - replaced with the clean SVG logo. */
 .logo,.light-theme .logo{color:transparent!important;display:block!important;width:205px!important;height:59px!important;flex:0 0 205px!important;font-size:0!important;line-height:0!important;background-image:url('/motodc-logo.svg?v=3')!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important}
 .logo span,.logo::before,.logo::after{display:none!important;content:none!important}
 
