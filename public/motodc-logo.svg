@@ -1,28 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img" aria-label="Moto DC">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 170" role="img" aria-label="MotoDC">
 <defs>
- <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff3157"/><stop offset="1" stop-color="#d10e35"/></linearGradient>
- <linearGradient id="white" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#d7dbe1"/></linearGradient>
- <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <linearGradient id="r" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff3157"/><stop offset="1" stop-color="#d10e35"/></linearGradient>
+ <linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff"/><stop offset="1" stop-color="#d7dbe1"/></linearGradient>
 </defs>
-<!-- tachometer arc -->
-<path d="M45 49 A78 78 0 0 1 171 42" fill="none" stroke="url(#red)" stroke-width="8" stroke-linecap="round"/>
-<path d="M54 48 A69 69 0 0 1 164 42" fill="none" stroke="#fff" stroke-width="2.5" opacity=".9"/>
-<g stroke="#ff3157" stroke-width="5" stroke-linecap="round"><path d="M66 35l-5-12"/><path d="M91 27l-2-13"/><path d="M117 25l2-13"/><path d="M143 31l7-11"/></g>
-<!-- speed trails -->
-<g stroke="#ff3157" stroke-linecap="round"><path d="M7 86h62" stroke-width="6"/><path d="M17 101h47" stroke-width="5"/><path d="M29 116h38" stroke-width="4"/></g>
-<!-- sport motorcycle silhouette -->
-<g fill="none" stroke="url(#white)" stroke-linecap="round" stroke-linejoin="round">
- <circle cx="72" cy="111" r="27" stroke-width="7"/><circle cx="72" cy="111" r="8" stroke="#ff3157" stroke-width="3"/>
- <circle cx="199" cy="111" r="27" stroke-width="7"/><circle cx="199" cy="111" r="8" stroke="#ff3157" stroke-width="3"/>
- <path d="M70 105l37-41 31 8 30 39h31l-25-34-36-18-24 6-26 27-18 8z" stroke-width="8"/>
- <path d="M107 65l-12-21 28-13 30 22" stroke-width="7"/>
- <path d="M153 55l25-10 15 18" stroke-width="6"/>
- <path d="M177 35l16-2" stroke-width="5"/>
- <path d="M130 72l-19 27M143 72l26 29" stroke-width="4"/>
+<!-- speedometer -->
+<path d="M35 54 A88 88 0 0 1 180 47" fill="none" stroke="url(#r)" stroke-width="9" stroke-linecap="round"/>
+<path d="M47 51 A76 76 0 0 1 172 47" fill="none" stroke="#fff" stroke-width="3" opacity=".9"/>
+<g stroke="#ff3157" stroke-width="6" stroke-linecap="round"><path d="M65 42l-7-15"/><path d="M94 31l-3-16"/><path d="M124 30l3-16"/><path d="M153 37l8-14"/></g>
+<!-- motorcycle -->
+<g fill="#101217" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+ <circle cx="78" cy="121" r="31" stroke-width="7"/><circle cx="205" cy="121" r="31" stroke-width="7"/>
+ <circle cx="78" cy="121" r="10" fill="#ff3157" stroke-width="3"/><circle cx="205" cy="121" r="10" fill="#ff3157" stroke-width="3"/>
+ <path d="M69 112l38-47 35 8 33 43h35l-27-39-38-20-27 8-25 30-18 10z" stroke-width="8"/>
+ <path d="M107 67l-12-25 31-15 31 24" fill="none" stroke-width="7"/>
+ <path d="M154 57l28-11 16 19" fill="none" stroke-width="6"/>
+ <path d="M178 37l17-2" fill="none" stroke-width="5"/>
+ <path d="M131 75l-20 32M145 75l28 34" fill="none" stroke-width="4"/>
 </g>
-<path d="M20 128h214" stroke="#ff3157" stroke-width="4" stroke-linecap="round" filter="url(#glow)"/>
+<!-- motion trails -->
+<g stroke="#ff3157" stroke-linecap="round"><path d="M4 91h68" stroke-width="7"/><path d="M13 106h55" stroke-width="6"/><path d="M26 120h43" stroke-width="5"/><path d="M39 134h35" stroke-width="4"/></g>
 <!-- wordmark -->
-<text x="238" y="100" font-family="Sora,Inter,Arial,sans-serif" font-size="68" font-weight="800" font-style="italic" letter-spacing="-4" fill="url(#white)">Moto</text>
-<text x="386" y="100" font-family="Sora,Inter,Arial,sans-serif" font-size="68" font-weight="900" font-style="italic" letter-spacing="-4" fill="url(#red)">DC</text>
-<path d="M390 115h105M397 124h88" stroke="#ff3157" stroke-width="5" stroke-linecap="round"/>
+<text x="242" y="111" font-family="Sora,Inter,Arial,sans-serif" font-size="74" font-weight="800" font-style="italic" letter-spacing="-5" fill="url(#w)">Moto</text>
+<text x="408" y="111" font-family="Sora,Inter,Arial,sans-serif" font-size="74" font-weight="900" font-style="italic" letter-spacing="-5" fill="url(#r)">DC</text>
+<!-- clean D counter: no fill/background -->
+<path d="M429 58h29a25 25 0 0 1 0 50h-29z" fill="none" stroke="none"/>
+<path d="M409 126h181" stroke="#ff3157" stroke-width="6" stroke-linecap="round"/>
+<path d="M420 139h92" stroke="#ff3157" stroke-width="5" stroke-linecap="round"/>
+<path d="M520 139h48" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
 </svg>
