@@ -25,12 +25,14 @@ export default async function handler(req,res){
     if(!secret)return send(res,503,{error:'Payment verification is not configured'});
     const signature=String(razorpay_signature),expected=crypto.createHmac('sha256',secret).update(`${razorpay_order_id}|${razorpay_payment_id}`).digest('hex');
     if(signature.length!==expected.length||!crypto.timingSafeEqual(Buffer.from(expected),Buffer.from(signature)))return send(res,400,{error:'Payment verification failed'});
-    const db=getFirestore(a.app(),'asia-south1'),intentRef=db.collection('paymentIntents').doc('online payment intents').collection('records').doc(razorpay_order_id),intentSnap=await intentRef.get();
+    const db=getFirestore(a.app(),'asia-south1'),intentRef=db.collection('paymentIntents').doc('online payment intents').collection('records').doc(razorpay_order_id),keyId=process.env.RAZORPAY_KEY_ID;
+    const [intentSnap,paymentResponse]=await Promise.all([
+      intentRef.get(),
+      fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(razorpay_payment_id)}`,{headers:{Authorization:`Basic ${Buffer.from(`${keyId}:${secret}`).toString('base64')}`}})
+    ]);
     if(!intentSnap.exists)return send(res,400,{error:'Payment session expired or invalid'});
     const intent=intentSnap.data();
     if(intent.userId!==decoded.uid||intent.status!=='created')return send(res,400,{error:'Invalid payment session'});
-    const keyId=process.env.RAZORPAY_KEY_ID;
-    const paymentResponse=await fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(razorpay_payment_id)}`,{headers:{Authorization:`Basic ${Buffer.from(`${keyId}:${secret}`).toString('base64')}`}});
     const payment=await paymentResponse.json().catch(()=>({}));
     if(!paymentResponse.ok||payment.order_id!==razorpay_order_id||Number(payment.amount)!==Math.round(Number(intent.amount)*100)||payment.currency!=='INR'||payment.status!=='captured')return send(res,400,{error:'Payment could not be verified'});
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
