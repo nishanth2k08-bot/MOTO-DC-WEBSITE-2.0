@@ -1,0 +1,33 @@
+:root{--m12-accent:#ff3157;--m12-bg:#07090d;--m12-surface:#0d1016;--m12-surface-2:#080b10;--m12-border:#252933;--m12-text:#f8fafc;--m12-muted:#9299a6;--m12-radius:16px;--m12-shadow:0 18px 50px rgba(0,0,0,.18)}
+/* Enhancement 12: shared MotoDC visual language. Intentionally limited to presentation; no layout logic or functionality is changed. */
+header{border-bottom-color:var(--m12-border)}
+.nav{max-width:1200px}
+.nav nav a{transition:color .18s ease,opacity .18s ease}
+.search,.account{border-color:var(--m12-border);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.search:focus-within{border-color:rgba(255,49,87,.65);box-shadow:0 0 0 3px rgba(255,49,87,.08)}
+.heroBtn,.actions .primary{background:var(--m12-accent);border-color:var(--m12-accent);transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+.heroBtn:hover,.actions .primary:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 8px 24px rgba(255,49,87,.16)}
+.sectionhead button,.backBtn{transition:color .18s ease,transform .18s ease}
+.sectionhead button:hover,.backBtn:hover{transform:translateX(2px)}
+.categories button,.card,.checkoutBlock,.checkoutSummary,.cartlayout aside,.adminform,.adminlist,.adminlogin,.authcard,.accountcard{border-color:var(--m12-border);border-radius:var(--m12-radius);box-shadow:none;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.categories button:hover,.card:hover{border-color:#3a3f4b;box-shadow:var(--m12-shadow)}
+.cardbody,.cartlayout aside,.checkoutBlock,.checkoutSummary,.adminform,.adminlist,.adminlogin{color:var(--m12-text)}
+.rating{color:#f4bf44}
+.actions button,.secondaryBtn,.qty button,.filters button,.adminsignout,.adminproduct>button{border-color:#30343d;transition:border-color .18s ease,background .18s ease,color .18s ease,transform .18s ease}
+.actions button:hover:not(:disabled),.secondaryBtn:hover,.qty button:hover:not(:disabled),.adminsignout:hover,.adminproduct>button:hover{border-color:var(--m12-accent)}
+.actions button:focus-visible,.heroBtn:focus-visible,.secondaryBtn:focus-visible,.sectionhead button:focus-visible,.backBtn:focus-visible,.account:focus-visible,.cart:focus-visible,.wishlistNav:focus-visible{outline:2px solid var(--m12-accent);outline-offset:2px}
+.detail>img,.pic img,.cartitem img,.summaryItem img,.adminproduct img{border-radius:10px}
+footer{border-top-color:var(--m12-border)}
+.aboutUsSection{background:transparent}
+.aboutUsIntro,.aboutUsContact{box-shadow:none}
+.aboutPage{max-width:1200px}
+.aboutCard,.aboutValue,.aboutStat{transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.aboutCard:hover{border-color:#353a46;box-shadow:var(--m12-shadow)}
+.aboutValue:hover,.aboutStat:hover{border-color:#353a46}
+/* Keep light mode visually aligned with the same system. */
+.light-theme{--m12-bg:#f6f7f9;--m12-surface:#fff;--m12-surface-2:#f5f6f8;--m12-border:#dfe2e8;--m12-text:#171a21;--m12-muted:#68707d;--m12-shadow:0 14px 35px rgba(20,24,32,.08)}
+.light-theme .categories button:hover,.light-theme .card:hover,.light-theme .aboutCard:hover{border-color:#cbd0d8;box-shadow:var(--m12-shadow)}
+.light-theme .search:focus-within{border-color:rgba(255,49,87,.55);box-shadow:0 0 0 3px rgba(255,49,87,.08)}
+@media(max-width:850px){.nav{padding-inline:15px}.section,.page{padding-inline:15px}.hero{padding-inline:15px}.grid{gap:14px}.categories{gap:14px}}
+@media(max-width:520px){.heroBtn{min-height:44px}.actions button,.secondaryBtn{min-height:40px}.sectionhead{align-items:flex-start;gap:12px}.sectionhead button{white-space:nowrap}.card{border-radius:14px}.aboutUsIntro,.aboutUsContact,.aboutCard{border-radius:14px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
