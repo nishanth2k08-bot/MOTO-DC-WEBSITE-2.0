@@ -1,11 +1,7 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
-import './about-us-page.css';
-import './about-us-background.css';
-import './scroll-animations.css';
+import './AboutUs.css';
 
 export default function AboutUs(){
-  const nav=useNavigate();
   React.useEffect(()=>{window.scrollTo(0,0)},[]);
   return <section className="aboutPage">
     <div className="aboutHero">
