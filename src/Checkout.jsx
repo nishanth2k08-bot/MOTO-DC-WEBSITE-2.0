@@ -8,7 +8,7 @@ const getCart=()=>{try{return JSON.parse(localStorage.getItem('motodc-cart')||'[
 const clearCart=()=>{localStorage.removeItem('motodc-cart');window.dispatchEvent(new Event('cartchange'))};
 const loadRazorpay=()=>new Promise((resolve,reject)=>{if(window.Razorpay)return resolve(true);const existing=document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');if(existing){existing.addEventListener('load',()=>resolve(true),{once:true});existing.addEventListener('error',()=>reject(new Error('Payment gateway could not load')),{once:true});return}const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=()=>resolve(true);s.onerror=()=>reject(new Error('Payment gateway could not load'));document.body.appendChild(s)});
 const readApiResponse=async response=>{const text=await response.text();let data;try{data=text?JSON.parse(text):{}}catch{throw new Error(response.ok?'Unexpected payment server response':'Payment server error. Please check the Vercel deployment logs.')}if(!response.ok)throw new Error(data.error||'Payment request failed');return data;};
-const PROCESSING_MS=4500;
+const PROCESSING_MS=2500;
 const waitForProcessingWindow=started=>new Promise(resolve=>{const remaining=Math.max(0,PROCESSING_MS-(Date.now()-started));window.setTimeout(resolve,remaining)});
 export default function Checkout(){
  const nav=useNavigate(),[items]=useState(getCart()),[placed,setPlaced]=useState(null),[loading,setLoading]=useState(false),[processing,setProcessing]=useState(false),user=auth.currentUser;
