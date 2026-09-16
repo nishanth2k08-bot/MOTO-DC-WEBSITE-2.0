@@ -26,8 +26,8 @@ const templateFor=(event,order,request,status)=>{
 const statusKey=status=>String(status||'placed').replace(/[^a-z0-9]+/gi,'_').toLowerCase();
 function requiredConfig(event,order,status){
   const keys=['MSG91_AUTHKEY','MSG91_EMAIL_DOMAIN','MSG91_FROM_EMAIL'];
-  if(event==='status-update'||event==='cancelled')keys.push('MSG91_TEMPLATE_ORDER_STATUS');
-  else keys.push('MSG91_TEMPLATE_ONLINE_RETURN','MSG91_TEMPLATE_COD_RETURN','MSG91_TEMPLATE_REPLACEMENT');
+  if(event==='cancelled')keys.push('MSG91_TEMPLATE_ORDER_STATUS');
+  else if(event==='return-completed')keys.push('MSG91_TEMPLATE_ONLINE_RETURN','MSG91_TEMPLATE_COD_RETURN','MSG91_TEMPLATE_REPLACEMENT');
   return keys.filter(key=>!process.env[key]);
 }
 export default async function handler(req,res){
@@ -44,6 +44,7 @@ export default async function handler(req,res){
    if(event==='cancelled'&&order.orderStatus!=='cancelled')return send(res,409,{error:'Order is not cancelled'});
    if(event==='status-update'){
     const currentStatus=String(status||order.orderStatus||'placed');
+    if(currentStatus.toLowerCase()!=='delivered')return send(res,400,{error:'Customer delivery email is only sent when an order is delivered'});
     if(currentStatus!==String(order.orderStatus||''))return send(res,409,{error:'Order status has changed. Refresh and try again'});
     const sentKey=`status_${statusKey(currentStatus)}_sentAt`;
     if(order.emailNotifications?.[sentKey])return send(res,200,{ok:true,alreadySent:true});
@@ -58,7 +59,7 @@ export default async function handler(req,res){
   const email=String(order.customer?.email||'').trim();if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return send(res,400,{error:'Customer email is missing or invalid'});
   const templateId=templateFor(event,order,request,currentStatus);if(!templateId)return send(res,503,{error:'No MSG91 template is configured for this email event'});
   const customerName=String(order.customer?.name||'Customer').trim(),orderId=String(order.orderId||order.id),amount=Number(request?.total??order.total??0).toLocaleString('en-IN');
-  const deliveryDate=currentStatus==='delivered'?new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(new Date()):'';
+  const deliveryDate=currentStatus.toLowerCase()==='delivered'?new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(new Date()):'';
   const payload={recipients:[{to:[{name:customerName,email}],variables:{customer_name:customerName,order_id:orderId,amount:`₹${amount}`,order_amount:amount,payment_method:isOnline(order)?'Online Payment':'Cash on Delivery',delivery_date:deliveryDate,order_status:currentStatus,status:currentStatus.replaceAll('_',' ')}}],from:{name:process.env.MSG91_FROM_NAME||'MOTO DC',email:process.env.MSG91_FROM_EMAIL},domain:process.env.MSG91_EMAIL_DOMAIN,template_id:templateId,validate_before_send:true};
   const response=await fetch('https://control.msg91.com/api/v5/email/send',{method:'POST',headers:{accept:'application/json',authkey:process.env.MSG91_AUTHKEY,'content-type':'application/json'},body:JSON.stringify(payload)});const data=await response.json().catch(()=>({}));if(!response.ok){const detail=data?.message||data?.error||data?.errors;throw new Error(`MSG91 rejected the email${detail?`: ${typeof detail==='string'?detail:JSON.stringify(detail)}`:''}`)}
   if(requestRefValue)await requestRefValue.update({'emailNotifications.completedSentAt':admin.firestore.FieldValue.serverTimestamp(),'emailNotifications.provider':'msg91'});
