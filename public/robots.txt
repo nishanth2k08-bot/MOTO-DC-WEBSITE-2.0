@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moto-dc-website-2-0-peach.vercel.app/sitemap.xml
