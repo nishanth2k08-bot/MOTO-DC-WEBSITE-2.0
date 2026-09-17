@@ -30,4 +30,38 @@ footer{border-top-color:var(--m12-border)}
 .light-theme .search:focus-within{border-color:rgba(255,49,87,.55);box-shadow:0 0 0 3px rgba(255,49,87,.08)}
 @media(max-width:850px){.nav{padding-inline:15px}.section,.page{padding-inline:15px}.hero{padding-inline:15px}.grid{gap:14px}.categories{gap:14px}}
 @media(max-width:520px){.heroBtn{min-height:44px}.actions button,.secondaryBtn{min-height:40px}.sectionhead{align-items:flex-start;gap:12px}.sectionhead button{white-space:nowrap}.card{border-radius:14px}.aboutUsIntro,.aboutUsContact,.aboutCard{border-radius:14px}}
+
+/* Mobile visual QA fixes: keep content inside the actual phone viewport. */
+@media(max-width:520px){
+  .nav{width:100%;max-width:100%;padding-left:8px;padding-right:8px;gap:5px;overflow:hidden}
+  .logo{min-width:0;max-width:36vw!important;overflow:hidden}
+  .themeToggle,.account,.wishlistNav,.cart{flex:0 0 42px!important;width:42px!important;min-width:42px!important;max-width:42px!important}
+  .accountName{min-width:0!important;max-width:42px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hero,.page,.section{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .hero p:not(.eyebrow){max-width:100%;overflow-wrap:anywhere;word-break:normal;line-height:1.55}
+  .sectionhead{width:100%;max-width:100%;min-width:0;display:flex;justify-content:space-between;align-items:flex-end}
+  .sectionhead>div{min-width:0;max-width:65%}
+  .sectionhead>button{flex:0 1 auto;min-width:0;max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-left:auto}
+  .categories{width:100%;max-width:100%;min-width:0;grid-template-columns:1fr!important}
+  .categories button{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .grid{width:100%;max-width:100%;min-width:0;grid-template-columns:1fr!important;gap:14px}
+  .grid .card{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .grid .pic{width:100%;max-width:100%;box-sizing:border-box}
+  .cardbody{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .actions{width:100%;max-width:100%;grid-template-columns:minmax(0,1fr) minmax(0,1fr);box-sizing:border-box}
+  .actions button{min-width:0;width:100%;max-width:100%;box-sizing:border-box}
+  .filterToolbar{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .filterToolbar>*{min-width:0;max-width:100%}
+  .filterToolbar select{width:100%;max-width:100%}
+  .pagination,.paginationWrap,.pager{max-width:100%;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .pagination>*{flex:none}
+  table{max-width:100%;overflow-x:auto}
+}
+@media(max-width:380px){
+  .nav{gap:3px}
+  .logo{max-width:31vw!important}
+  .themeToggle,.account,.wishlistNav,.cart{flex-basis:40px!important;width:40px!important;min-width:40px!important;max-width:40px!important}
+  .sectionhead>div{max-width:62%}
+  .sectionhead>button{max-width:38%;font-size:13px}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
