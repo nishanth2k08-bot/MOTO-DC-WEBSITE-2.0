@@ -1,0 +1,41 @@
+/* MotoDC Cart — final UI polish, presentation-only */
+.cartpage{max-width:1200px;margin-inline:auto;padding-bottom:56px}
+.cartpage h1{text-wrap:balance;letter-spacing:-2px;line-height:1.08}
+.cartlayout{gap:28px}
+.cartlayout>div:first-child{min-width:0}
+.cartitem{min-width:0;align-items:center}
+.cartitem>div{min-width:0}
+.cartitem h3{margin:0 0 5px;overflow-wrap:anywhere}
+.cartitem small{color:#9aa1ad}
+.cartitem strong{font-variant-numeric:tabular-nums}
+.cartitem .qty{align-self:center}
+.cartitem .delete{cursor:pointer}
+.cartitem button:focus-visible,.cartlayout aside .heroBtn:focus-visible{outline:2px solid #ff3157;outline-offset:3px}
+.cartlayout aside{border-radius:18px;padding:22px;min-width:0}
+.cartlayout aside h2{margin-top:0;margin-bottom:18px}
+.cartlayout aside h3{font-size:15px}
+.cartlayout aside>p{line-height:1.6}
+.cartlayout aside .heroBtn{min-height:48px;font-weight:800;letter-spacing:.2px}
+.cartlayout aside .trust{font-size:12px;line-height:1.55}
+.cartpage:has(.cartlayout) .eyebrow{letter-spacing:1.7px}
+@media(max-width:850px){
+  .cartpage{padding-bottom:36px}
+  .cartlayout{gap:20px}
+  .cartlayout aside{border-radius:15px}
+}
+@media(max-width:520px){
+  .cartpage h1{font-size:32px;letter-spacing:-1.3px}
+  .cartlayout{gap:16px}
+  .cartitem{border-radius:13px}
+  .cartitem small{font-size:10px}
+  .cartitem .delete{width:30px;height:30px}
+  .cartlayout aside{padding:17px;border-radius:14px}
+  .cartlayout aside h2{font-size:19px;margin-bottom:15px}
+  .cartlayout aside .heroBtn{min-height:46px}
+}
+@media(max-width:380px){
+  .cartpage h1{font-size:29px}
+  .cartitem{padding:11px 8px;gap:8px}
+  .cartlayout aside{padding:15px}
+}
+@media(prefers-reduced-motion:reduce){.cartpage h1,.cartitem{animation:none!important}}
