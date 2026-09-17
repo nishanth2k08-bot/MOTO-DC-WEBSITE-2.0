@@ -1,0 +1,37 @@
+/* MotoDC Orders & Returns — final UI polish, presentation-only */
+.ordersPage{max-width:1200px;margin-inline:auto;padding-bottom:56px}
+.ordersPage .pagehead h1{text-wrap:balance;line-height:1.08}
+.customerOrder{min-width:0}
+.customerOrderTop{min-width:0}
+.customerOrderTop .status{justify-self:end}
+.customerOrderTop .orderToggle{justify-self:end}
+.customerOrderTop>strong{font-variant-numeric:tabular-nums}
+.orderToggle:focus-visible,.invoiceActions button:focus-visible,.afterSales button:focus-visible,.returnActions button:focus-visible{outline:2px solid #ff3157;outline-offset:3px}
+.orderProgress{overflow:hidden}
+.customerOrderDetails{min-width:0}
+.customerAddress,.customerItem,.returnActions,.returnHistory{min-width:0}
+.customerItem b{overflow-wrap:anywhere}
+.invoiceActions button,.afterSales button,.returnActions button{cursor:pointer}
+.returnActions{grid-column:1 / -1;border-top:1px solid #252933;padding:18px 22px;display:flex;gap:10px;flex-wrap:wrap;background:rgba(5,7,10,.16)}
+.returnActions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:140px;height:40px;padding:0 15px;border:1px solid rgba(255,49,87,.5);border-radius:9px;background:rgba(255,49,87,.1);color:#ff7189;font:700 11px Sora;transition:transform .2s,background .2s,border-color .2s,color .2s}
+.returnActions button:hover:not(:disabled){background:rgba(255,49,87,.18);border-color:#ff3157;color:#ff3157;transform:translateY(-1px)}
+.returnActions button:disabled{opacity:.55;cursor:wait}
+.returnHistory{margin-top:22px;border-radius:16px;overflow:hidden}
+.returnHistory .dashPanelHead{padding:16px 18px}
+.returnHistory .returnRow{min-width:0}
+.returnHistory .returnRow b{overflow-wrap:anywhere}
+.light-theme .returnActions{background:#fafbfc;border-color:#e8ebef}
+.light-theme .returnActions button{background:rgba(255,49,87,.06);border-color:#e3264d;color:#e3264d}
+@media(max-width:800px){
+  .ordersPage{padding-bottom:38px}
+  .customerOrderTop .status{justify-self:stretch}
+  .returnActions{padding:16px}
+}
+@media(max-width:520px){
+  .ordersPage .pagehead h1{font-size:32px;letter-spacing:-1.3px}
+  .returnActions{gap:8px}
+  .returnActions button{flex:1 1 130px;min-width:0;height:38px}
+  .returnHistory{margin-top:16px;border-radius:14px}
+}
+@media(max-width:380px){.ordersPage .pagehead h1{font-size:29px}.returnActions{padding:14px 12px}.returnActions button{flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){.returnActions button{transition:none}.returnActions button:hover:not(:disabled){transform:none}}
