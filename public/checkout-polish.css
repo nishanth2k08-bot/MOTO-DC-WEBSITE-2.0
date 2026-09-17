@@ -1,0 +1,41 @@
+/* MotoDC Checkout — final UI polish, presentation-only */
+.checkoutPage{max-width:1200px;margin-inline:auto;padding-bottom:56px}
+.checkoutPage .pagehead h1{text-wrap:balance;letter-spacing:-2px;line-height:1.08}
+.checkoutLayout{align-items:start}
+.checkoutForm,.checkoutSummary{min-width:0}
+.checkoutBlock,.checkoutSummary{border-radius:16px}
+.checkoutBlock h2{margin-top:0}
+.formGrid label{min-width:0}
+.formGrid input,.formGrid select,.formGrid textarea{width:100%;box-sizing:border-box}
+.formGrid input:focus,.formGrid select:focus,.formGrid textarea:focus{outline:2px solid rgba(255,49,87,.3);outline-offset:1px}
+.paymentOptions{min-width:0}
+.paymentOptions label{cursor:pointer;min-width:0}
+.paymentOptions label:focus-within{outline:2px solid rgba(255,49,87,.3);outline-offset:2px}
+.paymentOptions label input{accent-color:#ff3157}
+.summaryItem{min-width:0}
+.summaryItem>div{min-width:0}
+.summaryItem b,.summaryItem strong{font-variant-numeric:tabular-nums;white-space:nowrap}
+.checkoutSummary{position:sticky;top:94px}
+.placeOrder{width:100%;cursor:pointer}
+.placeOrder:focus-visible,.checkoutPage button:focus-visible{outline:2px solid #ff3157;outline-offset:3px}
+.checkoutPage .trust{line-height:1.55}
+.checkoutLogin{border-radius:18px}
+.orderSuccess{text-align:center}
+@media(max-width:850px){
+  .checkoutPage{padding-bottom:36px}
+  .checkoutSummary{position:relative;top:auto}
+}
+@media(max-width:520px){
+  .checkoutPage .pagehead h1{font-size:32px;letter-spacing:-1.3px}
+  .checkoutPage .pagehead p:not(.eyebrow){line-height:1.55}
+  .checkoutBlock,.checkoutSummary{border-radius:14px}
+  .checkoutPage .formGrid{gap:12px}
+  .checkoutPage .paymentOptions{gap:9px}
+  .checkoutPage .trust{font-size:11px}
+}
+@media(max-width:380px){
+  .checkoutPage .pagehead h1{font-size:29px}
+  .checkoutPage.page{padding-inline:10px}
+  .checkoutBlock,.checkoutSummary{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){.checkoutPage *{scroll-behavior:auto}}
