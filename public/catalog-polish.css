@@ -1,0 +1,33 @@
+/* Step 2 — Catalog UI polish only. Functional behavior remains unchanged. */
+.page:has(.filterToolbar) .pagehead{margin-bottom:28px}
+.page:has(.filterToolbar) .pagehead h1{text-wrap:balance;letter-spacing:-2.2px}
+.page:has(.filterToolbar) .pagehead>p:last-child{color:var(--m12-muted,#9299a6);font-size:15px}
+.filterToolbar{padding:10px;border:1px solid var(--m12-border,#252933);border-radius:13px;background:rgba(13,16,22,.72);box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.filterToggle,.filterToolbar select{transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease}
+.filterToggle:hover,.filterToolbar select:hover{transform:translateY(-1px)}
+.resultCount{font-weight:600}
+.catalogFilters{border-radius:16px 0 0 16px}
+.filterHeader h2{letter-spacing:-.4px}
+.filterChoices button,.filterGroup select,.filterGroup input[type=number]{transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}
+.filterChoices button:hover{border-color:#4a515e}
+.filterGroup select:focus,.filterGroup input[type=number]:focus{box-shadow:0 0 0 3px rgba(255,49,87,.08)}
+.activeFilters button{transition:border-color .18s ease,background .18s ease,transform .18s ease}
+.activeFilters button:hover{transform:translateY(-1px);border-color:#ff3157}
+.page:has(.filterToolbar) .grid{align-items:stretch}
+.page:has(.filterToolbar) .grid .card{overflow:hidden}
+.page:has(.filterToolbar) .grid .cardbody{padding:15px}
+.page:has(.filterToolbar) .grid .card h3{line-height:1.4;min-height:20px}
+.page:has(.filterToolbar) .grid .rating{min-height:18px}
+.page:has(.filterToolbar) .grid .actions button{min-height:38px}
+.light-theme .filterToolbar{background:rgba(255,255,255,.82);box-shadow:0 10px 30px rgba(17,24,39,.05)}
+@media(max-width:850px){
+  .page:has(.filterToolbar) .pagehead{margin-bottom:22px}
+  .filterToolbar{padding:8px}
+}
+@media(max-width:520px){
+  .page:has(.filterToolbar) .pagehead h1{font-size:34px;letter-spacing:-1.6px}
+  .page:has(.filterToolbar) .pagehead>p:last-child{font-size:14px;line-height:1.55}
+  .filterToolbar{padding:7px;border-radius:11px}
+  .page:has(.filterToolbar) .grid .cardbody{padding:14px}
+  .page:has(.filterToolbar) .grid .actions button{min-height:40px}
+}
