@@ -1,0 +1,75 @@
+/* MotoDC UI polish — About page, navigation and footer only. No product/auth/payment logic. */
+
+/* Navigation */
+.nav nav a{position:relative;padding:8px 0;transition:color .2s ease}
+.nav nav a::after{content:"";position:absolute;left:0;right:0;bottom:1px;height:2px;border-radius:99px;background:#ff3157;transform:scaleX(0);transform-origin:center;transition:transform .2s ease}
+.nav nav a:hover::after,.nav nav a.active::after,.nav nav a[aria-current="page"]::after{transform:scaleX(1)}
+.nav nav a.active,.nav nav a[aria-current="page"]{color:#f8fafc}
+.nav .logo{transition:opacity .2s ease,transform .2s ease}
+.nav .logo:hover{opacity:.9;transform:translateY(-1px)}
+.nav .mobile:focus-visible,.nav nav a:focus-visible,.nav .logo:focus-visible,.nav .search:focus-within,.nav .themeToggle:focus-visible,.nav .account:focus-visible,.nav .wishlistNav:focus-visible,.nav .cart:focus-visible{outline:2px solid #ff3157;outline-offset:3px}
+
+/* About page */
+.aboutPage{width:100%;max-width:1200px;border-radius:0 0 22px 22px}
+.aboutHero{max-width:880px}
+.aboutEyebrow span{color:#ff3157}
+.aboutTitle{text-wrap:balance}
+.aboutLead{text-wrap:pretty}
+.aboutCard{min-width:0}
+.aboutCard h2{letter-spacing:-.6px}
+.aboutValue,.aboutStat{min-width:0}
+.aboutValue strong,.aboutValue span,.aboutContactItem a,.aboutContactItem span{overflow-wrap:anywhere}
+.aboutContactItem a{display:inline-block}
+.aboutCard:focus-within{border-color:#3b404d}
+
+/* Footer */
+footer{position:relative;display:grid;justify-items:center;gap:8px;padding:42px 22px 30px!important;background:#07090d}
+footer b{letter-spacing:-.8px}
+footer b span{color:#ff3157}
+footer p{max-width:760px;margin:0;line-height:1.7}
+footer a{transition:color .2s ease}
+footer a:hover{color:#ff3157}
+footer a:focus-visible{outline:2px solid #ff3157;outline-offset:3px;border-radius:3px}
+
+/* Light theme */
+.light-theme .nav nav a.active,.light-theme .nav nav a[aria-current="page"]{color:#171a21}
+.light-theme footer{background:#f8f9fb!important}
+.light-theme footer b{color:#171a21!important}
+
+/* Tablet */
+@media(max-width:850px){
+  .nav nav a{padding:10px 0}
+  .aboutPage{border-radius:0}
+  footer{padding:34px 18px 26px!important}
+}
+
+/* Phones */
+@media(max-width:520px){
+  .aboutHero{padding-top:24px;padding-bottom:30px}
+  .aboutTitle{font-size:29px;line-height:1.1}
+  .aboutLead{font-size:14px;line-height:1.7}
+  .aboutGrid{gap:12px}
+  .aboutCard{padding:19px}
+  .aboutCard h2{font-size:20px}
+  .aboutCard p{font-size:13px;line-height:1.7}
+  .aboutValues{gap:8px}
+  .aboutValue{padding:14px}
+  .aboutStats{gap:6px}
+  .aboutStat{padding:13px 6px}
+  .aboutStat strong{font-size:17px}
+  footer{padding:30px 14px 24px!important}
+  footer b{font-size:20px}
+  footer p{font-size:12px;line-height:1.65}
+}
+
+@media(max-width:360px){
+  .aboutTitle{font-size:27px}
+  .aboutLead{font-size:13px}
+  .aboutCard{padding:17px}
+  .aboutStat strong{font-size:15px}
+  .aboutStat small{font-size:8px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .nav nav a,.nav .logo,footer a{transition:none}
+}
