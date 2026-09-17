@@ -1,1 +1,1 @@
-(()=>{window.MotoDCRealImagesAuto={"Amaron_Car_Battery_45Ah":"data:image/jpeg;base64,/9j/","Amaron_Two_Wheeler_Battery_5Ah":"data:image/jpeg;base64,/9j/"};})();
+(()=>{window.MotoDCRealImagesAuto={};})();
