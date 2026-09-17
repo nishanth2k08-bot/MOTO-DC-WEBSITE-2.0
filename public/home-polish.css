@@ -1,0 +1,38 @@
+/* Step 1 — Homepage UI polish only. No product, auth, cart, payment or data logic. */
+.hero>div:first-child{max-width:680px}
+.hero h1{max-width:680px;text-wrap:balance}
+.hero p:not(.eyebrow){font-size:17px;line-height:1.65;margin-bottom:0}
+.hero .eyebrow{margin-bottom:14px}
+.heroBtn{box-shadow:0 10px 28px rgba(255,49,87,.10)}
+.stats{margin-top:0}
+.stats div{min-height:88px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.stats b{letter-spacing:-.4px}
+.stats span{letter-spacing:.15px}
+.sectionhead{margin-bottom:24px}
+.section h2{letter-spacing:-.7px}
+.categories button{min-height:142px;padding:26px 28px}
+.categories span{font-family:Sora,Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-.8px}
+.grid .card{box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.grid .card:hover{transform:translateY(-4px)}
+@media(min-width:851px){
+  .hero{min-height:560px}
+  .hero>div:first-child{transform:translateY(-2px)}
+  .stats div{padding:25px 12px}
+}
+@media(max-width:850px){
+  .hero p:not(.eyebrow){font-size:16px}
+  .categories button{min-height:130px}
+}
+@media(max-width:520px){
+  .hero h1{letter-spacing:-2.2px}
+  .hero p:not(.eyebrow){font-size:15px;line-height:1.55}
+  .heroBtn{box-shadow:0 7px 20px rgba(255,49,87,.10)}
+  .sectionhead{margin-bottom:20px}
+  .section h2{font-size:26px}
+  .categories button{min-height:116px;padding:22px}
+  .categories span{font-size:30px}
+  .grid .card{box-shadow:none}
+  .stats div{min-height:72px}
+}
+.light-theme .grid .card{box-shadow:0 8px 28px rgba(20,24,32,.05)}
+@media(prefers-reduced-motion:reduce){.grid .card:hover{transform:none}}
