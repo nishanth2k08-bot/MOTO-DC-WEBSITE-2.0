@@ -62,7 +62,7 @@ footer{border-top-color:var(--m12-border)}
   /* Final mobile header fit: reserve space for every navigation action. */
   .nav{gap:4px!important;overflow:visible!important}
   .nav>.mobile{flex:0 0 40px!important;width:40px!important;min-width:40px!important;height:40px!important;padding:0!important}
-  .nav>.logo{width:96px!important;min-width:96px!important;max-width:96px!important;height:40px!important;flex:0 0 96px!important;background-size:contain!important}
+  .nav>.logo{width:104px!important;min-width:104px!important;max-width:104px!important;height:40px!important;flex:0 0 104px!important;background-size:contain!important}
   .nav>.themeToggle{width:34px!important;min-width:34px!important;max-width:34px!important;height:34px!important;flex-basis:34px!important}
   .nav>.account{width:42px!important;min-width:42px!important;max-width:42px!important;height:40px!important;flex-basis:42px!important}
   .nav>.account.accountName{width:42px!important;min-width:42px!important;max-width:42px!important;padding:0 2px!important;font-size:11px!important}
@@ -73,7 +73,7 @@ footer{border-top-color:var(--m12-border)}
 @media(max-width:380px){
   .nav{gap:2px!important}
   .nav>.mobile{width:38px!important;min-width:38px!important;flex-basis:38px!important;height:38px!important}
-  .nav>.logo{width:82px!important;min-width:82px!important;max-width:82px!important;flex-basis:82px!important;height:38px!important}
+  .nav>.logo{width:90px!important;min-width:90px!important;max-width:90px!important;flex-basis:90px!important;height:38px!important}
   .nav>.themeToggle{width:32px!important;min-width:32px!important;max-width:32px!important;flex-basis:32px!important;height:32px!important}
   .nav>.account,.nav>.account.accountName{width:40px!important;min-width:40px!important;max-width:40px!important;flex-basis:40px!important;height:38px!important}
   .nav>.wishlistNav,.nav>.cart{width:30px!important;min-width:30px!important;max-width:30px!important;flex-basis:30px!important;height:36px!important}
