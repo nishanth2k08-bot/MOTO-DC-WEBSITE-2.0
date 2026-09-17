@@ -24,13 +24,11 @@ footer{border-top-color:var(--m12-border)}
 .aboutCard,.aboutValue,.aboutStat{transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease}
 .aboutCard:hover{border-color:#353a46;box-shadow:var(--m12-shadow)}
 .aboutValue:hover,.aboutStat:hover{border-color:#353a46}
-/* Keep light mode visually aligned with the same system. */
 .light-theme{--m12-bg:#f6f7f9;--m12-surface:#fff;--m12-surface-2:#f5f6f8;--m12-border:#dfe2e8;--m12-text:#171a21;--m12-muted:#68707d;--m12-shadow:0 14px 35px rgba(20,24,32,.08)}
 .light-theme .categories button:hover,.light-theme .card:hover,.light-theme .aboutCard:hover{border-color:#cbd0d8;box-shadow:var(--m12-shadow)}
 .light-theme .search:focus-within{border-color:rgba(255,49,87,.55);box-shadow:0 0 0 3px rgba(255,49,87,.08)}
 @media(max-width:850px){.nav{padding-inline:15px}.section,.page{padding-inline:15px}.hero{padding-inline:15px}.grid{gap:14px}.categories{gap:14px}}
 @media(max-width:520px){.heroBtn{min-height:44px}.actions button,.secondaryBtn{min-height:40px}.sectionhead{align-items:flex-start;gap:12px}.sectionhead button{white-space:nowrap}.card{border-radius:14px}.aboutUsIntro,.aboutUsContact,.aboutCard{border-radius:14px}}
-
 /* Mobile visual QA fixes: keep content inside the actual phone viewport. */
 @media(max-width:520px){
   .nav{width:100%;max-width:100%;padding-left:8px;padding-right:8px;gap:5px;overflow:hidden}
@@ -56,12 +54,18 @@ footer{border-top-color:var(--m12-border)}
   .pagination,.paginationWrap,.pager{max-width:100%;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .pagination>*{flex:none}
   table{max-width:100%;overflow-x:auto}
+  /* Preserve the two most useful header actions on phones: account and cart. */
+  .wishlistNav{display:none!important}
+  .cart{display:grid!important;visibility:visible!important;opacity:1!important;place-items:center}
+  .account{display:flex!important;visibility:visible!important;opacity:1!important;align-items:center;justify-content:center;overflow:hidden}
+  .accountName{display:block!important;max-width:62px!important;width:62px!important;min-width:0!important;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
 @media(max-width:380px){
   .nav{gap:3px}
-  .logo{max-width:31vw!important}
-  .themeToggle,.account,.wishlistNav,.cart{flex-basis:40px!important;width:40px!important;min-width:40px!important;max-width:40px!important}
-  .sectionhead>div{max-width:62%}
-  .sectionhead>button{max-width:38%;font-size:13px}
+  .logo{max-width:29vw!important}
+  .themeToggle{width:40px!important;min-width:40px!important;max-width:40px!important;flex-basis:40px!important}
+  .account{width:58px!important;min-width:58px!important;max-width:58px!important;flex-basis:58px!important}
+  .accountName{width:58px!important;max-width:58px!important}
+  .cart{width:40px!important;min-width:40px!important;max-width:40px!important;flex-basis:40px!important}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
