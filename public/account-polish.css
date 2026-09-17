@@ -1,0 +1,30 @@
+/* MotoDC Account/Auth — final UI polish, presentation-only */
+.auth{isolation:isolate}
+.authcard,.accountcard{min-width:0;box-sizing:border-box}
+.authintro h1,.accountcard h1{text-wrap:balance}
+.authintro>p:not(.eyebrow),.accountmuted{max-width:470px}
+.authswitch button,.authmethods button,.authsocial button,.textBtn{min-height:44px}
+.authform label>div{min-width:0;box-sizing:border-box}
+.authform input{min-width:0;box-sizing:border-box}
+.authform .heroBtn,.accountcard .heroBtn{width:100%;cursor:pointer}
+.authform .heroBtn:focus-visible,.accountcard .heroBtn:focus-visible,.authsocial button:focus-visible,.authswitch button:focus-visible,.authmethods button:focus-visible,.textBtn:focus-visible{outline:2px solid #ff3157;outline-offset:3px}
+.authsocial button img{flex:none}
+.accountinfo div{min-width:0;box-sizing:border-box}
+.accountinfo b{overflow-wrap:anywhere}
+.accounticon{flex:none}
+.otpBoxes{min-width:0}
+.otpBox{flex:0 1 42px;min-width:0}
+.light-theme .authform label>div:focus-within{background:#fff}
+@media(max-width:700px){.authcard,.accountcard{max-width:540px}}
+@media(max-width:520px){
+  .authcard,.accountcard{width:100%;max-width:none}
+  .authintro>p:not(.eyebrow),.accountmuted{max-width:none}
+  .authswitch button,.authmethods button,.authsocial button{min-height:42px}
+  .authform .heroBtn,.accountcard .heroBtn{min-height:48px}
+}
+@media(max-width:380px){
+  .authcard,.accountcard{padding-inline:15px}
+  .authintro h1,.accountcard h1{font-size:31px}
+  .otpBox{flex-basis:36px!important}
+}
+@media(prefers-reduced-motion:reduce){.auth *,.accountcard *{scroll-behavior:auto}}
