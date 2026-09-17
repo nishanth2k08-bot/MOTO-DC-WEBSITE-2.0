@@ -79,4 +79,8 @@ footer{border-top-color:var(--m12-border)}
   .nav>.wishlistNav,.nav>.cart{width:30px!important;min-width:30px!important;max-width:30px!important;flex-basis:30px!important;height:36px!important}
   .nav>.wishlistNav svg,.nav>.cart svg{width:20px!important;height:20px!important}
 }
+/* Tablet visual QA: the hero background is 620px tall, so keep the 769-850px hero at the same height instead of viewport height. This removes the empty gap before the stats row without affecting smaller phones or desktop. */
+@media(min-width:769px) and (max-width:850px){
+  .hero{height:620px!important;min-height:620px!important}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
