@@ -31,9 +31,23 @@ async function sendCancellationEmail(order){
   return {templateId,email};
 }
 export default async function handler(req,res){
-  if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});
+  if(req.method!=='POST'&&req.method!=='DELETE')return send(res,405,{error:'Method not allowed'});
   try{
     const auth=req.headers.authorization||'',idToken=auth.startsWith('Bearer ')?auth.slice(7):'';
+    if(req.method==='DELETE'){
+      const {docId,paymentMethod}=req.body||{};
+      if(!docId||!paymentMethod)return send(res,400,{error:'Order information is incomplete'});
+      const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
+      const category=String(paymentMethod).toLowerCase()==='cod'?'cod orders':'online orders';
+      const ref=db.collection('orders').doc(category).collection('records').doc(String(docId));
+      const snap=await ref.get();
+      if(!snap.exists)return send(res,404,{error:'Order not found'});
+      const order={id:snap.id,...snap.data()};
+      if(order.userId!==decoded.uid)return send(res,403,{error:'You can only delete your own order'});
+      if(!['delivered','returned','replaced'].includes(String(order.orderStatus||'').toLowerCase()))return send(res,409,{error:'Only delivered, returned, or replaced orders can be deleted'});
+      await ref.delete();
+      return send(res,200,{ok:true,deleted:true,docId:String(docId)});
+    }
     const {orderId,docId,paymentMethod}=req.body||{};
     if(!idToken)return send(res,401,{error:'Authentication required'});
     if(!docId||!paymentMethod)return send(res,400,{error:'Order information is incomplete'});
