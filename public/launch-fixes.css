@@ -1,0 +1,24 @@
+/* Final launch polish: light header, empty cart state, return actions */
+.light-theme header{background:rgba(255,255,255,.97)!important;backdrop-filter:blur(18px)!important;border-bottom-color:#dfe2e8!important;box-shadow:0 4px 18px rgba(20,25,35,.06)}
+.light-theme .nav nav a{color:#343b47!important}
+.light-theme .nav nav a:hover,.light-theme .nav nav a.currentPage{color:#e3264d!important}
+.light-theme .search{background:#fff!important;border-color:#dfe2e8!important;box-shadow:0 4px 14px rgba(20,25,35,.04)}
+.light-theme .search svg{color:#68717f}
+.light-theme .account{background:#fff!important;border-color:#dfe2e8!important;color:#171a21!important}
+.light-theme .wishlistNav,.light-theme .cart{color:#252b35!important}
+.light-theme .wishlistNav:hover,.light-theme .cart:hover{color:#e3264d!important}
+.cartEmpty{min-height:380px;border:1px dashed #30343d;border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;color:#9299a6;padding:42px}
+.cartEmpty>div{display:flex;flex-direction:column;align-items:center}
+.cartEmpty h2{color:#f8fafc;font:700 25px Sora;margin:0 0 7px}
+.cartEmpty p{margin:0}
+.cartEmpty .heroBtn{margin-top:20px}
+.light-theme .cartEmpty{border-color:#d5d9e0;background:rgba(255,255,255,.55);color:#68717f}
+.light-theme .cartEmpty h2{color:#171a21}
+.returnActions{display:flex;gap:10px;padding:15px 22px 20px;border-top:1px solid #252933}
+.returnActions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:150px;height:40px;padding:0 16px;border:1px solid rgba(255,49,87,.5);border-radius:9px;background:rgba(255,49,87,.08);color:#ff7189;font:700 11px Sora;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.returnActions button:hover:not(:disabled){background:rgba(255,49,87,.16);border-color:#ff3157;color:#ff3157;transform:translateY(-1px)}
+.returnActions button:disabled{opacity:.55;cursor:not-allowed}
+.light-theme .returnActions{border-color:#e8ebef}
+.light-theme .returnActions button{background:rgba(255,49,87,.05);border-color:#e3264d;color:#e3264d}
+@media(max-width:520px){.returnActions{padding:13px 15px 16px}.returnActions button{min-width:0;flex:1;height:38px}.cartEmpty{min-height:330px;padding:30px 18px}}
+@media(prefers-reduced-motion:reduce){.returnActions button{transition:none}.returnActions button:hover{transform:none}}
