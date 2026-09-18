@@ -6,6 +6,7 @@ import {toast} from 'react-hot-toast';
 import './orders.css';
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
+const clean=value=>{try{return JSON.parse(JSON.stringify(value??{}))}catch{return{}}};
 const sortNewest=xs=>xs.sort((a,b)=>{const av=a.createdAt?.toMillis?a.createdAt.toMillis():new Date(a.createdAt||0).getTime();const bv=b.createdAt?.toMillis?b.createdAt.toMillis():new Date(b.createdAt||0).getTime();return bv-av});
 const groupFor=payment=>String(payment||'cod').toLowerCase()==='online'?'online request':'cod request';
 const typeCollection=(payment,type)=>type==='replacement'?`${payment} replacement`:`${payment} return`;
@@ -59,13 +60,13 @@ export default function Returns(){
      const ref=await addDoc(collection(db,'request',group,sub),{
        userId:u.uid,orderId:o.id,displayOrderId:o.orderId||o.id,type,paymentMethod:payment,
        requestGroup:group,requestCollection:sub,reason:'Customer reported a mismatch or damage',
-       status:'requested',customer:o.customer||{},shipping:o.shipping||{},items:o.items||[],
+       status:'requested',customer:clean(o.customer),shipping:clean(o.shipping),items:clean(o.items),
        total:Number(o.total||0),createdAt:new Date(),updatedAt:new Date()
      });
      const newRequest={id:ref.id,requestGroup:group,requestCollection:sub,userId:u.uid,orderId:o.id,displayOrderId:o.orderId||o.id,type,paymentMethod:payment,status:'requested',customer:o.customer||{},shipping:o.shipping||{},items:o.items||[],total:Number(o.total||0),createdAt:new Date()};
      setRequests(xs=>sortNewest([newRequest,...xs]));
      toast.success(`${type==='replacement'?'Replacement':'Return'} request submitted`);
-   }catch(e){console.error('Return request error:',e);toast.error('Could not submit the request. Please try again.')}
+   }catch(e){console.error('Return request error:',e);toast.error(e?.code==='permission-denied'?'Return request permission was denied. Please sign in again.':e?.message||'Could not submit the request. Please try again.')}
    finally{setBusy('')}
  };
  return <section className="page ordersPage"><div className="pagehead"><p className="eyebrow">AFTER-SALES SUPPORT</p><h1>Returns & <span>replacement.</span></h1><p>Request help if an item arrived damaged, defective, or mismatched.</p></div>{loading?<div className="empty">Loading...</div>:<><div className="customerOrders">{orders.map(o=><article className="customerOrder" key={o.id}><div className="customerOrderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.createdAt?.toDate?o.createdAt.toDate().toLocaleDateString('en-IN'):'Recently'}</small></div><strong>{money(o.total)}</strong><span className="status delivered"><Package size={14}/> Delivered</span></div><div className="returnActions"><button onClick={()=>request(o,'return')} disabled={busy.startsWith(o.id)}><RotateCcw size={16}/> {busy===o.id+'return'?'Submitting...':'Return'}</button><button onClick={()=>request(o,'replacement')} disabled={busy.startsWith(o.id)}><RefreshCw size={16}/> {busy===o.id+'replacement'?'Submitting...':'Replacement'}</button></div></article>)}</div>{!orders.length&&<div className="ordersEmpty"><Package size={40}/><h2>No delivered orders</h2><p>Delivered purchases will appear here when they become eligible for support.</p></div>}<div className="dashPanel returnHistory"><div className="dashPanelHead"><h3>Request history</h3></div>{requests.length?requests.map(r=><div className="returnRow" key={`${r.requestGroup}-${r.requestCollection}-${r.id}`}><b>{r.displayOrderId}</b><span>{r.type==='replacement'?'Replacement':'Return'}</span><strong>{r.status}</strong></div>):<p className="dashMuted">No return or replacement requests yet.</p>}</div></>}</section>;
