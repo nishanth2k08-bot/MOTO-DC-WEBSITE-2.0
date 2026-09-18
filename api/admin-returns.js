@@ -30,10 +30,31 @@ export default async function handler(req,res){
       const allowedCollections=new Set(['cod return','cod replacement','online return','online replacement']);
       const allowedStatuses=new Set(['requested','approved','processing','completed','rejected']);
       if(!allowedGroups.has(requestGroup)||!allowedCollections.has(requestCollection)||!requestId||!allowedStatuses.has(status))return send(res,400,{error:'Invalid return request update'});
-      await db.collection('request').doc(requestGroup).collection(requestCollection).doc(requestId).update({
-        status,updatedAt:new Date()
-      });
-      return send(res,200,{ok:true,status});
+      const requestRef=db.collection('request').doc(requestGroup).collection(requestCollection).doc(requestId);
+      const requestSnap=await requestRef.get();
+      if(!requestSnap.exists)return send(res,404,{error:'Return request not found'});
+      const requestData=requestSnap.data()||{};
+      const now=new Date();
+      const history=Array.isArray(requestData.statusHistory)?requestData.statusHistory:[];
+      history.push({status,updatedAt:now,updatedBy:decoded.uid});
+      await requestRef.update({status,updatedAt:now,statusHistory:history});
+      if(status==='completed'){
+        const payment=String(requestData.paymentMethod||'').toLowerCase()==='online'?'online':'cod';
+        const orderCategory=payment==='online'?'online orders':'cod orders';
+        const orderId=String(requestData.orderId||'');
+        if(orderId){
+          const orderRef=db.collection('orders').doc(orderCategory).collection('records').doc(orderId);
+          const orderSnap=await orderRef.get();
+          if(orderSnap.exists){
+            const nextStatus=requestData.type==='replacement'?'replaced':'returned';
+            const orderData=orderSnap.data()||{};
+            const orderHistory=Array.isArray(orderData.statusHistory)?orderData.statusHistory:[];
+            orderHistory.push({status:nextStatus,updatedAt:now,reason:requestData.type==='replacement'?'Replacement request completed':'Return request completed'});
+            await orderRef.update({orderStatus:nextStatus,statusHistory:orderHistory,afterSalesType:requestData.type,afterSalesRequestId:requestId,updatedAt:now});
+          }
+        }
+      }
+      return send(res,200,{ok:true,status,orderStatus:status==='completed'?(requestData.type==='replacement'?'replaced':'returned'):undefined});
     }
 
     const groups=[
