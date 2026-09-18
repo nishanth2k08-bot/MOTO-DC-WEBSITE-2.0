@@ -22,3 +22,16 @@
 .light-theme .returnActions button{background:rgba(255,49,87,.05);border-color:#e3264d;color:#e3264d}
 @media(max-width:520px){.returnActions{padding:13px 15px 16px}.returnActions button{min-width:0;flex:1;height:38px}.cartEmpty{min-height:330px;padding:30px 18px}}
 @media(prefers-reduced-motion:reduce){.returnActions button{transition:none}.returnActions button:hover{transform:none}}
+
+/* Header utility controls: transparent in both themes */
+header .search,header .themeToggle,header .account{background:transparent!important;box-shadow:none!important}
+header .search{border-color:transparent!important}
+header .search:focus-within{border-color:rgba(255,49,87,.45)!important;background:rgba(255,255,255,.035)!important}
+header .themeToggle{border-color:transparent!important}
+header .account{border-color:transparent!important}
+header .themeToggle:hover,header .account:hover{background:rgba(255,255,255,.055)!important;border-color:transparent!important}
+.light-theme header .search,.light-theme header .themeToggle,.light-theme header .account{background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+.light-theme header .search:focus-within{background:rgba(20,25,35,.035)!important;border-color:rgba(227,38,77,.35)!important}
+.light-theme header .themeToggle:hover,.light-theme header .account:hover{background:rgba(20,25,35,.045)!important}
+.light-theme header .search input{background:transparent!important;color:#252b35!important}
+header .search input{background:transparent!important}
