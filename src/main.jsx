@@ -1,4 +1,5 @@
 import React,{useMemo,useState} from 'react';
+import {Analytics} from '@vercel/analytics/react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter,useNavigate,useLocation} from 'react-router-dom';
 import {collection,getDocs} from 'firebase/firestore';
