@@ -20,25 +20,32 @@ export default function Returns(){
    const load=async()=>{
      try{
        const [cod,online]=await Promise.all([
-         getDocs(query(collection(db,'orders','cod orders','records'),where('userId','==',u.uid),where('orderStatus','==','delivered'))),
-         getDocs(query(collection(db,'orders','online orders','records'),where('userId','==',u.uid),where('orderStatus','==','delivered')))
+         getDocs(query(collection(db,'orders','cod orders','records'),where('userId','==',u.uid))),
+         getDocs(query(collection(db,'orders','online orders','records'),where('userId','==',u.uid)))
        ]);
        if(!active)return;
-       const delivered=sortNewest([...cod.docs,...online.docs].map(d=>({id:d.id,...d.data()})));
-       setOrders(delivered);
-       const seen=[];
-       await Promise.all(delivered.map(async o=>{
-         const payment=String(o.paymentMethod||'cod').toLowerCase()==='online'?'online':'cod';
-         const group=groupFor(payment);
-         for(const type of ['return','replacement']){
-           try{
-             const snap=await getDocs(query(collection(db,'request',group,typeCollection(payment,type)),where('userId','==',u.uid),where('orderId','==',o.id)));
-             snap.docs.forEach(d=>seen.push({id:d.id,requestGroup:group,requestCollection:typeCollection(payment,type),...d.data()}));
-           }catch(e){console.warn('Return history unavailable:',e)}
+       const allOrders=[...cod.docs,...online.docs].map(d=>({id:d.id,...d.data()}))
+         .filter(o=>['delivered','returned','replaced'].includes(String(o.orderStatus||'').toLowerCase()));
+       const token=await u.getIdToken();
+       const response=await fetch('/api/returns',{headers:{Authorization:`Bearer ${token}`}});
+       const data=await response.json().catch(()=>({}));
+       if(!response.ok)throw new Error(data.error||'Could not load return history');
+       const history=Array.isArray(data.requests)?data.requests:[];
+       const completedByOrder={};
+       history.forEach(r=>{
+         if(['completed','processing','approved','requested'].includes(r.status))completedByOrder[r.orderId]=r;
+       });
+       const merged=allOrders.map(o=>{
+         const r=completedByOrder[o.id];
+         if(r?.status==='completed'){
+           const finalStatus=r.type==='replacement'?'replaced':'returned';
+           return {...o,orderStatus:finalStatus,afterSalesType:r.type,afterSalesRequestId:r.id};
          }
-       }));
-       if(active)setRequests(sortNewest(seen));
-     }catch(e){console.error(e);toast.error('Could not load delivered orders')}
+         return o;
+       });
+       setOrders(sortNewest(merged));
+       setRequests(sortNewest(history));
+     }catch(e){console.error(e);toast.error(e?.message||'Could not load return information')}
      finally{if(active)setLoading(false)}
    };
    load();
