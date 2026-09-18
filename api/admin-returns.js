@@ -15,13 +15,26 @@ function getAdmin(){
 function send(res,status,body){res.status(status).json(body)}
 
 export default async function handler(req,res){
-  if(req.method!=='GET')return send(res,405,{error:'Method not allowed'});
+  if(!['GET','PATCH'].includes(req.method))return send(res,405,{error:'Method not allowed'});
   try{
     const authHeader=req.headers.authorization||'',idToken=authHeader.startsWith('Bearer ')?authHeader.slice(7):'';
     if(!idToken)return send(res,401,{error:'Authentication required'});
     const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
     const adminSnap=await db.collection('admins').doc(decoded.uid).get();
     if(!adminSnap.exists)return send(res,403,{error:'Admin access required'});
+
+    if(req.method==='PATCH'){
+      const body=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
+      const requestGroup=String(body.requestGroup||''),requestCollection=String(body.requestCollection||''),requestId=String(body.requestId||''),status=String(body.status||'');
+      const allowedGroups=new Set(['cod request','online request']);
+      const allowedCollections=new Set(['cod return','cod replacement','online return','online replacement']);
+      const allowedStatuses=new Set(['requested','approved','processing','completed','rejected']);
+      if(!allowedGroups.has(requestGroup)||!allowedCollections.has(requestCollection)||!requestId||!allowedStatuses.has(status))return send(res,400,{error:'Invalid return request update'});
+      await db.collection('request').doc(requestGroup).collection(requestCollection).doc(requestId).update({
+        status,updatedAt:new Date()
+      });
+      return send(res,200,{ok:true,status});
+    }
 
     const groups=[
       ['cod request','cod return'],
