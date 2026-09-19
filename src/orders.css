@@ -23,3 +23,11 @@
 .ordersRoute .routeTruck{z-index:8;display:block;visibility:visible;opacity:1;width:32px;height:32px;line-height:0;position:absolute;left:55%;bottom:63px;color:#ff3157;filter:drop-shadow(0 0 6px rgba(255,49,87,.95));pointer-events:none;animation:orderTruckMove 6s ease-in-out infinite}
 .ordersRoute .routeTruck svg{position:relative;inset:auto;width:27px;height:27px;display:block;overflow:visible;color:currentColor;stroke:currentColor}
 @media(max-width:700px){.ordersRoute .routeTruck{left:55%;bottom:57px;width:30px;height:30px}.ordersRoute .routeTruck svg{width:25px;height:25px}}
+
+/* Final My Orders viewport + delivery truck correction. */
+.ordersPage{width:100%;max-width:none;margin:0;padding:0 4vw 54px;box-sizing:border-box}.ordersHero{width:100%;min-height:340px;margin:0;padding:30px 0 0;box-sizing:border-box;border-radius:0}.orderFilters,.customerOrders{width:100%;max-width:none;box-sizing:border-box}.customerOrderTop{width:100%;box-sizing:border-box}
+.ordersRoute .routeTruck{left:11%;bottom:61px;color:#050505;filter:drop-shadow(0 0 2px rgba(255,255,255,.95)) drop-shadow(0 0 7px rgba(255,49,87,.7));animation:orderTruckJourney 8s cubic-bezier(.45,.05,.25,1) infinite;will-change:left,bottom}
+.ordersRoute .routeTruck svg{stroke:#050505;fill:#050505;filter:drop-shadow(0 0 2px rgba(255,255,255,.9))}
+@keyframes orderTruckJourney{0%{left:11%;bottom:61px;transform:translateX(-50%) scale(.92)}8%{left:15%;bottom:61px}24%{left:31%;bottom:60px}40%{left:47%;bottom:70px}56%{left:62%;bottom:61px}72%{left:76%;bottom:78px}88%{left:89%;bottom:72px}100%{left:89%;bottom:72px;transform:translateX(-50%) scale(.92)}}
+@media(max-width:700px){.ordersPage{width:100%;padding:0 14px 40px}.ordersHero{min-height:300px}.ordersRoute .routeTruck{left:11%;bottom:57px;animation-name:orderTruckJourneyMobile}.ordersRoute .routeTruck svg{width:25px;height:25px}}
+@keyframes orderTruckJourneyMobile{0%{left:11%;bottom:57px;transform:translateX(-50%) scale(.85)}20%{left:31%;bottom:57px}40%{left:49%;bottom:66px}60%{left:67%;bottom:58px}80%{left:86%;bottom:68px}100%{left:89%;bottom:66px;transform:translateX(-50%) scale(.85)}}
