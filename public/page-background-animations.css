@@ -1,0 +1,32 @@
+/* MotoDC page-specific background animations */
+.motodc-page-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.72}
+.motodc-bg-glow,.motodc-bg-grid,.motodc-bg-orb,.motodc-bg-line{position:absolute;display:block}
+.motodc-bg-glow{inset:-20%;background:radial-gradient(circle at 70% 20%,rgba(255,49,87,.11),transparent 28%),radial-gradient(circle at 20% 80%,rgba(90,110,255,.06),transparent 25%);animation:motodcAmbient 14s ease-in-out infinite alternate}
+.motodc-bg-grid{inset:-30%;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:70px 70px;transform:perspective(700px) rotateX(62deg) translateY(15%);transform-origin:center;animation:motodcGrid 18s linear infinite}
+.motodc-bg-orb{width:180px;height:180px;border-radius:50%;filter:blur(2px);background:radial-gradient(circle,rgba(255,49,87,.18),rgba(255,49,87,0) 68%);animation:motodcFloat 10s ease-in-out infinite}
+.motodc-bg-orb-a{left:7%;top:22%}.motodc-bg-orb-b{right:5%;bottom:12%;animation-delay:-5s}
+.motodc-bg-line{width:55vw;height:2px;background:linear-gradient(90deg,transparent,rgba(255,49,87,.38),transparent);transform:rotate(-18deg);animation:motodcLine 9s ease-in-out infinite}
+.motodc-bg-line-a{left:-15%;top:35%}.motodc-bg-line-b{right:-15%;top:68%;animation-delay:-4s}
+.motodc-bg-home .motodc-bg-glow{animation-duration:11s}
+.motodc-bg-catalog .motodc-bg-grid{animation-duration:13s}
+.motodc-bg-catalog .motodc-bg-line{opacity:.5}
+.motodc-bg-detail .motodc-bg-grid{opacity:.2}
+.motodc-bg-detail .motodc-bg-orb{width:260px;height:260px}
+.motodc-bg-cart .motodc-bg-line{animation-duration:6s;opacity:.75}
+.motodc-bg-cart .motodc-bg-glow{background:radial-gradient(circle at 20% 35%,rgba(255,49,87,.13),transparent 25%),radial-gradient(circle at 80% 70%,rgba(255,49,87,.07),transparent 25%)}
+.motodc-bg-checkout .motodc-bg-glow{background:radial-gradient(circle at 50% 28%,rgba(255,49,87,.13),transparent 23%)}
+.motodc-bg-checkout .motodc-bg-grid{display:none}
+.motodc-bg-wishlist .motodc-bg-orb{width:120px;height:120px;opacity:.8}
+.motodc-bg-orders .motodc-bg-line{height:3px;transform:rotate(0);width:75vw;left:12%;opacity:.65;animation:motodcRoute 7s linear infinite}
+.motodc-bg-returns .motodc-bg-orb{border:1px solid rgba(255,49,87,.14);background:radial-gradient(circle,rgba(255,49,87,.15),transparent 62%);animation:motodcReturn 8s linear infinite}
+.motodc-bg-about .motodc-bg-grid{opacity:.16}.motodc-bg-about .motodc-bg-line{opacity:.7}
+.motodc-bg-account .motodc-bg-grid{opacity:.1}.motodc-bg-account .motodc-bg-orb{background:radial-gradient(circle,rgba(255,49,87,.13),transparent 65%)}
+.motodc-bg-admin .motodc-bg-grid{opacity:.22;animation-duration:9s}.motodc-bg-admin .motodc-bg-line{opacity:.8;animation-duration:5s}
+.light-theme .motodc-page-bg{opacity:.38}.light-theme .motodc-bg-grid{background-image:linear-gradient(rgba(20,25,35,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(20,25,35,.08) 1px,transparent 1px)}
+@keyframes motodcAmbient{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(3%,2%,0) scale(1.08)}}
+@keyframes motodcGrid{from{transform:perspective(700px) rotateX(62deg) translate3d(0,15%,0)}to{transform:perspective(700px) rotateX(62deg) translate3d(70px,15%,0)}}
+@keyframes motodcFloat{0%,100%{transform:translate3d(0,0,0) scale(.9)}50%{transform:translate3d(45px,-28px,0) scale(1.08)}}
+@keyframes motodcLine{0%,100%{transform:translateX(-10%) rotate(-18deg);opacity:.15}50%{transform:translateX(15%) rotate(-18deg);opacity:.65}}
+@keyframes motodcRoute{from{transform:translateX(-35%)}to{transform:translateX(35%)}}
+@keyframes motodcReturn{from{transform:rotate(0deg) scale(.9)}to{transform:rotate(360deg) scale(1.05)}}
+@media(prefers-reduced-motion:reduce){.motodc-page-bg *{animation:none!important;transform:none!important}}
