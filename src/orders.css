@@ -68,3 +68,107 @@
 .ordersRoute .routeTruckSvg .truckBrand{font-size:4.5px!important}
 @media(max-width:1000px){.ordersPage{padding-left:22px!important;padding-right:22px!important}.ordersHero{padding-left:24px!important;padding-right:24px!important}}
 @media(max-width:700px){.ordersPage{width:100%!important;padding:0 12px 40px!important}.ordersHero{min-height:350px!important;padding:28px 16px 0!important}.ordersRoute{height:175px!important}.routeNode{bottom:48px!important}.routeNode.n5 i{width:44px!important;height:44px!important}.routeNode.n5 i svg{width:17px!important;height:17px!important}.ordersHeroTrust{font-size:7px!important}.ordersHeroTrust span{max-width:48%}}
+
+/* FINAL REFERENCE UI — My Orders */
+.ordersPage{
+  width:100vw!important;max-width:none!important;margin:0!important;
+  padding:0 34px 54px!important;box-sizing:border-box!important;
+  overflow:visible!important;
+}
+.ordersHero{
+  position:relative!important;width:100%!important;max-width:none!important;
+  min-height:390px!important;height:390px!important;margin:0 0 12px!important;
+  padding:34px 32px 0!important;box-sizing:border-box!important;
+  border:0!important;border-radius:0!important;overflow:hidden!important;
+  background-color:#020508!important;
+  background-image:
+    radial-gradient(circle at 50% 58%,rgba(255,20,50,.16),transparent 34%),
+    radial-gradient(circle at 82% 28%,rgba(255,20,50,.10),transparent 24%),
+    linear-gradient(118deg,transparent 0 16%,rgba(255,35,65,.08) 16.1%,transparent 16.3% 32%,rgba(255,35,65,.07) 32.1%,transparent 32.3% 52%,rgba(255,35,65,.08) 52.1%,transparent 52.3% 74%,rgba(255,35,65,.06) 74.1%,transparent 74.3%),
+    linear-gradient(32deg,transparent 0 24%,rgba(255,35,65,.06) 24.1%,transparent 24.3% 49%,rgba(255,35,65,.08) 49.1%,transparent 49.3% 71%,rgba(255,35,65,.06) 71.1%,transparent 71.3%),
+    linear-gradient(180deg,#04080c,#010305)!important;
+}
+.ordersHero:before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 54px,rgba(255,40,65,.035) 55px,transparent 56px),
+    repeating-linear-gradient(90deg,transparent 0 70px,rgba(255,40,65,.03) 71px,transparent 72px),
+    radial-gradient(circle at 18% 34%,rgba(255,35,60,.16) 0 2px,transparent 3px),
+    radial-gradient(circle at 34% 22%,rgba(255,35,60,.14) 0 2px,transparent 3px),
+    radial-gradient(circle at 57% 30%,rgba(255,35,60,.13) 0 2px,transparent 3px),
+    radial-gradient(circle at 73% 18%,rgba(255,35,60,.12) 0 2px,transparent 3px);
+  opacity:.9;
+}
+.ordersHero:after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.05) 45%,rgba(0,0,0,.32));
+}
+.ordersHeroCopy{position:relative!important;z-index:6!important}
+.ordersHeroCopy .eyebrow{margin:0!important;color:#ff3157!important;letter-spacing:3px!important}
+.ordersHeroCopy h1{font-size:50px!important;line-height:1!important;letter-spacing:-2px!important;margin:8px 0 14px!important}
+.ordersHeroCopy>p:last-child{font-size:17px!important;color:#c8d0d5!important}
+.ordersHeroTag{z-index:7!important;right:34px!important;top:34px!important;font-size:18px!important}
+.ordersRoute{
+  position:absolute!important;left:0!important;right:0!important;bottom:0!important;
+  width:100%!important;height:205px!important;z-index:5!important;
+}
+.ordersRoute svg{z-index:1!important}
+.ordersRouteLine{stroke:#ff3157!important;stroke-width:3.1!important;filter:drop-shadow(0 0 6px rgba(255,49,87,.95))!important}
+.ordersRouteGlow{stroke:#ff3157!important;stroke-width:15!important;opacity:.22!important;filter:blur(7px)!important}
+.routeNode{
+  position:absolute!important;bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
+  z-index:9!important;color:#ff3157!important;
+  font-size:11px!important;letter-spacing:.45px!important;
+  text-shadow:0 0 10px rgba(255,49,87,.25)!important;
+}
+.routeNode i{
+  width:48px!important;height:48px!important;margin:0 auto 8px!important;
+  display:grid!important;place-items:center!important;
+  border:3px solid #ff3157!important;background:#070a0e!important;
+  box-shadow:0 0 0 5px rgba(255,49,87,.07),0 0 24px rgba(255,49,87,.78)!important;
+}
+.routeNode i svg{color:#fff!important;stroke-width:2.3!important}
+.routeNode.n1{left:10.5%!important;top:55.3%!important}
+.routeNode.n2{left:30%!important;top:55.3%!important}
+.routeNode.n3{left:49.5%!important;top:49%!important}
+.routeNode.n4{left:70.5%!important;top:55%!important}
+.routeNode.n5{left:90.5%!important;top:44%!important}
+.routeNode.n5 i{width:58px!important;height:58px!important;border-width:3px!important;box-shadow:0 0 0 7px rgba(255,49,87,.08),0 0 32px rgba(255,49,87,.9)!important}
+.routeNode.n5 i svg{width:21px!important;height:21px!important}
+.routeNode b{display:block!important;margin-top:0!important;font-weight:800!important}
+.routeNodeGlow i{animation:routePointPulse 1.8s ease-in-out infinite!important}
+.routeTruckSvg{z-index:12!important;filter:drop-shadow(0 0 2px rgba(255,255,255,.95)) drop-shadow(0 0 9px rgba(255,49,87,.55))!important}
+.ordersHeroTrust{
+  z-index:8!important;bottom:8px!important;left:32px!important;right:32px!important;
+  color:#aeb7bf!important;font-size:11px!important;
+}
+.orderFilters{
+  width:100%!important;max-width:none!important;margin:0 0 14px!important;
+  border:1px solid rgba(255,49,87,.35)!important;border-radius:12px!important;
+  background:#030609!important;
+}
+.orderFilters button{padding:13px 28px!important;font-size:12px!important}
+.customerOrders{width:100%!important;gap:12px!important}
+.customerOrder{
+  border:1px solid rgba(255,49,87,.28)!important;
+  background:linear-gradient(100deg,#05080c,#020407)!important;
+  border-radius:15px!important;
+}
+@media(max-width:1000px){
+  .ordersPage{padding:0 20px 40px!important}
+  .ordersHero{min-height:370px!important;height:370px!important;padding:30px 24px 0!important}
+  .ordersHeroCopy h1{font-size:44px!important}
+}
+@media(max-width:700px){
+  .ordersPage{padding:0 10px 40px!important}
+  .ordersHero{min-height:350px!important;height:350px!important;padding:25px 16px 0!important}
+  .ordersHeroCopy h1{font-size:34px!important}
+  .ordersHeroCopy>p:last-child{font-size:13px!important}
+  .ordersHeroTag{display:none!important}
+  .ordersRoute{height:175px!important}
+  .routeNode{font-size:7px!important}
+  .routeNode i{width:34px!important;height:34px!important;border-width:2px!important}
+  .routeNode.n5 i{width:44px!important;height:44px!important}
+  .ordersHeroTrust{left:14px!important;right:14px!important;font-size:7px!important}
+}
