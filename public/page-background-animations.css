@@ -137,10 +137,3 @@
 @keyframes cartTrailHead{0%{left:5%;opacity:0}15%{opacity:1}78%{opacity:.72}100%{left:88%;opacity:0}}
 @media(max-width:700px){.motodc-bg-cart .motodc-cart-motion-trail{right:-18%;width:92%;height:1.5px}.motodc-cart-motion-trail-a{top:43%}.motodc-cart-motion-trail-b{top:50%;right:-12%;width:86%}.motodc-cart-motion-trail-c{top:57%;right:-6%;width:80%}}
 @media(prefers-reduced-motion:reduce){.motodc-bg-cart .motodc-cart-motion-trail,.motodc-bg-cart .motodc-cart-motion-trail::after{animation:none!important}}
-
-/* Cart 4A approved asset — use the uploaded reference image, not generated CSS trails. */
-.motodc-bg-cart .motodc-cart-motion-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;opacity:.72;filter:saturate(1.05) contrast(1.04);pointer-events:none;user-select:none;animation:cart4aDrift 16s ease-in-out infinite alternate;transform-origin:center}
-.motodc-bg-cart::after{background:linear-gradient(90deg,rgba(5,7,11,.78) 0%,rgba(5,7,11,.42) 52%,rgba(5,7,11,.16) 100%)!important;z-index:2}
-@keyframes cart4aDrift{from{transform:scale(1.02) translate3d(-.5%,0,0)}to{transform:scale(1.07) translate3d(.8%,-.4%,0)}}
-@media(max-width:700px){.motodc-bg-cart .motodc-cart-motion-image{object-position:72% center;opacity:.6;animation-duration:20s}.motodc-bg-cart::after{background:linear-gradient(180deg,rgba(5,7,11,.72),rgba(5,7,11,.36) 55%,rgba(5,7,11,.7))!important}}
-@media(prefers-reduced-motion:reduce){.motodc-bg-cart .motodc-cart-motion-image{animation:none!important}}
