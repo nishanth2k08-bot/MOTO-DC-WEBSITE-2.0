@@ -1,5 +1,5 @@
 /* MotoDC page-specific background animations */
-.motodc-page-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.72}
+.motodc-page-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.72}
 .motodc-bg-glow,.motodc-bg-grid,.motodc-bg-orb,.motodc-bg-line{position:absolute;display:block}
 .motodc-bg-glow{inset:-20%;background:radial-gradient(circle at 70% 20%,rgba(255,49,87,.11),transparent 28%),radial-gradient(circle at 20% 80%,rgba(90,110,255,.06),transparent 25%);animation:motodcAmbient 14s ease-in-out infinite alternate}
 .motodc-bg-grid{inset:-30%;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:70px 70px;transform:perspective(700px) rotateX(62deg) translateY(15%);transform-origin:center;animation:motodcGrid 18s linear infinite}
@@ -30,3 +30,7 @@
 @keyframes motodcRoute{from{transform:translateX(-35%)}to{transform:translateX(35%)}}
 @keyframes motodcReturn{from{transform:rotate(0deg) scale(.9)}to{transform:rotate(360deg) scale(1.05)}}
 @media(prefers-reduced-motion:reduce){.motodc-page-bg *{animation:none!important;transform:none!important}}
+
+/* Keep animated background visible while content stays above it */
+#root{position:relative;z-index:1}
+.motodc-page-bg{mix-blend-mode:normal}
