@@ -124,3 +124,16 @@
 @keyframes cartAmbientA{from{transform:translate3d(0,0,0) scale(.92);opacity:.35}to{transform:translate3d(-45px,28px,0) scale(1.08);opacity:.8}}
 @keyframes cartAmbientB{from{transform:translate3d(0,0,0) scale(1);opacity:.3}to{transform:translate3d(35px,-24px,0) scale(.9);opacity:.7}}
 @media(prefers-reduced-motion:reduce){.motodc-cart-ambient-a,.motodc-cart-ambient-b{animation:none!important}}
+
+/* Cart 4A — Motion Trail: three curved racing sweeps, confined to the cart scene. */
+.motodc-bg-cart .motodc-cart-motion-trail{position:absolute;z-index:1;right:-12%;width:78%;height:180px;border:2px solid transparent;border-top-color:rgba(255,49,87,.78);border-radius:50%;transform:rotate(-11deg);filter:blur(.15px);box-shadow:0 -1px 8px rgba(255,49,87,.3);opacity:.7;pointer-events:none;animation:cartMotionArc 5.5s cubic-bezier(.4,0,.2,1) infinite}
+.motodc-bg-cart .motodc-cart-motion-trail::after{content:"";position:absolute;top:-6px;left:28%;width:42px;height:8px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),#ff3157,transparent);filter:blur(1px);box-shadow:0 0 10px rgba(255,49,87,.9),0 0 24px rgba(255,49,87,.45);animation:cartMotionHead 5.5s linear infinite}
+.motodc-cart-motion-trail-a{top:39%;transform:rotate(-11deg) scaleX(1.04);opacity:.72!important}
+.motodc-cart-motion-trail-b{top:46%;right:-8%;width:73%;height:165px;transform:rotate(-11deg) scaleX(.98);opacity:.5!important;animation-duration:6.3s!important;animation-delay:-2.1s}
+.motodc-cart-motion-trail-b::after{animation-duration:6.3s;animation-delay:-2.1s}
+.motodc-cart-motion-trail-c{top:53%;right:-4%;width:68%;height:150px;transform:rotate(-11deg) scaleX(.92);opacity:.32!important;animation-duration:7.1s!important;animation-delay:-4.3s}
+.motodc-cart-motion-trail-c::after{animation-duration:7.1s;animation-delay:-4.3s}
+@keyframes cartMotionArc{0%{transform:translate3d(-5%,0,0) rotate(-11deg) scaleX(1);opacity:.12}20%{opacity:.72}55%{opacity:.6}100%{transform:translate3d(6%,0,0) rotate(-11deg) scaleX(1.04);opacity:.08}}
+@keyframes cartMotionHead{0%{left:8%;opacity:0}18%{opacity:1}72%{opacity:.5}100%{left:82%;opacity:0}}
+@media(max-width:700px){.motodc-bg-cart .motodc-cart-motion-trail{right:-45%;width:125%;height:120px}.motodc-cart-motion-trail-a{top:40%}.motodc-cart-motion-trail-b{top:47%}.motodc-cart-motion-trail-c{top:54%}}
+@media(prefers-reduced-motion:reduce){.motodc-bg-cart .motodc-cart-motion-trail,.motodc-bg-cart .motodc-cart-motion-trail::after{animation:none!important}}
