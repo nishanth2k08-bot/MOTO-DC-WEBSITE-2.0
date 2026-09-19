@@ -153,3 +153,18 @@
 .motodc-bg-cart .motodc-cart-motion-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;opacity:1;pointer-events:none;}
 .motodc-bg-cart .motodc-cart-motion-image{display:none!important;}
 .motodc-bg-cart .motodc-cart-motion-trail,.motodc-bg-cart .motodc-cart-ambient{display:none!important;}
+
+/* Checkout — B: Progress Flow, isolated to the checkout background. */
+.motodc-bg-checkout{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.9;background:radial-gradient(circle at 50% 46%,rgba(255,49,87,.06),transparent 30%),#05070b}
+.motodc-bg-checkout .motodc-checkout-progress{position:absolute;left:12%;right:12%;top:47%;height:2px;background:rgba(255,255,255,.08);box-shadow:0 0 16px rgba(255,49,87,.08)}
+.motodc-bg-checkout .motodc-checkout-progress-line{position:absolute;left:0;top:0;height:100%;width:100%;background:linear-gradient(90deg,transparent,rgba(255,49,87,.72),transparent);transform:translateX(-100%);animation:checkoutProgressFlow 4s linear infinite}
+.motodc-bg-checkout .motodc-checkout-step{position:absolute;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;gap:12px;color:rgba(255,255,255,.34);font:600 10px Inter;letter-spacing:.4px;text-transform:uppercase}
+.motodc-bg-checkout .motodc-checkout-step i{display:block;width:9px;height:9px;border-radius:50%;background:#101319;border:1px solid rgba(255,49,87,.42);box-shadow:0 0 0 0 rgba(255,49,87,.25);animation:checkoutStepPulse 4s ease-in-out infinite}
+.motodc-bg-checkout .motodc-checkout-step-a{left:0}.motodc-bg-checkout .motodc-checkout-step-b{left:50%;animation-delay:1.33s}.motodc-bg-checkout .motodc-checkout-step-c{left:100%;animation-delay:2.66s}
+.motodc-bg-checkout .motodc-checkout-step-b i{animation-delay:1.33s}.motodc-bg-checkout .motodc-checkout-step-c i{animation-delay:2.66s}
+.motodc-bg-checkout .motodc-checkout-glow{position:absolute;left:50%;top:47%;width:150px;height:150px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,49,87,.12),transparent 68%);filter:blur(5px);animation:checkoutGlowFlow 4s ease-in-out infinite}
+@keyframes checkoutProgressFlow{0%{transform:translateX(-100%);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(100%);opacity:0}}
+@keyframes checkoutStepPulse{0%,24%{box-shadow:0 0 0 0 rgba(255,49,87,0);background:#101319}34%,50%{box-shadow:0 0 0 7px rgba(255,49,87,.08);background:#ff3157}60%,100%{box-shadow:0 0 0 0 rgba(255,49,87,0);background:#101319}}
+@keyframes checkoutGlowFlow{0%,100%{opacity:.18;transform:translate(-50%,-50%) scale(.8)}50%{opacity:.7;transform:translate(-50%,-50%) scale(1.15)}}
+@media(max-width:700px){.motodc-bg-checkout .motodc-checkout-progress{left:8%;right:8%;top:52%}.motodc-bg-checkout .motodc-checkout-step b{font-size:8px}.motodc-bg-checkout .motodc-checkout-glow{top:52%}}
+@media(prefers-reduced-motion:reduce){.motodc-bg-checkout .motodc-checkout-progress-line,.motodc-bg-checkout .motodc-checkout-step i,.motodc-bg-checkout .motodc-checkout-glow{animation:none!important}.motodc-bg-checkout .motodc-checkout-progress-line{transform:none;opacity:.5}}
