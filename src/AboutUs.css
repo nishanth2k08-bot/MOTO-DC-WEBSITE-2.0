@@ -18,3 +18,12 @@
 @media(max-width:850px){.aboutPage{padding:0 18px 55px;min-height:calc(100vh - 72px)}.aboutHero{min-height:620px;padding:58px 0 70px;max-width:100%}.aboutTitle{font-size:clamp(46px,12vw,72px);letter-spacing:-2px}.aboutLead{font-size:15px}.aboutHeroMeta{display:none}.aboutHeroStatement{right:18px;top:auto;bottom:18px;font-size:9px;letter-spacing:2px}.aboutActions{gap:10px;flex-wrap:wrap}.aboutActions button{min-width:0;flex:1;padding:14px 15px}.aboutStats{grid-template-columns:repeat(2,1fr);margin:-22px 0 0}.aboutContent{grid-template-columns:1fr}.aboutStat strong{font-size:26px}}
 @media(max-width:520px){.aboutHero{min-height:600px;padding-top:44px}.aboutEyebrow{letter-spacing:3px}.aboutTitle{font-size:clamp(40px,13vw,60px)}.aboutTagline{font-size:21px}.aboutLead{font-size:14px}.aboutActions{gap:9px}.aboutActions button{font-size:12px;padding:13px 11px}.aboutStats{gap:10px}.aboutStat{padding:17px 10px}.aboutStatIcon{height:36px}.aboutStatIcon svg{width:34px;height:34px}.aboutStat strong{font-size:22px}.aboutStat small{font-size:10px}.aboutCard{padding:22px}}
 @media(prefers-reduced-motion:reduce){.aboutActions button{transition:none}.aboutPage{scroll-behavior:auto}}
+
+/* Final Road Journey treatment: the page stays cinematic in both themes. */
+.aboutPage{background:transparent!important;color:#fff!important}
+.aboutPage::before{display:none!important}.aboutPage::after{display:none!important}
+.light-theme .aboutPage{background:transparent!important;color:#fff!important}
+.light-theme .aboutTitle .aboutTitleLight,.light-theme .aboutTagline,.light-theme .aboutStat strong,.light-theme .aboutCard h2,.light-theme .aboutValue strong{color:#fff!important}
+.light-theme .aboutLead{color:rgba(255,255,255,.92)!important}.light-theme .aboutCard p{color:#d2d7df!important}
+.light-theme .aboutStat,.light-theme .aboutCard{background:rgba(5,8,12,.72)!important;border-color:rgba(255,255,255,.22)!important}
+.light-theme .aboutValue{background:rgba(0,0,0,.4)!important}
