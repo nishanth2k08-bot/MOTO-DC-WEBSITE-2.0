@@ -146,3 +146,10 @@
 @keyframes cart4aImageDrift{from{transform:scale(1.03) translate3d(-.35%,0,0)}to{transform:scale(1.075) translate3d(.65%,-.35%,0)}}
 @media(max-width:700px){.motodc-bg-cart .motodc-cart-motion-image{object-position:72% center;opacity:.62;animation-duration:22s}.motodc-bg-cart::after{background:linear-gradient(180deg,rgba(5,7,11,.72),rgba(5,7,11,.34) 52%,rgba(5,7,11,.72))}}
 @media(prefers-reduced-motion:reduce){.motodc-bg-cart .motodc-cart-motion-image{animation:none!important}}
+
+/* Cart Motion Trail v2 — keep the animation layer visible behind the Cart UI. */
+.motodc-bg-cart{background:#05070b!important;}
+.motodc-bg-cart::after{display:none!important;}
+.motodc-bg-cart .motodc-cart-motion-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;opacity:1;pointer-events:none;}
+.motodc-bg-cart .motodc-cart-motion-image{display:none!important;}
+.motodc-bg-cart .motodc-cart-motion-trail,.motodc-bg-cart .motodc-cart-ambient{display:none!important;}
