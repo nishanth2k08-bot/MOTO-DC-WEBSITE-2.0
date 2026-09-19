@@ -40,11 +40,16 @@
 .motodc-bg-returns .motodc-bg-orb{width:240px;height:240px;border:2px solid rgba(255,49,87,.24);background:radial-gradient(circle,rgba(255,49,87,.13),transparent 61%);animation:motodcReturn2 5s linear infinite;filter:blur(0)}
 .motodc-bg-returns .motodc-bg-line{opacity:.35;transform:rotate(0)}
 
-/* About — road journey */
-.motodc-bg-about .motodc-bg-grid{opacity:.12;animation-duration:16s}
-.motodc-bg-about .motodc-bg-line{opacity:.85;animation-duration:4.8s}
-.motodc-bg-about .motodc-bg-line-b{animation-delay:-2.4s}
-
+/* About — road journey: full-bleed cinematic background */
+.motodc-bg-about{opacity:1;background:#05070a url('/about-us-bg.jpg?v=4') center 48%/cover no-repeat;animation:motodcAboutRoad 24s ease-in-out infinite alternate}
+.motodc-bg-about::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,5,8,.62),rgba(3,5,8,.24) 50%,rgba(3,5,8,.58)),linear-gradient(180deg,rgba(3,5,8,.18),rgba(3,5,8,.68));pointer-events:none}
+.motodc-bg-about .motodc-bg-glow{opacity:.35;z-index:1}
+.motodc-bg-about .motodc-bg-grid{opacity:.04;z-index:1}
+.motodc-bg-about .motodc-bg-line{opacity:.28;z-index:1}
+.light-theme .motodc-bg-about{background-image:url('/about-us-bg.jpg?v=4');background-color:#eef2f8}
+.light-theme .motodc-bg-about::after{background:linear-gradient(90deg,rgba(246,248,252,.74),rgba(246,248,252,.34) 50%,rgba(246,248,252,.68)),linear-gradient(180deg,rgba(246,248,252,.2),rgba(246,248,252,.64))}
+.light-theme .motodc-bg-about .motodc-bg-glow{opacity:.18}
+.light-theme .motodc-bg-about .motodc-bg-grid,.light-theme .motodc-bg-about .motodc-bg-line{opacity:.08}
 /* Login / account — red ambient */
 .motodc-bg-account .motodc-bg-grid{opacity:.08}
 .motodc-bg-account .motodc-bg-orb{width:330px;height:330px;opacity:.8}
@@ -70,3 +75,4 @@
 @media(prefers-reduced-motion:reduce){.motodc-page-bg *{animation:none!important;transform:none!important}}
 #root{position:relative;z-index:1}
 .motodc-page-bg{mix-blend-mode:normal}
+\n@keyframes motodcAboutRoad{0%{background-position:48% 48%;background-size:108%}50%{background-position:52% 50%;background-size:112%}100%{background-position:46% 52%;background-size:108%}}\n
