@@ -3,12 +3,6 @@ import './AboutUs.css';
 
 export default function AboutUs(){
   React.useEffect(()=>{window.scrollTo(0,0)},[]);
-  const stats=[
-    {value:'2,500+',label:'Parts listed',type:'parts'},
-    {value:'18+',label:'Brands supported',type:'brands'},
-    {value:'98%',label:'Happy customers',type:'customers'},
-    {value:'4.8',label:'Average rating',type:'rating'}
-  ];
   return <section className="aboutPage">
     <div className="aboutHero">
       <div className="aboutHeroCopy">
@@ -32,6 +26,43 @@ export default function AboutUs(){
       <i aria-hidden="true"></i>
       <div><span>03</span><strong>RIDE</strong><small>Get back on the road.</small></div>
     </div>
+
+    <section className="aboutInfoGrid">
+      <article className="aboutInfoCard">
+        <span className="aboutInfoKicker">OUR MISSION</span>
+        <h2>Making every part choice simpler.</h2>
+        <p>MotoDC brings automobile and motorcycle parts, useful product information and a straightforward shopping experience together so customers can make informed choices.</p>
+      </article>
+      <article className="aboutInfoCard">
+        <span className="aboutInfoKicker">WHAT WE OFFER</span>
+        <h2>Parts for everyday journeys.</h2>
+        <ul>
+          <li>Automobile and motorcycle spare parts</li>
+          <li>Clear product and pricing information</li>
+          <li>Wishlist, cart and order tracking</li>
+          <li>Returns support for eligible orders</li>
+        </ul>
+      </article>
+      <article className="aboutInfoCard">
+        <span className="aboutInfoKicker">HOW IT WORKS</span>
+        <h2>From search to road.</h2>
+        <div className="aboutSteps">
+          <div><b>01</b><span>Search</span><small>Find a part by category or product.</small></div>
+          <div><b>02</b><span>Check</span><small>Review price, stock and product details.</small></div>
+          <div><b>03</b><span>Order</span><small>Add to cart and complete checkout.</small></div>
+        </div>
+      </article>
+      <article className="aboutInfoCard aboutContactCard">
+        <span className="aboutInfoKicker">CONTACT & SUPPORT</span>
+        <h2>Need help with your MotoDC journey?</h2>
+        <div className="aboutContactList">
+          <div><strong>Order support</strong><span>Open <b>My Orders</b> to check order status and available return options.</span></div>
+          <div><strong>Product assistance</strong><span>Use the product details page to review compatibility, stock and product information before ordering.</span></div>
+          <div><strong>Account support</strong><span>Sign in to your MotoDC account for order and customer-support related actions.</span></div>
+        </div>
+        <p className="aboutContactNote">For direct email or phone support, add your official MotoDC contact details here once they are finalized.</p>
+      </article>
+    </section>
 
     <div className="aboutContent">
       <article className="aboutCard aboutStory">
