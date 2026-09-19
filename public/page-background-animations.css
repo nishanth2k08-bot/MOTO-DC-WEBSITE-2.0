@@ -113,3 +113,14 @@
 @keyframes blueprintGridMove{from{transform:perspective(900px) rotateX(58deg) scale(1.25) translate3d(-1%,20%,0)}to{transform:perspective(900px) rotateX(58deg) scale(1.25) translate3d(3%,20%,0)}}@keyframes blueprintScan{0%{top:8%;opacity:0}15%{opacity:.7}50%{opacity:.9}85%{opacity:.45}100%{top:92%;opacity:0}}@keyframes blueprintRing{to{transform:rotate(360deg)}}@keyframes blueprintFloat{0%,100%{transform:translate(0,0);opacity:.35}50%{transform:translate(12px,-9px);opacity:.8}}@keyframes blueprintBreath{from{opacity:.35}to{opacity:.8}}
 @media(max-width:700px){.motodc-blueprint-ring-a{width:280px;height:280px;right:-100px}.motodc-blueprint-ring-b{width:170px;height:170px;left:-70px}.motodc-blueprint-label{display:none}.motodc-blueprint-grid{background-size:34px 34px}}
 @media(prefers-reduced-motion:reduce){.motodc-bg-detail::before,.motodc-blueprint-grid,.motodc-blueprint-scan,.motodc-blueprint-ring,.motodc-blueprint-cross{animation:none!important}}
+
+/* HARD ISOLATION: Cart may only render its own red ambient layer. */
+.motodc-bg-cart,.motodc-bg-cart::before,.motodc-bg-cart::after{background-color:#05070b!important}
+.motodc-bg-cart .motodc-bg-glow,.motodc-bg-cart .motodc-bg-grid,.motodc-bg-cart .motodc-bg-orb,.motodc-bg-cart .motodc-bg-line,.motodc-bg-cart .motodc-products-scan,.motodc-bg-cart .motodc-products-grid,.motodc-bg-cart .motodc-products-corner,.motodc-bg-cart .motodc-products-pulse,.motodc-bg-cart .motodc-blueprint-grid,.motodc-bg-cart .motodc-blueprint-scan,.motodc-bg-cart .motodc-blueprint-ring,.motodc-bg-cart .motodc-blueprint-cross,.motodc-bg-cart .motodc-blueprint-label{display:none!important}
+.motodc-bg-cart{background:radial-gradient(circle at 78% 26%,rgba(255,49,87,.075),transparent 28%),radial-gradient(circle at 18% 72%,rgba(255,49,87,.045),transparent 30%),#05070b!important}
+.motodc-cart-ambient{position:absolute;border-radius:50%;filter:blur(55px);pointer-events:none;mix-blend-mode:screen}
+.motodc-cart-ambient-a{width:430px;height:300px;right:-120px;top:18%;background:rgba(255,49,87,.08);animation:cartAmbientA 10s ease-in-out infinite alternate}
+.motodc-cart-ambient-b{width:360px;height:260px;left:-120px;bottom:8%;background:rgba(255,49,87,.045);animation:cartAmbientB 12s ease-in-out infinite alternate}
+@keyframes cartAmbientA{from{transform:translate3d(0,0,0) scale(.92);opacity:.35}to{transform:translate3d(-45px,28px,0) scale(1.08);opacity:.8}}
+@keyframes cartAmbientB{from{transform:translate3d(0,0,0) scale(1);opacity:.3}to{transform:translate3d(35px,-24px,0) scale(.9);opacity:.7}}
+@media(prefers-reduced-motion:reduce){.motodc-cart-ambient-a,.motodc-cart-ambient-b{animation:none!important}}
