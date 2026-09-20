@@ -56,3 +56,42 @@
   .authcard{padding:25px 18px}
   .authintro h1{font-size:34px}
 }
+
+/* Final Red Ambient layout: use the page-level ambient treatment only. */
+.auth{
+  min-height:100vh;
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:40px 20px;
+  overflow:hidden;
+  background:#07090d;
+  background-image:
+    radial-gradient(circle at 50% 18%,rgba(255,49,87,.055),transparent 30%),
+    linear-gradient(180deg,#07090d 0%,#07090d 100%);
+}
+.auth::before,.auth::after{
+  display:none!important;
+  content:none!important;
+}
+.authcard{
+  margin:auto;
+  max-height:calc(100vh - 80px);
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+.authcard::-webkit-scrollbar{display:none}
+@media(max-width:700px){
+  .auth{
+    min-height:100vh;
+    padding:24px 14px;
+    align-items:center;
+  }
+  .authcard{
+    max-height:calc(100vh - 48px);
+  }
+}
+@media(max-width:520px){
+  .auth{padding:16px 10px}
+  .authcard{max-height:calc(100vh - 32px)}
+}
