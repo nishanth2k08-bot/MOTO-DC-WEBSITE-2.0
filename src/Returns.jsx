@@ -73,5 +73,39 @@ export default function Returns(){
    }catch(e){console.error('Return request error:',e);toast.error(e?.message||'Could not submit the request. Please try again.')}
    finally{setBusy('')}
  };
- return <section className="page ordersPage"><div className="pagehead"><p className="eyebrow">AFTER-SALES SUPPORT</p><h1>Returns & <span>replacement.</span></h1><p>Request help if an item arrived damaged, defective, or mismatched.</p></div>{loading?<div className="empty">Loading...</div>:<><div className="customerOrders">{orders.map(o=><article className="customerOrder" key={o.id}><div className="customerOrderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.createdAt?.toDate?o.createdAt.toDate().toLocaleDateString('en-IN'):'Recently'}</small></div><strong>{money(o.total)}</strong><span className={`status ${String(o.orderStatus||"delivered").toLowerCase()}`}><Package size={14}/> {o.orderStatus==="returned"?"Returned":o.orderStatus==="replaced"?"Replacement completed":"Delivered"}</span></div><div className="returnActions"><button onClick={()=>request(o,'return')} disabled={busy.startsWith(o.id)}><RotateCcw size={16}/> {busy===o.id+'return'?'Submitting...':'Return'}</button><button onClick={()=>request(o,'replacement')} disabled={busy.startsWith(o.id)}><RefreshCw size={16}/> {busy===o.id+'replacement'?'Submitting...':'Replacement'}</button></div></article>)}</div>{!orders.length&&<div className="ordersEmpty"><Package size={40}/><h2>No delivered orders</h2><p>Delivered purchases will appear here when they become eligible for support.</p></div>}<div className="dashPanel returnHistory"><div className="dashPanelHead"><h3>Request history</h3></div>{requests.length?requests.map(r=><div className="returnRow" key={`${r.requestGroup}-${r.requestCollection}-${r.id}`}><b>{r.displayOrderId}</b><span>{r.type==='replacement'?'Replacement':'Return'}</span><strong>{r.status}</strong></div>):<p className="dashMuted">No return or replacement requests yet.</p>}</div></>}</section>;
+ return <section className="page ordersPage returnsPage">
+  <section className="returnsHero" aria-labelledby="returns-title">
+    <div className="returnsHeroGlow returnsHeroGlowA" aria-hidden="true"></div>
+    <div className="returnsHeroGlow returnsHeroGlowB" aria-hidden="true"></div>
+    <div className="returnsHeroContent">
+      <div className="returnsOrbit" aria-hidden="true">
+        <span className="returnsOrbitRing returnsOrbitRingA"></span>
+        <span className="returnsOrbitRing returnsOrbitRingB"></span>
+        <span className="returnsArrow returnsArrowA">➜</span>
+        <span className="returnsArrow returnsArrowB">➜</span>
+        <span className="returnsArrow returnsArrowC">➜</span>
+        <span className="returnsPackage"><Package size={52} strokeWidth={1.8}/></span>
+      </div>
+      <p className="eyebrow">AFTER-SALES SUPPORT</p>
+      <h1 id="returns-title">Returns & <span>replacement.</span></h1>
+      <p>We're here to help.</p>
+      <div className="returnsHeroActions">
+        <button type="button" onClick={()=>document.querySelector('.returnsOrders')?.scrollIntoView({behavior:'smooth',block:'start'})}>
+          <RotateCcw size={15}/> New Request
+        </button>
+        <button type="button" onClick={()=>document.querySelector('.returnHistory')?.scrollIntoView({behavior:'smooth',block:'start'})}>
+          <RefreshCw size={15}/> Track Request
+        </button>
+      </div>
+    </div>
+  </section>
+  <div className="returnsBody">
+    <div className="returnsSectionHead">
+      <div><p className="eyebrow">ELIGIBLE ORDERS</p><h2>Choose an order</h2><p>Select a delivered order to request a return or replacement.</p></div>
+    </div>
+    {loading?<div className="empty">Loading...</div>:<><div className="customerOrders returnsOrders">{orders.map(o=><article className="customerOrder" key={o.id}><div className="customerOrderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.createdAt?.toDate?o.createdAt.toDate().toLocaleDateString('en-IN'):'Recently'}</small></div><strong>{money(o.total)}</strong><span className={`status ${String(o.orderStatus||"delivered").toLowerCase()}`}><Package size={14}/> {o.orderStatus==="returned"?"Returned":o.orderStatus==="replaced"?"Replacement completed":"Delivered"}</span></div><div className="returnActions"><button onClick={()=>request(o,'return')} disabled={busy.startsWith(o.id)}><RotateCcw size={16}/> {busy===o.id+'return'?'Submitting...':'Return'}</button><button onClick={()=>request(o,'replacement')} disabled={busy.startsWith(o.id)}><RefreshCw size={16}/> {busy===o.id+'replacement'?'Submitting...':'Replacement'}</button></div></article>)}</div>
+    {!orders.length&&<div className="ordersEmpty"><Package size={40}/><h2>No delivered orders</h2><p>Delivered purchases will appear here when they become eligible for support.</p></div>}
+    <div className="dashPanel returnHistory"><div className="dashPanelHead"><h3>Request history</h3></div>{requests.length?requests.map(r=><div className="returnRow" key={`${r.requestGroup}-${r.requestCollection}-${r.id}`}><b>{r.displayOrderId}</b><span>{r.type==='replacement'?'Replacement':'Return'}</span><strong>{r.status}</strong></div>):<p className="dashMuted">No return or replacement requests yet.</p>}</div></>}
+  </div>
+</section>;<div className="pagehead"><p className="eyebrow">AFTER-SALES SUPPORT</p><h1>Returns & <span>replacement.</span></h1><p>Request help if an item arrived damaged, defective, or mismatched.</p></div>{loading?<div className="empty">Loading...</div>:<><div className="customerOrders">{orders.map(o=><article className="customerOrder" key={o.id}><div className="customerOrderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.createdAt?.toDate?o.createdAt.toDate().toLocaleDateString('en-IN'):'Recently'}</small></div><strong>{money(o.total)}</strong><span className={`status ${String(o.orderStatus||"delivered").toLowerCase()}`}><Package size={14}/> {o.orderStatus==="returned"?"Returned":o.orderStatus==="replaced"?"Replacement completed":"Delivered"}</span></div><div className="returnActions"><button onClick={()=>request(o,'return')} disabled={busy.startsWith(o.id)}><RotateCcw size={16}/> {busy===o.id+'return'?'Submitting...':'Return'}</button><button onClick={()=>request(o,'replacement')} disabled={busy.startsWith(o.id)}><RefreshCw size={16}/> {busy===o.id+'replacement'?'Submitting...':'Replacement'}</button></div></article>)}</div>{!orders.length&&<div className="ordersEmpty"><Package size={40}/><h2>No delivered orders</h2><p>Delivered purchases will appear here when they become eligible for support.</p></div>}<div className="dashPanel returnHistory"><div className="dashPanelHead"><h3>Request history</h3></div>{requests.length?requests.map(r=><div className="returnRow" key={`${r.requestGroup}-${r.requestCollection}-${r.id}`}><b>{r.displayOrderId}</b><span>{r.type==='replacement'?'Replacement':'Return'}</span><strong>{r.status}</strong></div>):<p className="dashMuted">No return or replacement requests yet.</p>}</div></>}</section>;
 }
