@@ -781,3 +781,40 @@
     transition-duration:.001s !important;
   }
 }
+
+
+/* ============================================================
+   PAGE ISOLATION — selected UI owns its animation layer.
+   Legacy generic pseudo-elements must not compete with it.
+   ============================================================ */
+
+/* Cart: the canvas Motion Trail is the only page-level trail. */
+.cartpage::before,.cartpage::after{display:none!important;content:none!important}
+.cartlayout aside::before{display:none!important;content:none!important}
+
+/* Checkout: keep the selected Progress Flow stepper only. */
+.checkoutLayout::before{display:none!important;content:none!important}
+
+/* Wishlist: the selected Red Glow canvas owns the ambient motion. */
+.page:has(.wishlistCard)::before,
+.page:has(.wishlistEmpty)::before,
+.page:has(.wishlistCard)::after,
+.page:has(.wishlistEmpty)::after{display:none!important;content:none!important}
+
+/* My Orders: the Delivery Route component owns the visual route. */
+.ordersPage::before,.ordersPage::after{display:none!important;content:none!important}
+.status:not(.delivered):not(.cancelled){animation:none!important}
+.orderProgress .done i{animation:none!important}
+
+/* Returns: the Circular Return hero owns the circular animation. */
+.returnsPage::before,.returnsPage::after,
+.page:has(.returnsSection)::before,.page:has(.returnsSection)::after{
+  display:none!important;content:none!important;animation:none!important;
+}
+
+/* Product Details: do not add the old generic blueprint background.
+   Keep only the Spotlight treatment on the product itself. */
+.page:has(.detail)::after{display:none!important;content:none!important}
+
+/* Login/Register: auth.css owns the Red Ambient treatment. */
+.auth::before,.auth::after{display:none!important;content:none!important;animation:none!important}
