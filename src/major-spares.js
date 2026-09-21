@@ -7,7 +7,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.6,
     "stock": 48,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Activa_6G_Air_Filter.jpg",
     "description": "Honda Activa 6G air filter for Honda Activa 6G. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -18,7 +18,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.5,
     "stock": 32,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Activa_Front_Brake_Shoe_Set.jpg",
     "description": "Honda Activa front brake shoe set for Honda Activa 5G/6G. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -29,7 +29,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/moto_main_r4_c2.jpg",
+    "image": "/images/products/Honda_Shine_Clutch_Plate_Set.jpg",
     "description": "Honda Shine clutch plate set for Honda Shine 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -40,7 +40,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.6,
     "stock": 38,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_CB_Shine_Front_Disc_Pad.jpg",
     "description": "Honda CB Shine front disc pad for Honda Shine 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -51,7 +51,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 21,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Unicorn_Chain_Sprocket_Kit.jpg",
     "description": "Honda Unicorn chain sprocket kit for Honda Unicorn 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -62,7 +62,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.5,
     "stock": 65,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hero_Splendor_Plus_Air_Filter.jpg",
     "description": "Hero Splendor Plus air filter for Hero Splendor Plus. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -73,7 +73,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.6,
     "stock": 29,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hero_Splendor_Clutch_Plate_Set.jpg",
     "description": "Hero Splendor clutch plate set for Hero Splendor/Passion. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -84,7 +84,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.4,
     "stock": 42,
-    "image": "/images/products/moto_comp_r1_c3.jpg",
+    "image": "/images/products/Hero_Passion_Pro_Front_Brake_Shoe.jpg",
     "description": "Hero Passion Pro front brake shoe for Hero Passion Pro. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -95,7 +95,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 18,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hero_Glamour_Chain_Sprocket_Kit.jpg",
     "description": "Hero Glamour chain sprocket kit for Hero Glamour 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -106,7 +106,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/moto_comp_r1_c4.jpg",
+    "image": "/images/products/Hero_Xtreme_160R_Front_Brake_Pads.jpg",
     "description": "Hero Xtreme 160R front brake pads for Hero Xtreme 160R. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -117,7 +117,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.6,
     "stock": 54,
-    "image": "/images/products/moto_main_r2_c2.jpg",
+    "image": "/images/products/Bajaj_Pulsar_150_Air_Filter.jpg",
     "description": "Bajaj Pulsar 150 air filter for Bajaj Pulsar 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -128,7 +128,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 4.7,
     "stock": 20,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Bajaj_Pulsar_150_Chain_Sprocket_Kit.jpg",
     "description": "Bajaj Pulsar 150 chain sprocket kit for Bajaj Pulsar 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -139,7 +139,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.5,
     "stock": 34,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Bajaj_Pulsar_Front_Disc_Brake_Pads.jpg",
     "description": "Bajaj Pulsar front disc brake pads for Bajaj Pulsar 150/180. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -150,7 +150,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.4,
     "stock": 46,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Bajaj_Platina_Rear_Brake_Shoe.jpg",
     "description": "Bajaj Platina rear brake shoe for Bajaj Platina 100/110. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -161,7 +161,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.8,
     "stock": 37,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Bajaj_Dominar_400_Oil_Filter.jpg",
     "description": "Bajaj Dominar 400 oil filter for Bajaj Dominar 400. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -172,7 +172,7 @@ export const majorSpareProducts = [
     "price": 549,
     "rating": 4.7,
     "stock": 41,
-    "image": "/images/products/moto_comp_r1_c1.jpg",
+    "image": "/images/products/TVS_Apache_RTR_160_Air_Filter.jpg",
     "description": "TVS Apache RTR 160 air filter for TVS Apache RTR 160. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -194,7 +194,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.5,
     "stock": 23,
-    "image": "/images/products/moto_main_r4_c3.jpg",
+    "image": "/images/products/TVS_Jupiter_Drive_Belt.jpg",
     "description": "TVS Jupiter drive belt for TVS Jupiter 110. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -205,7 +205,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.6,
     "stock": 31,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/TVS_Ntorq_Clutch_Shoe_Set.jpg",
     "description": "TVS Ntorq clutch shoe set for TVS Ntorq 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -216,7 +216,7 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.7,
     "stock": 19,
-    "image": "/images/products/moto_main_r4_c6.jpg",
+    "image": "/images/products/TVS_Raider_Chain_Sprocket_Kit.jpg",
     "description": "TVS Raider chain sprocket kit for TVS Raider 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -227,7 +227,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.7,
     "stock": 36,
-    "image": "/images/products/moto_comp_r1_c2.jpg",
+    "image": "/images/products/Yamaha_FZ_FI_Air_Filter.jpg",
     "description": "Yamaha FZ-FI air filter for Yamaha FZ/FZS FI. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -238,7 +238,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.8,
     "stock": 22,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Yamaha_R15_V3_Front_Brake_Pads.jpg",
     "description": "Yamaha R15 V3 front brake pads for Yamaha R15 V3. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -260,7 +260,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.7,
     "stock": 29,
-    "image": "/images/products/moto_comp_r3_c5.jpg",
+    "image": "/images/products/Yamaha_MT_15_Oil_Filter.jpg",
     "description": "Yamaha MT-15 oil filter for Yamaha MT-15. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -271,7 +271,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.5,
     "stock": 33,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Yamaha_FZ_Rear_Brake_Shoe.jpg",
     "description": "Yamaha FZ rear brake shoe for Yamaha FZ V2. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -282,7 +282,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.6,
     "stock": 51,
-    "image": "/images/products/moto_main_r1_c2.jpg",
+    "image": "/images/products/Suzuki_Access_125_Air_Filter.jpg",
     "description": "Suzuki Access 125 air filter for Suzuki Access 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -293,7 +293,7 @@ export const majorSpareProducts = [
     "price": 1399,
     "rating": 4.5,
     "stock": 25,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Suzuki_Access_125_Drive_Belt.jpg",
     "description": "Suzuki Access 125 drive belt for Suzuki Access 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -315,7 +315,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 4.7,
     "stock": 17,
-    "image": "/images/products/moto_comp_r3_c2.jpg",
+    "image": "/images/products/Suzuki_Gixxer_Chain_Sprocket_Kit.jpg",
     "description": "Suzuki Gixxer chain sprocket kit for Suzuki Gixxer 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -326,7 +326,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.5,
     "stock": 30,
-    "image": "/images/products/moto_comp_r1_c5.jpg",
+    "image": "/images/products/Suzuki_Burgman_Street_Brake_Shoe.jpg",
     "description": "Suzuki Burgman Street brake shoe for Suzuki Burgman Street. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -337,7 +337,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.7,
     "stock": 44,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Royal_Enfield_Classic_350_Air_Filter.jpg",
     "description": "Royal Enfield Classic 350 air filter for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -348,7 +348,7 @@ export const majorSpareProducts = [
     "price": 1099,
     "rating": 4.7,
     "stock": 24,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Royal_Enfield_Classic_350_Front_Brake_Pads.jpg",
     "description": "Royal Enfield Classic 350 front brake pads for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -370,7 +370,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.8,
     "stock": 35,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Royal_Enfield_Hunter_350_Oil_Filter.jpg",
     "description": "Royal Enfield Hunter 350 oil filter for Royal Enfield Hunter 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -381,7 +381,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 4.6,
     "stock": 16,
-    "image": "/images/products/moto_main_r4_c1.jpg",
+    "image": "/images/products/Royal_Enfield_Meteor_350_Clutch_Plate_Set.jpg",
     "description": "Royal Enfield Meteor 350 clutch plate set for Royal Enfield Meteor 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -392,7 +392,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.7,
     "stock": 21,
-    "image": "/images/products/moto_main_r2_c1.jpg",
+    "image": "/images/products/KTM_Duke_200_Air_Filter.jpg",
     "description": "KTM Duke 200 air filter for KTM Duke 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -403,7 +403,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/moto_comp_r3_c4.jpg",
+    "image": "/images/products/KTM_Duke_200_Front_Brake_Pads.jpg",
     "description": "KTM Duke 200 front brake pads for KTM Duke 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -414,7 +414,7 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 11,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/KTM_Duke_250_Chain_Sprocket_Kit.jpg",
     "description": "KTM Duke 250 chain sprocket kit for KTM Duke 250. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -425,7 +425,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/moto_comp_r3_c3.jpg",
+    "image": "/images/products/KTM_RC_200_Oil_Filter.jpg",
     "description": "KTM RC 200 oil filter for KTM RC 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -447,7 +447,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 43,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Bosch_Motorcycle_Iridium_Spark_Plug.jpg",
     "description": "Bosch motorcycle iridium spark plug for Multi-brand 4-stroke bikes. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -458,7 +458,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.9,
     "stock": 52,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/NGK_Iridium_IX_Spark_Plug.jpg",
     "description": "NGK iridium IX spark plug for Honda/Yamaha/Suzuki 125-250cc. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -469,7 +469,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.5,
     "stock": 17,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Endurance universal rear shock absorber for Popular commuter motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -502,7 +502,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.7,
     "stock": 22,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Exide_Two_Wheeler_Battery_4Ah.jpg",
     "description": "Exide two-wheeler battery 4Ah for 12V motorcycles/scooters. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -513,7 +513,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 20,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Amaron_Two_Wheeler_Battery_5Ah.jpg",
     "description": "Amaron two-wheeler battery 5Ah for 12V motorcycles/scooters. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -524,7 +524,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.4,
     "stock": 47,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Minda_Universal_Indicator_Set.jpg",
     "description": "Minda universal indicator set for 12V motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -535,7 +535,7 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.5,
     "stock": 14,
-    "image": "/images/products/moto_main_r5_c3.jpg",
+    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
     "description": "Pricol digital motorcycle speedometer for Universal 12V bikes. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -546,7 +546,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.6,
     "stock": 52,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_Alto_K10_Air_Filter.jpg",
     "description": "Maruti Suzuki Alto K10 air filter for Maruti Suzuki Alto K10. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -557,7 +557,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 34,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
     "description": "Maruti Suzuki Swift front brake pad set for Maruti Suzuki Swift. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -579,7 +579,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.6,
     "stock": 43,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_Baleno_Cabin_Air_Filter.jpg",
     "description": "Maruti Suzuki Baleno cabin air filter for Maruti Suzuki Baleno. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -590,7 +590,7 @@ export const majorSpareProducts = [
     "price": 349,
     "rating": 4.5,
     "stock": 61,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
     "description": "Maruti Suzuki WagonR oil filter for Maruti Suzuki WagonR. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -612,7 +612,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.6,
     "stock": 47,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hyundai_i10_Air_Filter.jpg",
     "description": "Hyundai i10 air filter for Hyundai Grand i10. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -623,7 +623,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.7,
     "stock": 28,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hyundai_i20_Front_Brake_Pad_Set.jpg",
     "description": "Hyundai i20 front brake pad set for Hyundai i20. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -634,7 +634,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.6,
     "stock": 39,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hyundai_Creta_Cabin_Filter.jpg",
     "description": "Hyundai Creta cabin filter for Hyundai Creta. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -667,7 +667,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.6,
     "stock": 42,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Tata_Nexon_Air_Filter.jpg",
     "description": "Tata Nexon air filter for Tata Nexon. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -678,7 +678,7 @@ export const majorSpareProducts = [
     "price": 1999,
     "rating": 4.7,
     "stock": 24,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Tata_Nexon_Front_Brake_Pads.jpg",
     "description": "Tata Nexon front brake pads for Tata Nexon. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -689,7 +689,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.6,
     "stock": 31,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Tata_Punch_Cabin_Filter.jpg",
     "description": "Tata Punch cabin filter for Tata Punch. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -722,7 +722,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 22,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Mahindra_Scorpio_N_Air_Filter.jpg",
     "description": "Mahindra Scorpio N air filter for Mahindra Scorpio N. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -733,7 +733,7 @@ export const majorSpareProducts = [
     "price": 2499,
     "rating": 4.8,
     "stock": 19,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Mahindra_Thar_Front_Brake_Pads.jpg",
     "description": "Mahindra Thar front brake pads for Mahindra Thar. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -744,7 +744,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.7,
     "stock": 27,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Mahindra_XUV700_Cabin_Filter.jpg",
     "description": "Mahindra XUV700 cabin filter for Mahindra XUV700. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -777,7 +777,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.8,
     "stock": 23,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Toyota_Innova_Crysta_Air_Filter.jpg",
     "description": "Toyota Innova Crysta air filter for Toyota Innova Crysta. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -788,7 +788,7 @@ export const majorSpareProducts = [
     "price": 4999,
     "rating": 4.8,
     "stock": 13,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Toyota_Fortuner_Front_Brake_Pad_Set.jpg",
     "description": "Toyota Fortuner front brake pad set for Toyota Fortuner. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -799,7 +799,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.6,
     "stock": 32,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Toyota_Glanza_Cabin_Filter.jpg",
     "description": "Toyota Glanza cabin filter for Toyota Glanza. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -821,7 +821,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.7,
     "stock": 29,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Kia_Seltos_Air_Filter.jpg",
     "description": "Kia Seltos air filter for Kia Seltos. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -832,7 +832,7 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.7,
     "stock": 21,
-    "image": "/images/products/moto_comp_r2_c4.jpg",
+    "image": "/images/products/Kia_Sonet_Front_Brake_Pads.jpg",
     "description": "Kia Sonet front brake pads for Kia Sonet. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -843,7 +843,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.6,
     "stock": 24,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Kia_Carens_Cabin_Filter.jpg",
     "description": "Kia Carens cabin filter for Kia Carens. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -854,7 +854,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.7,
     "stock": 36,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_City_Air_Filter.jpg",
     "description": "Honda City air filter for Honda City. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -865,7 +865,7 @@ export const majorSpareProducts = [
     "price": 1999,
     "rating": 4.7,
     "stock": 18,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Amaze_Front_Brake_Pads.jpg",
     "description": "Honda Amaze front brake pads for Honda Amaze. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -887,7 +887,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.5,
     "stock": 37,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Renault_Kwid_Air_Filter.jpg",
     "description": "Renault Kwid air filter for Renault Kwid. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -898,7 +898,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 26,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Renault_Kwid_Front_Brake_Pad_Set.jpg",
     "description": "Renault Kwid front brake pad set for Renault Kwid. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -909,7 +909,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.5,
     "stock": 17,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Renault_Duster_Cabin_Filter.jpg",
     "description": "Renault Duster cabin filter for Renault Duster. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -986,7 +986,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.8,
     "stock": 45,
-    "image": "/images/products/auto_main_r4_c3.jpg",
+    "image": "/images/products/Bosch_Premium_Petrol_Spark_Plug_Set.jpg",
     "description": "Bosch premium petrol spark plug set for Maruti/Hyundai/Tata petrol engines. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -997,7 +997,7 @@ export const majorSpareProducts = [
     "price": 5699,
     "rating": 4.7,
     "stock": 12,
-    "image": "/images/products/auto_main_r4_c1.jpg",
+    "image": "/images/products/Bosch_Car_Battery_45Ah.jpg",
     "description": "Bosch car battery 45Ah for 12V passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1019,7 +1019,7 @@ export const majorSpareProducts = [
     "price": 4599,
     "rating": 4.7,
     "stock": 19,
-    "image": "/images/products/auto_main_r4_c2.jpg",
+    "image": "/images/products/Exide_Car_Battery_35Ah.jpg",
     "description": "Exide car battery 35Ah for 12V hatchbacks. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1030,7 +1030,7 @@ export const majorSpareProducts = [
     "price": 5299,
     "rating": 4.8,
     "stock": 17,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Amaron_Car_Battery_45Ah.jpg",
     "description": "Amaron car battery 45Ah for 12V hatchbacks/sedans. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1041,7 +1041,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.5,
     "stock": 16,
-    "image": "/images/products/auto_main_r4_c5.jpg",
+    "image": "/images/products/Lumax_LED_Headlamp_Assembly.jpg",
     "description": "Lumax LED headlamp assembly for Popular Indian passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1052,7 +1052,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.6,
     "stock": 44,
-    "image": "/images/products/auto_main_r4_c6.jpg",
+    "image": "/images/products/Uno_Minda_Car_Horn_Pair.jpg",
     "description": "Uno Minda car horn pair for 12V passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1063,7 +1063,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.9,
     "stock": 31,
-    "image": "/images/products/auto_main_r4_c4.jpg",
+    "image": "/images/products/NGK_Laser_Iridium_Spark_Plug_Set.jpg",
     "description": "NGK laser iridium spark plug set for Modern petrol engines. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1096,7 +1096,7 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.6,
     "stock": 13,
-    "image": "/images/products/auto_main_r4_c8.jpg",
+    "image": "/images/products/Denso_Radiator_Cooling_Fan_Motor.jpg",
     "description": "Denso radiator cooling fan motor for Popular passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   }
 ];

@@ -1,0 +1,783 @@
+/* ============================================================
+   MOTODC — PAGE ANIMATIONS MASTER FILE
+   Covers all 9 selected page styles:
+   1. Product Details  → Spotlight
+   2. Cart             → Motion Trail
+   3. Checkout         → Progress Flow
+   4. Wishlist         → Red Glow
+   5. My Orders        → Delivery Route
+   6. Returns          → Circular Return
+   7. About Us         → Road Journey
+   8. Login/Register   → Red Ambient
+   9. Admin Dashboard  → Command Center
+   ============================================================ */
+
+/* ─── SHARED KEYFRAMES ────────────────────────────────────── */
+@keyframes mdcFadeUp   { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+@keyframes mdcFadeIn   { from{opacity:0} to{opacity:1} }
+@keyframes mdcPulse    { 0%,100%{opacity:.55} 50%{opacity:1} }
+@keyframes mdcGlow     { 0%,100%{box-shadow:0 0 18px rgba(255,49,87,.18)} 50%{box-shadow:0 0 44px rgba(255,49,87,.45)} }
+@keyframes mdcSpin     { to{transform:rotate(360deg)} }
+@keyframes mdcSlideIn  { from{transform:translateX(-18px);opacity:0} to{transform:translateX(0);opacity:1} }
+@keyframes mdcFloat    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes mdcTrail    { 0%{transform:translateX(-100%) skewX(-18deg);opacity:0} 40%{opacity:.55} 100%{transform:translateX(220%) skewX(-18deg);opacity:0} }
+@keyframes mdcRouteRun { 0%{stroke-dashoffset:600} 100%{stroke-dashoffset:0} }
+@keyframes mdcCircle   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+@keyframes mdcGridMove { 0%{background-position:0 0} 100%{background-position:60px 60px} }
+@keyframes mdcAmbient  { 0%,100%{opacity:.55;transform:scale(1)} 50%{opacity:.9;transform:scale(1.08)} }
+@keyframes mdcCounter  { 0%{background-position:left} 100%{background-position:right} }
+@keyframes mdcBarGrow  { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+@keyframes mdcStepPulse{ 0%,100%{box-shadow:0 0 0 0 rgba(255,49,87,.5)} 50%{box-shadow:0 0 0 8px rgba(255,49,87,0)} }
+
+
+/* ══════════════════════════════════════════════════════════
+   1. PRODUCT DETAIL PAGE — Spotlight
+   ══════════════════════════════════════════════════════════ */
+.page:has(.detail){
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+}
+.page:has(.detail)::before{
+  content:"";
+  position:fixed;
+  top:-20%;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(700px, 90vw);
+  height:min(700px, 90vw);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,49,87,.13) 0%, transparent 68%);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcPulse 5s ease-in-out infinite;
+}
+.page:has(.detail)::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse 70% 55% at 50% 20%, rgba(255,49,87,.07) 0%, transparent 65%);
+  pointer-events:none;
+  z-index:0;
+}
+.detail{
+  position:relative;
+  z-index:1;
+  animation:mdcFadeUp .5s ease both;
+}
+.detail > img{
+  animation:mdcFloat 6s ease-in-out infinite;
+  box-shadow:0 30px 80px rgba(0,0,0,.5), 0 0 60px rgba(255,49,87,.08);
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.detail > img:hover{
+  transform:translateY(-4px) scale(1.015);
+  box-shadow:0 40px 100px rgba(0,0,0,.55), 0 0 80px rgba(255,49,87,.14);
+}
+.detail h1{animation:mdcFadeUp .4s .1s ease both}
+.detail .eyebrow{animation:mdcFadeUp .4s .05s ease both}
+.detail p:not(.eyebrow){animation:mdcFadeUp .4s .15s ease both}
+.detail .qty{animation:mdcFadeUp .4s .2s ease both}
+.detail .actions{animation:mdcFadeUp .4s .25s ease both}
+
+/* Active step glow on buy button */
+.detail .actions .primary{
+  position:relative;
+  overflow:hidden;
+}
+.detail .actions .primary::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.1) 50%, transparent 100%);
+  transform:translateX(-100%);
+  transition:transform .5s ease;
+}
+.detail .actions .primary:hover::after{
+  transform:translateX(100%);
+}
+
+@media(max-width:850px){
+  .page:has(.detail)::before{width:min(420px,80vw);height:min(420px,80vw)}
+}
+@media(max-width:520px){
+  .page:has(.detail)::before{width:280px;height:280px;top:-8%}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   2. CART PAGE — Motion Trail
+   ══════════════════════════════════════════════════════════ */
+.cartpage{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+}
+.cartpage::before,
+.cartpage::after{
+  content:"";
+  position:fixed;
+  pointer-events:none;
+  z-index:0;
+  border-radius:2px;
+}
+.cartpage::before{
+  width:min(320px, 60vw);
+  height:2px;
+  background:linear-gradient(90deg, transparent, rgba(255,49,87,.6), transparent);
+  top:28%;
+  left:0;
+  animation:mdcTrail 5s linear infinite;
+}
+.cartpage::after{
+  width:min(180px, 40vw);
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,49,87,.35), transparent);
+  top:58%;
+  left:0;
+  animation:mdcTrail 7s 2.5s linear infinite;
+}
+.cartpage > *{position:relative;z-index:1}
+.cartlayout{animation:mdcFadeUp .45s ease both}
+.cartitem{
+  animation:mdcSlideIn .35s ease both;
+  transition:transform .25s ease, background .25s ease;
+}
+.cartitem:hover{
+  transform:translateX(3px);
+  background:rgba(255,49,87,.03);
+}
+/* staggered entry for cart items */
+.cartitem:nth-child(1){animation-delay:.05s}
+.cartitem:nth-child(2){animation-delay:.10s}
+.cartitem:nth-child(3){animation-delay:.15s}
+.cartitem:nth-child(4){animation-delay:.20s}
+.cartitem:nth-child(5){animation-delay:.25s}
+.cartitem:nth-child(6){animation-delay:.30s}
+
+/* Summary aside speed lines */
+.cartlayout aside{
+  position:relative;
+  overflow:hidden;
+}
+.cartlayout aside::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,
+    rgba(255,49,87,.04) 0%,
+    transparent 40%,
+    rgba(255,49,87,.02) 80%,
+    transparent 100%);
+  pointer-events:none;
+}
+.cartlayout aside .heroBtn{
+  animation:mdcGlow 3s ease-in-out infinite;
+}
+
+@media(max-width:850px){
+  .cartpage::before{width:min(240px,70vw)}
+  .cartpage::after{display:none}
+}
+@media(max-width:520px){
+  .cartpage::before{width:min(160px,80vw)}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   3. CHECKOUT PAGE — Progress Flow
+   ══════════════════════════════════════════════════════════ */
+
+/* Checkout stepper bar */
+.checkoutSteps{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  margin-bottom:32px;
+  animation:mdcFadeIn .4s ease both;
+}
+.checkoutStep{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:7px;
+  position:relative;
+}
+.checkoutStep + .checkoutStep::before{
+  content:"";
+  position:absolute;
+  right:100%;
+  top:16px;
+  width:clamp(40px, 8vw, 80px);
+  height:2px;
+  background:#252933;
+}
+.checkoutStep + .checkoutStep.active::before,
+.checkoutStep + .checkoutStep.done::before{
+  background:linear-gradient(90deg,#ff3157,rgba(255,49,87,.5));
+}
+.checkoutStepDot{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:2px solid #252933;
+  background:#0d1016;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  font-weight:700;
+  color:#777f8d;
+  transition:all .35s ease;
+  z-index:1;
+}
+.checkoutStep.active .checkoutStepDot{
+  border-color:#ff3157;
+  background:rgba(255,49,87,.12);
+  color:#ff3157;
+  animation:mdcStepPulse 2s ease-in-out infinite;
+}
+.checkoutStep.done .checkoutStepDot{
+  border-color:#ff3157;
+  background:#ff3157;
+  color:#fff;
+}
+.checkoutStepLabel{
+  font-size:10px;
+  font-weight:700;
+  color:#777f8d;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  white-space:nowrap;
+}
+.checkoutStep.active .checkoutStepLabel{color:#ff3157}
+.checkoutStep.done .checkoutStepLabel{color:#f8fafc}
+
+/* Checkout layout animation */
+.checkoutLayout{
+  animation:mdcFadeUp .45s ease both;
+  position:relative;
+}
+.checkoutBlock{
+  animation:mdcSlideIn .35s ease both;
+  transition:border-color .3s ease, box-shadow .3s ease;
+}
+.checkoutBlock:nth-child(1){animation-delay:.05s}
+.checkoutBlock:nth-child(2){animation-delay:.12s}
+.checkoutBlock:nth-child(3){animation-delay:.19s}
+.checkoutBlock:focus-within{
+  border-color:rgba(255,49,87,.3);
+  box-shadow:0 0 0 3px rgba(255,49,87,.07);
+}
+.placeOrder{
+  animation:mdcGlow 3.5s ease-in-out infinite;
+  position:relative;
+  overflow:hidden;
+}
+.placeOrder::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+  transform:translateX(-100%);
+}
+.placeOrder:hover::after{
+  transform:translateX(100%);
+  transition:transform .5s ease;
+}
+
+/* Flowing background shimmer */
+.checkoutLayout::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,
+    rgba(255,49,87,.03) 0%,
+    transparent 35%,
+    rgba(255,49,87,.02) 70%,
+    transparent 100%);
+  pointer-events:none;
+  z-index:0;
+}
+
+@media(max-width:850px){
+  .checkoutSteps{gap:0;margin-bottom:24px}
+  .checkoutStep + .checkoutStep::before{width:clamp(24px,5vw,50px)}
+}
+@media(max-width:520px){
+  .checkoutStepLabel{font-size:9px;letter-spacing:.4px}
+  .checkoutStepDot{width:26px;height:26px;font-size:10px}
+  .checkoutStep + .checkoutStep::before{width:20px}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   4. WISHLIST PAGE — Red Glow
+   ══════════════════════════════════════════════════════════ */
+.page:has(.wishlistCard),
+.page:has(.wishlistEmpty){
+  position:relative;
+  isolation:isolate;
+}
+.page:has(.wishlistCard)::before,
+.page:has(.wishlistEmpty)::before{
+  content:"";
+  position:fixed;
+  pointer-events:none;
+  z-index:0;
+  bottom:-10%;
+  right:-10%;
+  width:min(600px, 80vw);
+  height:min(600px, 80vw);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,49,87,.09) 0%, transparent 65%);
+  animation:mdcAmbient 7s ease-in-out infinite;
+}
+.page:has(.wishlistCard)::after,
+.page:has(.wishlistEmpty)::after{
+  content:"";
+  position:fixed;
+  top:-5%;
+  left:-8%;
+  width:min(400px, 60vw);
+  height:min(400px, 60vw);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,49,87,.06) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcAmbient 9s 3s ease-in-out infinite;
+}
+.wishlistCard{
+  position:relative;
+  z-index:1;
+  animation:mdcFadeUp .4s ease both;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.wishlistCard:hover{
+  transform:translateY(-5px);
+  box-shadow:0 20px 50px rgba(0,0,0,.3), 0 0 30px rgba(255,49,87,.08);
+  border-color:rgba(255,49,87,.3) !important;
+}
+/* Stagger wishlist cards */
+.wishlistCard:nth-child(1){animation-delay:.04s}
+.wishlistCard:nth-child(2){animation-delay:.09s}
+.wishlistCard:nth-child(3){animation-delay:.14s}
+.wishlistCard:nth-child(4){animation-delay:.19s}
+.wishlistCard:nth-child(5){animation-delay:.24s}
+.wishlistCard:nth-child(6){animation-delay:.29s}
+.wishlistCard:nth-child(7){animation-delay:.34s}
+.wishlistCard:nth-child(8){animation-delay:.39s}
+
+/* Red heart pulse */
+.wishlistCard .heart{
+  animation:mdcPulse 2.5s ease-in-out infinite;
+}
+
+@media(max-width:850px){
+  .page:has(.wishlistCard)::before{width:min(360px,75vw);height:min(360px,75vw)}
+  .page:has(.wishlistCard)::after{width:min(260px,55vw);height:min(260px,55vw)}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   5. MY ORDERS — Delivery Route
+   ══════════════════════════════════════════════════════════ */
+.ordersPage{
+  position:relative;
+  isolation:isolate;
+}
+.ordersPage::before{
+  content:"";
+  position:fixed;
+  pointer-events:none;
+  z-index:0;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 119px,
+      rgba(255,49,87,.025) 120px
+    );
+  opacity:.7;
+}
+/* Animated horizontal delivery "road" line */
+.ordersPage::after{
+  content:"";
+  position:fixed;
+  left:0;
+  bottom:30%;
+  width:100%;
+  height:1px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,49,87,.22) 20%,
+    rgba(255,49,87,.45) 50%,
+    rgba(255,49,87,.22) 80%,
+    transparent 100%);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcPulse 4s ease-in-out infinite;
+}
+.customerOrder{
+  position:relative;
+  z-index:1;
+  animation:mdcSlideIn .35s ease both;
+}
+.customerOrder:nth-child(1){animation-delay:.04s}
+.customerOrder:nth-child(2){animation-delay:.10s}
+.customerOrder:nth-child(3){animation-delay:.16s}
+.customerOrder:nth-child(4){animation-delay:.22s}
+.customerOrder:nth-child(5){animation-delay:.28s}
+
+/* Delivery dot pulse for "In Transit" */
+.status:not(.delivered):not(.cancelled){
+  animation:mdcPulse 2s ease-in-out infinite;
+}
+.orderProgress .done i{
+  animation:mdcGlow 3s ease-in-out infinite;
+}
+
+@media(max-width:850px){
+  .ordersPage::before{display:none}
+  .ordersPage::after{bottom:40%}
+}
+@media(max-width:520px){
+  .ordersPage::after{display:none}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   6. RETURNS & REPLACEMENT — Circular Return
+   ══════════════════════════════════════════════════════════ */
+.returnsPage,.page:has(.returnsSection){
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+}
+/* Spinning ring in background */
+.returnsPage::before,
+.page:has(.returnsSection)::before{
+  content:"";
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(560px, 85vw);
+  height:min(560px, 85vw);
+  border-radius:50%;
+  border:1px dashed rgba(255,49,87,.15);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcCircle 22s linear infinite;
+}
+.returnsPage::after,
+.page:has(.returnsSection)::after{
+  content:"";
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(400px, 65vw);
+  height:min(400px, 65vw);
+  border-radius:50%;
+  border:1px solid rgba(255,49,87,.08);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcCircle 14s linear infinite reverse;
+}
+/* Returns card */
+.returnCard,.returnsEmpty{
+  position:relative;
+  z-index:1;
+  animation:mdcFadeUp .4s ease both;
+}
+.returnCard:nth-child(1){animation-delay:.05s}
+.returnCard:nth-child(2){animation-delay:.12s}
+.returnCard:nth-child(3){animation-delay:.19s}
+/* Return icon glow */
+.returnCard .returnType{
+  animation:mdcGlow 3s ease-in-out infinite;
+}
+
+@media(max-width:520px){
+  .returnsPage::before{width:min(280px,90vw);height:min(280px,90vw)}
+  .returnsPage::after{width:min(200px,70vw);height:min(200px,70vw)}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   7. ABOUT US — Road Journey (B)
+   ══════════════════════════════════════════════════════════ */
+/* Road journey: warm horizon glow + subtle road parallax */
+.aboutPage{
+  position:relative;
+  isolation:isolate;
+}
+/* Horizon warm glow strip */
+.aboutPage::before{
+  content:"";
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:min(320px, 45vh);
+  background:linear-gradient(0deg,
+    rgba(255,49,87,.06) 0%,
+    rgba(200,30,50,.03) 40%,
+    transparent 100%);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcPulse 8s ease-in-out infinite;
+}
+/* Winding road center line */
+.aboutPage::after{
+  content:"";
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:2px;
+  height:min(200px, 30vh);
+  background:linear-gradient(0deg, rgba(255,49,87,.4), transparent);
+  pointer-events:none;
+  z-index:0;
+  animation:mdcPulse 5s ease-in-out infinite;
+}
+.aboutHero{animation:mdcFadeUp .5s ease both; position:relative;z-index:1}
+.aboutGrid{position:relative;z-index:1}
+.aboutCard{animation:mdcFadeUp .45s ease both}
+.aboutCard:nth-child(1){animation-delay:.1s}
+.aboutCard:nth-child(2){animation-delay:.2s}
+.aboutCard{
+  transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.aboutCard:hover{
+  transform:translateY(-4px);
+  border-color:rgba(255,49,87,.25) !important;
+  box-shadow:0 20px 55px rgba(0,0,0,.25), 0 0 30px rgba(255,49,87,.06);
+}
+.aboutStat{
+  transition:transform .25s ease, border-color .25s ease;
+}
+.aboutStat:hover{
+  transform:scale(1.04);
+  border-color:rgba(255,49,87,.3) !important;
+}
+.aboutValue:hover{
+  border-color:rgba(255,49,87,.2) !important;
+}
+.aboutContactIcon{
+  animation:mdcFloat 4s ease-in-out infinite;
+}
+
+@media(max-width:850px){
+  .aboutPage::after{display:none}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   8. LOGIN / REGISTER — Red Ambient (B)
+   ══════════════════════════════════════════════════════════ */
+
+/* Large ambient glow orbs — enhanced */
+.auth{
+  position:relative;
+}
+.auth::before{
+  width:min(620px, 90vw) !important;
+  height:min(620px, 90vw) !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-50%) !important;
+  border-radius:50% !important;
+  border:none !important;
+  box-shadow:none !important;
+  background:radial-gradient(circle,
+    rgba(255,49,87,.09) 0%,
+    rgba(255,49,87,.04) 40%,
+    transparent 70%) !important;
+  animation:mdcAmbient 8s ease-in-out infinite !important;
+}
+.auth::after{
+  width:min(300px, 50vw) !important;
+  height:min(300px, 50vw) !important;
+  right:5% !important;
+  bottom:10% !important;
+  border-radius:50% !important;
+  background:radial-gradient(circle,
+    rgba(255,49,87,.06) 0%,
+    transparent 65%) !important;
+  animation:mdcAmbient 11s 4s ease-in-out infinite !important;
+}
+
+/* Extra left orb */
+.auth .authcard::after{
+  content:"";
+  position:fixed;
+  left:0;
+  top:25%;
+  width:min(220px,40vw);
+  height:min(220px,40vw);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,49,87,.05) 0%,transparent 65%);
+  pointer-events:none;
+  z-index:-1;
+  animation:mdcAmbient 9s 2s ease-in-out infinite;
+}
+
+/* Card enhanced entrance */
+.authcard,.accountcard{
+  animation:mdcFadeUp .5s ease both !important;
+}
+.authswitch{animation:mdcFadeUp .4s .1s ease both}
+.authsocial{animation:mdcFadeUp .4s .15s ease both}
+.authform{animation:mdcFadeUp .4s .2s ease both}
+.authmethods{animation:mdcFadeUp .4s .12s ease both}
+
+/* Input glow enhanced */
+.authform label > div:focus-within{
+  box-shadow:0 0 0 3px rgba(255,49,87,.12), 0 0 20px rgba(255,49,87,.06) !important;
+}
+/* Hero button ambient shine */
+.authform .heroBtn,.accountcard .heroBtn{
+  animation:mdcGlow 3s ease-in-out infinite;
+  position:relative;
+  overflow:hidden;
+}
+.authform .heroBtn::after,.accountcard .heroBtn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent);
+  transform:translateX(-100%);
+}
+.authform .heroBtn:hover::after,.accountcard .heroBtn:hover::after{
+  transform:translateX(100%);
+  transition:transform .55s ease;
+}
+
+@media(max-width:520px){
+  .auth::before{width:min(280px,90vw) !important;height:min(280px,90vw) !important}
+  .auth::after{width:min(180px,55vw) !important;height:min(180px,55vw) !important}
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   9. ADMIN DASHBOARD — Command Center (A)
+   ══════════════════════════════════════════════════════════ */
+.adminDash{
+  position:relative;
+}
+/* Animated grid overlay */
+.adminDash::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,49,87,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,49,87,.025) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+  animation:mdcGridMove 8s linear infinite;
+}
+.adminDash > *{position:relative;z-index:1}
+
+/* Stat cards — telemetry style */
+.dashStats > div{
+  animation:mdcFadeUp .4s ease both;
+  position:relative;
+  overflow:hidden;
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.dashStats > div:nth-child(1){animation-delay:.05s}
+.dashStats > div:nth-child(2){animation-delay:.10s}
+.dashStats > div:nth-child(3){animation-delay:.15s}
+.dashStats > div:nth-child(4){animation-delay:.20s}
+.dashStats > div:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,49,87,.3) !important;
+  box-shadow:0 14px 38px rgba(0,0,0,.2), 0 0 20px rgba(255,49,87,.06);
+}
+.dashStats > div::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,49,87,.5),transparent);
+  transform:scaleX(0);
+  transition:transform .35s ease;
+}
+.dashStats > div:hover::after{
+  transform:scaleX(1);
+}
+.dashStats strong{
+  animation:mdcFadeIn .5s ease both;
+}
+
+/* Dashboard panels */
+.dashPanel{
+  animation:mdcFadeUp .45s ease both;
+  transition:border-color .3s ease, transform .3s ease;
+}
+.dashPanel:nth-child(1){animation-delay:.1s}
+.dashPanel:nth-child(2){animation-delay:.18s}
+.dashPanel:hover{
+  border-color:rgba(255,49,87,.18) !important;
+}
+
+/* Bar chart bars grow in */
+.statusGrid > div{
+  animation:mdcFadeUp .4s ease both;
+  transition:border-color .25s ease, background .25s ease;
+}
+.statusGrid > div:hover{
+  border-color:rgba(255,49,87,.25) !important;
+  background:rgba(255,49,87,.04);
+}
+.statusGrid > div:nth-child(1){animation-delay:.08s}
+.statusGrid > div:nth-child(2){animation-delay:.14s}
+.statusGrid > div:nth-child(3){animation-delay:.20s}
+
+/* Order cards */
+.orderCard{
+  animation:mdcSlideIn .35s ease both;
+  transition:border-color .25s ease, transform .25s ease;
+}
+.orderCard:hover{
+  border-color:rgba(255,49,87,.2) !important;
+  transform:translateX(2px);
+}
+/* Stat icon pulse */
+.dashStats span{
+  animation:mdcPulse 3s ease-in-out infinite;
+}
+
+/* Admin head scan line */
+.adminDash .adminhead::after{
+  content:"";
+  display:block;
+  height:1px;
+  background:linear-gradient(90deg,rgba(255,49,87,.5),transparent);
+  margin-top:18px;
+  animation:mdcPulse 4s ease-in-out infinite;
+}
+
+@media(max-width:850px){
+  .adminDash::before{background-size:40px 40px}
+}
+@media(max-width:520px){
+  .adminDash::before{background-size:30px 30px}
+}
+
+/* ─── REDUCED MOTION SAFETY ────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{
+    animation-duration:.001s !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001s !important;
+  }
+}
