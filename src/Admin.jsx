@@ -54,16 +54,16 @@ function optimizeImage(file){
 function uploadToCloudinary(file,onProgress){
   return new Promise((resolve,reject)=>{
     if(!CLOUDINARY_CLOUD_NAME||!CLOUDINARY_UPLOAD_PRESET){
-      reject(Object.assign(new Error('Cloudinary upload is not configured yet'),{code:'cloudinary/not-configured'}));
+      reject(Object.assign(new Error('Cloudinary is not configured yet. Add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in Vercel settings.'),{code:'cloudinary/not-configured'}));
       return;
     }
     const xhr=new XMLHttpRequest();
-    const endpoint=`https://api.cloudinary.com/v1_1/${encodeURIComponent(CLOUDINARY_CLOUD_NAME)}/image/upload`;
+    const endpoint=`https://api.cloudinary.com/v1_1/${encodeURIComponent(CLOUDINARY_CLOUD_NAME.trim())}/image/upload`;
     xhr.open('POST',endpoint,true);
     xhr.upload.onprogress=event=>{
       if(event.lengthComputable)onProgress?.(Math.round((event.loaded/event.total)*100));
     };
-    xhr.onerror=()=>reject(Object.assign(new Error('Could not connect to Cloudinary'),{code:'cloudinary/network'}));
+    xhr.onerror=()=>reject(Object.assign(new Error('Network error: could not connect to Cloudinary'),{code:'cloudinary/network'}));
     xhr.onabort=()=>reject(Object.assign(new Error('Upload canceled'),{code:'cloudinary/canceled'}));
     xhr.onload=()=>{
       let data={};
@@ -72,12 +72,17 @@ function uploadToCloudinary(file,onProgress){
         resolve(data.secure_url);
         return;
       }
-      const message=data.error?.message||`Cloudinary upload failed (HTTP ${xhr.status})`;
+      let message=data.error?.message||`Cloudinary upload failed (HTTP ${xhr.status})`;
+      if(message.toLowerCase().includes('upload preset must be unsigned')){
+        message="Cloudinary preset must be 'Unsigned'. In Cloudinary Settings > Upload > Edit Preset, change Signing Mode to Unsigned.";
+      }else if(message.toLowerCase().includes('cloud name not found')||xhr.status===404){
+        message=`Cloudinary cloud name '${CLOUDINARY_CLOUD_NAME}' was not found. Please verify VITE_CLOUDINARY_CLOUD_NAME.`;
+      }
       reject(Object.assign(new Error(message),{code:'cloudinary/upload-failed',status:xhr.status}));
     };
     const formData=new FormData();
     formData.append('file',file);
-    formData.append('upload_preset',CLOUDINARY_UPLOAD_PRESET);
+    formData.append('upload_preset',CLOUDINARY_UPLOAD_PRESET.trim());
     formData.append('folder','motodc/products');
     xhr.send(formData);
   });
@@ -218,15 +223,46 @@ export default function Admin(){
               <label>Rating<input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={e=>setForm({...form,rating:e.target.value})}/></label>
             </div>
             <label>Stock<input type="number" min="0" value={form.stock} onChange={e=>setForm({...form,stock:e.target.value})}/></label>
-            <label className="adminupload">
-              <span>Product image</span>
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={uploadImage} disabled={uploading}/>
-              <button type="button" className="seedBtn" disabled={uploading} onClick={e=>{e.preventDefault();e.stopPropagation();fileInputRef.current?.click()}}>
-                <Upload size={15}/>{uploading?`Uploading ${uploadProgress}%`:'Choose image'}
-              </button>
-              {form.image&&<small>Image uploaded. Save the product to apply it.</small>}
-            </label>
-            {form.image&&<img className="adminimagepreview" src={form.image} alt="Product preview" onError={e=>{e.currentTarget.style.display='none'}}/>}
+            <div className="adminupload">
+              <label>Product image</label>
+              <div className="adminuploadBtnRow">
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={uploadImage} disabled={uploading}/>
+                <button type="button" className="seedBtn" disabled={uploading} onClick={e=>{e.preventDefault();e.stopPropagation();fileInputRef.current?.click()}}>
+                  <Upload size={15}/>{uploading?`Uploading ${uploadProgress}%`:'Choose image file'}
+                </button>
+                {form.image&&(
+                  <button type="button" className="adminsignout" style={{padding:'7px 11px',fontSize:'11px'}} onClick={()=>setForm(f=>({...f,image:''}))}>
+                    Remove image
+                  </button>
+                )}
+              </div>
+
+              <div className={`cloudinaryStatus ${CLOUDINARY_CLOUD_NAME&&CLOUDINARY_UPLOAD_PRESET?'connected':'missing'}`}>
+                {CLOUDINARY_CLOUD_NAME&&CLOUDINARY_UPLOAD_PRESET ? (
+                  <span>🟢 Cloudinary connected ({CLOUDINARY_CLOUD_NAME})</span>
+                ) : (
+                  <span>⚠️ Cloudinary not connected yet (Set VITE_CLOUDINARY_CLOUD_NAME & VITE_CLOUDINARY_UPLOAD_PRESET in Vercel)</span>
+                )}
+              </div>
+
+              <label style={{marginTop:'4px'}}>
+                <span>Or paste image URL</span>
+                <input
+                  value={form.image}
+                  onChange={e=>setForm({...form,image:e.target.value})}
+                  placeholder="https://... (or choose image file above)"
+                />
+              </label>
+
+              {form.image&&(
+                <img
+                  className="adminimagepreview"
+                  src={form.image}
+                  alt="Product preview"
+                  onError={e=>{e.currentTarget.style.display='none'}}
+                />
+              )}
+            </div>
             <label>Description<textarea rows="4" value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Product description"/></label>
             <button className="heroBtn" disabled={saving||uploading}>
               {saving?'Saving...':editing?'Update product':<><Plus size={17}/> Add product</>}
