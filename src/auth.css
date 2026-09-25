@@ -38,9 +38,79 @@
 .authintro .eyebrow{margin-bottom:10px}
 .authintro h1{font-size:42px;margin-bottom:9px}
 .authintro>p:not(.eyebrow){font-size:13px;max-width:390px;margin-inline:auto}
-.authswitch{margin:24px 0 18px}
-.authsocial{position:relative;z-index:1}
-.authdivider{margin:18px 0 2px}
+.authsocial{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.authsocial button{
+  position:relative;
+  appearance:none;
+  -webkit-appearance:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background:linear-gradient(145deg, rgba(22,26,36,0.95), rgba(12,15,22,0.95)) !important;
+  color:#f8fafc !important;
+  border:1px solid #303746 !important;
+  border-radius:12px !important;
+  padding:12px 14px !important;
+  font-weight:700 !important;
+  font-size:13px !important;
+  letter-spacing:0.2px;
+  cursor:pointer;
+  overflow:hidden;
+  transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow:0 4px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.authsocial button::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  background:linear-gradient(135deg, rgba(255,49,87,0.12), transparent 60%);
+  opacity:0;
+  transition:opacity 0.3s ease;
+  pointer-events:none;
+}
+.authsocial button:hover:not(:disabled){
+  border-color:rgba(255,49,87,0.6) !important;
+  background:linear-gradient(145deg, rgba(28,33,46,0.98), rgba(15,18,26,0.98)) !important;
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(0,0,0,0.45), 0 0 20px rgba(255,49,87,0.2) !important;
+}
+.authsocial button:hover:not(:disabled)::before{
+  opacity:1;
+}
+.authsocial button:active:not(:disabled){
+  transform:translateY(0) scale(0.98);
+}
+.authsocial button:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+}
+.authsocial button:focus-visible{
+  outline:2px solid #ff3157;
+  outline-offset:2px;
+}
+.authsocial button img{
+  width:20px;
+  height:20px;
+  display:block;
+  object-fit:contain;
+  flex:0 0 20px;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  transition:transform 0.3s ease;
+}
+.authsocial button:hover img{
+  transform:scale(1.1);
+}
+.authsocial button:nth-child(2) img{
+  filter:brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
 .authmethods{margin:9px 0 17px}
 .authform{position:relative;z-index:1}
 .authform .heroBtn{
