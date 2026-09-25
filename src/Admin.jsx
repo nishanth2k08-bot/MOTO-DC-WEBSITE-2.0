@@ -3,7 +3,7 @@ import {collection,deleteDoc,doc,getDocs,addDoc,updateDoc,getDoc} from 'firebase
 import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
 import {adminAuth,adminDb,adminStorage} from './firebase';
 import AdminOrders from './AdminOrders';
-import {Plus,Trash2,LogOut,Edit3,X,Package,Download,Upload} from 'lucide-react';
+import {Plus,Trash2,LogOut,Edit3,X,Package,Download,Upload,LayoutDashboard,ShoppingCart} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {majorSpareProducts} from './major-spares';
 import './admin.css';
@@ -84,7 +84,8 @@ function uploadToCloudinary(file,onProgress){
 }
 
 export default function Admin(){
- const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false);
+ const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState(()=>{try{return localStorage.getItem('motodc-admin-tab')||'dashboard'}catch{return 'dashboard'}});
+ const handleTabChange=t=>{setActiveTab(t);try{localStorage.setItem('motodc-admin-tab',t)}catch{}};
  useEffect(()=>onAuthStateChanged(adminAuth,async u=>{setUser(u);setAllowed(false);if(!u){setChecking(false);return}try{const snap=await getDoc(doc(adminDb,'admins',u.uid));setAllowed(snap.exists())}catch(e){console.error(e);toast.error('Could not verify admin access')}finally{setChecking(false)}}),[]);
  useEffect(()=>{if(allowed)loadProducts()},[allowed]);
  async function loadProducts(){try{const snap=await getDocs(collection(adminDb,'products'));setProducts(snap.docs.map(d=>({id:d.id,...d.data()})))}catch(e){console.error(e);toast.error(e.code==='permission-denied'?'Admin permissions are not enabled yet':'Could not load products')}}
@@ -144,5 +145,121 @@ export default function Admin(){
  if(checking)return <section className="admin page"><div className="empty">Checking admin access...</div></section>;
  if(!user)return <section className="admin page"><div className="adminlogin"><p className="eyebrow">MOTODC ADMIN</p><h1>Admin <span>login.</span></h1><p>Sign in with your Firebase Authentication account.</p><form onSubmit={login}><input type="email" placeholder="Admin email" value={email} onChange={e=>setEmail(e.target.value)} required/><input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} required/><button className="heroBtn" disabled={loginBusy}>{loginBusy?'Signing in...':'Sign in'}</button></form></div></section>;
  if(!allowed)return <section className="admin page"><div className="empty"><div><h2>Admin access not granted</h2><p>Your signed-in Firebase admin user does not have an <b>admins/{user.uid}</b> document.</p><button className="heroBtn" onClick={()=>signOut(adminAuth)}>Sign out</button></div></div></section>;
- return <section className="admin page"><div className="adminhead"><div><p className="eyebrow">MOTODC ADMIN</p><h1>Product <span>manager.</span></h1></div><button className="adminsignout" onClick={()=>signOut(adminAuth)}><LogOut size={16}/> Sign out</button></div><div className="adminlayout"><form className="adminform" onSubmit={save}><div className="formtitle"><h2>{editing?'Edit product':'Add product'}</h2>{editing&&<button type="button" onClick={reset}><X size={17}/></button>}</div><label>Name<input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Product name"/></label><label>Brand<input value={form.brand} onChange={e=>setForm({...form,brand:e.target.value})} placeholder="Brand"/></label><label>Vehicle / fitment<input value={form.fitment} onChange={e=>setForm({...form,fitment:e.target.value})} placeholder="Compatible model or vehicle"/></label><label>Category<select value={form.category} onChange={e=>setForm({...form,category:e.target.value})}><option>Automobile</option><option>Motorcycle</option></select></label><div className="formrow"><label>Price (₹)<input type="number" min="0" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/></label><label>Rating<input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={e=>setForm({...form,rating:e.target.value})}/></label></div><label>Stock<input type="number" min="0" value={form.stock} onChange={e=>setForm({...form,stock:e.target.value})}/></label><label className="adminupload"><span>Product image</span><input ref={fileInputRef} type="file" accept="image/*" onChange={uploadImage} disabled={uploading}/><button type="button" className="seedBtn" disabled={uploading} onClick={e=>{e.preventDefault();e.stopPropagation();fileInputRef.current?.click()}}><Upload size={15}/>{uploading?`Uploading ${uploadProgress}%`:'Choose image'}</button>{form.image&&<small>Image uploaded. Save the product to apply it.</small>}</label>{form.image&&<img className="adminimagepreview" src={form.image} alt="Product preview" onError={e=>{e.currentTarget.style.display='none'}}/>}<label>Description<textarea rows="4" value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Product description"/></label><button className="heroBtn" disabled={saving||uploading}>{saving?'Saving...':editing?'Update product':<><Plus size={17}/> Add product</>}</button></form><div className="adminlist"><div className="listhead"><h2><Package size={20}/> Products</h2><div className="listactions"><b>{products.length}</b><button type="button" className="seedBtn" onClick={importMajorSpares} disabled={bulkImporting}><Download size={15}/>{bulkImporting?'Importing...':'Add 100 major spares'}</button></div></div>{products.map(p=><div className="adminproduct" key={p.id}><img src={p.image} alt=""/><div><h3>{p.name}</h3><small>{p.brand?`${p.brand} · `:''}{p.category} · ₹{num(p.price).toLocaleString('en-IN')} · {p.rating?`${p.rating}★ · `:''}{p.stock} stock</small>{p.fitment&&<small className="fitment">Fits: {p.fitment}</small>}</div><button onClick={()=>edit(p)} title="Edit"><Edit3 size={16}/></button><button className="delete" onClick={()=>remove(p.id)} title="Delete"><Trash2 size={16}/></button></div>)}{!products.length&&<div className="empty">No products yet.</div>}</div></div><AdminOrders/></section>;
+  return (
+    <section className="admin page">
+      <div className="adminhead">
+        <div>
+          <p className="eyebrow">MOTODC CONTROL CENTER</p>
+          {activeTab==='dashboard'&&(
+            <>
+              <h1>Admin <span>dashboard.</span></h1>
+              <p className="adminSubtitle">Live business performance, sales analytics, and customer activity.</p>
+            </>
+          )}
+          {activeTab==='products'&&(
+            <>
+              <h1>Product <span>manager.</span></h1>
+              <p className="adminSubtitle">Add, edit, or manage products and inventory stock levels.</p>
+            </>
+          )}
+          {activeTab==='orders'&&(
+            <>
+              <h1>Customer <span>orders.</span></h1>
+              <p className="adminSubtitle">Review customer orders, update tracking status, and handle returns.</p>
+            </>
+          )}
+        </div>
+        <button className="adminsignout" onClick={()=>signOut(adminAuth)}><LogOut size={16}/> Sign out</button>
+      </div>
+
+      <div className="adminSectionNav" role="tablist" aria-label="Admin Navigation">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab==='dashboard'}
+          className={activeTab==='dashboard'?'active':''}
+          onClick={()=>handleTabChange('dashboard')}
+        >
+          <LayoutDashboard size={15}/> Admin Dashboard
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab==='products'}
+          className={activeTab==='products'?'active':''}
+          onClick={()=>handleTabChange('products')}
+        >
+          <Package size={15}/> Product Manager
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab==='orders'}
+          className={activeTab==='orders'?'active':''}
+          onClick={()=>handleTabChange('orders')}
+        >
+          <ShoppingCart size={15}/> Customer's Orders
+        </button>
+      </div>
+
+      {activeTab==='products'&&(
+        <div className="adminlayout">
+          <form className="adminform" onSubmit={save}>
+            <div className="formtitle">
+              <h2>{editing?'Edit product':'Add product'}</h2>
+              {editing&&<button type="button" onClick={reset}><X size={17}/></button>}
+            </div>
+            <label>Name<input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Product name"/></label>
+            <label>Brand<input value={form.brand} onChange={e=>setForm({...form,brand:e.target.value})} placeholder="Brand"/></label>
+            <label>Vehicle / fitment<input value={form.fitment} onChange={e=>setForm({...form,fitment:e.target.value})} placeholder="Compatible model or vehicle"/></label>
+            <label>Category<select value={form.category} onChange={e=>setForm({...form,category:e.target.value})}><option>Automobile</option><option>Motorcycle</option></select></label>
+            <div className="formrow">
+              <label>Price (₹)<input type="number" min="0" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/></label>
+              <label>Rating<input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={e=>setForm({...form,rating:e.target.value})}/></label>
+            </div>
+            <label>Stock<input type="number" min="0" value={form.stock} onChange={e=>setForm({...form,stock:e.target.value})}/></label>
+            <label className="adminupload">
+              <span>Product image</span>
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={uploadImage} disabled={uploading}/>
+              <button type="button" className="seedBtn" disabled={uploading} onClick={e=>{e.preventDefault();e.stopPropagation();fileInputRef.current?.click()}}>
+                <Upload size={15}/>{uploading?`Uploading ${uploadProgress}%`:'Choose image'}
+              </button>
+              {form.image&&<small>Image uploaded. Save the product to apply it.</small>}
+            </label>
+            {form.image&&<img className="adminimagepreview" src={form.image} alt="Product preview" onError={e=>{e.currentTarget.style.display='none'}}/>}
+            <label>Description<textarea rows="4" value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Product description"/></label>
+            <button className="heroBtn" disabled={saving||uploading}>
+              {saving?'Saving...':editing?'Update product':<><Plus size={17}/> Add product</>}
+            </button>
+          </form>
+          <div className="adminlist">
+            <div className="listhead">
+              <h2><Package size={20}/> Products</h2>
+              <div className="listactions">
+                <b>{products.length}</b>
+                <button type="button" className="seedBtn" onClick={importMajorSpares} disabled={bulkImporting}>
+                  <Download size={15}/>{bulkImporting?'Importing...':'Add 100 major spares'}
+                </button>
+              </div>
+            </div>
+            {products.map(p=>(
+              <div className="adminproduct" key={p.id}>
+                <img src={p.image} alt=""/>
+                <div>
+                  <h3>{p.name}</h3>
+                  <small>{p.brand?`${p.brand} · `:''}{p.category} · ₹{num(p.price).toLocaleString('en-IN')} · {p.rating?`${p.rating}★ · `:''}{p.stock} stock</small>
+                  {p.fitment&&<small className="fitment">Fits: {p.fitment}</small>}
+                </div>
+                <button onClick={()=>edit(p)} title="Edit"><Edit3 size={16}/></button>
+                <button className="delete" onClick={()=>remove(p.id)} title="Delete"><Trash2 size={16}/></button>
+              </div>
+            ))}
+            {!products.length&&<div className="empty">No products yet.</div>}
+          </div>
+        </div>
+      )}
+
+      <AdminOrders activeTab={activeTab}/>
+    </section>
+  );
 }
