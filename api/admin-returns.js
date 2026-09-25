@@ -15,13 +15,30 @@ function getAdmin(){
 function send(res,status,body){res.status(status).json(body)}
 
 export default async function handler(req,res){
-  if(!['GET','PATCH'].includes(req.method))return send(res,405,{error:'Method not allowed'});
+  if(!['GET','PATCH','DELETE'].includes(req.method))return send(res,405,{error:'Method not allowed'});
   try{
     const authHeader=req.headers.authorization||'',idToken=authHeader.startsWith('Bearer ')?authHeader.slice(7):'';
     if(!idToken)return send(res,401,{error:'Authentication required'});
     const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
     const adminSnap=await db.collection('admins').doc(decoded.uid).get();
     if(!adminSnap.exists)return send(res,403,{error:'Admin access required'});
+
+    if(req.method==='DELETE'){
+      const body=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
+      const requestGroup=String(body.requestGroup||''),requestCollection=String(body.requestCollection||''),requestId=String(body.requestId||'');
+      const allowedGroups=new Set(['cod request','online request']);
+      const allowedCollections=new Set(['cod return','cod replacement','online return','online replacement']);
+      if(!allowedGroups.has(requestGroup)||!allowedCollections.has(requestCollection)||!requestId)return send(res,400,{error:'Invalid return request delete payload'});
+      const requestRef=db.collection('request').doc(requestGroup).collection(requestCollection).doc(requestId);
+      const requestSnap=await requestRef.get();
+      if(!requestSnap.exists)return send(res,404,{error:'Return request not found'});
+      const requestData=requestSnap.data()||{};
+      if(requestData.status!=='completed'){
+        return send(res,400,{error:'Only completed return or replacement requests can be removed'});
+      }
+      await requestRef.delete();
+      return send(res,200,{ok:true,deletedId:requestId});
+    }
 
     if(req.method==='PATCH'){
       const body=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
