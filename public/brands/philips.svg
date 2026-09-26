@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 44" fill="none">
+  <g transform="translate(4, 4)">
+    <circle cx="18" cy="18" r="16" fill="#0B5FFF"/>
+    <path d="M10 18 Q14 14 18 18 T26 18" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
+    <path d="M10 22 Q14 18 18 22 T26 22" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
+    <path d="M18 9 L18 12 M18 24 L18 27" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <text x="46" y="28" font-family="'Arial Black', 'Helvetica', sans-serif" font-size="20" font-weight="900" letter-spacing="1.5px" fill="#0B5FFF">PHILIPS</text>
+</svg>

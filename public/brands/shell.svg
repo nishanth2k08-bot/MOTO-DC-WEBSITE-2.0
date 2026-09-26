@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" fill="none">
+  <g transform="translate(6, 4)">
+    <path d="M18 4 C8 4 2 12 4 24 C5 31 11 34 18 34 C25 34 31 31 32 24 C34 12 28 4 18 4 Z" fill="#FFD100" stroke="#DD1D21" stroke-width="2.5"/>
+    <path d="M18 4 L18 34 M11 7 L13 32 M25 7 L23 32 M6 14 L10 30 M30 14 L26 30" stroke="#DD1D21" stroke-width="2"/>
+  </g>
+  <text x="46" y="29" font-family="'Arial Black', sans-serif" font-size="22" font-weight="900" letter-spacing="1px" fill="#DD1D21">SHELL</text>
+</svg>
