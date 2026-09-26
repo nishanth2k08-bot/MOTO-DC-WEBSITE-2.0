@@ -11,9 +11,17 @@
 .detail .heroBtn{box-shadow:0 10px 28px rgba(255,49,87,.12)}
 .detail .heroBtn:hover:not(:disabled){box-shadow:0 12px 32px rgba(255,49,87,.2)}
 .light-theme .detail>img{background:#f5f6f8;box-shadow:0 20px 60px rgba(17,24,39,.1)}
+
+/* Back to products button */
+.detailBackBtn{grid-column:1 / -1;display:inline-flex;align-items:center;gap:8px;background:#0d1016;border:1px solid #282c35;color:#c7cbd4;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;width:fit-content;cursor:pointer;transition:all .2s ease;margin-bottom:-15px}
+.detailBackBtn:hover{background:#151922;border-color:#ff3157;color:#ff3157;transform:translateX(-3px)}
+.light-theme .detailBackBtn{background:#ffffff;border-color:#dfe2e8;color:#30343d}
+.light-theme .detailBackBtn:hover{background:#fff0f3;border-color:#ff3157;color:#ff3157}
+
 @media(max-width:850px){
   .detail h1{letter-spacing:-2px}
   .detail p:not(.eyebrow){font-size:15px}
+  .detailBackBtn{margin-bottom:0}
 }
 @media(max-width:520px){
   .detail h1{font-size:32px;letter-spacing:-1.4px;line-height:1.1}
