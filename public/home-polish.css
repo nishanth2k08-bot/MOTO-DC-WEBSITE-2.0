@@ -182,126 +182,6 @@
 }
 
 /* =========================================================
-   ENHANCEMENT 3: High-Octane "Shop By Machine" Visual Cards
-   ========================================================= */
-.categories.upgradedCategories{
-  display:grid!important;
-  grid-template-columns:1fr 1fr!important;
-  gap:20px!important;
-  margin-top:12px;
-}
-.categoryMachineCard{
-  position:relative;
-  border-radius:20px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-  border:1px solid rgba(255,255,255,0.10);
-  min-height:220px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  padding:26px 28px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
-}
-.categoryMachineCard.autoCard{
-  background:linear-gradient(135deg, rgba(12,15,22,0.93) 0%, rgba(18,22,32,0.82) 55%, rgba(255,49,87,0.18) 100%), url('/70cfa8e2-2409-460c-b546-c348c0076234.png') center / cover no-repeat;
-}
-.categoryMachineCard.bikeCard{
-  background:linear-gradient(135deg, rgba(12,15,22,0.93) 0%, rgba(18,22,32,0.82) 55%, rgba(255,49,87,0.18) 100%), url('/4d727a7c-9c8a-436c-b880-9723a5762532.png') center / cover no-repeat;
-}
-.categoryMachineCard:hover{
-  transform:translateY(-6px);
-  border-color:#ff3157;
-  box-shadow:0 20px 48px rgba(0,0,0,0.5), 0 0 30px rgba(255,49,87,0.22);
-}
-.categoryMachineCard .cardAura{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(circle at 85% 85%, rgba(255,49,87,0.20) 0%, transparent 60%);
-  opacity:0;
-  transition:opacity 0.3s ease;
-}
-.categoryMachineCard:hover .cardAura{
-  opacity:1;
-}
-.categoryCardContent{
-  position:relative;
-  z-index:2;
-  width:100%;
-}
-.categoryCardTop{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:12px;
-}
-.machineTag{
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:1px;
-  color:#ff3157;
-  text-transform:uppercase;
-  background:rgba(255,49,87,0.14);
-  padding:4px 10px;
-  border-radius:6px;
-  border:1px solid rgba(255,49,87,0.25);
-}
-.machineStockPill{
-  font-size:12px;
-  font-weight:600;
-  color:#e2e8f0;
-  background:rgba(255,255,255,0.10);
-  padding:4px 12px;
-  border-radius:9999px;
-  border:1px solid rgba(255,255,255,0.14);
-  backdrop-filter:blur(8px);
-}
-.categoryMachineCard h3{
-  font-size:27px;
-  font-weight:800;
-  color:#ffffff;
-  margin:0 0 8px 0;
-  font-family:Sora,Inter,sans-serif;
-  letter-spacing:-0.6px;
-}
-.categoryMachineCard p{
-  font-size:14px;
-  line-height:1.55;
-  color:#cbd5e1;
-  max-width:440px;
-  margin:0 0 16px 0;
-}
-.categoryCardBottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.categoryCardAction{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  font-weight:700;
-  color:#ff3157;
-  transition:gap 0.2s ease;
-}
-.categoryMachineCard:hover .categoryCardAction{
-  gap:12px;
-}
-.machineEmoji{
-  font-size:32px;
-  line-height:1;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.6));
-  transition:transform 0.28s ease;
-}
-.categoryMachineCard:hover .machineEmoji{
-  transform:scale(1.15) rotate(-6deg);
-}
-
-/* =========================================================
    ENHANCEMENT 4: Top Automotive Brands Strip
    ========================================================= */
 .homeBrandsSection{
@@ -385,31 +265,6 @@
 .light-theme .essentialInfo p{
   color:#64748b;
 }
-.light-theme .categoryMachineCard.autoCard{
-  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.88) 55%, rgba(255,49,87,0.12) 100%), url('/70cfa8e2-2409-460c-b546-c348c0076234.png') center / cover no-repeat;
-  border-color:#e2e8f0;
-  box-shadow:0 8px 24px rgba(0,0,0,0.06);
-}
-.light-theme .categoryMachineCard.bikeCard{
-  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.88) 55%, rgba(255,49,87,0.12) 100%), url('/4d727a7c-9c8a-436c-b880-9723a5762532.png') center / cover no-repeat;
-  border-color:#e2e8f0;
-  box-shadow:0 8px 24px rgba(0,0,0,0.06);
-}
-.light-theme .categoryMachineCard:hover{
-  border-color:#ff3157;
-  box-shadow:0 16px 36px rgba(0,0,0,0.10), 0 0 24px rgba(255,49,87,0.14);
-}
-.light-theme .categoryMachineCard h3{
-  color:#0f172a;
-}
-.light-theme .categoryMachineCard p{
-  color:#475569;
-}
-.light-theme .machineStockPill{
-  background:rgba(0,0,0,0.06);
-  color:#334155;
-  border-color:rgba(0,0,0,0.08);
-}
 .light-theme .homeBrandCard{
   background:#ffffff;
   border-color:#e2e8f0;
@@ -437,7 +292,6 @@
 }
 @media(max-width:850px){
   .hero p:not(.eyebrow){font-size:16px}
-  .categories.upgradedCategories{grid-template-columns:1fr!important;gap:16px!important}
   .homeEssentialsGrid{grid-template-columns:repeat(2, 1fr)}
   .homeBrandsGrid{grid-template-columns:repeat(auto-fit, minmax(100px, 1fr))}
   .heroBikeLight, .heroCarLight{opacity:0.4}
@@ -453,13 +307,10 @@
   .homeEssentialsGrid{grid-template-columns:1fr;gap:12px}
   .homeBrandsGrid{grid-template-columns:repeat(3, 1fr);gap:8px}
   .homeBrandCard{padding:12px 8px}
-  .categoryMachineCard{padding:20px 22px;min-height:190px}
-  .categoryMachineCard h3{font-size:23px}
-  .categoryMachineCard p{font-size:13px}
   .heroBikeLight, .heroCarLight{display:none}
 }
 .light-theme .grid .card{box-shadow:0 8px 28px rgba(20,24,32,.05)}
 @media(prefers-reduced-motion:reduce){
-  .grid .card:hover, .essentialCard:hover, .categoryMachineCard:hover, .homeBrandCard:hover{transform:none}
+  .grid .card:hover, .essentialCard:hover, .homeBrandCard:hover{transform:none}
   .heroStockPulse, .heroBikeLight, .heroCarLight{animation:none}
 }
