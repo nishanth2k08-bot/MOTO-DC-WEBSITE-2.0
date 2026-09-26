@@ -1,0 +1,149 @@
+[
+  {
+    "id": "sp-107",
+    "name": "Castrol EDGE 5W-40 Advanced Full Synthetic Engine Oil (4L)",
+    "imageName": "castrol_edge_5w40",
+    "target": "public/images/products/sp-107_castrol_edge_5w-40_advanced_full_synthetic.jpg",
+    "prompt": "Studio product photography of an authentic 4-litre gold canister of Castrol EDGE 5W-40 Advanced Full Synthetic engine oil. Fluid TITANIUM technology badge, embossed Castrol lettering, ergonomic black handle, placed on polished black acrylic with golden ambient rim lighting, crisp reflections."
+  },
+  {
+    "id": "sp-108",
+    "name": "Castrol Radicool SF Longlife OAT Coolant Concentrate (1L)",
+    "imageName": "castrol_radicool_sf",
+    "target": "public/images/products/sp-108_castrol_radicool_sf_longlife_oat_coolant.jpg",
+    "prompt": "Studio product photography of a 1-litre bottle of Castrol Radicool SF Premix OAT coolant concentrate. Vibrant magenta-pink coolant liquid partially visible, clean white Castrol bottle with green cap, professional commercial studio lighting with bright pink backglow."
+  },
+  {
+    "id": "sp-109",
+    "name": "Castrol Syntrans 75W-90 Manual Transmission Fluid (1L)",
+    "imageName": "castrol_syntrans_75w90",
+    "target": "public/images/products/sp-109_castrol_syntrans_75w-90_manual_transmission_fluid.jpg",
+    "prompt": "Studio product photography of a 1-litre silver-grey bottle of Castrol Syntrans 75W-90 full synthetic manual transmission gear oil. Pull-out pouring spout, clean Castrol green and red labels, isolated on dark carbon surface with cool directional studio lighting."
+  },
+  {
+    "id": "sp-110",
+    "name": "Castrol POWER1 4T 15W-50 Semi-Synthetic Oil (2.5L)",
+    "imageName": "castrol_power1_4t_15w50",
+    "target": "public/images/products/sp-110_castrol_power1_4t_15w-50_semi-synthetic_oil.jpg",
+    "prompt": "Studio product photography of a 2.5-litre gold bottle of Castrol POWER1 4T 15W-50 semi-synthetic motorcycle engine oil. Power Release Technology graphic on label, red cap, dramatic warm studio rim lighting, isolated on a dark reflective pedestal."
+  },
+  {
+    "id": "sp-113",
+    "name": "Motul C1 Chain Clean + C2 Chain Lube Road Combo Pack",
+    "imageName": "motul_c1_c2_combo",
+    "target": "public/images/products/sp-113_motul_c1_chain_clean_plus_c2_chain_lube_road_combo.jpg",
+    "prompt": "Studio product photography of Motul MC Care combo pack containing C1 Chain Clean aerosol spray can and C2 Chain Lube Road aerosol spray can side by side. Black metal spray cans with bold red and yellow Motul branding, precision red nozzle tubes attached, on sleek dark granite floor."
+  },
+  {
+    "id": "sp-114",
+    "name": "Motul RBF 660 Factory Line Racing Brake Fluid (500ml)",
+    "imageName": "motul_rbf_660",
+    "target": "public/images/products/sp-114_motul_rbf_660_factory_line_racing_brake_fluid.jpg",
+    "prompt": "Studio product photography of Motul RBF 660 Factory Line Dot 4 racing brake fluid 500ml bottle. Matte black ergonomic bottle with red and white Motul racing checkered badge, 325°C dry boiling point badge, on dark carbon fiber floor with intense red rim reflections."
+  },
+  {
+    "id": "sp-115",
+    "name": "Motul Motocool Expert Ready-To-Use Hybrid Coolant (1L)",
+    "imageName": "motul_motocool_expert",
+    "target": "public/images/products/sp-115_motul_motocool_expert_ready-to-use_hybrid_coolant.jpg",
+    "prompt": "Studio product photography of a 1-litre bottle of Motul Motocool Expert ready-to-use motorcycle coolant. Translucent yellow fluid level strip on bottle side, distinctive Motul grey bottle with blue and red label, soft studio lighting with cyan-blue accents."
+  },
+  {
+    "id": "sp-133",
+    "name": "Mobil 1 ESP 5W-30 Advanced Full Synthetic Engine Oil (4L)",
+    "imageName": "mobil1_esp_5w30",
+    "target": "public/images/products/sp-133_mobil_1_esp_5w-30_advanced_full_synthetic.jpg",
+    "prompt": "Studio product photography of a 4-litre silver jug of Mobil 1 ESP 5W-30 Emission System Protection fully synthetic motor oil. Premium silver plastic jug with signature blue and green Mobil 1 logo, on dark studio glass floor with bright studio key lights."
+  },
+  {
+    "id": "sp-134",
+    "name": "Mobil Super Moto 15W-50 4T Semi-Synthetic Oil (1L)",
+    "imageName": "mobil_super_moto_15w50",
+    "target": "public/images/products/sp-134_mobil_super_moto_15w-50_4t_semi-synthetic_oil.jpg",
+    "prompt": "Studio product photography of a 1-litre silver-grey bottle of Mobil Super Moto 15W-50 4T premium motorcycle engine oil. Modern motorcycle sport silhouette graphic on front label, blue cap, high-contrast studio spotlighting on dark background."
+  },
+  {
+    "id": "sp-135",
+    "name": "Shell Advance Ultra 4T 10W-40 PurePlus Synthetic (1L)",
+    "imageName": "shell_advance_ultra_10w40",
+    "target": "public/images/products/sp-135_shell_advance_ultra_4t_10w-40_pureplus_synthetic.jpg",
+    "prompt": "Studio product photography of an authentic 1-litre grey bottle of Shell Advance 4T Ultra 10W-40 full synthetic motorcycle oil made from natural gas with PurePlus Technology. Signature Ducati Corse technical partner badge, clean bright automotive studio lighting."
+  },
+  {
+    "id": "sp-136",
+    "name": "Shell Helix Ultra 5W-40 Fully Synthetic Car Engine Oil (4L)",
+    "imageName": "shell_helix_ultra_5w40",
+    "target": "public/images/products/sp-136_shell_helix_ultra_5w-40_fully_synthetic_car_oil.jpg",
+    "prompt": "Studio product photography of a 4-litre silver container of Shell Helix Ultra 5W-40 fully synthetic motor oil. PurePlus Technology natural gas badge, Ferrari official partner logo on label, placed on a dark reflective stage with dual softbox lighting."
+  },
+  {
+    "id": "sp-160",
+    "name": "Mobil 1 0W-40 Ultimate All-Round Performance Synthetic Oil (4L)",
+    "imageName": "mobil1_0w40_gold",
+    "target": "public/images/products/sp-160_mobil_1_0w-40_ultimate_all-round_performance.jpg",
+    "prompt": "Studio product photography of a 4-litre gold container of Mobil 1 0W-40 European Car Formula advanced full synthetic oil. Rich metallic gold canister with Mobil 1 Pegasus badge, clean commercial product shot on dark textured background with dramatic rim glints."
+  },
+  {
+    "id": "sp-161",
+    "name": "Mobil 1 Racing 4T 10W-40 Motorcycle Oil (1L)",
+    "imageName": "mobil1_racing_4t_10w40",
+    "target": "public/images/products/sp-161_mobil_1_racing_4t_10w-40_motorcycle_oil.jpg",
+    "prompt": "Studio product photography of a 1-litre bottle of Mobil 1 Racing 4T 10W-40 full synthetic superbike oil. Bold red and blue racing decals, high-flow pour spout cap, set on dark asphalt-textured studio pedestal with dynamic rim lighting."
+  },
+  {
+    "id": "sp-162",
+    "name": "Mobil 1 Synthetic ATF Multi-Vehicle Automatic Transmission Fluid (1L)",
+    "imageName": "mobil1_synthetic_atf",
+    "target": "public/images/products/sp-162_mobil_1_synthetic_atf_multi-vehicle_transmission.jpg",
+    "prompt": "Studio product photography of a 1-litre silver bottle of Mobil 1 Synthetic ATF Multi-Vehicle automatic transmission fluid. Signature red ATF labeling and translucent red fluid accent line, dark reflective studio staging with clean highlights."
+  },
+  {
+    "id": "sp-163",
+    "name": "Shell Advance 4T Ultra 15W-50 PurePlus Synthetic (1L)",
+    "imageName": "shell_advance_ultra_15w50",
+    "target": "public/images/products/sp-163_shell_advance_4t_ultra_15w-50_pureplus_synthetic.jpg",
+    "prompt": "Studio product photography of a 1-litre bottle of Shell Advance 4T Ultra 15W-50 motorcycle engine oil. PurePlus Technology natural gas synthesis badge, metallic silver bottle with red Shell pecten logo, crisp studio product photography."
+  },
+  {
+    "id": "sp-164",
+    "name": "Shell Helix Ultra ECT C3 5W-30 Synthetic Car Oil (4L)",
+    "imageName": "shell_helix_ultra_ect_c3",
+    "target": "public/images/products/sp-164_shell_helix_ultra_ect_c3_5w-30_synthetic_car_oil.jpg",
+    "prompt": "Studio product photography of a 4-litre silver bottle of Shell Helix Ultra ECT C3 5W-30 Emission Compatible Technology engine oil. Clean blue and yellow Shell Helix livery, standing on dark glass with symmetrical soft reflections."
+  },
+  {
+    "id": "sp-165",
+    "name": "Shell Spirax S4 G 75W-90 Synthetic Axle & Gear Oil (1L)",
+    "imageName": "shell_spirax_s4g_75w90",
+    "target": "public/images/products/sp-165_shell_spirax_s4_g_75w-90_synthetic_gear_oil.jpg",
+    "prompt": "Studio product photography of a 1-litre yellow bottle of Shell Spirax S4 G 75W-90 synthetic transmission and hypoid gear oil. High-torque gear graphic on label, ribbed grip bottle, on dark carbon studio surface with directional highlights."
+  },
+  {
+    "id": "sp-202",
+    "name": "Castrol GTX 20W-50 High Mileage Engine Oil (3.5L)",
+    "imageName": "castrol_gtx_20w50",
+    "target": "public/images/products/sp-202_castrol_gtx_20w-50_high_mileage_engine_oil.jpg",
+    "prompt": "Studio product photography of a 3.5-litre white bottle of Castrol GTX 20W-50 Anti-Sludge high mileage engine oil. Classic green and red Castrol logo with sludge protection shield graphic, studio product shot on dark reflective floor."
+  },
+  {
+    "id": "sp-203",
+    "name": "Castrol Chain Lube Racing Synthetic Spray (400ml)",
+    "imageName": "castrol_chain_lube_racing",
+    "target": "public/images/products/sp-203_castrol_chain_lube_racing_synthetic_spray.jpg",
+    "prompt": "Studio product photography of a 400ml aerosol can of Castrol Chain Lube Racing synthetic motorcycle chain lubricant spray. Sleek green and white tin can with red spray cap and extension straw, high gloss finish, on dark slate surface."
+  },
+  {
+    "id": "sp-204",
+    "name": "Motul 8100 X-cess 5W-40 100% Synthetic Car Oil (4L)",
+    "imageName": "motul_8100_xcess_5w40",
+    "target": "public/images/products/sp-204_motul_8100_x-cess_5w-40_synthetic_car_oil.jpg",
+    "prompt": "Studio product photography of a 4-litre black canister of Motul 8100 X-cess 5W-40 100% synthetic car motor oil. Iconic red and white Motul logo, OEM approval badges on label, resting on dark carbon fiber floor with professional studio rim lighting."
+  },
+  {
+    "id": "sp-205",
+    "name": "Motul Fork Oil Expert Medium 10W Technosynthese (1L)",
+    "imageName": "motul_fork_oil_expert_10w",
+    "target": "public/images/products/sp-205_motul_fork_oil_expert_medium_10w_technosynthese.jpg",
+    "prompt": "Studio product photography of a 1-litre bottle of Motul Fork Oil Expert Medium 10W suspension hydraulic fluid for motorcycle forks. Blue accent label, sleek dark bottle with pour neck, isolated on dark reflective surface with blue edge glow."
+  }
+]
