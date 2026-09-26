@@ -3,7 +3,7 @@ import {collection,deleteDoc,doc,getDocs,addDoc,updateDoc,getDoc} from 'firebase
 import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
 import {adminAuth,adminDb,adminStorage} from './firebase';
 import AdminOrders from './AdminOrders';
-import {Plus,Trash2,LogOut,Edit3,X,Package,Download,Upload,LayoutDashboard,ShoppingCart} from 'lucide-react';
+import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {majorSpareProducts} from './major-spares';
 import './admin.css';
@@ -265,9 +265,6 @@ export default function Admin(){
               <h2><Package size={20}/> Products</h2>
               <div className="listactions">
                 <b>{products.length}</b>
-                <button type="button" className="seedBtn" onClick={importMajorSpares} disabled={bulkImporting}>
-                  <Download size={15}/>{bulkImporting?'Importing...':'Add 100 major spares'}
-                </button>
               </div>
             </div>
             {products.map(p=>(
