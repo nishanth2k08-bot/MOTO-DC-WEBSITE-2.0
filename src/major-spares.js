@@ -1,5 +1,6 @@
 export const majorSpareProducts = [
   {
+    "id": "sp-1",
     "name": "Honda Activa 6G Air Filter",
     "category": "Motorcycle",
     "brand": "Honda",
@@ -11,6 +12,7 @@ export const majorSpareProducts = [
     "description": "Honda Activa 6G air filter for Honda Activa 6G. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-2",
     "name": "Honda Activa Front Brake Shoe Set",
     "category": "Motorcycle",
     "brand": "Honda",
@@ -22,6 +24,7 @@ export const majorSpareProducts = [
     "description": "Honda Activa front brake shoe set for Honda Activa 5G/6G. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-3",
     "name": "Honda Shine Clutch Plate Set",
     "category": "Motorcycle",
     "brand": "Honda",
@@ -33,6 +36,7 @@ export const majorSpareProducts = [
     "description": "Honda Shine clutch plate set for Honda Shine 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-4",
     "name": "Honda CB Shine Front Disc Pad",
     "category": "Motorcycle",
     "brand": "Honda",
@@ -44,6 +48,7 @@ export const majorSpareProducts = [
     "description": "Honda CB Shine front disc pad for Honda Shine 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-5",
     "name": "Honda Unicorn Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "Honda",
@@ -55,6 +60,7 @@ export const majorSpareProducts = [
     "description": "Honda Unicorn chain sprocket kit for Honda Unicorn 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-6",
     "name": "Hero Splendor Plus Air Filter",
     "category": "Motorcycle",
     "brand": "Hero",
@@ -66,6 +72,7 @@ export const majorSpareProducts = [
     "description": "Hero Splendor Plus air filter for Hero Splendor Plus. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-7",
     "name": "Hero Splendor Clutch Plate Set",
     "category": "Motorcycle",
     "brand": "Hero",
@@ -77,6 +84,7 @@ export const majorSpareProducts = [
     "description": "Hero Splendor clutch plate set for Hero Splendor/Passion. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-8",
     "name": "Hero Passion Pro Front Brake Shoe",
     "category": "Motorcycle",
     "brand": "Hero",
@@ -88,6 +96,7 @@ export const majorSpareProducts = [
     "description": "Hero Passion Pro front brake shoe for Hero Passion Pro. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-9",
     "name": "Hero Glamour Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "Hero",
@@ -99,6 +108,7 @@ export const majorSpareProducts = [
     "description": "Hero Glamour chain sprocket kit for Hero Glamour 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-10",
     "name": "Hero Xtreme 160R Front Brake Pads",
     "category": "Motorcycle",
     "brand": "Hero",
@@ -110,6 +120,7 @@ export const majorSpareProducts = [
     "description": "Hero Xtreme 160R front brake pads for Hero Xtreme 160R. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-11",
     "name": "Bajaj Pulsar 150 Air Filter",
     "category": "Motorcycle",
     "brand": "Bajaj",
@@ -121,6 +132,7 @@ export const majorSpareProducts = [
     "description": "Bajaj Pulsar 150 air filter for Bajaj Pulsar 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-12",
     "name": "Bajaj Pulsar 150 Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "Bajaj",
@@ -132,6 +144,7 @@ export const majorSpareProducts = [
     "description": "Bajaj Pulsar 150 chain sprocket kit for Bajaj Pulsar 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-13",
     "name": "Bajaj Pulsar Front Disc Brake Pads",
     "category": "Motorcycle",
     "brand": "Bajaj",
@@ -143,6 +156,7 @@ export const majorSpareProducts = [
     "description": "Bajaj Pulsar front disc brake pads for Bajaj Pulsar 150/180. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-14",
     "name": "Bajaj Platina Rear Brake Shoe",
     "category": "Motorcycle",
     "brand": "Bajaj",
@@ -154,6 +168,7 @@ export const majorSpareProducts = [
     "description": "Bajaj Platina rear brake shoe for Bajaj Platina 100/110. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-15",
     "name": "Bajaj Dominar 400 Oil Filter",
     "category": "Motorcycle",
     "brand": "Bajaj",
@@ -165,6 +180,7 @@ export const majorSpareProducts = [
     "description": "Bajaj Dominar 400 oil filter for Bajaj Dominar 400. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-16",
     "name": "TVS Apache RTR 160 Air Filter",
     "category": "Motorcycle",
     "brand": "TVS",
@@ -176,6 +192,7 @@ export const majorSpareProducts = [
     "description": "TVS Apache RTR 160 air filter for TVS Apache RTR 160. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-17",
     "name": "TVS Apache RTR 160 Front Brake Pads",
     "category": "Motorcycle",
     "brand": "TVS",
@@ -183,10 +200,11 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.6,
     "stock": 27,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hero_Xtreme_160R_Front_Brake_Pads.jpg",
     "description": "TVS Apache RTR 160 front brake pads for TVS Apache RTR 160. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-18",
     "name": "TVS Jupiter Drive Belt",
     "category": "Motorcycle",
     "brand": "TVS",
@@ -198,6 +216,7 @@ export const majorSpareProducts = [
     "description": "TVS Jupiter drive belt for TVS Jupiter 110. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-19",
     "name": "TVS Ntorq Clutch Shoe Set",
     "category": "Motorcycle",
     "brand": "TVS",
@@ -209,6 +228,7 @@ export const majorSpareProducts = [
     "description": "TVS Ntorq clutch shoe set for TVS Ntorq 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-20",
     "name": "TVS Raider Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "TVS",
@@ -220,6 +240,7 @@ export const majorSpareProducts = [
     "description": "TVS Raider chain sprocket kit for TVS Raider 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-21",
     "name": "Yamaha FZ-FI Air Filter",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -231,6 +252,7 @@ export const majorSpareProducts = [
     "description": "Yamaha FZ-FI air filter for Yamaha FZ/FZS FI. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-22",
     "name": "Yamaha R15 V3 Front Brake Pads",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -242,6 +264,7 @@ export const majorSpareProducts = [
     "description": "Yamaha R15 V3 front brake pads for Yamaha R15 V3. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-23",
     "name": "Yamaha R15 Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -249,10 +272,11 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.8,
     "stock": 15,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Bajaj_Pulsar_150_Chain_Sprocket_Kit.jpg",
     "description": "Yamaha R15 chain sprocket kit for Yamaha R15 V3/V4. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-24",
     "name": "Yamaha MT-15 Oil Filter",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -264,6 +288,7 @@ export const majorSpareProducts = [
     "description": "Yamaha MT-15 oil filter for Yamaha MT-15. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-25",
     "name": "Yamaha FZ Rear Brake Shoe",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -275,6 +300,7 @@ export const majorSpareProducts = [
     "description": "Yamaha FZ rear brake shoe for Yamaha FZ V2. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-26",
     "name": "Suzuki Access 125 Air Filter",
     "category": "Motorcycle",
     "brand": "Suzuki",
@@ -286,6 +312,7 @@ export const majorSpareProducts = [
     "description": "Suzuki Access 125 air filter for Suzuki Access 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-27",
     "name": "Suzuki Access 125 Drive Belt",
     "category": "Motorcycle",
     "brand": "Suzuki",
@@ -297,6 +324,7 @@ export const majorSpareProducts = [
     "description": "Suzuki Access 125 drive belt for Suzuki Access 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-28",
     "name": "Suzuki Gixxer Front Disc Pads",
     "category": "Motorcycle",
     "brand": "Suzuki",
@@ -304,10 +332,11 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.6,
     "stock": 28,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Suzuki Gixxer front disc pads for Suzuki Gixxer 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-29",
     "name": "Suzuki Gixxer Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "Suzuki",
@@ -319,6 +348,7 @@ export const majorSpareProducts = [
     "description": "Suzuki Gixxer chain sprocket kit for Suzuki Gixxer 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-30",
     "name": "Suzuki Burgman Street Brake Shoe",
     "category": "Motorcycle",
     "brand": "Suzuki",
@@ -330,6 +360,7 @@ export const majorSpareProducts = [
     "description": "Suzuki Burgman Street brake shoe for Suzuki Burgman Street. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-31",
     "name": "Royal Enfield Classic 350 Air Filter",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -341,6 +372,7 @@ export const majorSpareProducts = [
     "description": "Royal Enfield Classic 350 air filter for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-32",
     "name": "Royal Enfield Classic 350 Front Brake Pads",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -352,6 +384,7 @@ export const majorSpareProducts = [
     "description": "Royal Enfield Classic 350 front brake pads for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-33",
     "name": "Royal Enfield Classic 350 Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -359,10 +392,11 @@ export const majorSpareProducts = [
     "price": 2499,
     "rating": 4.8,
     "stock": 13,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Royal Enfield Classic 350 chain sprocket kit for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-34",
     "name": "Royal Enfield Hunter 350 Oil Filter",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -374,6 +408,7 @@ export const majorSpareProducts = [
     "description": "Royal Enfield Hunter 350 oil filter for Royal Enfield Hunter 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-35",
     "name": "Royal Enfield Meteor 350 Clutch Plate Set",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -385,6 +420,7 @@ export const majorSpareProducts = [
     "description": "Royal Enfield Meteor 350 clutch plate set for Royal Enfield Meteor 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-36",
     "name": "KTM Duke 200 Air Filter",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -396,6 +432,7 @@ export const majorSpareProducts = [
     "description": "KTM Duke 200 air filter for KTM Duke 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-37",
     "name": "KTM Duke 200 Front Brake Pads",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -407,6 +444,7 @@ export const majorSpareProducts = [
     "description": "KTM Duke 200 front brake pads for KTM Duke 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-38",
     "name": "KTM Duke 250 Chain Sprocket Kit",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -414,10 +452,11 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 11,
-    "image": "/images/products/KTM_Duke_250_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "KTM Duke 250 chain sprocket kit for KTM Duke 250. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-39",
     "name": "KTM RC 200 Oil Filter",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -429,6 +468,7 @@ export const majorSpareProducts = [
     "description": "KTM RC 200 oil filter for KTM RC 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-40",
     "name": "KTM Adventure 390 Brake Pad Set",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -436,10 +476,11 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.8,
     "stock": 12,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/KTM_Duke_200_Front_Brake_Pads.jpg",
     "description": "KTM Adventure 390 brake pad set for KTM Adventure 390. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-41",
     "name": "Bosch Motorcycle Iridium Spark Plug",
     "category": "Motorcycle",
     "brand": "Bosch",
@@ -451,6 +492,7 @@ export const majorSpareProducts = [
     "description": "Bosch motorcycle iridium spark plug for Multi-brand 4-stroke bikes. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-42",
     "name": "NGK Iridium IX Spark Plug",
     "category": "Motorcycle",
     "brand": "NGK",
@@ -458,10 +500,11 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.9,
     "stock": 52,
-    "image": "/images/products/NGK_Iridium_IX_Spark_Plug.jpg",
+    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
     "description": "NGK iridium IX spark plug for Honda/Yamaha/Suzuki 125-250cc. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-43",
     "name": "Endurance Universal Rear Shock Absorber",
     "category": "Motorcycle",
     "brand": "Endurance",
@@ -473,6 +516,7 @@ export const majorSpareProducts = [
     "description": "Endurance universal rear shock absorber for Popular commuter motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-44",
     "name": "SKF Steering Cone Bearing Kit",
     "category": "Motorcycle",
     "brand": "SKF",
@@ -480,10 +524,11 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.7,
     "stock": 39,
-    "image": "https://images.unsplash.com/photo-1558980664-10ea4b0e4d7d?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
     "description": "SKF steering cone bearing kit for Bajaj/Hero/Honda/TVS. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-45",
     "name": "Uno Minda LED Motorcycle Headlamp",
     "category": "Motorcycle",
     "brand": "Uno Minda",
@@ -491,10 +536,11 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.6,
     "stock": 28,
-    "image": "https://images.unsplash.com/photo-1558980394-0c6e2e4f1d7c?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Lumax_LED_Headlamp_Assembly.jpg",
     "description": "Uno Minda LED motorcycle headlamp for 12V motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-46",
     "name": "Exide Two-Wheeler Battery 4Ah",
     "category": "Motorcycle",
     "brand": "Exide",
@@ -506,6 +552,7 @@ export const majorSpareProducts = [
     "description": "Exide two-wheeler battery 4Ah for 12V motorcycles/scooters. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-47",
     "name": "Amaron Two-Wheeler Battery 5Ah",
     "category": "Motorcycle",
     "brand": "Amaron",
@@ -517,6 +564,7 @@ export const majorSpareProducts = [
     "description": "Amaron two-wheeler battery 5Ah for 12V motorcycles/scooters. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-48",
     "name": "Minda Universal Indicator Set",
     "category": "Motorcycle",
     "brand": "Minda",
@@ -528,6 +576,7 @@ export const majorSpareProducts = [
     "description": "Minda universal indicator set for 12V motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-49",
     "name": "Pricol Digital Motorcycle Speedometer",
     "category": "Motorcycle",
     "brand": "Pricol",
@@ -539,6 +588,7 @@ export const majorSpareProducts = [
     "description": "Pricol digital motorcycle speedometer for Universal 12V bikes. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-50",
     "name": "Maruti Suzuki Alto K10 Air Filter",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -550,6 +600,7 @@ export const majorSpareProducts = [
     "description": "Maruti Suzuki Alto K10 air filter for Maruti Suzuki Alto K10. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-51",
     "name": "Maruti Suzuki Swift Front Brake Pad Set",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -561,6 +612,7 @@ export const majorSpareProducts = [
     "description": "Maruti Suzuki Swift front brake pad set for Maruti Suzuki Swift. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-52",
     "name": "Maruti Suzuki Swift Clutch Plate Kit",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -568,10 +620,11 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.7,
     "stock": 16,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Maruti Suzuki Swift clutch plate kit for Maruti Suzuki Swift. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-53",
     "name": "Maruti Suzuki Baleno Cabin Air Filter",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -583,6 +636,7 @@ export const majorSpareProducts = [
     "description": "Maruti Suzuki Baleno cabin air filter for Maruti Suzuki Baleno. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-54",
     "name": "Maruti Suzuki WagonR Oil Filter",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -594,6 +648,7 @@ export const majorSpareProducts = [
     "description": "Maruti Suzuki WagonR oil filter for Maruti Suzuki WagonR. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-55",
     "name": "Maruti Suzuki Brezza Front Brake Disc",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -601,10 +656,11 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.7,
     "stock": 12,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Maruti Suzuki Brezza front brake disc for Maruti Suzuki Brezza. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-56",
     "name": "Hyundai i10 Air Filter",
     "category": "Automobile",
     "brand": "Hyundai",
@@ -616,6 +672,7 @@ export const majorSpareProducts = [
     "description": "Hyundai i10 air filter for Hyundai Grand i10. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-57",
     "name": "Hyundai i20 Front Brake Pad Set",
     "category": "Automobile",
     "brand": "Hyundai",
@@ -627,6 +684,7 @@ export const majorSpareProducts = [
     "description": "Hyundai i20 front brake pad set for Hyundai i20. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-58",
     "name": "Hyundai Creta Cabin Filter",
     "category": "Automobile",
     "brand": "Hyundai",
@@ -638,6 +696,7 @@ export const majorSpareProducts = [
     "description": "Hyundai Creta cabin filter for Hyundai Creta. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-59",
     "name": "Hyundai Venue Oil Filter",
     "category": "Automobile",
     "brand": "Hyundai",
@@ -645,10 +704,11 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.5,
     "stock": 55,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
     "description": "Hyundai Venue oil filter for Hyundai Venue. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-60",
     "name": "Hyundai Verna Clutch Kit",
     "category": "Automobile",
     "brand": "Hyundai",
@@ -656,10 +716,11 @@ export const majorSpareProducts = [
     "price": 6999,
     "rating": 4.8,
     "stock": 9,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Hyundai Verna clutch kit for Hyundai Verna. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-61",
     "name": "Tata Nexon Air Filter",
     "category": "Automobile",
     "brand": "Tata",
@@ -671,6 +732,7 @@ export const majorSpareProducts = [
     "description": "Tata Nexon air filter for Tata Nexon. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-62",
     "name": "Tata Nexon Front Brake Pads",
     "category": "Automobile",
     "brand": "Tata",
@@ -682,6 +744,7 @@ export const majorSpareProducts = [
     "description": "Tata Nexon front brake pads for Tata Nexon. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-63",
     "name": "Tata Punch Cabin Filter",
     "category": "Automobile",
     "brand": "Tata",
@@ -693,6 +756,7 @@ export const majorSpareProducts = [
     "description": "Tata Punch cabin filter for Tata Punch. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-64",
     "name": "Tata Altroz Oil Filter",
     "category": "Automobile",
     "brand": "Tata",
@@ -700,10 +764,11 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.5,
     "stock": 48,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
     "description": "Tata Altroz oil filter for Tata Altroz. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-65",
     "name": "Tata Tiago Clutch Kit",
     "category": "Automobile",
     "brand": "Tata",
@@ -711,10 +776,11 @@ export const majorSpareProducts = [
     "price": 5999,
     "rating": 4.7,
     "stock": 11,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Tata Tiago clutch kit for Tata Tiago. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-66",
     "name": "Mahindra Scorpio N Air Filter",
     "category": "Automobile",
     "brand": "Mahindra",
@@ -726,6 +792,7 @@ export const majorSpareProducts = [
     "description": "Mahindra Scorpio N air filter for Mahindra Scorpio N. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-67",
     "name": "Mahindra Thar Front Brake Pads",
     "category": "Automobile",
     "brand": "Mahindra",
@@ -737,6 +804,7 @@ export const majorSpareProducts = [
     "description": "Mahindra Thar front brake pads for Mahindra Thar. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-68",
     "name": "Mahindra XUV700 Cabin Filter",
     "category": "Automobile",
     "brand": "Mahindra",
@@ -748,6 +816,7 @@ export const majorSpareProducts = [
     "description": "Mahindra XUV700 cabin filter for Mahindra XUV700. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-69",
     "name": "Mahindra Bolero Oil Filter",
     "category": "Automobile",
     "brand": "Mahindra",
@@ -755,10 +824,11 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.5,
     "stock": 46,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
     "description": "Mahindra Bolero oil filter for Mahindra Bolero. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-70",
     "name": "Mahindra Thar Clutch Kit",
     "category": "Automobile",
     "brand": "Mahindra",
@@ -766,10 +836,11 @@ export const majorSpareProducts = [
     "price": 8499,
     "rating": 4.8,
     "stock": 7,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Mahindra Thar clutch kit for Mahindra Thar. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-71",
     "name": "Toyota Innova Crysta Air Filter",
     "category": "Automobile",
     "brand": "Toyota",
@@ -781,6 +852,7 @@ export const majorSpareProducts = [
     "description": "Toyota Innova Crysta air filter for Toyota Innova Crysta. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-72",
     "name": "Toyota Fortuner Front Brake Pad Set",
     "category": "Automobile",
     "brand": "Toyota",
@@ -792,6 +864,7 @@ export const majorSpareProducts = [
     "description": "Toyota Fortuner front brake pad set for Toyota Fortuner. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-73",
     "name": "Toyota Glanza Cabin Filter",
     "category": "Automobile",
     "brand": "Toyota",
@@ -803,6 +876,7 @@ export const majorSpareProducts = [
     "description": "Toyota Glanza cabin filter for Toyota Glanza. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-74",
     "name": "Toyota Innova Oil Filter",
     "category": "Automobile",
     "brand": "Toyota",
@@ -810,10 +884,11 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.7,
     "stock": 41,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
     "description": "Toyota Innova oil filter for Toyota Innova. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-75",
     "name": "Kia Seltos Air Filter",
     "category": "Automobile",
     "brand": "Kia",
@@ -825,6 +900,7 @@ export const majorSpareProducts = [
     "description": "Kia Seltos air filter for Kia Seltos. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-76",
     "name": "Kia Sonet Front Brake Pads",
     "category": "Automobile",
     "brand": "Kia",
@@ -836,6 +912,7 @@ export const majorSpareProducts = [
     "description": "Kia Sonet front brake pads for Kia Sonet. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-77",
     "name": "Kia Carens Cabin Filter",
     "category": "Automobile",
     "brand": "Kia",
@@ -847,6 +924,7 @@ export const majorSpareProducts = [
     "description": "Kia Carens cabin filter for Kia Carens. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-78",
     "name": "Honda City Air Filter",
     "category": "Automobile",
     "brand": "Honda",
@@ -858,6 +936,7 @@ export const majorSpareProducts = [
     "description": "Honda City air filter for Honda City. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-79",
     "name": "Honda Amaze Front Brake Pads",
     "category": "Automobile",
     "brand": "Honda",
@@ -869,6 +948,7 @@ export const majorSpareProducts = [
     "description": "Honda Amaze front brake pads for Honda Amaze. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-80",
     "name": "Honda City Clutch Kit",
     "category": "Automobile",
     "brand": "Honda",
@@ -876,10 +956,11 @@ export const majorSpareProducts = [
     "price": 7499,
     "rating": 4.8,
     "stock": 8,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Honda City clutch kit for Honda City. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-81",
     "name": "Renault Kwid Air Filter",
     "category": "Automobile",
     "brand": "Renault",
@@ -891,6 +972,7 @@ export const majorSpareProducts = [
     "description": "Renault Kwid air filter for Renault Kwid. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-82",
     "name": "Renault Kwid Front Brake Pad Set",
     "category": "Automobile",
     "brand": "Renault",
@@ -902,6 +984,7 @@ export const majorSpareProducts = [
     "description": "Renault Kwid front brake pad set for Renault Kwid. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-83",
     "name": "Renault Duster Cabin Filter",
     "category": "Automobile",
     "brand": "Renault",
@@ -913,6 +996,7 @@ export const majorSpareProducts = [
     "description": "Renault Duster cabin filter for Renault Duster. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-84",
     "name": "Nissan Magnite Air Filter",
     "category": "Automobile",
     "brand": "Nissan",
@@ -920,10 +1004,11 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.6,
     "stock": 33,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Activa_6G_Air_Filter.jpg",
     "description": "Nissan Magnite air filter for Nissan Magnite. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-85",
     "name": "Nissan Kicks Front Brake Pads",
     "category": "Automobile",
     "brand": "Nissan",
@@ -931,10 +1016,11 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.6,
     "stock": 14,
-    "image": "/images/products/moto_comp_r2_c3.jpg",
+    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
     "description": "Nissan Kicks front brake pads for Nissan Kicks. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-86",
     "name": "Volkswagen Polo Air Filter",
     "category": "Automobile",
     "brand": "Volkswagen",
@@ -942,10 +1028,11 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 25,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Activa_6G_Air_Filter.jpg",
     "description": "Volkswagen Polo air filter for Volkswagen Polo. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-87",
     "name": "Volkswagen Virtus Front Brake Pads",
     "category": "Automobile",
     "brand": "Volkswagen",
@@ -953,10 +1040,11 @@ export const majorSpareProducts = [
     "price": 2599,
     "rating": 4.8,
     "stock": 18,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
     "description": "Volkswagen Virtus front brake pads for Volkswagen Virtus. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-88",
     "name": "Skoda Slavia Cabin Filter",
     "category": "Automobile",
     "brand": "Skoda",
@@ -964,10 +1052,11 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.7,
     "stock": 20,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Hyundai_Creta_Cabin_Filter.jpg",
     "description": "Skoda Slavia cabin filter for Skoda Slavia. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-89",
     "name": "Skoda Kushaq Front Brake Pads",
     "category": "Automobile",
     "brand": "Skoda",
@@ -975,10 +1064,11 @@ export const majorSpareProducts = [
     "price": 2699,
     "rating": 4.8,
     "stock": 15,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
     "description": "Skoda Kushaq front brake pads for Skoda Kushaq. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-90",
     "name": "Bosch Premium Petrol Spark Plug Set",
     "category": "Automobile",
     "brand": "Bosch",
@@ -990,6 +1080,7 @@ export const majorSpareProducts = [
     "description": "Bosch premium petrol spark plug set for Maruti/Hyundai/Tata petrol engines. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-91",
     "name": "Bosch Car Battery 45Ah",
     "category": "Automobile",
     "brand": "Bosch",
@@ -1001,6 +1092,7 @@ export const majorSpareProducts = [
     "description": "Bosch car battery 45Ah for 12V passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-92",
     "name": "Valeo Clutch Kit",
     "category": "Automobile",
     "brand": "Valeo",
@@ -1008,10 +1100,11 @@ export const majorSpareProducts = [
     "price": 7499,
     "rating": 4.8,
     "stock": 10,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Valeo clutch kit for Popular hatchbacks and sedans. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-93",
     "name": "Exide Car Battery 35Ah",
     "category": "Automobile",
     "brand": "Exide",
@@ -1023,6 +1116,7 @@ export const majorSpareProducts = [
     "description": "Exide car battery 35Ah for 12V hatchbacks. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-94",
     "name": "Amaron Car Battery 45Ah",
     "category": "Automobile",
     "brand": "Amaron",
@@ -1034,6 +1128,7 @@ export const majorSpareProducts = [
     "description": "Amaron car battery 45Ah for 12V hatchbacks/sedans. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-95",
     "name": "Lumax LED Headlamp Assembly",
     "category": "Automobile",
     "brand": "Lumax",
@@ -1045,6 +1140,7 @@ export const majorSpareProducts = [
     "description": "Lumax LED headlamp assembly for Popular Indian passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-96",
     "name": "Uno Minda Car Horn Pair",
     "category": "Automobile",
     "brand": "Uno Minda",
@@ -1056,6 +1152,7 @@ export const majorSpareProducts = [
     "description": "Uno Minda car horn pair for 12V passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-97",
     "name": "NGK Laser Iridium Spark Plug Set",
     "category": "Automobile",
     "brand": "NGK",
@@ -1063,10 +1160,11 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.9,
     "stock": 31,
-    "image": "/images/products/NGK_Laser_Iridium_Spark_Plug_Set.jpg",
+    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
     "description": "NGK laser iridium spark plug set for Modern petrol engines. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-98",
     "name": "SKF Front Wheel Bearing Kit",
     "category": "Automobile",
     "brand": "SKF",
@@ -1074,10 +1172,11 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.7,
     "stock": 22,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
     "description": "SKF front wheel bearing kit for Maruti/Hyundai/Tata applications. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-99",
     "name": "Monroe Front Shock Absorber Pair",
     "category": "Automobile",
     "brand": "Monroe",
@@ -1085,10 +1184,11 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.7,
     "stock": 9,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Monroe front shock absorber pair for Popular passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-100",
     "name": "Denso Radiator Cooling Fan Motor",
     "category": "Automobile",
     "brand": "Denso",
@@ -1100,6 +1200,7 @@ export const majorSpareProducts = [
     "description": "Denso radiator cooling fan motor for Popular passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
+    "id": "sp-101",
     "name": "Brembo Ceramic Front Brake Pad Set",
     "category": "Automobile",
     "brand": "Brembo",
@@ -1107,10 +1208,11 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.9,
     "stock": 28,
-    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Brembo premium ceramic front brake pad set offering exceptional thermal stability, ultra-low dust generation, and whisper-quiet high-performance stopping power."
   },
   {
+    "id": "sp-102",
     "name": "Brembo Sport Ventilated Grooved Brake Disc (Pair)",
     "category": "Automobile",
     "brand": "Brembo",
@@ -1118,10 +1220,11 @@ export const majorSpareProducts = [
     "price": 8499,
     "rating": 4.9,
     "stock": 16,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Precision-engineered grooved ventilated brake discs for rapid heat dissipation, instant initial bite, and fade-free highway and track deceleration."
   },
   {
+    "id": "sp-103",
     "name": "Brembo Sintered Racing Front Brake Pads",
     "category": "Motorcycle",
     "brand": "Brembo",
@@ -1129,10 +1232,11 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.8,
     "stock": 34,
-    "image": "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Genuine Brembo sintered friction compound pads engineered for high initial bite, aggressive track braking, and zero fade in wet or dry conditions."
   },
   {
+    "id": "sp-104",
     "name": "Brembo DOT 4 High-Performance Brake Fluid (500ml)",
     "category": "Automobile",
     "brand": "Brembo",
@@ -1140,10 +1244,11 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.9,
     "stock": 65,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "High-boiling point DOT 4 racing brake fluid ensuring consistent hydraulic lever firmness, anti-corrosion protection, and vapor-lock resistance."
   },
   {
+    "id": "sp-105",
     "name": "Brembo P4-32 Radial 4-Piston Caliper Kit",
     "category": "Motorcycle",
     "brand": "Brembo",
@@ -1151,10 +1256,11 @@ export const majorSpareProducts = [
     "price": 12499,
     "rating": 4.9,
     "stock": 10,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Forged monobloc radial 4-piston caliper kit engineered for championship-grade braking control, reduced unsprung weight, and razor-sharp lever feedback."
   },
   {
+    "id": "sp-106",
     "name": "Castrol POWER1 Ultimate 10W-50 4T Full Synthetic (1L)",
     "category": "Motorcycle",
     "brand": "Castrol",
@@ -1162,10 +1268,11 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.8,
     "stock": 75,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "5-in-1 formula full synthetic motorcycle engine oil delivering outstanding acceleration, thermal protection, smooth gear shifts, and clutch grip."
   },
   {
+    "id": "sp-107",
     "name": "Castrol EDGE 5W-40 Advanced Full Synthetic Engine Oil (4L)",
     "category": "Automobile",
     "brand": "Castrol",
@@ -1173,10 +1280,11 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.9,
     "stock": 40,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Fluid TITANIUM technology doubles its film strength under extreme engine pressure, reducing friction and maximizing performance across all RPM ranges."
   },
   {
+    "id": "sp-108",
     "name": "Castrol Radicool SF Longlife OAT Coolant Concentrate (1L)",
     "category": "Automobile",
     "brand": "Castrol",
@@ -1184,10 +1292,11 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.7,
     "stock": 90,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Silicate-free Organic Acid Technology (OAT) engine coolant providing 5-year anti-freeze, anti-boil, and cavitation corrosion defense."
   },
   {
+    "id": "sp-109",
     "name": "Castrol Syntrans 75W-90 Manual Transmission Fluid (1L)",
     "category": "Automobile",
     "brand": "Castrol",
@@ -1195,10 +1304,11 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 45,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Full synthetic transmission oil ensuring silky smooth cold shifting, superior synchronizer compatibility, and tooth wear resistance."
   },
   {
+    "id": "sp-110",
     "name": "Castrol POWER1 4T 15W-50 Semi-Synthetic Oil (2.5L)",
     "category": "Motorcycle",
     "brand": "Castrol",
@@ -1206,10 +1316,11 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Specially formulated for high-displacement air-cooled thumpers, reducing thermal stress, valve deposits, and engine wear during long tours."
   },
   {
+    "id": "sp-111",
     "name": "Motul 7100 4T 10W-50 100% Synthetic Ester Oil (1L)",
     "category": "Motorcycle",
     "brand": "Motul",
@@ -1217,10 +1328,11 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.9,
     "stock": 65,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "Ester technology 100% synthetic 4-stroke lubricant offering extreme shear resistance, crisp gearbox shifting, and maximum thermal stability."
   },
   {
+    "id": "sp-112",
     "name": "Motul 300V Factory Line Road Racing 15W-50 (1L)",
     "category": "Motorcycle",
     "brand": "Motul",
@@ -1228,10 +1340,11 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 5,
     "stock": 25,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "Flagship ESTER Core motorsport formulation maximizing horsepower output, oil pressure stability, and extreme clutch anti-slip protection."
   },
   {
+    "id": "sp-113",
     "name": "Motul C1 Chain Clean + C2 Chain Lube Road Combo Pack",
     "category": "Motorcycle",
     "brand": "Motul",
@@ -1239,10 +1352,11 @@ export const majorSpareProducts = [
     "price": 920,
     "rating": 4.8,
     "stock": 110,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "High-demand chain maintenance bundle with penetrating chlorine-free degreaser spray and colorless high-tack fling-resistant lubricant."
   },
   {
+    "id": "sp-114",
     "name": "Motul RBF 660 Factory Line Racing Brake Fluid (500ml)",
     "category": "Automobile",
     "brand": "Motul",
@@ -1250,10 +1364,11 @@ export const majorSpareProducts = [
     "price": 1450,
     "rating": 4.9,
     "stock": 35,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "Ultra-high dry boiling point (328°C / 622°F) 100% synthetic brake fluid tailored for extreme heat generated by steel or carbon ceramic brakes."
   },
   {
+    "id": "sp-115",
     "name": "Motul Motocool Expert Ready-To-Use Hybrid Coolant (1L)",
     "category": "Motorcycle",
     "brand": "Motul",
@@ -1261,10 +1376,11 @@ export const majorSpareProducts = [
     "price": 650,
     "rating": 4.8,
     "stock": 50,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "Nitrite-free, amine-free, phosphate-free hybrid technology coolant with anti-corrosion additives for aluminum engine and radiator blocks."
   },
   {
+    "id": "sp-116",
     "name": "Philips Ultinon Pro9000 LED Headlight Bulb Kit (H4)",
     "category": "Automobile",
     "brand": "Philips",
@@ -1272,10 +1388,11 @@ export const majorSpareProducts = [
     "price": 6899,
     "rating": 4.9,
     "stock": 24,
-    "image": "/products/headlamp.svg",
+    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
     "description": "Lumileds TopContact LEDs with up to +250% brighter beam, 5800K pure white temperature, and integrated AirBoost thermal architecture."
   },
   {
+    "id": "sp-117",
     "name": "Philips X-tremeVision Pro150 Halogen Bulbs (H7 Pair)",
     "category": "Automobile",
     "brand": "Philips",
@@ -1283,10 +1400,11 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.7,
     "stock": 48,
-    "image": "/products/headlamp.svg",
+    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
     "description": "Delivers up to 150% more brightness with a 70-meter longer road throw for rapid obstacle spotting and safer nighttime highway driving."
   },
   {
+    "id": "sp-118",
     "name": "Philips CityVision Moto HS1 35W Headlight Bulb",
     "category": "Motorcycle",
     "brand": "Philips",
@@ -1294,10 +1412,11 @@ export const majorSpareProducts = [
     "price": 349,
     "rating": 4.6,
     "stock": 80,
-    "image": "/products/headlamp.svg",
+    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
     "description": "Features an eye-catching orange reflection effect to differentiate riders from surrounding vehicular traffic, plus 40% more road illumination."
   },
   {
+    "id": "sp-119",
     "name": "Philips Ultinon Pro3021 LED Fog Light Kit (H8/H11/H16)",
     "category": "Automobile",
     "brand": "Philips",
@@ -1305,10 +1424,11 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.7,
     "stock": 35,
-    "image": "/products/headlamp.svg",
+    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
     "description": "Compact plug-and-play 6000K cool white LED fog lamp pair featuring precise beam cutoff to avoid blinding oncoming traffic in mist and rain."
   },
   {
+    "id": "sp-120",
     "name": "K&N High-Flow Washable Car Replacement Air Filter",
     "category": "Automobile",
     "brand": "K&N",
@@ -1316,10 +1436,11 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.8,
     "stock": 20,
-    "image": "/products/air-filter.svg",
+    "image": "/images/products/kn-high-flow-air-filter.jpg",
     "description": "Reusable layered oiled cotton gauze filter engineered to increase airflow up to 50% for improved throttle response and horsepower."
   },
   {
+    "id": "sp-121",
     "name": "K&N Performance Motorcycle High-Flow Air Filter",
     "category": "Motorcycle",
     "brand": "K&N",
@@ -1327,10 +1448,11 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.9,
     "stock": 26,
-    "image": "/products/air-filter.svg",
+    "image": "/images/products/kn-high-flow-air-filter.jpg",
     "description": "Championship-proven high airflow washable filter providing superior filtration efficiency and unrestricted engine intake breathing."
   },
   {
+    "id": "sp-122",
     "name": "K&N Pro Series Heavy Duty Spin-On Oil Filter",
     "category": "Automobile",
     "brand": "K&N",
@@ -1338,10 +1460,11 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 55,
-    "image": "/products/air-filter.svg",
+    "image": "/images/products/kn-high-flow-air-filter.jpg",
     "description": "High flow rates with synthetic blend media designed to trap 99% of harmful engine contaminants, fitted with anti-drainback silicone valve."
   },
   {
+    "id": "sp-123",
     "name": "Akrapovič Slip-On Line Titanium Exhaust Silencer",
     "category": "Motorcycle",
     "brand": "Akrapovič",
@@ -1349,10 +1472,11 @@ export const majorSpareProducts = [
     "price": 42999,
     "rating": 5,
     "stock": 5,
-    "image": "/products/exhaust.svg",
+    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
     "description": "Ultra-lightweight titanium outer sleeve with handcrafted carbon fiber end cap, resonant racing tone, and verified dyno horsepower gains."
   },
   {
+    "id": "sp-124",
     "name": "Akrapovič Carbon Fiber Exhaust Heat Shield",
     "category": "Motorcycle",
     "brand": "Akrapovič",
@@ -1360,10 +1484,11 @@ export const majorSpareProducts = [
     "price": 7499,
     "rating": 4.8,
     "stock": 14,
-    "image": "/products/exhaust.svg",
+    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
     "description": "Autoclave-cured real carbon fiber protective shield that reduces rider heat exposure while elevating aggressive racing aesthetics."
   },
   {
+    "id": "sp-125",
     "name": "DID 520 VX3 Professional Gold X-Ring Drive Chain (120L)",
     "category": "Motorcycle",
     "brand": "DID",
@@ -1371,10 +1496,11 @@ export const majorSpareProducts = [
     "price": 4899,
     "rating": 4.9,
     "stock": 30,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Patented X-Ring technology retains internal grease twice as long as standard O-rings with minimal friction and corrosion-resistant gold plating."
   },
   {
+    "id": "sp-126",
     "name": "DID 428 D Heavy Duty Motorcycle Drive Chain (132L)",
     "category": "Motorcycle",
     "brand": "DID",
@@ -1382,10 +1508,11 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.7,
     "stock": 42,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Solid bush construction offering exceptional tensile strength and wear life for daily commuter and sport touring motorcycles."
   },
   {
+    "id": "sp-127",
     "name": "Rolon Brass Plated Chain & Sprocket Combo Kit",
     "category": "Motorcycle",
     "brand": "Rolon",
@@ -1393,10 +1520,11 @@ export const majorSpareProducts = [
     "price": 2499,
     "rating": 4.8,
     "stock": 38,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Premium brass-plated anti-rust drive chain coupled with induction hardened carbon steel sprockets for ultra-smooth power delivery."
   },
   {
+    "id": "sp-128",
     "name": "Rolon Heavy Duty Sealed Ring Drive Chain Kit",
     "category": "Motorcycle",
     "brand": "Rolon",
@@ -1404,10 +1532,11 @@ export const majorSpareProducts = [
     "price": 3199,
     "rating": 4.7,
     "stock": 28,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Sealed O-ring design engineered specifically to withstand heavy torque loads and dusty Indian highway touring conditions."
   },
   {
+    "id": "sp-129",
     "name": "Michelin Pilot Street 2 Tubeless Motorcycle Tyre (140/70-17 Rear)",
     "category": "Motorcycle",
     "brand": "Michelin",
@@ -1415,10 +1544,11 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.9,
     "stock": 22,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Progressive tread pattern with central grooves for rapid wet water evacuation and high-mileage silica compound."
   },
   {
+    "id": "sp-130",
     "name": "Michelin Primacy 4 ST Passenger Car Tyre (205/60 R16)",
     "category": "Automobile",
     "brand": "Michelin",
@@ -1426,10 +1556,11 @@ export const majorSpareProducts = [
     "price": 7899,
     "rating": 4.9,
     "stock": 18,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "EverGrip technology ensures exceptional wet braking even when worn, paired with class-leading cabin quietness and comfort."
   },
   {
+    "id": "sp-131",
     "name": "Pirelli Diablo Rosso Sport Radial Tyre (110/70-17 Front)",
     "category": "Motorcycle",
     "brand": "Pirelli",
@@ -1437,10 +1568,11 @@ export const majorSpareProducts = [
     "price": 3999,
     "rating": 4.9,
     "stock": 24,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Multi-radius profile and flash tread pattern derived from World Superbike championship for razor-sharp agility and apex grip."
   },
   {
+    "id": "sp-132",
     "name": "Pirelli Cinturato P7 High Performance Car Tyre (215/55 R17)",
     "category": "Automobile",
     "brand": "Pirelli",
@@ -1448,10 +1580,11 @@ export const majorSpareProducts = [
     "price": 9499,
     "rating": 4.8,
     "stock": 14,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Green Performance compound designed for superior braking distance, reduced rolling resistance, and high-speed stability."
   },
   {
+    "id": "sp-133",
     "name": "Mobil 1 ESP 5W-30 Advanced Full Synthetic Engine Oil (4L)",
     "category": "Automobile",
     "brand": "Mobil 1",
@@ -1459,10 +1592,11 @@ export const majorSpareProducts = [
     "price": 3999,
     "rating": 4.9,
     "stock": 32,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Low ash, phosphorus, and sulfur formulation engineered to prolong the life of emission reduction systems (DPF & CAT) in petrol & diesel."
   },
   {
+    "id": "sp-134",
     "name": "Mobil Super Moto 15W-50 4T Semi-Synthetic Oil (1L)",
     "category": "Motorcycle",
     "brand": "Mobil 1",
@@ -1470,10 +1604,11 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.7,
     "stock": 65,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Engineered specifically for heavy air-cooled engines operating in hot climates with robust anti-wear additive package."
   },
   {
+    "id": "sp-135",
     "name": "Shell Advance Ultra 4T 10W-40 PurePlus Synthetic (1L)",
     "category": "Motorcycle",
     "brand": "Shell",
@@ -1481,10 +1616,11 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.8,
     "stock": 55,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Made from natural gas using Shell PurePlus technology, delivering near-zero sludge formation and superior power retention."
   },
   {
+    "id": "sp-136",
     "name": "Shell Helix Ultra 5W-40 Fully Synthetic Car Engine Oil (4L)",
     "category": "Automobile",
     "brand": "Shell",
@@ -1492,10 +1628,11 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.9,
     "stock": 42,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Gas-to-liquid synthetic base oil offering unmatched wear protection and active cleansing agents for peak engine performance."
   },
   {
+    "id": "sp-137",
     "name": "Bosch Aerotwin Frameless Wiper Blade Set (24\" + 16\")",
     "category": "Automobile",
     "brand": "Bosch",
@@ -1503,10 +1640,11 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.8,
     "stock": 45,
-    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/bosch-double-iridium-spark-plugs.jpg",
     "description": "Patented Power Protection Plus rubber technology with twin spring strip for streak-free visibility and silent wiping in heavy downpours."
   },
   {
+    "id": "sp-138",
     "name": "Bosch Symphony Dual Tone Electric Horn Set",
     "category": "Automobile",
     "brand": "Bosch",
@@ -1514,10 +1652,11 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 70,
-    "image": "/images/products/auto_main_r3_c5.jpg",
+    "image": "/images/products/Uno_Minda_Car_Horn_Pair.jpg",
     "description": "German tuned dual acoustic pitch (420Hz/500Hz) producing a commanding 110dB harmonized sound with corrosion-resistant teflon filter."
   },
   {
+    "id": "sp-139",
     "name": "NGK Racing Competition Spark Plug Cap & Cable Set",
     "category": "Motorcycle",
     "brand": "NGK",
@@ -1525,10 +1664,11 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.9,
     "stock": 55,
-    "image": "/images/products/NGK_Iridium_IX_Spark_Plug.jpg",
+    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
     "description": "Waterproof silicone ceramic resistor cover providing 5k-ohm noise suppression and maximum electrical transfer to the electrode."
   },
   {
+    "id": "sp-140",
     "name": "Denso Iridium Power High Performance Spark Plug (IK20)",
     "category": "Automobile",
     "brand": "Denso",
@@ -1540,6 +1680,7 @@ export const majorSpareProducts = [
     "description": "Ultra-fine 0.4mm laser-welded iridium center electrode requires lower ignition voltage for instant throttle response and crisp combustion."
   },
   {
+    "id": "sp-141",
     "name": "Valeo Classic Clutch Kit with Release Bearing",
     "category": "Automobile",
     "brand": "Valeo",
@@ -1547,10 +1688,11 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.7,
     "stock": 16,
-    "image": "/images/products/auto_main_r4_c1.jpg",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "OEM standard clutch pressure plate, friction disc, and release bearing engineered for light pedal effort and judder-free engagement."
   },
   {
+    "id": "sp-142",
     "name": "Lumax LED Daytime Running Light (DRL) Strip Set",
     "category": "Automobile",
     "brand": "Lumax",
@@ -1562,6 +1704,7 @@ export const majorSpareProducts = [
     "description": "Flexible high-lumen waterproof silicone DRL strips with integrated sequential amber turn indicator function."
   },
   {
+    "id": "sp-143",
     "name": "Uno Minda Heavy Duty Starter Motor Assembly",
     "category": "Motorcycle",
     "brand": "Uno Minda",
@@ -1569,10 +1712,11 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/auto_main_r3_c2.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "High-torque armature winding and heavy-duty permanent magnets ensure instant, reliable cold starts every single time."
   },
   {
+    "id": "sp-144",
     "name": "KTM PowerParts Factory Wave Floating Brake Disc (320mm)",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -1580,10 +1724,11 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.9,
     "stock": 12,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Stainless steel laser-cut floating wave rotor providing consistent braking bite, superior heat dispersion, and distinctive orange carrier pins."
   },
   {
+    "id": "sp-145",
     "name": "Akrapovič Evolution Titanium Full Exhaust System",
     "category": "Motorcycle",
     "brand": "Akrapovič",
@@ -1591,10 +1736,11 @@ export const majorSpareProducts = [
     "price": 118999,
     "rating": 5,
     "stock": 3,
-    "image": "/products/exhaust.svg",
+    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
     "description": "Full titanium race exhaust system with hydroformed headers, carbon end cap, and massive weight savings for track day performance."
   },
   {
+    "id": "sp-146",
     "name": "Akrapovič Carbon Slip-On Track Silencer",
     "category": "Motorcycle",
     "brand": "Akrapovič",
@@ -1602,10 +1748,11 @@ export const majorSpareProducts = [
     "price": 89999,
     "rating": 5,
     "stock": 4,
-    "image": "/products/exhaust.svg",
+    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
     "description": "Championship-developed carbon fiber sleeve with titanium internals, delivering pure race acoustic profile and high-rpm throttle gains."
   },
   {
+    "id": "sp-147",
     "name": "Akrapovič Stainless Link Pipe Kit",
     "category": "Motorcycle",
     "brand": "Akrapovič",
@@ -1613,10 +1760,11 @@ export const majorSpareProducts = [
     "price": 18999,
     "rating": 4.8,
     "stock": 8,
-    "image": "/products/exhaust.svg",
+    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
     "description": "Precision CNC-bent stainless steel cat-delete link pipe designed to eliminate exhaust backpressure."
   },
   {
+    "id": "sp-148",
     "name": "DID 525 ZVM-X Super Street Heavy Duty Gold Chain (120L)",
     "category": "Motorcycle",
     "brand": "DID",
@@ -1624,10 +1772,11 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.9,
     "stock": 18,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Ultra-high rigidity X-Ring chain engineered to resist elongation under massive superbike torque loads."
   },
   {
+    "id": "sp-149",
     "name": "DID 428 VX Pro Gold X-Ring Motorcycle Chain (130L)",
     "category": "Motorcycle",
     "brand": "DID",
@@ -1635,10 +1784,11 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.8,
     "stock": 35,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Low-friction X-ring sealed chain offering 3x longer life than standard roller chains for sporty commuters."
   },
   {
+    "id": "sp-150",
     "name": "DID Professional Chain Rivet & Breaking Tool Kit",
     "category": "Motorcycle",
     "brand": "DID",
@@ -1646,10 +1796,11 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.9,
     "stock": 22,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Heavy-duty forged alloy workshop tool for precise chain cutting, pressing side plates, and riveting master links."
   },
   {
+    "id": "sp-151",
     "name": "Rolon Competition Sprocket & Gold Chain Kit",
     "category": "Motorcycle",
     "brand": "Rolon",
@@ -1657,10 +1808,11 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.8,
     "stock": 32,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Lightweight drilled rear sprocket with gold brass-plated sealed drive chain for rapid acceleration and durability."
   },
   {
+    "id": "sp-152",
     "name": "Rolon Silent Rubber Cushioned Front Engine Sprocket (15T)",
     "category": "Motorcycle",
     "brand": "Rolon",
@@ -1668,10 +1820,11 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.7,
     "stock": 50,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Vulcanized rubber damper ring absorbs drivetrain vibrations and chain slap for whisper-quiet cruising."
   },
   {
+    "id": "sp-153",
     "name": "Rolon Heavy Duty O-Ring Drive Chain Kit",
     "category": "Motorcycle",
     "brand": "Rolon",
@@ -1679,10 +1832,11 @@ export const majorSpareProducts = [
     "price": 2399,
     "rating": 4.7,
     "stock": 40,
-    "image": "/products/chain.svg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Hardened alloy pins with high-grade synthetic O-rings designed for aggressive gear shifts and high-revving engines."
   },
   {
+    "id": "sp-154",
     "name": "Michelin Road 6 Radial Motorcycle Front Tyre (120/70 ZR17)",
     "category": "Motorcycle",
     "brand": "Michelin",
@@ -1690,10 +1844,11 @@ export const majorSpareProducts = [
     "price": 11499,
     "rating": 5,
     "stock": 12,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "2CT+ dual compound technology with 3D sipes delivering 15% more wet grip and 10% longer tread longevity."
   },
   {
+    "id": "sp-155",
     "name": "Michelin City Extra Reinforced Scooter Tyre (90/90-12 Front)",
     "category": "Motorcycle",
     "brand": "Michelin",
@@ -1701,10 +1856,11 @@ export const majorSpareProducts = [
     "price": 1999,
     "rating": 4.8,
     "stock": 45,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Puncture-resistant overlapping ply architecture with Water Sipe Technology for supreme city commute safety."
   },
   {
+    "id": "sp-156",
     "name": "Michelin Pilot Sport 4 High Performance Car Tyre (225/45 R17)",
     "category": "Automobile",
     "brand": "Michelin",
@@ -1712,10 +1868,11 @@ export const majorSpareProducts = [
     "price": 12499,
     "rating": 4.9,
     "stock": 14,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Dynamic Response Technology adapts continuously to the road for ultra-precise steering and dry cornering grip."
   },
   {
+    "id": "sp-157",
     "name": "Pirelli Angel GT II Sport Touring Rear Tyre (160/60 ZR17)",
     "category": "Motorcycle",
     "brand": "Pirelli",
@@ -1723,10 +1880,11 @@ export const majorSpareProducts = [
     "price": 13999,
     "rating": 4.9,
     "stock": 10,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Gran Turismo derived carcass for long-distance highway stability, confidence in the wet, and high mileage."
   },
   {
+    "id": "sp-158",
     "name": "Pirelli Scorpion Rally STR Dual Sport Tyre (130/80-17 Rear)",
     "category": "Motorcycle",
     "brand": "Pirelli",
@@ -1734,10 +1892,11 @@ export const majorSpareProducts = [
     "price": 6999,
     "rating": 4.8,
     "stock": 18,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Aggressive block tread pattern optimized for dirt trails and loose gravel without sacrificing pavement handling."
   },
   {
+    "id": "sp-159",
     "name": "Pirelli P Zero Luxury Performance Car Tyre (245/45 R18)",
     "category": "Automobile",
     "brand": "Pirelli",
@@ -1745,10 +1904,11 @@ export const majorSpareProducts = [
     "price": 16999,
     "rating": 4.9,
     "stock": 8,
-    "image": "/products/wheel.svg",
+    "image": "/images/products/michelin-pilot-street-tyre.jpg",
     "description": "Ultra-high performance tyre developed with Formula 1 know-how for exceptional braking distance and lateral grip."
   },
   {
+    "id": "sp-160",
     "name": "Mobil 1 0W-40 Ultimate All-Round Performance Synthetic Oil (4L)",
     "category": "Automobile",
     "brand": "Mobil 1",
@@ -1756,10 +1916,11 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.9,
     "stock": 35,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Flagship European car formulation providing instant cold start lubrication, high temperature deposit protection, and fuel economy."
   },
   {
+    "id": "sp-161",
     "name": "Mobil 1 Racing 4T 10W-40 Motorcycle Oil (1L)",
     "category": "Motorcycle",
     "brand": "Mobil 1",
@@ -1767,10 +1928,11 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.9,
     "stock": 50,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Formulated specifically for motorcycle wet clutches and transmission gears operating under high rpm and track heat."
   },
   {
+    "id": "sp-162",
     "name": "Mobil 1 Synthetic ATF Multi-Vehicle Automatic Transmission Fluid (1L)",
     "category": "Automobile",
     "brand": "Mobil 1",
@@ -1778,10 +1940,11 @@ export const majorSpareProducts = [
     "price": 949,
     "rating": 4.8,
     "stock": 40,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Full synthetic ATF offering outstanding thermal stability, oxidation resistance, and friction durability for smooth shifting."
   },
   {
+    "id": "sp-163",
     "name": "Shell Advance 4T Ultra 15W-50 PurePlus Synthetic (1L)",
     "category": "Motorcycle",
     "brand": "Shell",
@@ -1789,10 +1952,11 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.8,
     "stock": 55,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "PurePlus gas-to-liquid synthetic engine oil engineered to prevent piston wear and keep engine parts clean as new."
   },
   {
+    "id": "sp-164",
     "name": "Shell Helix Ultra ECT C3 5W-30 Synthetic Car Oil (4L)",
     "category": "Automobile",
     "brand": "Shell",
@@ -1800,10 +1964,11 @@ export const majorSpareProducts = [
     "price": 3599,
     "rating": 4.9,
     "stock": 38,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Emissions Compatible Technology protects exhaust catalyst and particulate filters from blocking and soot accumulation."
   },
   {
+    "id": "sp-165",
     "name": "Shell Spirax S4 G 75W-90 Synthetic Axle & Gear Oil (1L)",
     "category": "Automobile",
     "brand": "Shell",
@@ -1811,10 +1976,11 @@ export const majorSpareProducts = [
     "price": 679,
     "rating": 4.7,
     "stock": 45,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Extreme-pressure gear lubricant providing quiet operation and high scuffing protection under heavy towing loads."
   },
   {
+    "id": "sp-166",
     "name": "Endurance Gas-Charged Rear Monoshock Damper",
     "category": "Motorcycle",
     "brand": "Endurance",
@@ -1822,10 +1988,11 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.7,
     "stock": 24,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "High-pressure nitrogen gas-charged rear monoshock with 7-step preload adjustment for superior ride comfort and stability."
   },
   {
+    "id": "sp-167",
     "name": "Endurance Front Telescopic Fork Assembly (Pair)",
     "category": "Motorcycle",
     "brand": "Endurance",
@@ -1833,10 +2000,11 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.6,
     "stock": 18,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Complete OEM front fork legs with hardened chrome stanchions and responsive internal damping valves."
   },
   {
+    "id": "sp-168",
     "name": "Endurance Disc Brake Master Cylinder Assembly",
     "category": "Motorcycle",
     "brand": "Endurance",
@@ -1844,10 +2012,11 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 30,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "OEM standard handlebar-mounted master cylinder reservoir with integrated brake lever and brake light switch."
   },
   {
+    "id": "sp-169",
     "name": "Monroe OESpectrum Rear Shock Absorber Pair",
     "category": "Automobile",
     "brand": "Monroe",
@@ -1855,10 +2024,11 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.8,
     "stock": 16,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Twin-technology active control valve provides exceptional feedback during lane changes while absorbing rough bumps."
   },
   {
+    "id": "sp-170",
     "name": "Monroe Quick-Strut Front Suspension Assembly",
     "category": "Automobile",
     "brand": "Monroe",
@@ -1866,10 +2036,11 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.7,
     "stock": 10,
-    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Pre-assembled strut unit with coil spring and top bearing mount for safe, straightforward DIY suspension replacement."
   },
   {
+    "id": "sp-171",
     "name": "Pricol High-Accuracy Motorcycle Fuel Level Sensor",
     "category": "Motorcycle",
     "brand": "Pricol",
@@ -1877,10 +2048,11 @@ export const majorSpareProducts = [
     "price": 549,
     "rating": 4.6,
     "stock": 60,
-    "image": "/images/products/auto_main_r3_c2.jpg",
+    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
     "description": "Precision resistive fuel sender float unit calibrated to deliver accurate dashboard tank readings."
   },
   {
+    "id": "sp-172",
     "name": "Pricol Electric Windshield Washer Pump (12V)",
     "category": "Automobile",
     "brand": "Pricol",
@@ -1888,10 +2060,11 @@ export const majorSpareProducts = [
     "price": 420,
     "rating": 4.7,
     "stock": 75,
-    "image": "/images/products/auto_main_r3_c5.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Compact high-pressure 12V washer fluid motor with waterproof rubber grommet for streak-free windscreen spray."
   },
   {
+    "id": "sp-173",
     "name": "Uno Minda Handlebar Switch Control Assembly (LH)",
     "category": "Motorcycle",
     "brand": "Uno Minda",
@@ -1899,10 +2072,11 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/auto_main_r3_c2.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Die-cast metal switch block featuring horn, high/low beam pass switch, and indicator toggle with weather-sealed wiring."
   },
   {
+    "id": "sp-174",
     "name": "Uno Minda Automotive Ignition Coil Pack",
     "category": "Automobile",
     "brand": "Uno Minda",
@@ -1910,10 +2084,11 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.8,
     "stock": 40,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Heavy-duty electromagnetic secondary winding delivers up to 35,000 volts for rapid combustion and zero misfires."
   },
   {
+    "id": "sp-175",
     "name": "Minda Waterproof Motorcycle USB Fast Charger (18W)",
     "category": "Motorcycle",
     "brand": "Minda",
@@ -1921,10 +2096,11 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 80,
-    "image": "/images/products/auto_main_r3_c5.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Quick Charge 3.0 dual port handlebar mount with smart voltage protection and silicone dust cap."
   },
   {
+    "id": "sp-176",
     "name": "Minda Premium High-Decibel Trumpet Car Horn Set",
     "category": "Automobile",
     "brand": "Minda",
@@ -1936,6 +2112,7 @@ export const majorSpareProducts = [
     "description": "Aerodynamic snail trumpet horn set generating a powerful, elegant dual European harmonic tone."
   },
   {
+    "id": "sp-177",
     "name": "Exide Matrix Maintenance-Free Car Battery 45Ah",
     "category": "Automobile",
     "brand": "Exide",
@@ -1947,6 +2124,7 @@ export const majorSpareProducts = [
     "description": "Alloy grid technology with high electrolyte reserve and sealed cover, guaranteed zero maintenance for 60 months."
   },
   {
+    "id": "sp-178",
     "name": "Exide Xplore Factory Charged Motorcycle Battery 5Ah",
     "category": "Motorcycle",
     "brand": "Exide",
@@ -1958,6 +2136,7 @@ export const majorSpareProducts = [
     "description": "VRLA AGM spill-proof battery designed to absorb severe motorcycle vibrations and high crank demand."
   },
   {
+    "id": "sp-179",
     "name": "Amaron Pro Heavy Duty Passenger Car Battery 55Ah",
     "category": "Automobile",
     "brand": "Amaron",
@@ -1969,6 +2148,7 @@ export const majorSpareProducts = [
     "description": "Patented Silven-X alloy delivers maximum cranking amps, heat tolerance in Indian summers, and longest life cycle."
   },
   {
+    "id": "sp-180",
     "name": "Amaron Pro Rider Two-Wheeler Battery 9Ah",
     "category": "Motorcycle",
     "brand": "Amaron",
@@ -1980,6 +2160,7 @@ export const majorSpareProducts = [
     "description": "High cold-cranking capacity specially engineered to fire up big single-cylinder thumpers effortlessly."
   },
   {
+    "id": "sp-181",
     "name": "SKF Motorcycle Wheel & Sprocket Bearing Combo",
     "category": "Motorcycle",
     "brand": "SKF",
@@ -1987,10 +2168,11 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.9,
     "stock": 40,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
     "description": "Low-drag deep groove ball bearings with contact nitrile rubber seals on both sides to keep water and grit out."
   },
   {
+    "id": "sp-182",
     "name": "SKF Rear Wheel Hub Bearing Assembly with ABS Sensor",
     "category": "Automobile",
     "brand": "SKF",
@@ -1998,10 +2180,11 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.8,
     "stock": 22,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
     "description": "Factory-greased sealed wheel bearing unit integrated with magnetic impulse ring for ABS brake signals."
   },
   {
+    "id": "sp-183",
     "name": "Denso Automotive Cabin AC Air Filter",
     "category": "Automobile",
     "brand": "Denso",
@@ -2013,6 +2196,7 @@ export const majorSpareProducts = [
     "description": "Electrostatic filtration media captures fine PM2.5 particles, pollen, and allergens for healthy cabin air."
   },
   {
+    "id": "sp-184",
     "name": "Denso High-Torque Starter Motor Assembly",
     "category": "Automobile",
     "brand": "Denso",
@@ -2020,10 +2204,11 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.8,
     "stock": 14,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Planetary gear reduction starter motor engineered for swift, low-current cranking in all weather."
   },
   {
+    "id": "sp-185",
     "name": "Valeo Beep & Park Ultrasonic Parking Sensor Kit",
     "category": "Automobile",
     "brand": "Valeo",
@@ -2031,10 +2216,11 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.8,
     "stock": 25,
-    "image": "/images/products/auto_main_r3_c5.jpg",
+    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
     "description": "4-sensor flush-mount ultrasonic rear parking system with audio buzzer and dashboard distance display."
   },
   {
+    "id": "sp-186",
     "name": "Valeo First Pyramid Frameless Wiper Blade Set (Pair)",
     "category": "Automobile",
     "brand": "Valeo",
@@ -2042,10 +2228,11 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "3D aerodynamic spoiler technology provides even contact pressure across curved windscreens at highway speeds."
   },
   {
+    "id": "sp-187",
     "name": "Lumax Projector Fog Lamp Assembly with Angel Eye (Pair)",
     "category": "Automobile",
     "brand": "Lumax",
@@ -2057,6 +2244,7 @@ export const majorSpareProducts = [
     "description": "Bi-LED projector fog lamp system featuring sharp optical cutoff and distinctive white DRL halo rings."
   },
   {
+    "id": "sp-188",
     "name": "Lumax LED Tail Lamp Assembly (Right)",
     "category": "Automobile",
     "brand": "Lumax",
@@ -2068,6 +2256,7 @@ export const majorSpareProducts = [
     "description": "OEM genuine replacement LED rear combination lamp with high impact poly-carbonate lens."
   },
   {
+    "id": "sp-189",
     "name": "Volkswagen Front Brake Disc Rotor Set (Pair)",
     "category": "Automobile",
     "brand": "Volkswagen",
@@ -2075,10 +2264,11 @@ export const majorSpareProducts = [
     "price": 4899,
     "rating": 4.8,
     "stock": 18,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "High carbon anti-corrosion coated disc rotors designed to eliminate judder and provide OEM German pedal response."
   },
   {
+    "id": "sp-190",
     "name": "Volkswagen Carbon Cabin Air Filter",
     "category": "Automobile",
     "brand": "Volkswagen",
@@ -2090,6 +2280,7 @@ export const majorSpareProducts = [
     "description": "Multi-stage activated charcoal cabin filter absorbs exhaust odors, gases, and ultra-fine dust."
   },
   {
+    "id": "sp-191",
     "name": "Skoda Engine Oil Filter Cartridge",
     "category": "Automobile",
     "brand": "Skoda",
@@ -2101,6 +2292,7 @@ export const majorSpareProducts = [
     "description": "Precision synthetic pleated filter element traps micro debris while maintaining full oil pressure."
   },
   {
+    "id": "sp-192",
     "name": "Skoda Front Suspension Stabilizer Link Rod Pair",
     "category": "Automobile",
     "brand": "Skoda",
@@ -2108,10 +2300,11 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Heavy-duty anti-roll bar drop links with sealed ball joints to stop suspension rattling and body roll."
   },
   {
+    "id": "sp-193",
     "name": "Nissan Front Brake Disc Rotors (Pair)",
     "category": "Automobile",
     "brand": "Nissan",
@@ -2119,10 +2312,11 @@ export const majorSpareProducts = [
     "price": 3799,
     "rating": 4.8,
     "stock": 20,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Ventilated steel brake rotors engineered for smooth pedal feel and high heat dissipation during hill descents."
   },
   {
+    "id": "sp-194",
     "name": "Nissan Engine Oil Filter",
     "category": "Automobile",
     "brand": "Nissan",
@@ -2134,6 +2328,7 @@ export const majorSpareProducts = [
     "description": "OEM standard spin-on filter with anti-drainback valve ensures rapid engine lubrication during cold starts."
   },
   {
+    "id": "sp-195",
     "name": "Renault Heavy Duty Clutch Plate & Cover Assembly",
     "category": "Automobile",
     "brand": "Renault",
@@ -2141,10 +2336,11 @@ export const majorSpareProducts = [
     "price": 5499,
     "rating": 4.7,
     "stock": 12,
-    "image": "/images/products/auto_main_r4_c1.jpg",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Reinforced damper springs and heat-resistant friction material built for high-torque diesel applications."
   },
   {
+    "id": "sp-196",
     "name": "Kia Front Ventilated Brake Disc Rotors (Pair)",
     "category": "Automobile",
     "brand": "Kia",
@@ -2152,10 +2348,11 @@ export const majorSpareProducts = [
     "price": 5199,
     "rating": 4.8,
     "stock": 18,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Precision-balanced OEM replacement brake discs engineered for crisp stopping power and zero brake fade."
   },
   {
+    "id": "sp-197",
     "name": "Kia Engine Spin-On Oil Filter",
     "category": "Automobile",
     "brand": "Kia",
@@ -2163,10 +2360,11 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.7,
     "stock": 70,
-    "image": "/products/Hyundai_Venue_Oil_Filter.jpg",
+    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
     "description": "High-efficiency filtration medium safeguards turbocharger bearings and engine journals from wear."
   },
   {
+    "id": "sp-198",
     "name": "Toyota Front Brake Disc Rotor Set (Pair)",
     "category": "Automobile",
     "brand": "Toyota",
@@ -2174,10 +2372,11 @@ export const majorSpareProducts = [
     "price": 6299,
     "rating": 4.9,
     "stock": 16,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Heavy-duty vented cast iron rotors engineered to stop heavy commercial and personal MPVs safely."
   },
   {
+    "id": "sp-199",
     "name": "Toyota Genuine Heavy Duty Clutch Kit",
     "category": "Automobile",
     "brand": "Toyota",
@@ -2185,10 +2384,11 @@ export const majorSpareProducts = [
     "price": 11999,
     "rating": 4.9,
     "stock": 9,
-    "image": "/images/products/auto_main_r4_c1.jpg",
+    "image": "/images/products/automotive-clutch-plate-set.jpg",
     "description": "Championship-standard heavy duty clutch plate, pressure cover, and release bearing for tough off-road recovery."
   },
   {
+    "id": "sp-200",
     "name": "Brembo Prime Carbon Ceramic Rear Brake Pads",
     "category": "Automobile",
     "brand": "Brembo",
@@ -2196,10 +2396,11 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.9,
     "stock": 24,
-    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Brembo Prime rear brake pads offering ultra-clean operation, quiet friction compound, and excellent rear braking balance."
   },
   {
+    "id": "sp-201",
     "name": "Brembo RCS 19 Corsa Corta Radial Brake Master Cylinder",
     "category": "Motorcycle",
     "brand": "Brembo",
@@ -2207,10 +2408,11 @@ export const majorSpareProducts = [
     "price": 28999,
     "rating": 5,
     "stock": 6,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "MotoGP-derived adjustable bite point selector (Normal, Sport, Race) with forged body and folding lever."
   },
   {
+    "id": "sp-202",
     "name": "Castrol GTX 20W-50 High Mileage Engine Oil (3.5L)",
     "category": "Automobile",
     "brand": "Castrol",
@@ -2218,10 +2420,11 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Double Action formula cleans away old engine sludge and protects against new sludge build-up in high-mileage cars."
   },
   {
+    "id": "sp-203",
     "name": "Castrol Chain Lube Racing Synthetic Spray (400ml)",
     "category": "Motorcycle",
     "brand": "Castrol",
@@ -2229,10 +2432,11 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.8,
     "stock": 85,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
     "description": "Clear synthetic formulation with ceramic anti-friction additives for zero fling-off at speeds exceeding 200 km/h."
   },
   {
+    "id": "sp-204",
     "name": "Motul 8100 X-cess 5W-40 100% Synthetic Car Oil (4L)",
     "category": "Automobile",
     "brand": "Motul",
@@ -2240,10 +2444,11 @@ export const majorSpareProducts = [
     "price": 3699,
     "rating": 4.9,
     "stock": 32,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "Full synthetic engine lubricant specially designed for powerful, high displacement modern petrol and diesel vehicles."
   },
   {
+    "id": "sp-205",
     "name": "Motul Fork Oil Expert Medium 10W Technosynthese (1L)",
     "category": "Motorcycle",
     "brand": "Motul",
@@ -2251,10 +2456,11 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 50,
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/motul-300v-factory-line.jpg",
     "description": "Synthetic blend fork fluid featuring anti-foaming technology for uniform damping control over bumpy terrain."
   },
   {
+    "id": "sp-206",
     "name": "Philips DiamondVision 5000K Halogen Headlight Bulb (H4 Pair)",
     "category": "Automobile",
     "brand": "Philips",
@@ -2262,10 +2468,11 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 40,
-    "image": "/products/headlamp.svg",
+    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
     "description": "High-temperature 5000K xenon-white styling light without requiring any relay modifications or ballast wiring."
   },
   {
+    "id": "sp-207",
     "name": "Philips Ultinon Pro6000 LED Interior Festoon Bulb (31mm Pair)",
     "category": "Automobile",
     "brand": "Philips",
@@ -2273,10 +2480,11 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.8,
     "stock": 65,
-    "image": "/products/headlamp.svg",
+    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
     "description": "Brilliant 6000K daylight white interior illumination with uniform 360-degree light distribution."
   },
   {
+    "id": "sp-208",
     "name": "K&N Air Filter Recharge Cleaning & Oiling Service Kit",
     "category": "Automobile",
     "brand": "K&N",
@@ -2284,10 +2492,11 @@ export const majorSpareProducts = [
     "price": 1399,
     "rating": 4.9,
     "stock": 70,
-    "image": "/products/air-filter.svg",
+    "image": "/images/products/kn-high-flow-air-filter.jpg",
     "description": "Restores air flow efficiency and traps harmful dirt by dissolving old oil and reapplying fresh red filter oil."
   },
   {
+    "id": "sp-209",
     "name": "K&N Powersports High Performance Oil Filter (KN-155)",
     "category": "Motorcycle",
     "brand": "K&N",
@@ -2295,10 +2504,11 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 55,
-    "image": "/products/air-filter.svg",
+    "image": "/images/products/kn-high-flow-air-filter.jpg",
     "description": "Synthetic media with 17mm cross-drilled removal nut for rapid track-side and home garage oil servicing."
   },
   {
+    "id": "sp-210",
     "name": "Bosch High Performance Front Ceramic Brake Pads",
     "category": "Automobile",
     "brand": "Bosch",
@@ -2306,10 +2516,11 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.8,
     "stock": 50,
-    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/bosch-double-iridium-spark-plugs.jpg",
     "description": "Bosch QuietCast copper-free ceramic formulation engineered for noise-free stopping and clean wheel rims."
   },
   {
+    "id": "sp-211",
     "name": "Bosch Electric In-Tank Fuel Pump Assembly",
     "category": "Automobile",
     "brand": "Bosch",
@@ -2317,10 +2528,11 @@ export const majorSpareProducts = [
     "price": 2799,
     "rating": 4.7,
     "stock": 20,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/Denso_Radiator_Cooling_Fan_Motor.jpg",
     "description": "Turbine pump technology delivers consistent fuel pressure with low electrical current draw and quiet operation."
   },
   {
+    "id": "sp-212",
     "name": "NGK CPR8EAIX-9 Iridium IX High Performance Spark Plug",
     "category": "Motorcycle",
     "brand": "NGK",
@@ -2328,10 +2540,11 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.9,
     "stock": 80,
-    "image": "/products/NGK_Iridium_IX_Spark_Plug.jpg",
+    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
     "description": "0.6mm laser-welded iridium alloy tip ensures superior anti-fouling, instantaneous ignition, and throttle crispness."
   },
   {
+    "id": "sp-213",
     "name": "NGK LMAR9AI-8 Laser Iridium Racing Spark Plug",
     "category": "Motorcycle",
     "brand": "NGK",
@@ -2339,10 +2552,11 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.9,
     "stock": 65,
-    "image": "/products/NGK_Laser_Iridium_Spark_Plug_Set.jpg",
+    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
     "description": "Dual precious metal construction with iridium center tip and platinum ground electrode for ultra-long lifespan."
   },
   {
+    "id": "sp-214",
     "name": "Royal Enfield Touring Handlebar Deluxe Mirror Set (Bar-End)",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -2350,10 +2564,11 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.9,
     "stock": 22,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "CNC machined anodized billet aluminum bar-end mirrors with anti-glare convex glass for vibration-free rear vision."
   },
   {
+    "id": "sp-215",
     "name": "Royal Enfield Heavy Duty Sump Guard / Bash Plate",
     "category": "Motorcycle",
     "brand": "Royal Enfield",
@@ -2361,10 +2576,11 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 25,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Laser-cut 4mm thick brushed aluminum engine guard shielding the crankcase and oil filter from rocky impact."
   },
   {
+    "id": "sp-216",
     "name": "Yamaha Genuine Slipper Clutch Assist Assembly",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -2372,10 +2588,11 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.9,
     "stock": 20,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/Honda_Shine_Clutch_Plate_Set.jpg",
     "description": "Reduces clutch lever pull effort by 20% and prevents rear wheel hopping during aggressive downshifts."
   },
   {
+    "id": "sp-217",
     "name": "Yamaha LED Flasher Indicator Kit (Set of 4)",
     "category": "Motorcycle",
     "brand": "Yamaha",
@@ -2387,6 +2604,7 @@ export const majorSpareProducts = [
     "description": "Ultra-sleek aerodynamic smoked LED turn signals with rubber vibration-resistant stalks."
   },
   {
+    "id": "sp-218",
     "name": "Honda Activa 6G Genuine Variator & Roller Weight Kit",
     "category": "Motorcycle",
     "brand": "Honda",
@@ -2398,6 +2616,7 @@ export const majorSpareProducts = [
     "description": "Precisely weighted OEM variator pulley rollers and drive face for smooth, lag-free CVT scooter acceleration."
   },
   {
+    "id": "sp-219",
     "name": "Honda City Vented Front Brake Disc Set (Pair)",
     "category": "Automobile",
     "brand": "Honda",
@@ -2405,10 +2624,11 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.8,
     "stock": 22,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Precision-ground cast iron front rotors providing responsive braking and minimal pedal pulsation."
   },
   {
+    "id": "sp-220",
     "name": "Hero Splendor Carburetor & Intake Manifold Assembly",
     "category": "Motorcycle",
     "brand": "Hero",
@@ -2416,10 +2636,11 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 35,
-    "image": "/images/products/auto_main_r3_c2.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Factory-tuned fuel-air mixing jet assembly engineered for optimal fuel economy and easy starting in cold winters."
   },
   {
+    "id": "sp-221",
     "name": "Bajaj Pulsar 220F High-Output Magneto Stator Coil",
     "category": "Motorcycle",
     "brand": "Bajaj",
@@ -2427,10 +2648,11 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Copper wound alternator stator charging coil delivering steady 12V output for dual projector headlamps."
   },
   {
+    "id": "sp-222",
     "name": "TVS Apache RTR 200 4V Slipper Clutch Plate Kit",
     "category": "Motorcycle",
     "brand": "TVS",
@@ -2438,10 +2660,11 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.8,
     "stock": 28,
-    "image": "/images/products/auto_main_r4_c1.jpg",
+    "image": "/images/products/TVS_Ntorq_Clutch_Shoe_Set.jpg",
     "description": "Race-tuned friction plates engineered with RT Slipper Clutch tech for rapid power transfer and zero clutch fade."
   },
   {
+    "id": "sp-223",
     "name": "Suzuki Access 125 Front Disc Brake Caliper & Pad Kit",
     "category": "Motorcycle",
     "brand": "Suzuki",
@@ -2449,10 +2672,11 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Hydraulic single-piston floating caliper assembly including pre-installed OEM organic friction pads."
   },
   {
+    "id": "sp-224",
     "name": "KTM PowerParts Ergonomic Rider Comfort Seat",
     "category": "Motorcycle",
     "brand": "KTM",
@@ -2460,10 +2684,11 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.9,
     "stock": 15,
-    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=85",
+    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
     "description": "Specially formulated 3D structural foam with non-slip dual texture cover for reduced fatigue on long highway tours."
   },
   {
+    "id": "sp-225",
     "name": "Maruti Suzuki Swift Front Suspension Lower Arm / Wishbone",
     "category": "Automobile",
     "brand": "Maruti Suzuki",
@@ -2471,10 +2696,11 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.8,
     "stock": 25,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Sturdy stamped steel suspension control arm with pre-pressed vulcanized rubber bushings and ball joint."
   },
   {
+    "id": "sp-226",
     "name": "Hyundai Creta Front Brake Disc Rotors (Pair)",
     "category": "Automobile",
     "brand": "Hyundai",
@@ -2482,10 +2708,11 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.8,
     "stock": 20,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "Precision balanced ventilated cast iron brake discs providing fade-resistant highway stopping confidence."
   },
   {
+    "id": "sp-227",
     "name": "Tata Nexon Front Suspension Strut Mount Assembly with Bearing",
     "category": "Automobile",
     "brand": "Tata",
@@ -2493,10 +2720,11 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/auto_main_r4_c7.jpg",
+    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
     "description": "Heavy-duty rubber-to-metal bonded top strut mount with integrated thrust ball bearing for smooth steering return."
   },
   {
+    "id": "sp-228",
     "name": "Mahindra Thar Front Heavy Duty Brake Disc Rotors (Pair)",
     "category": "Automobile",
     "brand": "Mahindra",
@@ -2504,10 +2732,7 @@ export const majorSpareProducts = [
     "price": 5899,
     "rating": 4.8,
     "stock": 16,
-    "image": "/products/brake-disc.svg",
+    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
     "description": "High-grade alloy cast iron brake discs built to endure extreme mud, rock crawling, and heavy off-road braking."
   }
-].map((p, index) => ({
-  id: p.id || `sp-${index + 1}`,
-  ...p
-}));
+];
