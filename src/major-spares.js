@@ -656,7 +656,7 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.7,
     "stock": 12,
-    "image": "/images/products/sp-55_maruti_suzuki_brezza_front_brake_disc.svg",
+    "image": "/images/products/sp-55_maruti_suzuki_brezza_front_brake_disc.jpg",
     "description": "Maruti Suzuki Brezza front brake disc for Maruti Suzuki Brezza. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1244,7 +1244,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.9,
     "stock": 65,
-    "image": "/images/products/sp-104_brembo_dot_4_high-performance_brake_fluid.svg",
+    "image": "/images/products/sp-104_brembo_dot_4_high-performance_brake_fluid.jpg",
     "description": "High-boiling point DOT 4 racing brake fluid ensuring consistent hydraulic lever firmness, anti-corrosion protection, and vapor-lock resistance."
   },
   {
@@ -1256,7 +1256,7 @@ export const majorSpareProducts = [
     "price": 12499,
     "rating": 4.9,
     "stock": 10,
-    "image": "/images/products/sp-105_brembo_p4-32_radial_4-piston_caliper_kit.svg",
+    "image": "/images/products/sp-105_brembo_p4-32_radial_4-piston_caliper_kit.jpg",
     "description": "Forged monobloc radial 4-piston caliper kit engineered for championship-grade braking control, reduced unsprung weight, and razor-sharp lever feedback."
   },
   {
@@ -1724,7 +1724,7 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.9,
     "stock": 12,
-    "image": "/images/products/sp-144_ktm_powerparts_factory_wave_floating_brake_disc_320mm.svg",
+    "image": "/images/products/sp-144_ktm_powerparts_factory_wave_floating_brake_disc_320mm.jpg",
     "description": "Stainless steel laser-cut floating wave rotor providing consistent braking bite, superior heat dispersion, and distinctive orange carrier pins."
   },
   {
@@ -2012,7 +2012,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/sp-168_endurance_disc_brake_master_cylinder_assembly.svg",
+    "image": "/images/products/sp-168_endurance_disc_brake_master_cylinder_assembly.jpg",
     "description": "OEM standard handlebar-mounted master cylinder reservoir with integrated brake lever and brake light switch."
   },
   {
@@ -2264,7 +2264,7 @@ export const majorSpareProducts = [
     "price": 4899,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/sp-189_volkswagen_front_brake_disc_rotor_set_pair.svg",
+    "image": "/images/products/sp-189_volkswagen_front_brake_disc_rotor_set_pair.jpg",
     "description": "High carbon anti-corrosion coated disc rotors designed to eliminate judder and provide OEM German pedal response."
   },
   {
@@ -2312,7 +2312,7 @@ export const majorSpareProducts = [
     "price": 3799,
     "rating": 4.8,
     "stock": 20,
-    "image": "/images/products/sp-193_nissan_front_brake_disc_rotors_pair.svg",
+    "image": "/images/products/sp-193_nissan_front_brake_disc_rotors_pair.jpg",
     "description": "Ventilated steel brake rotors engineered for smooth pedal feel and high heat dissipation during hill descents."
   },
   {
@@ -2348,7 +2348,7 @@ export const majorSpareProducts = [
     "price": 5199,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/sp-196_kia_front_ventilated_brake_disc_rotors_pair.svg",
+    "image": "/images/products/sp-196_kia_front_ventilated_brake_disc_rotors_pair.jpg",
     "description": "Precision-balanced OEM replacement brake discs engineered for crisp stopping power and zero brake fade."
   },
   {
@@ -2372,7 +2372,7 @@ export const majorSpareProducts = [
     "price": 6299,
     "rating": 4.9,
     "stock": 16,
-    "image": "/images/products/sp-198_toyota_front_brake_disc_rotor_set_pair.svg",
+    "image": "/images/products/sp-198_toyota_front_brake_disc_rotor_set_pair.jpg",
     "description": "Heavy-duty vented cast iron rotors engineered to stop heavy commercial and personal MPVs safely."
   },
   {
@@ -2396,7 +2396,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.9,
     "stock": 24,
-    "image": "/images/products/sp-200_brembo_prime_carbon_ceramic_rear_brake_pads.svg",
+    "image": "/images/products/sp-200_brembo_prime_carbon_ceramic_rear_brake_pads.jpg",
     "description": "Brembo Prime rear brake pads offering ultra-clean operation, quiet friction compound, and excellent rear braking balance."
   },
   {
@@ -2408,7 +2408,7 @@ export const majorSpareProducts = [
     "price": 28999,
     "rating": 5,
     "stock": 6,
-    "image": "/images/products/sp-201_brembo_rcs_19_corsa_corta_radial_brake_master_cylinder.svg",
+    "image": "/images/products/sp-201_brembo_rcs_19_corsa_corta_radial_brake_master_cylinder.jpg",
     "description": "MotoGP-derived adjustable bite point selector (Normal, Sport, Race) with forged body and folding lever."
   },
   {
@@ -2624,7 +2624,7 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.8,
     "stock": 22,
-    "image": "/images/products/sp-219_honda_city_vented_front_brake_disc_set_pair.svg",
+    "image": "/images/products/sp-219_honda_city_vented_front_brake_disc_set_pair.jpg",
     "description": "Precision-ground cast iron front rotors providing responsive braking and minimal pedal pulsation."
   },
   {
@@ -2672,7 +2672,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/sp-223_suzuki_access_125_front_disc_brake_caliper_and_pad_kit.svg",
+    "image": "/images/products/sp-223_suzuki_access_125_front_disc_brake_caliper_and_pad_kit.jpg",
     "description": "Hydraulic single-piston floating caliper assembly including pre-installed OEM organic friction pads."
   },
   {
