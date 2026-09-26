@@ -20,3 +20,14 @@
 .adminimagepreview{width:100%;max-height:200px;object-fit:cover;border-radius:12px;border:1px solid #252933;background:#080b10;margin-top:6px}
 .light-theme .adminimagepreview{border-color:#dfe2e8;background:#f8f9fb}
 .adminuploadNote{font-size:11px;color:#858c98;margin-top:2px}
+/* Admin Product Search Bar */
+.adminProductSearchWrap{display:flex;align-items:center;gap:10px;background:#080b10;border:1px solid #292d36;border-radius:10px;padding:9px 13px;margin:0 0 16px;transition:border-color .2s,box-shadow .2s}
+.adminProductSearchWrap:focus-within{border-color:#ff3157;box-shadow:0 0 0 3px rgba(255,49,87,.12)}
+.adminProductSearchWrap svg{color:#7f8794;flex:none}
+.adminProductSearchInput{flex:1;background:transparent!important;border:0!important;outline:0!important;color:#f8fafc!important;font-size:13px!important;padding:0!important;box-shadow:none!important}
+.adminProductSearchInput::placeholder{color:#68707d}
+.adminProductSearchClear{background:none;border:0;color:#7f8794;display:grid;place-items:center;padding:2px;cursor:pointer;border-radius:4px}
+.adminProductSearchClear:hover{color:#ff3157}
+.light-theme .adminProductSearchWrap{background:#f8f9fa;border-color:#dfe2e8}
+.light-theme .adminProductSearchInput{color:#171a21!important}
+.light-theme .adminProductSearchInput::placeholder{color:#9299a6}

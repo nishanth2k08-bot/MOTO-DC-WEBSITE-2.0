@@ -1,5 +1,5 @@
 /* Final launch polish: light header, empty cart state, return actions */
-.light-theme header{background:rgba(255,255,255,.97)!important;backdrop-filter:blur(18px)!important;border-bottom-color:#dfe2e8!important;box-shadow:0 4px 18px rgba(20,25,35,.06)}
+.light-theme header{background:transparent!important;backdrop-filter:none!important;border-bottom-color:#dfe2e8!important;box-shadow:none!important}
 .light-theme .nav nav a{color:#343b47!important}
 .light-theme .nav nav a:hover,.light-theme .nav nav a.currentPage{color:#e3264d!important}
 .light-theme .search{background:#fff!important;border-color:#dfe2e8!important;box-shadow:0 4px 14px rgba(20,25,35,.04)}

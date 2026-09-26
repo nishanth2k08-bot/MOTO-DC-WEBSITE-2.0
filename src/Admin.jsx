@@ -3,7 +3,7 @@ import {collection,deleteDoc,doc,getDocs,addDoc,updateDoc,getDoc} from 'firebase
 import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
 import {adminAuth,adminDb,adminStorage} from './firebase';
 import AdminOrders from './AdminOrders';
-import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart} from 'lucide-react';
+import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {majorSpareProducts} from './major-spares';
 import './admin.css';
@@ -89,7 +89,8 @@ function uploadToCloudinary(file,onProgress){
 }
 
 export default function Admin(){
- const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState('dashboard');
+ const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState('dashboard'),[searchQuery,setSearchQuery]=useState('');
+ const filteredProducts=products.filter(p=>{if(!searchQuery.trim())return true;const q=searchQuery.toLowerCase().trim();return (p.name&&p.name.toLowerCase().includes(q))||(p.brand&&p.brand.toLowerCase().includes(q))||(p.category&&p.category.toLowerCase().includes(q))||(p.fitment&&p.fitment.toLowerCase().includes(q))||(p.id&&p.id.toLowerCase().includes(q))});
  const handleTabChange=t=>{setActiveTab(t);try{localStorage.setItem('motodc-admin-tab',t)}catch{}};
  useEffect(()=>onAuthStateChanged(adminAuth,async u=>{setUser(u);setAllowed(false);if(!u){setChecking(false);return}try{const snap=await getDoc(doc(adminDb,'admins',u.uid));setAllowed(snap.exists());setActiveTab('dashboard');try{localStorage.setItem('motodc-admin-tab','dashboard')}catch{}}catch(e){console.error(e);toast.error('Could not verify admin access')}finally{setChecking(false)}}),[]);
  useEffect(()=>{if(allowed)loadProducts()},[allowed]);
@@ -264,10 +265,31 @@ export default function Admin(){
             <div className="listhead">
               <h2><Package size={20}/> Products</h2>
               <div className="listactions">
-                <b>{products.length}</b>
+                <b title={`${filteredProducts.length} of ${products.length} products`}>{searchQuery.trim()?`${filteredProducts.length} / ${products.length}`:products.length}</b>
               </div>
             </div>
-            {products.map(p=>(
+            <div className="adminProductSearchWrap">
+              <Search size={16}/>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e=>setSearchQuery(e.target.value)}
+                placeholder="Search products by name, brand, vehicle fitment, or category..."
+                className="adminProductSearchInput"
+              />
+              {searchQuery&&(
+                <button
+                  type="button"
+                  className="adminProductSearchClear"
+                  onClick={()=>setSearchQuery('')}
+                  title="Clear search"
+                  aria-label="Clear search"
+                >
+                  <X size={15}/>
+                </button>
+              )}
+            </div>
+            {filteredProducts.map(p=>(
               <div className="adminproduct" key={p.id}>
                 <img src={p.image} alt=""/>
                 <div>
@@ -279,7 +301,12 @@ export default function Admin(){
                 <button className="delete" onClick={()=>remove(p.id)} title="Delete"><Trash2 size={16}/></button>
               </div>
             ))}
-            {!products.length&&<div className="empty">No products yet.</div>}
+            {!filteredProducts.length&&(
+              <div className="empty" style={{minHeight:'180px',padding:'30px'}}>
+                <p>{products.length?'No products match "'+searchQuery+'"':'No products yet.'}</p>
+                {searchQuery&&<button type="button" className="secondaryBtn" onClick={()=>setSearchQuery('')} style={{marginTop:'12px',padding:'8px 16px',fontSize:'12px'}}>Clear search</button>}
+              </div>
+            )}
           </div>
         </div>
       )}
