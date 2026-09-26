@@ -8,7 +8,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.6,
     "stock": 48,
-    "image": "/images/products/Honda_Activa_6G_Air_Filter.jpg",
+    "image": "/images/products/sp-1_honda_activa_6g_air_filter.jpg",
     "description": "Honda Activa 6G air filter for Honda Activa 6G. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -20,7 +20,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.5,
     "stock": 32,
-    "image": "/images/products/Honda_Activa_Front_Brake_Shoe_Set.jpg",
+    "image": "/images/products/sp-2_honda_activa_front_brake_shoe_set.jpg",
     "description": "Honda Activa front brake shoe set for Honda Activa 5G/6G. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -32,7 +32,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/Honda_Shine_Clutch_Plate_Set.jpg",
+    "image": "/images/products/sp-3_honda_shine_clutch_plate_set.jpg",
     "description": "Honda Shine clutch plate set for Honda Shine 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -44,7 +44,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.6,
     "stock": 38,
-    "image": "/images/products/Honda_CB_Shine_Front_Disc_Pad.jpg",
+    "image": "/images/products/sp-4_honda_cb_shine_front_disc_pad.jpg",
     "description": "Honda CB Shine front disc pad for Honda Shine 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -56,7 +56,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 21,
-    "image": "/images/products/Honda_Unicorn_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/sp-5_honda_unicorn_chain_sprocket_kit.jpg",
     "description": "Honda Unicorn chain sprocket kit for Honda Unicorn 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -68,7 +68,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.5,
     "stock": 65,
-    "image": "/images/products/Hero_Splendor_Plus_Air_Filter.jpg",
+    "image": "/images/products/sp-6_hero_splendor_plus_air_filter.jpg",
     "description": "Hero Splendor Plus air filter for Hero Splendor Plus. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -80,7 +80,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.6,
     "stock": 29,
-    "image": "/images/products/Hero_Splendor_Clutch_Plate_Set.jpg",
+    "image": "/images/products/sp-7_hero_splendor_clutch_plate_set.jpg",
     "description": "Hero Splendor clutch plate set for Hero Splendor/Passion. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -92,7 +92,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.4,
     "stock": 42,
-    "image": "/images/products/Hero_Passion_Pro_Front_Brake_Shoe.jpg",
+    "image": "/images/products/sp-8_hero_passion_pro_front_brake_shoe.jpg",
     "description": "Hero Passion Pro front brake shoe for Hero Passion Pro. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -104,7 +104,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 18,
-    "image": "/images/products/Hero_Glamour_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/sp-9_hero_glamour_chain_sprocket_kit.jpg",
     "description": "Hero Glamour chain sprocket kit for Hero Glamour 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -116,7 +116,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/Hero_Xtreme_160R_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-10_hero_xtreme_160r_front_brake_pads.jpg",
     "description": "Hero Xtreme 160R front brake pads for Hero Xtreme 160R. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -128,7 +128,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.6,
     "stock": 54,
-    "image": "/images/products/Bajaj_Pulsar_150_Air_Filter.jpg",
+    "image": "/images/products/sp-11_bajaj_pulsar_150_air_filter.jpg",
     "description": "Bajaj Pulsar 150 air filter for Bajaj Pulsar 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -140,7 +140,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 4.7,
     "stock": 20,
-    "image": "/images/products/Bajaj_Pulsar_150_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/sp-12_bajaj_pulsar_150_chain_sprocket_kit.jpg",
     "description": "Bajaj Pulsar 150 chain sprocket kit for Bajaj Pulsar 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -152,7 +152,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.5,
     "stock": 34,
-    "image": "/images/products/Bajaj_Pulsar_Front_Disc_Brake_Pads.jpg",
+    "image": "/images/products/sp-13_bajaj_pulsar_front_disc_brake_pads.jpg",
     "description": "Bajaj Pulsar front disc brake pads for Bajaj Pulsar 150/180. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -164,7 +164,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.4,
     "stock": 46,
-    "image": "/images/products/Bajaj_Platina_Rear_Brake_Shoe.jpg",
+    "image": "/images/products/sp-14_bajaj_platina_rear_brake_shoe.jpg",
     "description": "Bajaj Platina rear brake shoe for Bajaj Platina 100/110. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -176,7 +176,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.8,
     "stock": 37,
-    "image": "/images/products/Bajaj_Dominar_400_Oil_Filter.jpg",
+    "image": "/images/products/sp-15_bajaj_dominar_400_oil_filter.jpg",
     "description": "Bajaj Dominar 400 oil filter for Bajaj Dominar 400. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -188,7 +188,7 @@ export const majorSpareProducts = [
     "price": 549,
     "rating": 4.7,
     "stock": 41,
-    "image": "/images/products/TVS_Apache_RTR_160_Air_Filter.jpg",
+    "image": "/images/products/sp-16_tvs_apache_rtr_160_air_filter.jpg",
     "description": "TVS Apache RTR 160 air filter for TVS Apache RTR 160. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -200,7 +200,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.6,
     "stock": 27,
-    "image": "/images/products/Hero_Xtreme_160R_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-17_tvs_apache_rtr_160_front_brake_pads.jpg",
     "description": "TVS Apache RTR 160 front brake pads for TVS Apache RTR 160. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -212,7 +212,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.5,
     "stock": 23,
-    "image": "/images/products/TVS_Jupiter_Drive_Belt.jpg",
+    "image": "/images/products/sp-18_tvs_jupiter_drive_belt.jpg",
     "description": "TVS Jupiter drive belt for TVS Jupiter 110. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -224,7 +224,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.6,
     "stock": 31,
-    "image": "/images/products/TVS_Ntorq_Clutch_Shoe_Set.jpg",
+    "image": "/images/products/sp-19_tvs_ntorq_clutch_shoe_set.jpg",
     "description": "TVS Ntorq clutch shoe set for TVS Ntorq 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -236,7 +236,7 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.7,
     "stock": 19,
-    "image": "/images/products/TVS_Raider_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/sp-20_tvs_raider_chain_sprocket_kit.jpg",
     "description": "TVS Raider chain sprocket kit for TVS Raider 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -248,7 +248,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.7,
     "stock": 36,
-    "image": "/images/products/Yamaha_FZ_FI_Air_Filter.jpg",
+    "image": "/images/products/sp-21_yamaha_fz-fi_air_filter.jpg",
     "description": "Yamaha FZ-FI air filter for Yamaha FZ/FZS FI. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -260,7 +260,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.8,
     "stock": 22,
-    "image": "/images/products/Yamaha_R15_V3_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-22_yamaha_r15_v3_front_brake_pads.jpg",
     "description": "Yamaha R15 V3 front brake pads for Yamaha R15 V3. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -272,7 +272,7 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.8,
     "stock": 15,
-    "image": "/images/products/Bajaj_Pulsar_150_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/sp-23_yamaha_r15_chain_sprocket_kit.jpg",
     "description": "Yamaha R15 chain sprocket kit for Yamaha R15 V3/V4. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -284,7 +284,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.7,
     "stock": 29,
-    "image": "/images/products/Yamaha_MT_15_Oil_Filter.jpg",
+    "image": "/images/products/sp-24_yamaha_mt-15_oil_filter.jpg",
     "description": "Yamaha MT-15 oil filter for Yamaha MT-15. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -296,7 +296,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.5,
     "stock": 33,
-    "image": "/images/products/Yamaha_FZ_Rear_Brake_Shoe.jpg",
+    "image": "/images/products/sp-25_yamaha_fz_rear_brake_shoe.jpg",
     "description": "Yamaha FZ rear brake shoe for Yamaha FZ V2. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -308,7 +308,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.6,
     "stock": 51,
-    "image": "/images/products/Suzuki_Access_125_Air_Filter.jpg",
+    "image": "/images/products/sp-26_suzuki_access_125_air_filter.jpg",
     "description": "Suzuki Access 125 air filter for Suzuki Access 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -320,7 +320,7 @@ export const majorSpareProducts = [
     "price": 1399,
     "rating": 4.5,
     "stock": 25,
-    "image": "/images/products/Suzuki_Access_125_Drive_Belt.jpg",
+    "image": "/images/products/sp-27_suzuki_access_125_drive_belt.jpg",
     "description": "Suzuki Access 125 drive belt for Suzuki Access 125. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -332,7 +332,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.6,
     "stock": 28,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-28_suzuki_gixxer_front_disc_pads.jpg",
     "description": "Suzuki Gixxer front disc pads for Suzuki Gixxer 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -344,7 +344,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 4.7,
     "stock": 17,
-    "image": "/images/products/Suzuki_Gixxer_Chain_Sprocket_Kit.jpg",
+    "image": "/images/products/sp-29_suzuki_gixxer_chain_sprocket_kit.jpg",
     "description": "Suzuki Gixxer chain sprocket kit for Suzuki Gixxer 150. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -356,7 +356,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.5,
     "stock": 30,
-    "image": "/images/products/Suzuki_Burgman_Street_Brake_Shoe.jpg",
+    "image": "/images/products/sp-30_suzuki_burgman_street_brake_shoe.jpg",
     "description": "Suzuki Burgman Street brake shoe for Suzuki Burgman Street. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -368,7 +368,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.7,
     "stock": 44,
-    "image": "/images/products/Royal_Enfield_Classic_350_Air_Filter.jpg",
+    "image": "/images/products/sp-31_royal_enfield_classic_350_air_filter.jpg",
     "description": "Royal Enfield Classic 350 air filter for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -380,7 +380,7 @@ export const majorSpareProducts = [
     "price": 1099,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/Royal_Enfield_Classic_350_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-32_royal_enfield_classic_350_front_brake_pads.jpg",
     "description": "Royal Enfield Classic 350 front brake pads for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -392,7 +392,7 @@ export const majorSpareProducts = [
     "price": 2499,
     "rating": 4.8,
     "stock": 13,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-33_royal_enfield_classic_350_chain_sprocket_kit.jpg",
     "description": "Royal Enfield Classic 350 chain sprocket kit for Royal Enfield Classic 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -404,7 +404,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.8,
     "stock": 35,
-    "image": "/images/products/Royal_Enfield_Hunter_350_Oil_Filter.jpg",
+    "image": "/images/products/sp-34_royal_enfield_hunter_350_oil_filter.jpg",
     "description": "Royal Enfield Hunter 350 oil filter for Royal Enfield Hunter 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -416,7 +416,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 4.6,
     "stock": 16,
-    "image": "/images/products/Royal_Enfield_Meteor_350_Clutch_Plate_Set.jpg",
+    "image": "/images/products/sp-35_royal_enfield_meteor_350_clutch_plate_set.jpg",
     "description": "Royal Enfield Meteor 350 clutch plate set for Royal Enfield Meteor 350. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -428,7 +428,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.7,
     "stock": 21,
-    "image": "/images/products/KTM_Duke_200_Air_Filter.jpg",
+    "image": "/images/products/sp-36_ktm_duke_200_air_filter.jpg",
     "description": "KTM Duke 200 air filter for KTM Duke 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -440,7 +440,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/KTM_Duke_200_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-37_ktm_duke_200_front_brake_pads.jpg",
     "description": "KTM Duke 200 front brake pads for KTM Duke 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -452,7 +452,7 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 11,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-38_ktm_duke_250_chain_sprocket_kit.jpg",
     "description": "KTM Duke 250 chain sprocket kit for KTM Duke 250. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -464,7 +464,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/KTM_RC_200_Oil_Filter.jpg",
+    "image": "/images/products/sp-39_ktm_rc_200_oil_filter.jpg",
     "description": "KTM RC 200 oil filter for KTM RC 200. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -476,7 +476,7 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.8,
     "stock": 12,
-    "image": "/images/products/KTM_Duke_200_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-40_ktm_adventure_390_brake_pad_set.jpg",
     "description": "KTM Adventure 390 brake pad set for KTM Adventure 390. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -488,7 +488,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 43,
-    "image": "/images/products/Bosch_Motorcycle_Iridium_Spark_Plug.jpg",
+    "image": "/images/products/sp-41_bosch_motorcycle_iridium_spark_plug.jpg",
     "description": "Bosch motorcycle iridium spark plug for Multi-brand 4-stroke bikes. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -500,7 +500,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.9,
     "stock": 52,
-    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
+    "image": "/images/products/sp-42_ngk_iridium_ix_spark_plug.jpg",
     "description": "NGK iridium IX spark plug for Honda/Yamaha/Suzuki 125-250cc. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -512,7 +512,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.5,
     "stock": 17,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-43_endurance_universal_rear_shock_absorber.jpg",
     "description": "Endurance universal rear shock absorber for Popular commuter motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -524,7 +524,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.7,
     "stock": 39,
-    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
+    "image": "/images/products/sp-44_skf_steering_cone_bearing_kit.jpg",
     "description": "SKF steering cone bearing kit for Bajaj/Hero/Honda/TVS. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -536,7 +536,7 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.6,
     "stock": 28,
-    "image": "/images/products/Lumax_LED_Headlamp_Assembly.jpg",
+    "image": "/images/products/sp-45_uno_minda_led_motorcycle_headlamp.jpg",
     "description": "Uno Minda LED motorcycle headlamp for 12V motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -548,7 +548,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.7,
     "stock": 22,
-    "image": "/images/products/Exide_Two_Wheeler_Battery_4Ah.jpg",
+    "image": "/images/products/sp-46_exide_two-wheeler_battery_4ah.jpg",
     "description": "Exide two-wheeler battery 4Ah for 12V motorcycles/scooters. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -560,7 +560,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 20,
-    "image": "/images/products/Amaron_Two_Wheeler_Battery_5Ah.jpg",
+    "image": "/images/products/sp-47_amaron_two-wheeler_battery_5ah.jpg",
     "description": "Amaron two-wheeler battery 5Ah for 12V motorcycles/scooters. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -572,7 +572,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.4,
     "stock": 47,
-    "image": "/images/products/Minda_Universal_Indicator_Set.jpg",
+    "image": "/images/products/sp-48_minda_universal_indicator_set.jpg",
     "description": "Minda universal indicator set for 12V motorcycles. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -584,7 +584,7 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.5,
     "stock": 14,
-    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
+    "image": "/images/products/sp-49_pricol_digital_motorcycle_speedometer.jpg",
     "description": "Pricol digital motorcycle speedometer for Universal 12V bikes. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -596,7 +596,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.6,
     "stock": 52,
-    "image": "/images/products/Maruti_Suzuki_Alto_K10_Air_Filter.jpg",
+    "image": "/images/products/sp-50_maruti_suzuki_alto_k10_air_filter.jpg",
     "description": "Maruti Suzuki Alto K10 air filter for Maruti Suzuki Alto K10. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -608,7 +608,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 34,
-    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-51_maruti_suzuki_swift_front_brake_pad_set.jpg",
     "description": "Maruti Suzuki Swift front brake pad set for Maruti Suzuki Swift. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -620,7 +620,7 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.7,
     "stock": 16,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-52_maruti_suzuki_swift_clutch_plate_kit.jpg",
     "description": "Maruti Suzuki Swift clutch plate kit for Maruti Suzuki Swift. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -632,7 +632,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.6,
     "stock": 43,
-    "image": "/images/products/Maruti_Suzuki_Baleno_Cabin_Air_Filter.jpg",
+    "image": "/images/products/sp-53_maruti_suzuki_baleno_cabin_air_filter.jpg",
     "description": "Maruti Suzuki Baleno cabin air filter for Maruti Suzuki Baleno. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -644,7 +644,7 @@ export const majorSpareProducts = [
     "price": 349,
     "rating": 4.5,
     "stock": 61,
-    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-54_maruti_suzuki_wagonr_oil_filter.jpg",
     "description": "Maruti Suzuki WagonR oil filter for Maruti Suzuki WagonR. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -656,7 +656,7 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.7,
     "stock": 12,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-55_maruti_suzuki_brezza_front_brake_disc.svg",
     "description": "Maruti Suzuki Brezza front brake disc for Maruti Suzuki Brezza. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -668,7 +668,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.6,
     "stock": 47,
-    "image": "/images/products/Hyundai_i10_Air_Filter.jpg",
+    "image": "/images/products/sp-56_hyundai_i10_air_filter.jpg",
     "description": "Hyundai i10 air filter for Hyundai Grand i10. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -680,7 +680,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.7,
     "stock": 28,
-    "image": "/images/products/Hyundai_i20_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-57_hyundai_i20_front_brake_pad_set.jpg",
     "description": "Hyundai i20 front brake pad set for Hyundai i20. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -692,7 +692,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.6,
     "stock": 39,
-    "image": "/images/products/Hyundai_Creta_Cabin_Filter.jpg",
+    "image": "/images/products/sp-58_hyundai_creta_cabin_filter.jpg",
     "description": "Hyundai Creta cabin filter for Hyundai Creta. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -704,7 +704,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.5,
     "stock": 55,
-    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-59_hyundai_venue_oil_filter.jpg",
     "description": "Hyundai Venue oil filter for Hyundai Venue. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -716,7 +716,7 @@ export const majorSpareProducts = [
     "price": 6999,
     "rating": 4.8,
     "stock": 9,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-60_hyundai_verna_clutch_kit.jpg",
     "description": "Hyundai Verna clutch kit for Hyundai Verna. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -728,7 +728,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.6,
     "stock": 42,
-    "image": "/images/products/Tata_Nexon_Air_Filter.jpg",
+    "image": "/images/products/sp-61_tata_nexon_air_filter.jpg",
     "description": "Tata Nexon air filter for Tata Nexon. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -740,7 +740,7 @@ export const majorSpareProducts = [
     "price": 1999,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/Tata_Nexon_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-62_tata_nexon_front_brake_pads.jpg",
     "description": "Tata Nexon front brake pads for Tata Nexon. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -752,7 +752,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.6,
     "stock": 31,
-    "image": "/images/products/Tata_Punch_Cabin_Filter.jpg",
+    "image": "/images/products/sp-63_tata_punch_cabin_filter.jpg",
     "description": "Tata Punch cabin filter for Tata Punch. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -764,7 +764,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.5,
     "stock": 48,
-    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-64_tata_altroz_oil_filter.jpg",
     "description": "Tata Altroz oil filter for Tata Altroz. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -776,7 +776,7 @@ export const majorSpareProducts = [
     "price": 5999,
     "rating": 4.7,
     "stock": 11,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-65_tata_tiago_clutch_kit.jpg",
     "description": "Tata Tiago clutch kit for Tata Tiago. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -788,7 +788,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 22,
-    "image": "/images/products/Mahindra_Scorpio_N_Air_Filter.jpg",
+    "image": "/images/products/sp-66_mahindra_scorpio_n_air_filter.jpg",
     "description": "Mahindra Scorpio N air filter for Mahindra Scorpio N. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -800,7 +800,7 @@ export const majorSpareProducts = [
     "price": 2499,
     "rating": 4.8,
     "stock": 19,
-    "image": "/images/products/Mahindra_Thar_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-67_mahindra_thar_front_brake_pads.jpg",
     "description": "Mahindra Thar front brake pads for Mahindra Thar. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -812,7 +812,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.7,
     "stock": 27,
-    "image": "/images/products/Mahindra_XUV700_Cabin_Filter.jpg",
+    "image": "/images/products/sp-68_mahindra_xuv700_cabin_filter.jpg",
     "description": "Mahindra XUV700 cabin filter for Mahindra XUV700. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -824,7 +824,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.5,
     "stock": 46,
-    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-69_mahindra_bolero_oil_filter.jpg",
     "description": "Mahindra Bolero oil filter for Mahindra Bolero. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -836,7 +836,7 @@ export const majorSpareProducts = [
     "price": 8499,
     "rating": 4.8,
     "stock": 7,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-70_mahindra_thar_clutch_kit.jpg",
     "description": "Mahindra Thar clutch kit for Mahindra Thar. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -848,7 +848,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.8,
     "stock": 23,
-    "image": "/images/products/Toyota_Innova_Crysta_Air_Filter.jpg",
+    "image": "/images/products/sp-71_toyota_innova_crysta_air_filter.jpg",
     "description": "Toyota Innova Crysta air filter for Toyota Innova Crysta. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -860,7 +860,7 @@ export const majorSpareProducts = [
     "price": 4999,
     "rating": 4.8,
     "stock": 13,
-    "image": "/images/products/Toyota_Fortuner_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-72_toyota_fortuner_front_brake_pad_set.jpg",
     "description": "Toyota Fortuner front brake pad set for Toyota Fortuner. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -872,7 +872,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.6,
     "stock": 32,
-    "image": "/images/products/Toyota_Glanza_Cabin_Filter.jpg",
+    "image": "/images/products/sp-73_toyota_glanza_cabin_filter.jpg",
     "description": "Toyota Glanza cabin filter for Toyota Glanza. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -884,7 +884,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.7,
     "stock": 41,
-    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-74_toyota_innova_oil_filter.jpg",
     "description": "Toyota Innova oil filter for Toyota Innova. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -896,7 +896,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.7,
     "stock": 29,
-    "image": "/images/products/Kia_Seltos_Air_Filter.jpg",
+    "image": "/images/products/sp-75_kia_seltos_air_filter.jpg",
     "description": "Kia Seltos air filter for Kia Seltos. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -908,7 +908,7 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.7,
     "stock": 21,
-    "image": "/images/products/Kia_Sonet_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-76_kia_sonet_front_brake_pads.jpg",
     "description": "Kia Sonet front brake pads for Kia Sonet. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -920,7 +920,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.6,
     "stock": 24,
-    "image": "/images/products/Kia_Carens_Cabin_Filter.jpg",
+    "image": "/images/products/sp-77_kia_carens_cabin_filter.jpg",
     "description": "Kia Carens cabin filter for Kia Carens. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -932,7 +932,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.7,
     "stock": 36,
-    "image": "/images/products/Honda_City_Air_Filter.jpg",
+    "image": "/images/products/sp-78_honda_city_air_filter.jpg",
     "description": "Honda City air filter for Honda City. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -944,7 +944,7 @@ export const majorSpareProducts = [
     "price": 1999,
     "rating": 4.7,
     "stock": 18,
-    "image": "/images/products/Honda_Amaze_Front_Brake_Pads.jpg",
+    "image": "/images/products/sp-79_honda_amaze_front_brake_pads.jpg",
     "description": "Honda Amaze front brake pads for Honda Amaze. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -956,7 +956,7 @@ export const majorSpareProducts = [
     "price": 7499,
     "rating": 4.8,
     "stock": 8,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-80_honda_city_clutch_kit.jpg",
     "description": "Honda City clutch kit for Honda City. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -968,7 +968,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.5,
     "stock": 37,
-    "image": "/images/products/Renault_Kwid_Air_Filter.jpg",
+    "image": "/images/products/sp-81_renault_kwid_air_filter.jpg",
     "description": "Renault Kwid air filter for Renault Kwid. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -980,7 +980,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 26,
-    "image": "/images/products/Renault_Kwid_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-82_renault_kwid_front_brake_pad_set.jpg",
     "description": "Renault Kwid front brake pad set for Renault Kwid. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -992,7 +992,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.5,
     "stock": 17,
-    "image": "/images/products/Renault_Duster_Cabin_Filter.jpg",
+    "image": "/images/products/sp-83_renault_duster_cabin_filter.jpg",
     "description": "Renault Duster cabin filter for Renault Duster. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1004,7 +1004,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.6,
     "stock": 33,
-    "image": "/images/products/Honda_Activa_6G_Air_Filter.jpg",
+    "image": "/images/products/sp-84_nissan_magnite_air_filter.jpg",
     "description": "Nissan Magnite air filter for Nissan Magnite. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1016,7 +1016,7 @@ export const majorSpareProducts = [
     "price": 2299,
     "rating": 4.6,
     "stock": 14,
-    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-85_nissan_kicks_front_brake_pads.jpg",
     "description": "Nissan Kicks front brake pads for Nissan Kicks. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1028,7 +1028,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 25,
-    "image": "/images/products/Honda_Activa_6G_Air_Filter.jpg",
+    "image": "/images/products/sp-86_volkswagen_polo_air_filter.jpg",
     "description": "Volkswagen Polo air filter for Volkswagen Polo. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1040,7 +1040,7 @@ export const majorSpareProducts = [
     "price": 2599,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-87_volkswagen_virtus_front_brake_pads.jpg",
     "description": "Volkswagen Virtus front brake pads for Volkswagen Virtus. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1052,7 +1052,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.7,
     "stock": 20,
-    "image": "/images/products/Hyundai_Creta_Cabin_Filter.jpg",
+    "image": "/images/products/sp-88_skoda_slavia_cabin_filter.jpg",
     "description": "Skoda Slavia cabin filter for Skoda Slavia. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1064,7 +1064,7 @@ export const majorSpareProducts = [
     "price": 2699,
     "rating": 4.8,
     "stock": 15,
-    "image": "/images/products/Maruti_Suzuki_Swift_Front_Brake_Pad_Set.jpg",
+    "image": "/images/products/sp-89_skoda_kushaq_front_brake_pads.jpg",
     "description": "Skoda Kushaq front brake pads for Skoda Kushaq. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1076,7 +1076,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.8,
     "stock": 45,
-    "image": "/images/products/Bosch_Premium_Petrol_Spark_Plug_Set.jpg",
+    "image": "/images/products/sp-90_bosch_premium_petrol_spark_plug_set.jpg",
     "description": "Bosch premium petrol spark plug set for Maruti/Hyundai/Tata petrol engines. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1088,7 +1088,7 @@ export const majorSpareProducts = [
     "price": 5699,
     "rating": 4.7,
     "stock": 12,
-    "image": "/images/products/Bosch_Car_Battery_45Ah.jpg",
+    "image": "/images/products/sp-91_bosch_car_battery_45ah.jpg",
     "description": "Bosch car battery 45Ah for 12V passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1100,7 +1100,7 @@ export const majorSpareProducts = [
     "price": 7499,
     "rating": 4.8,
     "stock": 10,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-92_valeo_clutch_kit.jpg",
     "description": "Valeo clutch kit for Popular hatchbacks and sedans. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1112,7 +1112,7 @@ export const majorSpareProducts = [
     "price": 4599,
     "rating": 4.7,
     "stock": 19,
-    "image": "/images/products/Exide_Car_Battery_35Ah.jpg",
+    "image": "/images/products/sp-93_exide_car_battery_35ah.jpg",
     "description": "Exide car battery 35Ah for 12V hatchbacks. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1124,7 +1124,7 @@ export const majorSpareProducts = [
     "price": 5299,
     "rating": 4.8,
     "stock": 17,
-    "image": "/images/products/Amaron_Car_Battery_45Ah.jpg",
+    "image": "/images/products/sp-94_amaron_car_battery_45ah.jpg",
     "description": "Amaron car battery 45Ah for 12V hatchbacks/sedans. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1136,7 +1136,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.5,
     "stock": 16,
-    "image": "/images/products/Lumax_LED_Headlamp_Assembly.jpg",
+    "image": "/images/products/sp-95_lumax_led_headlamp_assembly.jpg",
     "description": "Lumax LED headlamp assembly for Popular Indian passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1148,7 +1148,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.6,
     "stock": 44,
-    "image": "/images/products/Uno_Minda_Car_Horn_Pair.jpg",
+    "image": "/images/products/sp-96_uno_minda_car_horn_pair.jpg",
     "description": "Uno Minda car horn pair for 12V passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1160,7 +1160,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.9,
     "stock": 31,
-    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
+    "image": "/images/products/sp-97_ngk_laser_iridium_spark_plug_set.jpg",
     "description": "NGK laser iridium spark plug set for Modern petrol engines. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1172,7 +1172,7 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.7,
     "stock": 22,
-    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
+    "image": "/images/products/sp-98_skf_front_wheel_bearing_kit.jpg",
     "description": "SKF front wheel bearing kit for Maruti/Hyundai/Tata applications. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1184,7 +1184,7 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.7,
     "stock": 9,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-99_monroe_front_shock_absorber_pair.jpg",
     "description": "Monroe front shock absorber pair for Popular passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1196,7 +1196,7 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.6,
     "stock": 13,
-    "image": "/images/products/Denso_Radiator_Cooling_Fan_Motor.jpg",
+    "image": "/images/products/sp-100_denso_radiator_cooling_fan_motor.jpg",
     "description": "Denso radiator cooling fan motor for Popular passenger cars. Quality replacement spare selected for dependable fit, everyday durability and service performance."
   },
   {
@@ -1208,7 +1208,7 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.9,
     "stock": 28,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-101_brembo_ceramic_front_brake_pad_set.jpg",
     "description": "Brembo premium ceramic front brake pad set offering exceptional thermal stability, ultra-low dust generation, and whisper-quiet high-performance stopping power."
   },
   {
@@ -1220,7 +1220,7 @@ export const majorSpareProducts = [
     "price": 8499,
     "rating": 4.9,
     "stock": 16,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-102_brembo_sport_ventilated_grooved_brake_disc.jpg",
     "description": "Precision-engineered grooved ventilated brake discs for rapid heat dissipation, instant initial bite, and fade-free highway and track deceleration."
   },
   {
@@ -1232,7 +1232,7 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.8,
     "stock": 34,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-103_brembo_sintered_racing_front_brake_pads.jpg",
     "description": "Genuine Brembo sintered friction compound pads engineered for high initial bite, aggressive track braking, and zero fade in wet or dry conditions."
   },
   {
@@ -1244,7 +1244,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.9,
     "stock": 65,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-104_brembo_dot_4_high-performance_brake_fluid.svg",
     "description": "High-boiling point DOT 4 racing brake fluid ensuring consistent hydraulic lever firmness, anti-corrosion protection, and vapor-lock resistance."
   },
   {
@@ -1256,7 +1256,7 @@ export const majorSpareProducts = [
     "price": 12499,
     "rating": 4.9,
     "stock": 10,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-105_brembo_p4-32_radial_4-piston_caliper_kit.svg",
     "description": "Forged monobloc radial 4-piston caliper kit engineered for championship-grade braking control, reduced unsprung weight, and razor-sharp lever feedback."
   },
   {
@@ -1268,7 +1268,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.8,
     "stock": 75,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-106_castrol_power1_ultimate_10w50.jpg",
     "description": "5-in-1 formula full synthetic motorcycle engine oil delivering outstanding acceleration, thermal protection, smooth gear shifts, and clutch grip."
   },
   {
@@ -1280,7 +1280,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.9,
     "stock": 40,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-107_castrol_edge_5w-40_advanced_full_synthetic.svg",
     "description": "Fluid TITANIUM technology doubles its film strength under extreme engine pressure, reducing friction and maximizing performance across all RPM ranges."
   },
   {
@@ -1292,7 +1292,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.7,
     "stock": 90,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-108_castrol_radicool_sf_longlife_oat_coolant.svg",
     "description": "Silicate-free Organic Acid Technology (OAT) engine coolant providing 5-year anti-freeze, anti-boil, and cavitation corrosion defense."
   },
   {
@@ -1304,7 +1304,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 45,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-109_castrol_syntrans_75w-90_manual_transmission_fluid.svg",
     "description": "Full synthetic transmission oil ensuring silky smooth cold shifting, superior synchronizer compatibility, and tooth wear resistance."
   },
   {
@@ -1316,7 +1316,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-110_castrol_power1_4t_15w-50_semi-synthetic_oil.svg",
     "description": "Specially formulated for high-displacement air-cooled thumpers, reducing thermal stress, valve deposits, and engine wear during long tours."
   },
   {
@@ -1328,7 +1328,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.9,
     "stock": 65,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-111_motul_7100_4t_10w50.jpg",
     "description": "Ester technology 100% synthetic 4-stroke lubricant offering extreme shear resistance, crisp gearbox shifting, and maximum thermal stability."
   },
   {
@@ -1340,7 +1340,7 @@ export const majorSpareProducts = [
     "price": 1799,
     "rating": 5,
     "stock": 25,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-112_motul_300v_factory_line_road_racing_15w50.jpg",
     "description": "Flagship ESTER Core motorsport formulation maximizing horsepower output, oil pressure stability, and extreme clutch anti-slip protection."
   },
   {
@@ -1352,7 +1352,7 @@ export const majorSpareProducts = [
     "price": 920,
     "rating": 4.8,
     "stock": 110,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-113_motul_c1_chain_clean_plus_c2_chain_lube_road_combo.svg",
     "description": "High-demand chain maintenance bundle with penetrating chlorine-free degreaser spray and colorless high-tack fling-resistant lubricant."
   },
   {
@@ -1364,7 +1364,7 @@ export const majorSpareProducts = [
     "price": 1450,
     "rating": 4.9,
     "stock": 35,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-114_motul_rbf_660_factory_line_racing_brake_fluid.svg",
     "description": "Ultra-high dry boiling point (328°C / 622°F) 100% synthetic brake fluid tailored for extreme heat generated by steel or carbon ceramic brakes."
   },
   {
@@ -1376,7 +1376,7 @@ export const majorSpareProducts = [
     "price": 650,
     "rating": 4.8,
     "stock": 50,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-115_motul_motocool_expert_ready-to-use_hybrid_coolant.svg",
     "description": "Nitrite-free, amine-free, phosphate-free hybrid technology coolant with anti-corrosion additives for aluminum engine and radiator blocks."
   },
   {
@@ -1388,7 +1388,7 @@ export const majorSpareProducts = [
     "price": 6899,
     "rating": 4.9,
     "stock": 24,
-    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
+    "image": "/images/products/sp-116_philips_ultinon_pro9000_led_headlight_bulb.jpg",
     "description": "Lumileds TopContact LEDs with up to +250% brighter beam, 5800K pure white temperature, and integrated AirBoost thermal architecture."
   },
   {
@@ -1400,7 +1400,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.7,
     "stock": 48,
-    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
+    "image": "/images/products/sp-117_philips_xtremevision_pro150_halogen_bulbs.jpg",
     "description": "Delivers up to 150% more brightness with a 70-meter longer road throw for rapid obstacle spotting and safer nighttime highway driving."
   },
   {
@@ -1412,7 +1412,7 @@ export const majorSpareProducts = [
     "price": 349,
     "rating": 4.6,
     "stock": 80,
-    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
+    "image": "/images/products/sp-118_philips_cityvision_moto_hs1_35w_headlight_bulb.jpg",
     "description": "Features an eye-catching orange reflection effect to differentiate riders from surrounding vehicular traffic, plus 40% more road illumination."
   },
   {
@@ -1424,7 +1424,7 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
+    "image": "/images/products/sp-119_philips_ultinon_pro3021_led_fog_light_kit.svg",
     "description": "Compact plug-and-play 6000K cool white LED fog lamp pair featuring precise beam cutoff to avoid blinding oncoming traffic in mist and rain."
   },
   {
@@ -1436,7 +1436,7 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.8,
     "stock": 20,
-    "image": "/images/products/kn-high-flow-air-filter.jpg",
+    "image": "/images/products/sp-120_kn_high_flow_washable_car_replacement_air_filter.jpg",
     "description": "Reusable layered oiled cotton gauze filter engineered to increase airflow up to 50% for improved throttle response and horsepower."
   },
   {
@@ -1448,7 +1448,7 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.9,
     "stock": 26,
-    "image": "/images/products/kn-high-flow-air-filter.jpg",
+    "image": "/images/products/sp-121_kn_performance_motorcycle_high_flow_air_filter.jpg",
     "description": "Championship-proven high airflow washable filter providing superior filtration efficiency and unrestricted engine intake breathing."
   },
   {
@@ -1460,7 +1460,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 55,
-    "image": "/images/products/kn-high-flow-air-filter.jpg",
+    "image": "/images/products/sp-122_kn_pro_series_heavy_duty_spin_on_oil_filter.svg",
     "description": "High flow rates with synthetic blend media designed to trap 99% of harmful engine contaminants, fitted with anti-drainback silicone valve."
   },
   {
@@ -1472,7 +1472,7 @@ export const majorSpareProducts = [
     "price": 42999,
     "rating": 5,
     "stock": 5,
-    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
+    "image": "/images/products/sp-123_akrapovic_slip_on_line_titanium_exhaust_silencer.jpg",
     "description": "Ultra-lightweight titanium outer sleeve with handcrafted carbon fiber end cap, resonant racing tone, and verified dyno horsepower gains."
   },
   {
@@ -1484,7 +1484,7 @@ export const majorSpareProducts = [
     "price": 7499,
     "rating": 4.8,
     "stock": 14,
-    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
+    "image": "/images/products/sp-124_akrapovic_carbon_fiber_exhaust_heat_shield.jpg",
     "description": "Autoclave-cured real carbon fiber protective shield that reduces rider heat exposure while elevating aggressive racing aesthetics."
   },
   {
@@ -1496,7 +1496,7 @@ export const majorSpareProducts = [
     "price": 4899,
     "rating": 4.9,
     "stock": 30,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-125_did_520_vx3_professional_gold_x-ring_drive_chain.jpg",
     "description": "Patented X-Ring technology retains internal grease twice as long as standard O-rings with minimal friction and corrosion-resistant gold plating."
   },
   {
@@ -1508,7 +1508,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.7,
     "stock": 42,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-126_did_428_d_heavy_duty_motorcycle_drive_chain.jpg",
     "description": "Solid bush construction offering exceptional tensile strength and wear life for daily commuter and sport touring motorcycles."
   },
   {
@@ -1520,7 +1520,7 @@ export const majorSpareProducts = [
     "price": 2499,
     "rating": 4.8,
     "stock": 38,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-127_rolon_brass_plated_chain__sprocket_combo_kit.jpg",
     "description": "Premium brass-plated anti-rust drive chain coupled with induction hardened carbon steel sprockets for ultra-smooth power delivery."
   },
   {
@@ -1532,7 +1532,7 @@ export const majorSpareProducts = [
     "price": 3199,
     "rating": 4.7,
     "stock": 28,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-128_rolon_heavy_duty_sealed_ring_drive_chain_kit.jpg",
     "description": "Sealed O-ring design engineered specifically to withstand heavy torque loads and dusty Indian highway touring conditions."
   },
   {
@@ -1544,7 +1544,7 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.9,
     "stock": 22,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-129_michelin_pilot_street_2_tubeless_motorcycle_tyre_1.jpg",
     "description": "Progressive tread pattern with central grooves for rapid wet water evacuation and high-mileage silica compound."
   },
   {
@@ -1556,7 +1556,7 @@ export const majorSpareProducts = [
     "price": 7899,
     "rating": 4.9,
     "stock": 18,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-130_michelin_primacy_4_st_passenger_car_tyre_20560_r16.jpg",
     "description": "EverGrip technology ensures exceptional wet braking even when worn, paired with class-leading cabin quietness and comfort."
   },
   {
@@ -1568,7 +1568,7 @@ export const majorSpareProducts = [
     "price": 3999,
     "rating": 4.9,
     "stock": 24,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-131_pirelli_diablo_rosso_sport_radial_tyre.jpg",
     "description": "Multi-radius profile and flash tread pattern derived from World Superbike championship for razor-sharp agility and apex grip."
   },
   {
@@ -1580,7 +1580,7 @@ export const majorSpareProducts = [
     "price": 9499,
     "rating": 4.8,
     "stock": 14,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-132_pirelli_cinturato_p7_high_performance_car_tyre.jpg",
     "description": "Green Performance compound designed for superior braking distance, reduced rolling resistance, and high-speed stability."
   },
   {
@@ -1592,7 +1592,7 @@ export const majorSpareProducts = [
     "price": 3999,
     "rating": 4.9,
     "stock": 32,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-133_mobil_1_esp_5w-30_advanced_full_synthetic.svg",
     "description": "Low ash, phosphorus, and sulfur formulation engineered to prolong the life of emission reduction systems (DPF & CAT) in petrol & diesel."
   },
   {
@@ -1604,7 +1604,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.7,
     "stock": 65,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-134_mobil_super_moto_15w-50_4t_semi-synthetic_oil.svg",
     "description": "Engineered specifically for heavy air-cooled engines operating in hot climates with robust anti-wear additive package."
   },
   {
@@ -1616,7 +1616,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.8,
     "stock": 55,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-135_shell_advance_ultra_4t_10w-40_pureplus_synthetic.svg",
     "description": "Made from natural gas using Shell PurePlus technology, delivering near-zero sludge formation and superior power retention."
   },
   {
@@ -1628,7 +1628,7 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.9,
     "stock": 42,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-136_shell_helix_ultra_5w-40_fully_synthetic_car_oil.svg",
     "description": "Gas-to-liquid synthetic base oil offering unmatched wear protection and active cleansing agents for peak engine performance."
   },
   {
@@ -1640,7 +1640,7 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.8,
     "stock": 45,
-    "image": "/images/products/bosch-double-iridium-spark-plugs.jpg",
+    "image": "/images/products/sp-137_bosch_aerotwin_frameless_wiper_blade_set_24__16.jpg",
     "description": "Patented Power Protection Plus rubber technology with twin spring strip for streak-free visibility and silent wiping in heavy downpours."
   },
   {
@@ -1652,7 +1652,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 70,
-    "image": "/images/products/Uno_Minda_Car_Horn_Pair.jpg",
+    "image": "/images/products/sp-138_bosch_symphony_dual_tone_electric_horn_set.jpg",
     "description": "German tuned dual acoustic pitch (420Hz/500Hz) producing a commanding 110dB harmonized sound with corrosion-resistant teflon filter."
   },
   {
@@ -1664,7 +1664,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.9,
     "stock": 55,
-    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
+    "image": "/images/products/sp-139_ngk_racing_competition_spark_plug_cap__cable_set.jpg",
     "description": "Waterproof silicone ceramic resistor cover providing 5k-ohm noise suppression and maximum electrical transfer to the electrode."
   },
   {
@@ -1676,7 +1676,7 @@ export const majorSpareProducts = [
     "price": 849,
     "rating": 4.8,
     "stock": 60,
-    "image": "/images/products/NGK_Laser_Iridium_Spark_Plug_Set.jpg",
+    "image": "/images/products/sp-140_oem.jpg",
     "description": "Ultra-fine 0.4mm laser-welded iridium center electrode requires lower ignition voltage for instant throttle response and crisp combustion."
   },
   {
@@ -1688,7 +1688,7 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.7,
     "stock": 16,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-141_valeo_classic_clutch_kit_with_release_bearing.jpg",
     "description": "OEM standard clutch pressure plate, friction disc, and release bearing engineered for light pedal effort and judder-free engagement."
   },
   {
@@ -1700,7 +1700,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.6,
     "stock": 32,
-    "image": "/images/products/Lumax_LED_Headlamp_Assembly.jpg",
+    "image": "/images/products/sp-142_lumax_led_daytime_running_light_drl_strip_set.jpg",
     "description": "Flexible high-lumen waterproof silicone DRL strips with integrated sequential amber turn indicator function."
   },
   {
@@ -1712,7 +1712,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-143_uno_minda_heavy_duty_starter_motor_assembly.svg",
     "description": "High-torque armature winding and heavy-duty permanent magnets ensure instant, reliable cold starts every single time."
   },
   {
@@ -1724,7 +1724,7 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.9,
     "stock": 12,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-144_ktm_powerparts_factory_wave_floating_brake_disc_320mm.svg",
     "description": "Stainless steel laser-cut floating wave rotor providing consistent braking bite, superior heat dispersion, and distinctive orange carrier pins."
   },
   {
@@ -1736,7 +1736,7 @@ export const majorSpareProducts = [
     "price": 118999,
     "rating": 5,
     "stock": 3,
-    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
+    "image": "/images/products/sp-145_akrapovic_evolution_titanium_full_exhaust_system.svg",
     "description": "Full titanium race exhaust system with hydroformed headers, carbon end cap, and massive weight savings for track day performance."
   },
   {
@@ -1748,7 +1748,7 @@ export const majorSpareProducts = [
     "price": 89999,
     "rating": 5,
     "stock": 4,
-    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
+    "image": "/images/products/sp-146_akrapovic_carbon_slip_on_track_silencer.svg",
     "description": "Championship-developed carbon fiber sleeve with titanium internals, delivering pure race acoustic profile and high-rpm throttle gains."
   },
   {
@@ -1760,7 +1760,7 @@ export const majorSpareProducts = [
     "price": 18999,
     "rating": 4.8,
     "stock": 8,
-    "image": "/images/products/akrapovic-titanium-slipon-exhaust.jpg",
+    "image": "/images/products/sp-147_akrapovic_stainless_link_pipe_kit.svg",
     "description": "Precision CNC-bent stainless steel cat-delete link pipe designed to eliminate exhaust backpressure."
   },
   {
@@ -1772,7 +1772,7 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.9,
     "stock": 18,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-148_did_525_zvm-x_super_street_heavy_duty_gold_chain_1.jpg",
     "description": "Ultra-high rigidity X-Ring chain engineered to resist elongation under massive superbike torque loads."
   },
   {
@@ -1784,7 +1784,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.8,
     "stock": 35,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-149_did_428_vx_pro_gold_x-ring_motorcycle_chain_130l.jpg",
     "description": "Low-friction X-ring sealed chain offering 3x longer life than standard roller chains for sporty commuters."
   },
   {
@@ -1796,7 +1796,7 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.9,
     "stock": 22,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-150_did_professional_chain_rivet__breaking_tool_kit.jpg",
     "description": "Heavy-duty forged alloy workshop tool for precise chain cutting, pressing side plates, and riveting master links."
   },
   {
@@ -1808,7 +1808,7 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.8,
     "stock": 32,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-151_rolon_competition_sprocket__gold_chain_kit.jpg",
     "description": "Lightweight drilled rear sprocket with gold brass-plated sealed drive chain for rapid acceleration and durability."
   },
   {
@@ -1820,7 +1820,7 @@ export const majorSpareProducts = [
     "price": 599,
     "rating": 4.7,
     "stock": 50,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-152_rolon_silent_rubber_cushioned_front_engine_sprocke.jpg",
     "description": "Vulcanized rubber damper ring absorbs drivetrain vibrations and chain slap for whisper-quiet cruising."
   },
   {
@@ -1832,7 +1832,7 @@ export const majorSpareProducts = [
     "price": 2399,
     "rating": 4.7,
     "stock": 40,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-153_rolon_heavy_duty_o-ring_drive_chain_kit.jpg",
     "description": "Hardened alloy pins with high-grade synthetic O-rings designed for aggressive gear shifts and high-revving engines."
   },
   {
@@ -1844,7 +1844,7 @@ export const majorSpareProducts = [
     "price": 11499,
     "rating": 5,
     "stock": 12,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-154_michelin_road_6_radial_motorcycle_front_tyre_12070.jpg",
     "description": "2CT+ dual compound technology with 3D sipes delivering 15% more wet grip and 10% longer tread longevity."
   },
   {
@@ -1856,7 +1856,7 @@ export const majorSpareProducts = [
     "price": 1999,
     "rating": 4.8,
     "stock": 45,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-155_michelin_city_extra_reinforced_scooter_tyre_9090-1.jpg",
     "description": "Puncture-resistant overlapping ply architecture with Water Sipe Technology for supreme city commute safety."
   },
   {
@@ -1868,7 +1868,7 @@ export const majorSpareProducts = [
     "price": 12499,
     "rating": 4.9,
     "stock": 14,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-156_michelin_pilot_sport_4_high_performance_car_tyre_2.jpg",
     "description": "Dynamic Response Technology adapts continuously to the road for ultra-precise steering and dry cornering grip."
   },
   {
@@ -1880,7 +1880,7 @@ export const majorSpareProducts = [
     "price": 13999,
     "rating": 4.9,
     "stock": 10,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-157_pirelli_angel_gt_ii_sport_touring_rear_tyre_16060_.jpg",
     "description": "Gran Turismo derived carcass for long-distance highway stability, confidence in the wet, and high mileage."
   },
   {
@@ -1892,7 +1892,7 @@ export const majorSpareProducts = [
     "price": 6999,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-158_pirelli_scorpion_rally_str_dual_sport_tyre_13080-1.jpg",
     "description": "Aggressive block tread pattern optimized for dirt trails and loose gravel without sacrificing pavement handling."
   },
   {
@@ -1904,7 +1904,7 @@ export const majorSpareProducts = [
     "price": 16999,
     "rating": 4.9,
     "stock": 8,
-    "image": "/images/products/michelin-pilot-street-tyre.jpg",
+    "image": "/images/products/sp-159_pirelli_p_zero_luxury_performance_car_tyre_24545_r.jpg",
     "description": "Ultra-high performance tyre developed with Formula 1 know-how for exceptional braking distance and lateral grip."
   },
   {
@@ -1916,7 +1916,7 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.9,
     "stock": 35,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-160_mobil_1_0w-40_ultimate_all-round_performance.svg",
     "description": "Flagship European car formulation providing instant cold start lubrication, high temperature deposit protection, and fuel economy."
   },
   {
@@ -1928,7 +1928,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.9,
     "stock": 50,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-161_mobil_1_racing_4t_10w-40_motorcycle_oil.svg",
     "description": "Formulated specifically for motorcycle wet clutches and transmission gears operating under high rpm and track heat."
   },
   {
@@ -1940,7 +1940,7 @@ export const majorSpareProducts = [
     "price": 949,
     "rating": 4.8,
     "stock": 40,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-162_mobil_1_synthetic_atf_multi-vehicle_transmission.svg",
     "description": "Full synthetic ATF offering outstanding thermal stability, oxidation resistance, and friction durability for smooth shifting."
   },
   {
@@ -1952,7 +1952,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.8,
     "stock": 55,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-163_shell_advance_4t_ultra_15w-50_pureplus_synthetic.svg",
     "description": "PurePlus gas-to-liquid synthetic engine oil engineered to prevent piston wear and keep engine parts clean as new."
   },
   {
@@ -1964,7 +1964,7 @@ export const majorSpareProducts = [
     "price": 3599,
     "rating": 4.9,
     "stock": 38,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-164_shell_helix_ultra_ect_c3_5w-30_synthetic_car_oil.svg",
     "description": "Emissions Compatible Technology protects exhaust catalyst and particulate filters from blocking and soot accumulation."
   },
   {
@@ -1976,7 +1976,7 @@ export const majorSpareProducts = [
     "price": 679,
     "rating": 4.7,
     "stock": 45,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-165_shell_spirax_s4_g_75w-90_synthetic_gear_oil.svg",
     "description": "Extreme-pressure gear lubricant providing quiet operation and high scuffing protection under heavy towing loads."
   },
   {
@@ -1988,7 +1988,7 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-166_endurance_gas-charged_rear_monoshock_damper.jpg",
     "description": "High-pressure nitrogen gas-charged rear monoshock with 7-step preload adjustment for superior ride comfort and stability."
   },
   {
@@ -2000,7 +2000,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.6,
     "stock": 18,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-167_endurance_front_telescopic_fork_assembly_pair.jpg",
     "description": "Complete OEM front fork legs with hardened chrome stanchions and responsive internal damping valves."
   },
   {
@@ -2012,7 +2012,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-168_endurance_disc_brake_master_cylinder_assembly.svg",
     "description": "OEM standard handlebar-mounted master cylinder reservoir with integrated brake lever and brake light switch."
   },
   {
@@ -2024,7 +2024,7 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.8,
     "stock": 16,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-169_monroe_oespectrum_rear_shock_absorber_pair.jpg",
     "description": "Twin-technology active control valve provides exceptional feedback during lane changes while absorbing rough bumps."
   },
   {
@@ -2036,7 +2036,7 @@ export const majorSpareProducts = [
     "price": 7999,
     "rating": 4.7,
     "stock": 10,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-170_monroe_quick-strut_front_suspension_assembly.jpg",
     "description": "Pre-assembled strut unit with coil spring and top bearing mount for safe, straightforward DIY suspension replacement."
   },
   {
@@ -2048,7 +2048,7 @@ export const majorSpareProducts = [
     "price": 549,
     "rating": 4.6,
     "stock": 60,
-    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
+    "image": "/images/products/sp-171_pricol_high-accuracy_motorcycle_fuel_level_sensor.jpg",
     "description": "Precision resistive fuel sender float unit calibrated to deliver accurate dashboard tank readings."
   },
   {
@@ -2060,7 +2060,7 @@ export const majorSpareProducts = [
     "price": 420,
     "rating": 4.7,
     "stock": 75,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-172_pricol_electric_windshield_washer_pump_12v.svg",
     "description": "Compact high-pressure 12V washer fluid motor with waterproof rubber grommet for streak-free windscreen spray."
   },
   {
@@ -2072,7 +2072,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-173_uno_minda_handlebar_switch_control_assembly_lh.svg",
     "description": "Die-cast metal switch block featuring horn, high/low beam pass switch, and indicator toggle with weather-sealed wiring."
   },
   {
@@ -2084,7 +2084,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.8,
     "stock": 40,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-174_uno_minda_automotive_ignition_coil_pack.svg",
     "description": "Heavy-duty electromagnetic secondary winding delivers up to 35,000 volts for rapid combustion and zero misfires."
   },
   {
@@ -2096,7 +2096,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 80,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-175_minda_waterproof_motorcycle_usb_fast_charger_18w.svg",
     "description": "Quick Charge 3.0 dual port handlebar mount with smart voltage protection and silicone dust cap."
   },
   {
@@ -2108,7 +2108,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.7,
     "stock": 55,
-    "image": "/images/products/Uno_Minda_Car_Horn_Pair.jpg",
+    "image": "/images/products/sp-176_minda_premium_high-decibel_trumpet_car_horn_set.jpg",
     "description": "Aerodynamic snail trumpet horn set generating a powerful, elegant dual European harmonic tone."
   },
   {
@@ -2120,7 +2120,7 @@ export const majorSpareProducts = [
     "price": 5499,
     "rating": 4.9,
     "stock": 20,
-    "image": "/products/Exide_Car_Battery_35Ah.jpg",
+    "image": "/images/products/sp-177_exide_matrix_maintenance-free_car_battery_45ah.jpg",
     "description": "Alloy grid technology with high electrolyte reserve and sealed cover, guaranteed zero maintenance for 60 months."
   },
   {
@@ -2132,7 +2132,7 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.8,
     "stock": 45,
-    "image": "/products/Exide_Two_Wheeler_Battery_4Ah.jpg",
+    "image": "/images/products/sp-178_exide_xplore_factory_charged_motorcycle_battery_5a.jpg",
     "description": "VRLA AGM spill-proof battery designed to absorb severe motorcycle vibrations and high crank demand."
   },
   {
@@ -2144,7 +2144,7 @@ export const majorSpareProducts = [
     "price": 6799,
     "rating": 4.9,
     "stock": 15,
-    "image": "/products/Amaron_Car_Battery_45Ah.jpg",
+    "image": "/images/products/sp-179_amaron_pro_heavy_duty_passenger_car_battery_55ah.jpg",
     "description": "Patented Silven-X alloy delivers maximum cranking amps, heat tolerance in Indian summers, and longest life cycle."
   },
   {
@@ -2156,7 +2156,7 @@ export const majorSpareProducts = [
     "price": 2399,
     "rating": 4.8,
     "stock": 35,
-    "image": "/products/Amaron_Two_Wheeler_Battery_5Ah.jpg",
+    "image": "/images/products/sp-180_amaron_pro_rider_two-wheeler_battery_9ah.jpg",
     "description": "High cold-cranking capacity specially engineered to fire up big single-cylinder thumpers effortlessly."
   },
   {
@@ -2168,7 +2168,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.9,
     "stock": 40,
-    "image": "/images/products/ktm-chain-sprocket-kit.jpg",
+    "image": "/images/products/sp-181_skf_motorcycle_wheel__sprocket_bearing_combo.jpg",
     "description": "Low-drag deep groove ball bearings with contact nitrile rubber seals on both sides to keep water and grit out."
   },
   {
@@ -2180,7 +2180,7 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.8,
     "stock": 22,
-    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
+    "image": "/images/products/sp-182_skf_rear_wheel_hub_bearing_assembly_with_abs_senso.jpg",
     "description": "Factory-greased sealed wheel bearing unit integrated with magnetic impulse ring for ABS brake signals."
   },
   {
@@ -2192,7 +2192,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.7,
     "stock": 50,
-    "image": "/products/Hyundai_Creta_Cabin_Filter.jpg",
+    "image": "/images/products/sp-183_denso_automotive_cabin_ac_air_filter.jpg",
     "description": "Electrostatic filtration media captures fine PM2.5 particles, pollen, and allergens for healthy cabin air."
   },
   {
@@ -2204,7 +2204,7 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.8,
     "stock": 14,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-184_denso_high_torque_starter_motor_assembly.svg",
     "description": "Planetary gear reduction starter motor engineered for swift, low-current cranking in all weather."
   },
   {
@@ -2216,7 +2216,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.8,
     "stock": 25,
-    "image": "/images/products/Pricol_Digital_Motorcycle_Speedometer.jpg",
+    "image": "/images/products/sp-185_valeo_beep__park_ultrasonic_parking_sensor_kit.jpg",
     "description": "4-sensor flush-mount ultrasonic rear parking system with audio buzzer and dashboard distance display."
   },
   {
@@ -2228,7 +2228,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-186_valeo_first_pyramid_frameless_wiper_blade_set.jpg",
     "description": "3D aerodynamic spoiler technology provides even contact pressure across curved windscreens at highway speeds."
   },
   {
@@ -2240,7 +2240,7 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 28,
-    "image": "/products/Lumax_LED_Headlamp_Assembly.jpg",
+    "image": "/images/products/sp-187_lumax_projector_fog_lamp_assembly_with_angel_eye_p.jpg",
     "description": "Bi-LED projector fog lamp system featuring sharp optical cutoff and distinctive white DRL halo rings."
   },
   {
@@ -2252,7 +2252,7 @@ export const majorSpareProducts = [
     "price": 3899,
     "rating": 4.7,
     "stock": 16,
-    "image": "/products/Lumax_LED_Headlamp_Assembly.jpg",
+    "image": "/images/products/sp-188_lumax_led_tail_lamp_assembly_right.jpg",
     "description": "OEM genuine replacement LED rear combination lamp with high impact poly-carbonate lens."
   },
   {
@@ -2264,7 +2264,7 @@ export const majorSpareProducts = [
     "price": 4899,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-189_volkswagen_front_brake_disc_rotor_set_pair.svg",
     "description": "High carbon anti-corrosion coated disc rotors designed to eliminate judder and provide OEM German pedal response."
   },
   {
@@ -2276,7 +2276,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 45,
-    "image": "/products/Hyundai_Creta_Cabin_Filter.jpg",
+    "image": "/images/products/sp-190_volkswagen_carbon_cabin_air_filter.jpg",
     "description": "Multi-stage activated charcoal cabin filter absorbs exhaust odors, gases, and ultra-fine dust."
   },
   {
@@ -2288,7 +2288,7 @@ export const majorSpareProducts = [
     "price": 649,
     "rating": 4.8,
     "stock": 55,
-    "image": "/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-191_skoda_engine_oil_filter_cartridge.jpg",
     "description": "Precision synthetic pleated filter element traps micro debris while maintaining full oil pressure."
   },
   {
@@ -2300,7 +2300,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-192_skoda_front_suspension_stabilizer_link_rod_pair.jpg",
     "description": "Heavy-duty anti-roll bar drop links with sealed ball joints to stop suspension rattling and body roll."
   },
   {
@@ -2312,7 +2312,7 @@ export const majorSpareProducts = [
     "price": 3799,
     "rating": 4.8,
     "stock": 20,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-193_nissan_front_brake_disc_rotors_pair.svg",
     "description": "Ventilated steel brake rotors engineered for smooth pedal feel and high heat dissipation during hill descents."
   },
   {
@@ -2324,7 +2324,7 @@ export const majorSpareProducts = [
     "price": 399,
     "rating": 4.6,
     "stock": 65,
-    "image": "/products/Renault_Kwid_Air_Filter.jpg",
+    "image": "/images/products/sp-194_nissan_engine_oil_filter.jpg",
     "description": "OEM standard spin-on filter with anti-drainback valve ensures rapid engine lubrication during cold starts."
   },
   {
@@ -2336,7 +2336,7 @@ export const majorSpareProducts = [
     "price": 5499,
     "rating": 4.7,
     "stock": 12,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-195_renault_heavy_duty_clutch_plate__cover_assembly.jpg",
     "description": "Reinforced damper springs and heat-resistant friction material built for high-torque diesel applications."
   },
   {
@@ -2348,7 +2348,7 @@ export const majorSpareProducts = [
     "price": 5199,
     "rating": 4.8,
     "stock": 18,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-196_kia_front_ventilated_brake_disc_rotors_pair.svg",
     "description": "Precision-balanced OEM replacement brake discs engineered for crisp stopping power and zero brake fade."
   },
   {
@@ -2360,7 +2360,7 @@ export const majorSpareProducts = [
     "price": 449,
     "rating": 4.7,
     "stock": 70,
-    "image": "/images/products/Maruti_Suzuki_WagonR_Oil_Filter.jpg",
+    "image": "/images/products/sp-197_kia_engine_spin-on_oil_filter.jpg",
     "description": "High-efficiency filtration medium safeguards turbocharger bearings and engine journals from wear."
   },
   {
@@ -2372,7 +2372,7 @@ export const majorSpareProducts = [
     "price": 6299,
     "rating": 4.9,
     "stock": 16,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-198_toyota_front_brake_disc_rotor_set_pair.svg",
     "description": "Heavy-duty vented cast iron rotors engineered to stop heavy commercial and personal MPVs safely."
   },
   {
@@ -2384,7 +2384,7 @@ export const majorSpareProducts = [
     "price": 11999,
     "rating": 4.9,
     "stock": 9,
-    "image": "/images/products/automotive-clutch-plate-set.jpg",
+    "image": "/images/products/sp-199_toyota_genuine_heavy_duty_clutch_kit.jpg",
     "description": "Championship-standard heavy duty clutch plate, pressure cover, and release bearing for tough off-road recovery."
   },
   {
@@ -2396,7 +2396,7 @@ export const majorSpareProducts = [
     "price": 3499,
     "rating": 4.9,
     "stock": 24,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-200_brembo_prime_carbon_ceramic_rear_brake_pads.svg",
     "description": "Brembo Prime rear brake pads offering ultra-clean operation, quiet friction compound, and excellent rear braking balance."
   },
   {
@@ -2408,7 +2408,7 @@ export const majorSpareProducts = [
     "price": 28999,
     "rating": 5,
     "stock": 6,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-201_brembo_rcs_19_corsa_corta_radial_brake_master_cylinder.svg",
     "description": "MotoGP-derived adjustable bite point selector (Normal, Sport, Race) with forged body and folding lever."
   },
   {
@@ -2420,7 +2420,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-202_castrol_gtx_20w-50_high_mileage_engine_oil.svg",
     "description": "Double Action formula cleans away old engine sludge and protects against new sludge build-up in high-mileage cars."
   },
   {
@@ -2432,7 +2432,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.8,
     "stock": 85,
-    "image": "/images/products/castrol-power1-ultimate-10w50.jpg",
+    "image": "/images/products/sp-203_castrol_chain_lube_racing_synthetic_spray.svg",
     "description": "Clear synthetic formulation with ceramic anti-friction additives for zero fling-off at speeds exceeding 200 km/h."
   },
   {
@@ -2444,7 +2444,7 @@ export const majorSpareProducts = [
     "price": 3699,
     "rating": 4.9,
     "stock": 32,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-204_motul_8100_x-cess_5w-40_synthetic_car_oil.svg",
     "description": "Full synthetic engine lubricant specially designed for powerful, high displacement modern petrol and diesel vehicles."
   },
   {
@@ -2456,7 +2456,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 50,
-    "image": "/images/products/motul-300v-factory-line.jpg",
+    "image": "/images/products/sp-205_motul_fork_oil_expert_medium_10w_technosynthese.svg",
     "description": "Synthetic blend fork fluid featuring anti-foaming technology for uniform damping control over bumpy terrain."
   },
   {
@@ -2468,7 +2468,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 40,
-    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
+    "image": "/images/products/sp-206_philips_diamondvision_5000k_halogen_headlight_bulb.svg",
     "description": "High-temperature 5000K xenon-white styling light without requiring any relay modifications or ballast wiring."
   },
   {
@@ -2480,7 +2480,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.8,
     "stock": 65,
-    "image": "/images/products/philips-racingvision-gt200-h4.jpg",
+    "image": "/images/products/sp-207_philips_ultinon_pro6000_led_interior_festoon_bulb.svg",
     "description": "Brilliant 6000K daylight white interior illumination with uniform 360-degree light distribution."
   },
   {
@@ -2492,7 +2492,7 @@ export const majorSpareProducts = [
     "price": 1399,
     "rating": 4.9,
     "stock": 70,
-    "image": "/images/products/kn-high-flow-air-filter.jpg",
+    "image": "/images/products/sp-208_kn_air_filter_recharge_cleaning_and_oiling_kit.svg",
     "description": "Restores air flow efficiency and traps harmful dirt by dissolving old oil and reapplying fresh red filter oil."
   },
   {
@@ -2504,7 +2504,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 55,
-    "image": "/images/products/kn-high-flow-air-filter.jpg",
+    "image": "/images/products/sp-209_kn_powersports_high_performance_oil_filter_kn155.svg",
     "description": "Synthetic media with 17mm cross-drilled removal nut for rapid track-side and home garage oil servicing."
   },
   {
@@ -2516,7 +2516,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.8,
     "stock": 50,
-    "image": "/images/products/bosch-double-iridium-spark-plugs.jpg",
+    "image": "/images/products/sp-210_bosch_high_performance_front_ceramic_brake_pads.jpg",
     "description": "Bosch QuietCast copper-free ceramic formulation engineered for noise-free stopping and clean wheel rims."
   },
   {
@@ -2528,7 +2528,7 @@ export const majorSpareProducts = [
     "price": 2799,
     "rating": 4.7,
     "stock": 20,
-    "image": "/images/products/Denso_Radiator_Cooling_Fan_Motor.jpg",
+    "image": "/images/products/sp-211_oem.jpg",
     "description": "Turbine pump technology delivers consistent fuel pressure with low electrical current draw and quiet operation."
   },
   {
@@ -2540,7 +2540,7 @@ export const majorSpareProducts = [
     "price": 749,
     "rating": 4.9,
     "stock": 80,
-    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
+    "image": "/images/products/sp-212_ngk_cpr8eaix-9_iridium_ix_high_performance_spark_p.jpg",
     "description": "0.6mm laser-welded iridium alloy tip ensures superior anti-fouling, instantaneous ignition, and throttle crispness."
   },
   {
@@ -2552,7 +2552,7 @@ export const majorSpareProducts = [
     "price": 999,
     "rating": 4.9,
     "stock": 65,
-    "image": "/images/products/ngk-iridium-ix-spark-plug.jpg",
+    "image": "/images/products/sp-213_ngk_lmar9ai8_laser_iridium_racing_spark_plug.jpg",
     "description": "Dual precious metal construction with iridium center tip and platinum ground electrode for ultra-long lifespan."
   },
   {
@@ -2564,7 +2564,7 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.9,
     "stock": 22,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-214_royal_enfield_touring_handlebar_deluxe_mirror_set.svg",
     "description": "CNC machined anodized billet aluminum bar-end mirrors with anti-glare convex glass for vibration-free rear vision."
   },
   {
@@ -2576,7 +2576,7 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 25,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-215_royal_enfield_heavy_duty_sump_guard_bash_plate.svg",
     "description": "Laser-cut 4mm thick brushed aluminum engine guard shielding the crankcase and oil filter from rocky impact."
   },
   {
@@ -2588,7 +2588,7 @@ export const majorSpareProducts = [
     "price": 2899,
     "rating": 4.9,
     "stock": 20,
-    "image": "/images/products/Honda_Shine_Clutch_Plate_Set.jpg",
+    "image": "/images/products/sp-216_yamaha_genuine_slipper_clutch_assist_assembly.jpg",
     "description": "Reduces clutch lever pull effort by 20% and prevents rear wheel hopping during aggressive downshifts."
   },
   {
@@ -2600,7 +2600,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/Minda_Universal_Indicator_Set.jpg",
+    "image": "/images/products/sp-217_oem.jpg",
     "description": "Ultra-sleek aerodynamic smoked LED turn signals with rubber vibration-resistant stalks."
   },
   {
@@ -2612,7 +2612,7 @@ export const majorSpareProducts = [
     "price": 1399,
     "rating": 4.7,
     "stock": 40,
-    "image": "/images/products/TVS_Jupiter_Drive_Belt.jpg",
+    "image": "/images/products/sp-218_oem.jpg",
     "description": "Precisely weighted OEM variator pulley rollers and drive face for smooth, lag-free CVT scooter acceleration."
   },
   {
@@ -2624,7 +2624,7 @@ export const majorSpareProducts = [
     "price": 4299,
     "rating": 4.8,
     "stock": 22,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-219_honda_city_vented_front_brake_disc_set_pair.svg",
     "description": "Precision-ground cast iron front rotors providing responsive braking and minimal pedal pulsation."
   },
   {
@@ -2636,7 +2636,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 35,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-220_hero_splendor_carburetor_and_intake_manifold_assembly.svg",
     "description": "Factory-tuned fuel-air mixing jet assembly engineered for optimal fuel economy and easy starting in cold winters."
   },
   {
@@ -2648,7 +2648,7 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-221_bajaj_pulsar_220f_high_output_magneto_stator_coil.svg",
     "description": "Copper wound alternator stator charging coil delivering steady 12V output for dual projector headlamps."
   },
   {
@@ -2660,7 +2660,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.8,
     "stock": 28,
-    "image": "/images/products/TVS_Ntorq_Clutch_Shoe_Set.jpg",
+    "image": "/images/products/sp-222_oem.jpg",
     "description": "Race-tuned friction plates engineered with RT Slipper Clutch tech for rapid power transfer and zero clutch fade."
   },
   {
@@ -2672,7 +2672,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 26,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-223_suzuki_access_125_front_disc_brake_caliper_and_pad_kit.svg",
     "description": "Hydraulic single-piston floating caliper assembly including pre-installed OEM organic friction pads."
   },
   {
@@ -2684,7 +2684,7 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.9,
     "stock": 15,
-    "image": "/images/products/brembo-ceramic-brake-pads.jpg",
+    "image": "/images/products/sp-224_ktm_powerparts_ergonomic_rider_comfort_seat.svg",
     "description": "Specially formulated 3D structural foam with non-slip dual texture cover for reduced fatigue on long highway tours."
   },
   {
@@ -2696,7 +2696,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.8,
     "stock": 25,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-225_oem.jpg",
     "description": "Sturdy stamped steel suspension control arm with pre-pressed vulcanized rubber bushings and ball joint."
   },
   {
@@ -2708,7 +2708,7 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.8,
     "stock": 20,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-226_hyundai_creta_front_brake_disc_rotors_pair.svg",
     "description": "Precision balanced ventilated cast iron brake discs providing fade-resistant highway stopping confidence."
   },
   {
@@ -2720,7 +2720,7 @@ export const majorSpareProducts = [
     "price": 1499,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/Endurance_Universal_Rear_Shock_Absorber.jpg",
+    "image": "/images/products/sp-227_oem.jpg",
     "description": "Heavy-duty rubber-to-metal bonded top strut mount with integrated thrust ball bearing for smooth steering return."
   },
   {
@@ -2732,7 +2732,7 @@ export const majorSpareProducts = [
     "price": 5899,
     "rating": 4.8,
     "stock": 16,
-    "image": "/images/products/brembo-ventilated-brake-disc.jpg",
+    "image": "/images/products/sp-228_mahindra_thar_front_heavy_duty_brake_disc_rotors_pair.svg",
     "description": "High-grade alloy cast iron brake discs built to endure extreme mud, rock crawling, and heavy off-road braking."
   }
 ];

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="studioBg" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#1e222d"/>
+      <stop offset="55%" stop-color="#111318"/>
+      <stop offset="100%" stop-color="#08090c"/>
+    </radialGradient>
+    <radialGradient id="floorSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <filter id="studioShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+    <linearGradient id="metalChrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="25%" stop-color="#94a3b8"/>
+      <stop offset="50%" stop-color="#f8fafc"/>
+      <stop offset="75%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="rotorSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a95a5"/>
+      <stop offset="35%" stop-color="#4a5568"/>
+      <stop offset="70%" stop-color="#9aa5b8"/>
+      <stop offset="100%" stop-color="#2d3748"/>
+    </linearGradient>
+    
+  </defs>
+
+  <!-- Studio Canvas -->
+  <rect width="600" height="600" fill="url(#studioBg)"/>
+  <ellipse cx="300" cy="515" rx="220" ry="32" fill="url(#floorSpot)"/>
+  <ellipse cx="300" cy="515" rx="160" ry="18" fill="rgba(0,0,0,0.65)"/>
+
+  <!-- Content -->
+  
+    <g filter="url(#studioShadow)">
+      
+      <!-- Carburetor Body -->
+      <rect x="210" y="210" width="180" height="150" rx="16" fill="url(#metalChrome)" stroke="#475569" stroke-width="3"/>
+      <circle cx="300" cy="285" r="45" fill="#0f172a" stroke="#64748b" stroke-width="4"/>
+      <!-- Butterfly / Slide -->
+      <line x1="260" y1="285" x2="340" y2="285" stroke="#d4af37" stroke-width="6"/>
+      <!-- Float Bowl -->
+      <path d="M225 360 L375 360 Q380 430 300 440 Q220 430 225 360 Z" fill="#334155" stroke="#94a3b8" stroke-width="3"/>
+      <circle cx="300" cy="415" r="8" fill="#d97706"/>
+      <!-- Throttle Bell & Linkage -->
+      <rect x="250" y="160" width="100" height="50" rx="8" fill="#1e293b" stroke="#cbd5e1" stroke-width="2"/>
+    
+      <!-- Tech Badge -->
+      <rect x="200" y="460" width="200" height="32" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+      <text x="300" y="481" fill="#f8fafc" font-family="Arial, sans-serif" font-size="13" font-weight="900" text-anchor="middle">Hero • Fuel Intake System</text>
+    </g>
+  
+
+  <!-- Studio Watermark Tag -->
+  <text x="32" y="568" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">MOTODC AUTHENTIC PART • HERO • CARBURETOR & MANIFOLD</text>
+</svg>

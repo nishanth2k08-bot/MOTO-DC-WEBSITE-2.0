@@ -1,12 +1,13 @@
 (()=>{
  const PAGE_SIZE={catalog:12,admin:10};
- let scanTimer=0,lockedUntil=0;
+ let scanTimer=0;
  const isAdminPage=()=>location.pathname.replace(/\/$/,'')==='/admin';
- const getItems=(c,t)=>[...c.querySelectorAll(t==='admin'?':scope > .adminproduct':':scope > .card')];
+ const getGrid=()=>document.querySelector('.filterToolbar')?.parentElement?.querySelector('.grid') || document.querySelector('.grid');
+ const getItems=(c,t)=>[...(c||getGrid())?.querySelectorAll(t==='admin'?':scope > .adminproduct':':scope > .card') || []];
  const signature=items=>items.map(x=>x.querySelector('h3')?.textContent?.trim()||x.textContent.trim().slice(0,120)).join('|');
- const findNav=c=>c.classList.contains('adminlist')
+ const findNav=(c,type)=>type==='admin'
   ?c.querySelector(':scope > #adminProductPagination')
-  :c.parentElement?.querySelector(`:scope > .productPagination[data-owner="catalog"]`);
+  :document.querySelector('.productPagination[data-owner="catalog"]');
 
  const makeButton=(label,action,disabled,active)=>{
   const b=document.createElement('button');
@@ -25,12 +26,12 @@
   const controls=nav.querySelector('.productPageControls');
   if(!controls)return;
   controls.innerHTML='';
-  controls.appendChild(makeButton('‹','prev',page===1,false));
+  controls.appendChild(makeButton('‹','prev',page<=1,false));
   const start=Math.max(1,Math.min(page-2,total-4)),end=Math.min(total,Math.max(5,start+4));
   for(let p=Math.max(1,start);p<=end;p++){
    controls.appendChild(makeButton(String(p),String(p),false,p===page));
   }
-  controls.appendChild(makeButton('›','next',page===total,false));
+  controls.appendChild(makeButton('›','next',page>=total,false));
  };
 
  const applyPage=(c,items,type,page)=>{
@@ -39,7 +40,7 @@
   c.dataset.paginationPage=String(page);
   const from=(page-1)*size,to=page*size;
   items.forEach((x,i)=>x.style.setProperty('display',i>=from&&i<to?'':'none','important'));
-  const nav=findNav(c);
+  const nav=findNav(c,type);
   if(nav)updateNav(nav,page,total);
   if(type==='catalog'){
    try{
@@ -90,10 +91,14 @@
   }
 
   page=Math.max(1,Math.min(page||1,total));
-  let nav=findNav(c);
+  let nav=findNav(c,type);
   if(type==='admin'){
    document.querySelectorAll('.productPagination[data-owner="admin"]').forEach(n=>{if(n.id!=='adminProductPagination')n.remove()});
-   nav=findNav(c);
+   nav=findNav(c,type);
+  }else{
+   const allNavs=document.querySelectorAll('.productPagination[data-owner="catalog"]');
+   allNavs.forEach((n,idx)=>{if(idx>0)n.remove()});
+   nav=allNavs[0]||null;
   }
   if(!nav){
    nav=document.createElement('div');
@@ -108,6 +113,8 @@
    nav.appendChild(controls);
    if(type==='admin')c.appendChild(nav);
    else c.insertAdjacentElement('afterend',nav);
+  }else if(type!=='admin'&&nav.previousElementSibling!==c){
+   c.insertAdjacentElement('afterend',nav);
   }
   applyPage(c,items,type,page);
 
@@ -128,20 +135,19 @@
  };
 
  const scan=()=>{
-  if(Date.now()<lockedUntil)return;
   if(isAdminPage()){
    document.querySelectorAll('.productPagination[data-owner="catalog"]').forEach(n=>n.remove());
    document.querySelectorAll('.adminlist').forEach(x=>render(x,'admin'));
    return;
   }
-  const toolbar=document.querySelector('.filterToolbar'),grid=toolbar?.parentElement?.querySelector(':scope > .grid');
+  const grid=getGrid();
   if(grid)render(grid,'catalog');
  };
 
  document.addEventListener('click',e=>{
   const card=e.target.closest('.grid > .card');
   if(card && !e.target.closest('button')){
-   const grid=card.closest('.grid');
+   const grid=card.closest('.grid')||getGrid();
    const p=grid?.dataset?.paginationPage||sessionStorage.getItem('motodc-catalog-page')||'1';
    sessionStorage.setItem('motodc-catalog-page',String(p));
    sessionStorage.setItem('motodc-catalog-scroll',String(window.scrollY||0));
@@ -152,26 +158,36 @@
   if(!b||b.disabled)return;
   e.preventDefault();
   e.stopPropagation();
+
   const nav=b.closest('.productPagination');
   if(!nav)return;
   const type=nav.dataset.owner||'catalog';
-  const c=type==='admin'?nav.closest('.adminlist'):nav.previousElementSibling;
+  const c=type==='admin'?nav.closest('.adminlist'):getGrid();
   if(!c)return;
   const items=getItems(c,type);
   if(!items.length)return;
-  let page=Number(c.dataset.paginationPage||1),a=b.dataset.pageAction;
-  if(a==='prev')page--;else if(a==='next')page++;else page=Number(a);
-  lockedUntil=Date.now()+700;
+
+  const total=Math.max(1,Math.ceil(items.length/PAGE_SIZE[type]));
+  let page=Number(c.dataset.paginationPage||1);
+  const a=b.dataset.pageAction;
+  if(a==='prev')page=Math.max(1,page-1);
+  else if(a==='next')page=Math.min(total,page+1);
+  else page=Math.max(1,Math.min(total,Number(a)));
+
   applyPage(c,items,type,page);
-  setTimeout(()=>{if(Date.now()>=lockedUntil)scan()},800);
-  window.requestAnimationFrame(()=>c.scrollIntoView({behavior:'smooth',block:'start'}));
+
+  const toolbar=document.querySelector('.filterToolbar');
+  const targetElem=toolbar||c;
+  if(targetElem){
+   const topOffset=targetElem.getBoundingClientRect().top+window.scrollY-85;
+   window.scrollTo({top:Math.max(0,topOffset),behavior:'smooth'});
+  }
  },true);
 
  const observer=new MutationObserver((mutations)=>{
-  if(Date.now()<lockedUntil)return;
   const hasNewGrid=mutations.some(m=>[...m.addedNodes].some(n=>(n.classList?.contains('grid')||n.querySelector?.('.grid'))));
   clearTimeout(scanTimer);
-  scanTimer=setTimeout(scan,hasNewGrid?30:120);
+  scanTimer=setTimeout(scan,hasNewGrid?20:100);
  });
  observer.observe(document.documentElement,{childList:true,subtree:true});
  document.addEventListener('DOMContentLoaded',scan);

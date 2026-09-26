@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="studioBg" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#1e222d"/>
+      <stop offset="55%" stop-color="#111318"/>
+      <stop offset="100%" stop-color="#08090c"/>
+    </radialGradient>
+    <radialGradient id="floorSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <filter id="studioShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+    <linearGradient id="metalChrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="25%" stop-color="#94a3b8"/>
+      <stop offset="50%" stop-color="#f8fafc"/>
+      <stop offset="75%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="rotorSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a95a5"/>
+      <stop offset="35%" stop-color="#4a5568"/>
+      <stop offset="70%" stop-color="#9aa5b8"/>
+      <stop offset="100%" stop-color="#2d3748"/>
+    </linearGradient>
+    
+  </defs>
+
+  <!-- Studio Canvas -->
+  <rect width="600" height="600" fill="url(#studioBg)"/>
+  <ellipse cx="300" cy="515" rx="220" ry="32" fill="url(#floorSpot)"/>
+  <ellipse cx="300" cy="515" rx="160" ry="18" fill="rgba(0,0,0,0.65)"/>
+
+  <!-- Content -->
+  
+    <g filter="url(#studioShadow)">
+      
+      <!-- Stator Ring -->
+      <circle cx="300" cy="300" r="160" fill="none" stroke="#334155" stroke-width="45"/>
+      
+          <rect x="444" y="288" width="32" height="24" rx="4" transform="rotate(0 460 300)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="422.5640646055102" y="368" width="32" height="24" rx="4" transform="rotate(30 438.5640646055102 380)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="364" y="426.56406460551017" width="32" height="24" rx="4" transform="rotate(60 380 438.56406460551017)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="284" y="448" width="32" height="24" rx="4" transform="rotate(90 300 460)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="204.00000000000003" y="426.5640646055102" width="32" height="24" rx="4" transform="rotate(120 220.00000000000003 438.5640646055102)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="145.4359353944898" y="368" width="32" height="24" rx="4" transform="rotate(150 161.4359353944898 380)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="124" y="288" width="32" height="24" rx="4" transform="rotate(180 140 300)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="145.43593539448983" y="208" width="32" height="24" rx="4" transform="rotate(210 161.43593539448983 220)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="203.99999999999994" y="149.43593539448983" width="32" height="24" rx="4" transform="rotate(240 219.99999999999994 161.43593539448983)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="283.99999999999994" y="128" width="32" height="24" rx="4" transform="rotate(270 299.99999999999994 140)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="364" y="149.43593539448983" width="32" height="24" rx="4" transform="rotate(300 380 161.43593539448983)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+          <rect x="422.5640646055101" y="207.99999999999994" width="32" height="24" rx="4" transform="rotate(330 438.5640646055101 219.99999999999994)" fill="#b45309" stroke="#fbbf24" stroke-width="1.5"/>
+        
+      <!-- Center Mounting Core -->
+      <circle cx="300" cy="300" r="100" fill="#0f172a" stroke="#64748b" stroke-width="4"/>
+      <circle cx="300" cy="300" r="40" fill="#000000"/>
+      <!-- Pickup Sensor -->
+      <rect x="420" y="270" width="50" height="40" rx="6" fill="#1e293b" stroke="#ffffff" stroke-width="2"/>
+    
+      <!-- Tech Badge -->
+      <rect x="200" y="460" width="200" height="32" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+      <text x="300" y="481" fill="#f8fafc" font-family="Arial, sans-serif" font-size="13" font-weight="900" text-anchor="middle">Bajaj • Electrical Stator</text>
+    </g>
+  
+
+  <!-- Studio Watermark Tag -->
+  <text x="32" y="568" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">MOTODC AUTHENTIC PART • BAJAJ • MAGNETO STATOR COIL RING</text>
+</svg>

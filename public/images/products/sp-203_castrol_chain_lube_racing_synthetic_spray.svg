@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="studioBg" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#1e222d"/>
+      <stop offset="55%" stop-color="#111318"/>
+      <stop offset="100%" stop-color="#08090c"/>
+    </radialGradient>
+    <radialGradient id="floorSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <filter id="studioShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+    <linearGradient id="metalChrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="25%" stop-color="#94a3b8"/>
+      <stop offset="50%" stop-color="#f8fafc"/>
+      <stop offset="75%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="rotorSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a95a5"/>
+      <stop offset="35%" stop-color="#4a5568"/>
+      <stop offset="70%" stop-color="#9aa5b8"/>
+      <stop offset="100%" stop-color="#2d3748"/>
+    </linearGradient>
+    
+    <linearGradient id="body_sp-203" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="cap_sp-203" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#15803d"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+  
+  </defs>
+
+  <!-- Studio Canvas -->
+  <rect width="600" height="600" fill="url(#studioBg)"/>
+  <ellipse cx="300" cy="515" rx="220" ry="32" fill="url(#floorSpot)"/>
+  <ellipse cx="300" cy="515" rx="160" ry="18" fill="rgba(0,0,0,0.65)"/>
+
+  <!-- Content -->
+  
+      <g filter="url(#studioShadow)">
+        <!-- Nozzle & Cap -->
+        <rect x="278" y="110" width="44" height="24" rx="4" fill="#ffffff"/>
+        <circle cx="300" cy="100" r="10" fill="#dc2626"/>
+        <rect x="255" y="134" width="90" height="30" rx="4" fill="url(#cap_sp-203)"/>
+        <!-- Cylinder Can -->
+        <rect x="240" y="164" width="120" height="330" rx="12" fill="url(#body_sp-203)"/>
+        <!-- Label Area -->
+        <rect x="246" y="180" width="108" height="295" rx="6" fill="#111317" stroke="#ffffff" stroke-width="1.5"/>
+        <rect x="252" y="195" width="96" height="42" rx="4" fill="#ffffff"/>
+        <text x="300" y="224" fill="#dc2626" font-family="Arial, sans-serif" font-size="20" font-weight="900" text-anchor="middle">Castrol</text>
+        <text x="300" y="275" fill="#f8fafc" font-family="Arial, sans-serif" font-size="16" font-weight="900" text-anchor="middle">CHAIN LUBE</text>
+        <text x="300" y="298" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">RACING SYNTHETIC</text>
+        <!-- Spray Badge -->
+        <circle cx="300" cy="355" r="32" fill="#dc2626" stroke="#ffffff" stroke-width="2"/>
+        <text x="300" y="352" fill="#ffffff" font-family="Arial, sans-serif" font-size="13" font-weight="900" text-anchor="middle">AEROSOL</text>
+        <text x="300" y="368" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="800" text-anchor="middle">SPRAY</text>
+        <rect x="275" y="430" width="50" height="24" rx="4" fill="#1e293b"/>
+        <text x="300" y="446" fill="#94a3b8" font-family="Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle">400ml</text>
+      </g>
+    
+
+  <!-- Studio Watermark Tag -->
+  <text x="32" y="568" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">MOTODC AUTHENTIC PART • CASTROL • CHAIN LUBE </text>
+</svg>

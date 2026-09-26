@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="studioBg" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#1e222d"/>
+      <stop offset="55%" stop-color="#111318"/>
+      <stop offset="100%" stop-color="#08090c"/>
+    </radialGradient>
+    <radialGradient id="floorSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <filter id="studioShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+    <linearGradient id="metalChrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="25%" stop-color="#94a3b8"/>
+      <stop offset="50%" stop-color="#f8fafc"/>
+      <stop offset="75%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="rotorSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a95a5"/>
+      <stop offset="35%" stop-color="#4a5568"/>
+      <stop offset="70%" stop-color="#9aa5b8"/>
+      <stop offset="100%" stop-color="#2d3748"/>
+    </linearGradient>
+    
+  </defs>
+
+  <!-- Studio Canvas -->
+  <rect width="600" height="600" fill="url(#studioBg)"/>
+  <ellipse cx="300" cy="515" rx="220" ry="32" fill="url(#floorSpot)"/>
+  <ellipse cx="300" cy="515" rx="160" ry="18" fill="rgba(0,0,0,0.65)"/>
+
+  <!-- Content -->
+  
+    <g filter="url(#studioShadow)">
+      <!-- Outer Rotor Ring -->
+      
+      <circle cx="300" cy="300" r="235" fill="url(#metalChrome)" stroke="#334155" stroke-width="4"/>
+      
+      <circle cx="300" cy="300" r="145" fill="none" stroke="#64748b" stroke-width="2"/>
+      
+      <!-- Ventilation slots / grooves -->
+      
+        <path d="M300 300 m155,0 q25.98076211353316,14.999999999999998 59.088465180732484,10.418890660015819" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m109.60155108391487,109.60155108391486 q7.764571353075622,28.97777478867205 34.41458618106276,49.14912265733951" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m9.491012693391987e-15,155 q-14.999999999999993,25.98076211353316 -10.418890660015819,59.088465180732484" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m-109.60155108391486,109.60155108391487 q-28.977774788672047,7.76457135307563 -49.1491226573395,34.41458618106278" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m-155,1.8982025386783973e-14 q-25.980762113533157,-15.000000000000004 -59.088465180732484,-10.418890660015828" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m-109.60155108391488,-109.60155108391486 q-7.764571353075619,-28.97777478867205 -34.41458618106278,-49.1491226573395" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m-2.847303808017596e-14,-155 q15.000000000000004,-25.980762113533157 10.418890660015798,-59.088465180732484" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+        <path d="M300 300 m109.60155108391484,-109.60155108391488 q28.97777478867205,-7.76457135307562 49.1491226573395,-34.41458618106279" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+      
+
+      <!-- Cross Drilled Holes -->
+      <circle cx="485" cy="300" r="4" fill="#0f172a"/><circle cx="509.3283583235501" cy="316.7820857335263" r="3.5" fill="#0f172a"/><circle cx="478.69627786347763" cy="347.88152334396636" r="4" fill="#0f172a"/><circle cx="497.85214407502934" cy="370.3884158431899" r="3.5" fill="#0f172a"/><circle cx="460.2146997001212" cy="392.5" r="4" fill="#0f172a"/><circle cx="472.89263317392295" cy="419.19789173549714" r="3.5" fill="#0f172a"/><circle cx="430.8147545195113" cy="430.81475451951127" r="4" fill="#0f172a"/><circle cx="436.15077504059934" cy="459.8842282898602" r="3.5" fill="#0f172a"/><circle cx="392.5" cy="460.2146997001212" r="4" fill="#0f172a"/><circle cx="390.13046658805285" cy="489.67471890744923" r="3.5" fill="#0f172a"/><circle cx="347.88152334396636" cy="478.69627786347763" r="4" fill="#0f172a"/><circle cx="337.96791578516917" cy="506.53919088378916" r="3.5" fill="#0f172a"/><circle cx="300" cy="485" r="4" fill="#0f172a"/><circle cx="283.2179142664737" cy="509.3283583235501" r="3.5" fill="#0f172a"/><circle cx="252.11847665603364" cy="478.69627786347763" r="4" fill="#0f172a"/><circle cx="229.6115841568101" cy="497.85214407502934" r="3.5" fill="#0f172a"/><circle cx="207.50000000000006" cy="460.2146997001212" r="4" fill="#0f172a"/><circle cx="180.80210826450283" cy="472.892633173923" r="3.5" fill="#0f172a"/><circle cx="169.18524548048873" cy="430.8147545195113" r="4" fill="#0f172a"/><circle cx="140.11577171013985" cy="436.15077504059934" r="3.5" fill="#0f172a"/><circle cx="139.78530029987883" cy="392.5" r="4" fill="#0f172a"/><circle cx="110.32528109255074" cy="390.13046658805285" r="3.5" fill="#0f172a"/><circle cx="121.3037221365224" cy="347.88152334396636" r="4" fill="#0f172a"/><circle cx="93.46080911621084" cy="337.9679157851692" r="3.5" fill="#0f172a"/><circle cx="115" cy="300" r="4" fill="#0f172a"/><circle cx="90.67164167644992" cy="283.21791426647377" r="3.5" fill="#0f172a"/><circle cx="121.30372213652234" cy="252.11847665603375" r="4" fill="#0f172a"/><circle cx="102.1478559249706" cy="229.61158415681018" r="3.5" fill="#0f172a"/><circle cx="139.78530029987886" cy="207.5" r="4" fill="#0f172a"/><circle cx="127.10736682607705" cy="180.80210826450278" r="3.5" fill="#0f172a"/><circle cx="169.18524548048867" cy="169.18524548048873" r="4" fill="#0f172a"/><circle cx="163.8492249594007" cy="140.11577171013985" r="3.5" fill="#0f172a"/><circle cx="207.49999999999991" cy="139.78530029987888" r="4" fill="#0f172a"/><circle cx="209.86953341194703" cy="110.3252810925508" r="3.5" fill="#0f172a"/><circle cx="252.1184766560337" cy="121.30372213652237" r="4" fill="#0f172a"/><circle cx="262.03208421483083" cy="93.46080911621081" r="3.5" fill="#0f172a"/><circle cx="299.99999999999994" cy="115" r="4" fill="#0f172a"/><circle cx="316.78208573352623" cy="90.67164167644992" r="3.5" fill="#0f172a"/><circle cx="347.8815233439664" cy="121.3037221365224" r="4" fill="#0f172a"/><circle cx="370.38841584319" cy="102.14785592497068" r="3.5" fill="#0f172a"/><circle cx="392.5" cy="139.78530029987886" r="4" fill="#0f172a"/><circle cx="419.1978917354972" cy="127.10736682607705" r="3.5" fill="#0f172a"/><circle cx="430.81475451951127" cy="169.18524548048867" r="4" fill="#0f172a"/><circle cx="459.8842282898602" cy="163.8492249594007" r="3.5" fill="#0f172a"/><circle cx="460.21469970012106" cy="207.49999999999991" r="4" fill="#0f172a"/><circle cx="489.67471890744923" cy="209.86953341194703" r="3.5" fill="#0f172a"/><circle cx="478.69627786347763" cy="252.11847665603366" r="4" fill="#0f172a"/><circle cx="506.53919088378916" cy="262.03208421483083" r="3.5" fill="#0f172a"/>
+
+      <!-- Center Carrier Hub -->
+      <circle cx="300" cy="300" r="125" fill="#1e222d" stroke="#d4af37" stroke-width="2"/>
+      <circle cx="300" cy="300" r="122" fill="#0f172a"/>
+      <circle cx="300" cy="300" r="50" fill="#090a0f" stroke="#334155" stroke-width="4"/>
+
+      <!-- Lug Bolt Holes -->
+      
+          <circle cx="385" cy="300" r="14" fill="#334155" stroke="#94a3b8" stroke-width="2.5"/>
+          <circle cx="385" cy="300" r="8" fill="#090a0f"/>
+        
+          <circle cx="326.26644452187054" cy="380.83980388508803" r="14" fill="#334155" stroke="#94a3b8" stroke-width="2.5"/>
+          <circle cx="326.26644452187054" cy="380.83980388508803" r="8" fill="#090a0f"/>
+        
+          <circle cx="231.23355547812946" cy="349.96174644486024" r="14" fill="#334155" stroke="#94a3b8" stroke-width="2.5"/>
+          <circle cx="231.23355547812946" cy="349.96174644486024" r="8" fill="#090a0f"/>
+        
+          <circle cx="231.23355547812946" cy="250.0382535551398" r="14" fill="#334155" stroke="#94a3b8" stroke-width="2.5"/>
+          <circle cx="231.23355547812946" cy="250.0382535551398" r="8" fill="#090a0f"/>
+        
+          <circle cx="326.26644452187054" cy="219.16019611491194" r="14" fill="#334155" stroke="#94a3b8" stroke-width="2.5"/>
+          <circle cx="326.26644452187054" cy="219.16019611491194" r="8" fill="#090a0f"/>
+        
+
+      <!-- Center Hub Specs -->
+      <text x="300" y="278" fill="#f8fafc" font-family="Arial, sans-serif" font-size="15" font-weight="900" text-anchor="middle" letter-spacing="1">MAHINDRA</text>
+      <text x="300" y="296" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle">Thar HD Rotor Pair</text>
+      <text x="300" y="328" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">VENTILATED DISC</text>
+      <text x="300" y="342" fill="#64748b" font-family="Arial, sans-serif" font-size="9" font-weight="600" text-anchor="middle">PCD 5x139.7 • MIN THK 22mm</text>
+    </g>
+  
+
+  <!-- Studio Watermark Tag -->
+  <text x="32" y="568" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">MOTODC AUTHENTIC PART • MAHINDRA • THAR HD ROTOR PAIR BRAKE ROTOR</text>
+</svg>
