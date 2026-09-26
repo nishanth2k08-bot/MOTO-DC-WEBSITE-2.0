@@ -51,6 +51,30 @@
 .light-theme .motodc-bg-about::after{background:linear-gradient(90deg,rgba(3,5,8,.88) 0%,rgba(3,5,8,.62) 33%,rgba(3,5,8,.23) 68%,rgba(3,5,8,.48) 100%),linear-gradient(180deg,rgba(3,5,8,.1),rgba(3,5,8,.72))}
 .light-theme .motodc-bg-about .motodc-bg-glow{opacity:.2}
 .light-theme .motodc-bg-about .motodc-bg-grid,.light-theme .motodc-bg-about .motodc-bg-line{opacity:.04}
+
+/* Animated Road Speed Lines for About Us */
+.motodc-road-speed-layer{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:hidden}
+.motodc-road-speed-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;will-change:transform}
+.motodc-asphalt-flare{position:absolute;right:6vw;bottom:0;width:55vw;height:42vh;background:radial-gradient(ellipse at center,rgba(255,49,87,.24) 0%,rgba(255,30,70,.09) 42%,transparent 72%);filter:blur(32px);pointer-events:none;z-index:2;animation:motodcAsphaltPulse 4s ease-in-out infinite alternate}
+.motodc-stream-fast{stroke-dasharray:160 320;animation:motodcSpeedFlowFast 1.35s linear infinite}
+.motodc-stream-medium{stroke-dasharray:240 260;animation:motodcSpeedFlowMed 2.1s linear infinite}
+.motodc-stream-slow{stroke-dasharray:380 200;animation:motodcSpeedFlowSlow 3.2s linear infinite}
+.motodc-stream-laser{stroke-dasharray:80 420;animation:motodcSpeedFlowLaser 1.05s linear infinite}
+.motodc-straight-streak-1{stroke-dasharray:180 300;animation:motodcStreakRun 0.9s ease-out infinite}
+.motodc-straight-streak-2{stroke-dasharray:120 240;animation:motodcStreakRun 0.75s ease-out infinite .25s}
+.motodc-straight-streak-3{stroke-dasharray:150 280;animation:motodcStreakRun 1.1s ease-out infinite .45s}
+.motodc-straight-streak-4{stroke-dasharray:200 350;animation:motodcStreakRun 1.25s ease-out infinite .15s}
+.motodc-rail-reflection{stroke-dasharray:120 380;animation:motodcRailGlowFlow 2.8s linear infinite .5s}
+@keyframes motodcSpeedFlowFast{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-480}}
+@keyframes motodcSpeedFlowMed{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
+@keyframes motodcSpeedFlowSlow{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-580}}
+@keyframes motodcSpeedFlowLaser{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
+@keyframes motodcStreakRun{0%{stroke-dashoffset:0;opacity:0}20%{opacity:.95}80%{opacity:.9}100%{stroke-dashoffset:-480;opacity:0}}
+@keyframes motodcRailGlowFlow{0%{stroke-dashoffset:0;opacity:.2}50%{opacity:.75}100%{stroke-dashoffset:-500;opacity:.2}}
+@keyframes motodcAsphaltPulse{0%{opacity:.55;transform:scale(.94)}100%{opacity:.95;transform:scale(1.06)}}
+@media(max-width:768px){.motodc-road-speed-lines{opacity:.85}.motodc-asphalt-flare{width:80vw;height:35vh}}
+@media(prefers-reduced-motion:reduce){.motodc-road-speed-lines path,.motodc-road-speed-lines line,.motodc-asphalt-flare{animation:none!important}}
+
 /* Login / account — red ambient */
 .motodc-bg-account .motodc-bg-grid{opacity:.08}
 .motodc-bg-account .motodc-bg-orb{width:330px;height:330px;opacity:.8}
