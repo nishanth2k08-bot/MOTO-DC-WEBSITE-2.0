@@ -16,53 +16,8 @@
 .grid .card:hover{transform:translateY(-4px)}
 
 /* =========================================================
-   ENHANCEMENT 5: Hero Headlight Micro-Glow & Stock Pill Badge
+   HERO HEADLIGHT MICRO-GLOW
    ========================================================= */
-.heroStockBadge{
-  display:inline-flex;
-  align-items:center;
-  gap:9px;
-  padding:7px 16px;
-  background:rgba(20,24,35,0.72);
-  border:1px solid rgba(255,49,87,0.32);
-  border-radius:9999px;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  font-size:13px;
-  font-weight:500;
-  color:#f1f5f9;
-  margin-bottom:18px;
-  width:fit-content;
-  box-shadow:0 4px 20px rgba(0,0,0,0.25), 0 0 15px rgba(255,49,87,0.12);
-  animation:heroBadgeFadeIn 0.8s ease-out;
-}
-.heroStockPulse{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#00e676;
-  box-shadow:0 0 10px #00e676;
-  display:inline-block;
-  flex:none;
-  animation:stockPulseGlow 2s infinite ease-in-out;
-}
-.heroStockText b{
-  color:#ff3157;
-  font-weight:700;
-}
-.heroStockDot{
-  color:rgba(255,255,255,0.4);
-  font-weight:700;
-}
-@keyframes stockPulseGlow{
-  0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 10px #00e676}
-  50%{opacity:0.4;transform:scale(0.85);box-shadow:0 0 4px #00e676}
-}
-@keyframes heroBadgeFadeIn{
-  from{opacity:0;transform:translateY(-8px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
 .heroHeadlightLayer{
   position:absolute;
   inset:0;
@@ -98,7 +53,7 @@
 }
 
 /* =========================================================
-   ENHANCEMENT 2: Service & Maintenance Essentials
+   SERVICE & MAINTENANCE ESSENTIALS
    ========================================================= */
 .homeEssentialsSection{
   margin-top:20px;
@@ -182,7 +137,7 @@
 }
 
 /* =========================================================
-   ENHANCEMENT 4: Top Automotive Brands Strip
+   TOP AUTOMOTIVE BRANDS WITH OFFICIAL LOGOS
    ========================================================= */
 .homeBrandsSection{
   margin-top:24px;
@@ -190,24 +145,24 @@
 }
 .homeBrandsGrid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(115px, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(118px, 1fr));
   gap:12px;
 }
 .homeBrandCard{
   background:linear-gradient(150deg, #131722 0%, #0d1017 100%);
   border:1px solid rgba(255,255,255,0.07);
   border-radius:14px;
-  padding:15px 10px;
+  padding:16px 10px 14px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  gap:4px;
   cursor:pointer;
   transition:all 0.22s ease;
   position:relative;
   overflow:hidden;
+  min-height:94px;
 }
 .homeBrandCard:hover{
   transform:translateY(-4px);
@@ -215,20 +170,35 @@
   background:#161c27;
   box-shadow:0 12px 26px rgba(0,0,0,0.35), 0 0 18px rgba(255,49,87,0.14);
 }
-.brandDot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#ff3157;
-  margin-bottom:3px;
-  box-shadow:0 0 8px #ff3157;
+.brandLogoWrap{
+  width:100%;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:8px;
+  padding:2px 4px;
+}
+.brandLogoImg{
+  max-height:28px;
+  max-width:88px;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,0.35));
+  transition:transform 0.25s ease, filter 0.25s ease;
+}
+.homeBrandCard:hover .brandLogoImg{
+  transform:scale(1.08);
+  filter:drop-shadow(0 4px 10px rgba(255,49,87,0.3));
 }
 .homeBrandCard b{
-  font-size:15px;
+  font-size:14px;
   font-weight:700;
   color:#f8fafc;
   letter-spacing:-0.2px;
   font-family:Sora,Inter,sans-serif;
+  margin-bottom:2px;
 }
 .homeBrandCard small{
   font-size:10px;
@@ -241,15 +211,6 @@
 /* =========================================================
    LIGHT THEME SUPPORT
    ========================================================= */
-.light-theme .heroStockBadge{
-  background:rgba(255,255,255,0.85);
-  border-color:rgba(255,49,87,0.35);
-  color:#1e293b;
-  box-shadow:0 4px 18px rgba(0,0,0,0.06);
-}
-.light-theme .heroStockDot{
-  color:rgba(0,0,0,0.35);
-}
 .light-theme .essentialCard{
   background:#ffffff;
   border-color:#e2e8f0;
@@ -281,6 +242,12 @@
 .light-theme .homeBrandCard small{
   color:#64748b;
 }
+.light-theme .brandLogoImg{
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.12));
+}
+.light-theme .homeBrandCard:hover .brandLogoImg{
+  filter:drop-shadow(0 3px 6px rgba(255,49,87,0.20));
+}
 
 /* =========================================================
    RESPONSIVE DESIGN
@@ -293,7 +260,7 @@
 @media(max-width:850px){
   .hero p:not(.eyebrow){font-size:16px}
   .homeEssentialsGrid{grid-template-columns:repeat(2, 1fr)}
-  .homeBrandsGrid{grid-template-columns:repeat(auto-fit, minmax(100px, 1fr))}
+  .homeBrandsGrid{grid-template-columns:repeat(auto-fit, minmax(105px, 1fr))}
   .heroBikeLight, .heroCarLight{opacity:0.4}
 }
 @media(max-width:520px){
@@ -303,14 +270,17 @@
   .sectionhead{margin-bottom:20px}
   .section h2{font-size:26px}
   .stats div{min-height:72px}
-  .heroStockBadge{font-size:12px;padding:6px 12px;gap:7px}
   .homeEssentialsGrid{grid-template-columns:1fr;gap:12px}
   .homeBrandsGrid{grid-template-columns:repeat(3, 1fr);gap:8px}
-  .homeBrandCard{padding:12px 8px}
+  .homeBrandCard{padding:12px 6px;min-height:86px}
+  .brandLogoWrap{height:28px;margin-bottom:5px}
+  .brandLogoImg{max-height:22px;max-width:70px}
+  .homeBrandCard b{font-size:12px}
+  .homeBrandCard small{font-size:9px}
   .heroBikeLight, .heroCarLight{display:none}
 }
 .light-theme .grid .card{box-shadow:0 8px 28px rgba(20,24,32,.05)}
 @media(prefers-reduced-motion:reduce){
   .grid .card:hover, .essentialCard:hover, .homeBrandCard:hover{transform:none}
-  .heroStockPulse, .heroBikeLight, .heroCarLight{animation:none}
+  .heroBikeLight, .heroCarLight{animation:none}
 }

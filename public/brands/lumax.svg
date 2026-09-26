@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" fill="none">
+  <!-- LUMAX logo -->
+  <g transform="translate(6, 6)">
+    <!-- Red Lumax accent triangle/flare -->
+    <polygon points="12,4 24,16 6,16" fill="#E31B23"/>
+    <circle cx="15" cy="24" r="5" fill="#004B97"/>
+  </g>
+  <text x="44" y="30" font-family="'Arial Black', Impact, sans-serif" font-size="24" font-weight="900" letter-spacing="1px" fill="#004B97">LUMAX</text>
+</svg>

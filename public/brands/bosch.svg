@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 44" fill="none">
+  <!-- Bosch Armature Emblem -->
+  <g transform="translate(6, 4)">
+    <circle cx="18" cy="18" r="16" stroke="#EA0016" stroke-width="3.5" fill="none"/>
+    <rect x="7" y="13" width="22" height="10" rx="2" fill="#EA0016"/>
+    <circle cx="18" cy="18" r="3" fill="#131722"/>
+  </g>
+  <!-- BOSCH text -->
+  <text x="48" y="29" font-family="'Arial Black', Impact, sans-serif" font-size="23" font-weight="900" letter-spacing="1px" fill="#EA0016">BOSCH</text>
+</svg>

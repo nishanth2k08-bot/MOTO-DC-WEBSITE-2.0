@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 44" fill="none">
+  <!-- Brembo emblem -->
+  <g transform="translate(4, 4)">
+    <circle cx="18" cy="18" r="16" fill="#E31B23"/>
+    <circle cx="18" cy="18" r="9" fill="#131722"/>
+    <circle cx="18" cy="18" r="4.5" fill="#E31B23"/>
+  </g>
+  <!-- brembo wordmark -->
+  <text x="48" y="29" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="24" font-weight="900" letter-spacing="-0.8px" fill="#E31B23">brembo</text>
+</svg>

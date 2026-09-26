@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" fill="none">
+  <!-- Motul racing block -->
+  <g transform="skewX(-10) translate(12, 0)">
+    <rect x="0" y="6" width="130" height="32" rx="4" fill="#E30613"/>
+    <text x="65" y="30" font-family="'Arial Black', Impact, sans-serif" font-size="22" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5px">MOTUL</text>
+  </g>
+</svg>

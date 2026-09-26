@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 44" fill="none">
+  <!-- NGK racing parallelogram badge -->
+  <g transform="skewX(-16) translate(16, 0)">
+    <rect x="0" y="5" width="112" height="34" rx="4" fill="#E4002B"/>
+    <text x="56" y="30" font-family="'Arial Black', Impact, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1px">NGK</text>
+  </g>
+  <!-- Spark plug spark slash -->
+  <polygon points="122,8 116,22 124,20 114,36 128,19 120,21" fill="#FFCC00"/>
+</svg>

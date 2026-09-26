@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" fill="none">
+  <!-- Valeo dynamic circle/swoosh -->
+  <g transform="translate(8, 6)">
+    <circle cx="16" cy="16" r="14" stroke="#82BC00" stroke-width="4.5" fill="none"/>
+    <path d="M 6,16 A 10,10 0 0,1 26,16" stroke="#82BC00" stroke-width="3" fill="#82BC00"/>
+  </g>
+  <!-- Valeo wordmark -->
+  <text x="48" y="29" font-family="'Montserrat', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="-0.5px" fill="#82BC00">Valeo</text>
+</svg>
