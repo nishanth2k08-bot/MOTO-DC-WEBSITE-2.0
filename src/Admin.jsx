@@ -89,8 +89,13 @@ function uploadToCloudinary(file,onProgress){
 }
 
 export default function Admin(){
- const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState('dashboard'),[searchQuery,setSearchQuery]=useState('');
+ const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState('dashboard'),[searchQuery,setSearchQuery]=useState(''),[adminPage,setAdminPage]=useState(1);
  const filteredProducts=products.filter(p=>{if(!searchQuery.trim())return true;const q=searchQuery.toLowerCase().trim();return (p.name&&p.name.toLowerCase().includes(q))||(p.brand&&p.brand.toLowerCase().includes(q))||(p.category&&p.category.toLowerCase().includes(q))||(p.fitment&&p.fitment.toLowerCase().includes(q))||(p.id&&p.id.toLowerCase().includes(q))});
+ const ADMIN_PAGE_SIZE=10;
+ useEffect(()=>{setAdminPage(1);},[searchQuery]);
+ const totalAdminPages=Math.max(1,Math.ceil(filteredProducts.length/ADMIN_PAGE_SIZE));
+ const currentAdminPage=Math.max(1,Math.min(adminPage,totalAdminPages));
+ const pagedAdminProducts=filteredProducts.slice((currentAdminPage-1)*ADMIN_PAGE_SIZE,currentAdminPage*ADMIN_PAGE_SIZE);
  const handleTabChange=t=>{setActiveTab(t);try{localStorage.setItem('motodc-admin-tab',t)}catch{}};
  useEffect(()=>onAuthStateChanged(adminAuth,async u=>{setUser(u);setAllowed(false);if(!u){setChecking(false);return}try{const snap=await getDoc(doc(adminDb,'admins',u.uid));setAllowed(snap.exists());setActiveTab('dashboard');try{localStorage.setItem('motodc-admin-tab','dashboard')}catch{}}catch(e){console.error(e);toast.error('Could not verify admin access')}finally{setChecking(false)}}),[]);
  useEffect(()=>{if(allowed)loadProducts()},[allowed]);
@@ -289,7 +294,7 @@ export default function Admin(){
                 </button>
               )}
             </div>
-            {filteredProducts.map(p=>(
+            {pagedAdminProducts.map(p=>(
               <div className="adminproduct" key={p.id}>
                 <img src={p.image} alt=""/>
                 <div>
@@ -301,6 +306,22 @@ export default function Admin(){
                 <button className="delete" onClick={()=>remove(p.id)} title="Delete"><Trash2 size={16}/></button>
               </div>
             ))}
+            {totalAdminPages>1&&(
+              <div className="productPagination" id="adminProductPagination" data-owner="admin">
+                <span className="productPageInfo">Page {currentAdminPage} of {totalAdminPages}</span>
+                <div className="productPageControls">
+                  <button type="button" className="productPageBtn" disabled={currentAdminPage<=1} onClick={()=>setAdminPage(p=>Math.max(1,p-1))} aria-label="Previous page">‹</button>
+                  {Array.from({length:totalAdminPages},(_,i)=>i+1).filter(p=>{
+                    const start=Math.max(1,Math.min(currentAdminPage-2,totalAdminPages-4));
+                    const end=Math.min(totalAdminPages,Math.max(5,start+4));
+                    return p>=start&&p<=end;
+                  }).map(p=>(
+                    <button key={p} type="button" className={`productPageBtn${p===currentAdminPage?' active':''}`} onClick={()=>setAdminPage(p)} aria-label={`Page ${p}`}>{p}</button>
+                  ))}
+                  <button type="button" className="productPageBtn" disabled={currentAdminPage>=totalAdminPages} onClick={()=>setAdminPage(p=>Math.min(totalAdminPages,p+1))} aria-label="Next page">›</button>
+                </div>
+              </div>
+            )}
             {!filteredProducts.length&&(
               <div className="empty" style={{minHeight:'180px',padding:'30px'}}>
                 <p>{products.length?'No products match "'+searchQuery+'"':'No products yet.'}</p>
