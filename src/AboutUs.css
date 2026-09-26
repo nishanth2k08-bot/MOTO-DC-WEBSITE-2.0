@@ -43,43 +43,6 @@
 @keyframes aboutContentIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}@keyframes aboutMetaIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.motodc-bg-about::before,.motodc-about-road-glow,.aboutJourneyRail,.aboutJourneyRail i,.aboutHeroCopy>*,.aboutHeroMeta,.aboutHeroStatement{animation:none!important;transform:none!important}.motodc-bg-about::before{transform:scale(1.04)}}
 
-.motodc-road-trails{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible;pointer-events:none}
-.motodc-road-trail{fill:none;stroke:rgba(255,72,72,.9);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1 20;stroke-dashoffset:0;filter:url(#motodcTrailGlow);opacity:.72;animation:motodcRoadTrailFlow 2.8s linear infinite}
-.motodc-road-trail-b{stroke:rgba(255,150,110,.82);stroke-width:1.5;stroke-dasharray:1 26;animation-duration:3.6s;animation-delay:-1.4s;opacity:.55}
-@keyframes motodcRoadTrailFlow{to{stroke-dashoffset:-180}}
-
-/* Animated Highway Speed Lines on About Road Background */
-.motodc-road-speed-layer{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:hidden}
-.motodc-road-speed-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;will-change:transform}
-.motodc-asphalt-flare{position:absolute;right:6vw;bottom:0;width:55vw;height:42vh;background:radial-gradient(ellipse at center,rgba(255,49,87,.24) 0%,rgba(255,30,70,.09) 42%,transparent 72%);filter:blur(32px);pointer-events:none;z-index:2;animation:motodcAsphaltPulse 4s ease-in-out infinite alternate}
-
-.motodc-stream-fast{stroke-dasharray:160 320;animation:motodcSpeedFlowFast 1.35s linear infinite}
-.motodc-stream-medium{stroke-dasharray:240 260;animation:motodcSpeedFlowMed 2.1s linear infinite}
-.motodc-stream-slow{stroke-dasharray:380 200;animation:motodcSpeedFlowSlow 3.2s linear infinite}
-.motodc-stream-laser{stroke-dasharray:80 420;animation:motodcSpeedFlowLaser 1.05s linear infinite}
-
-.motodc-straight-streak-1{stroke-dasharray:180 300;animation:motodcStreakRun 0.9s ease-out infinite}
-.motodc-straight-streak-2{stroke-dasharray:120 240;animation:motodcStreakRun 0.75s ease-out infinite .25s}
-.motodc-straight-streak-3{stroke-dasharray:150 280;animation:motodcStreakRun 1.1s ease-out infinite .45s}
-.motodc-straight-streak-4{stroke-dasharray:200 350;animation:motodcStreakRun 1.25s ease-out infinite .15s}
-
-.motodc-rail-reflection{stroke-dasharray:120 380;animation:motodcRailGlowFlow 2.8s linear infinite .5s}
-
-@keyframes motodcSpeedFlowFast{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-480}}
-@keyframes motodcSpeedFlowMed{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
-@keyframes motodcSpeedFlowSlow{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-580}}
-@keyframes motodcSpeedFlowLaser{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
-@keyframes motodcStreakRun{0%{stroke-dashoffset:0;opacity:0}20%{opacity:.95}80%{opacity:.9}100%{stroke-dashoffset:-480;opacity:0}}
-@keyframes motodcRailGlowFlow{0%{stroke-dashoffset:0;opacity:.2}50%{opacity:.75}100%{stroke-dashoffset:-500;opacity:.2}}
-@keyframes motodcAsphaltPulse{0%{opacity:.55;transform:scale(.94)}100%{opacity:.95;transform:scale(1.06)}}
-
-@media(max-width:768px){
-  .motodc-road-speed-lines{opacity:.85}
-  .motodc-asphalt-flare{width:80vw;height:35vh}
-}
-@media(prefers-reduced-motion:reduce){
-  .motodc-road-speed-lines path,.motodc-road-speed-lines line,.motodc-asphalt-flare{animation:none!important}
-}
 
 .aboutInfoGrid{position:relative;z-index:3;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:26px}
 .aboutInfoCard{padding:28px;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(5,8,12,.72);backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.2)}
