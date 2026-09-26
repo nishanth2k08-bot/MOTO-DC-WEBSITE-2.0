@@ -14,6 +14,422 @@
 .categories span{font-family:Sora,Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-.8px}
 .grid .card{box-shadow:0 8px 28px rgba(0,0,0,.08)}
 .grid .card:hover{transform:translateY(-4px)}
+
+/* =========================================================
+   ENHANCEMENT 5: Hero Headlight Micro-Glow & Stock Pill Badge
+   ========================================================= */
+.heroStockBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 16px;
+  background:rgba(20,24,35,0.72);
+  border:1px solid rgba(255,49,87,0.32);
+  border-radius:9999px;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  font-size:13px;
+  font-weight:500;
+  color:#f1f5f9;
+  margin-bottom:18px;
+  width:fit-content;
+  box-shadow:0 4px 20px rgba(0,0,0,0.25), 0 0 15px rgba(255,49,87,0.12);
+  animation:heroBadgeFadeIn 0.8s ease-out;
+}
+.heroStockPulse{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#00e676;
+  box-shadow:0 0 10px #00e676;
+  display:inline-block;
+  flex:none;
+  animation:stockPulseGlow 2s infinite ease-in-out;
+}
+.heroStockText b{
+  color:#ff3157;
+  font-weight:700;
+}
+.heroStockDot{
+  color:rgba(255,255,255,0.4);
+  font-weight:700;
+}
+@keyframes stockPulseGlow{
+  0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 10px #00e676}
+  50%{opacity:0.4;transform:scale(0.85);box-shadow:0 0 4px #00e676}
+}
+@keyframes heroBadgeFadeIn{
+  from{opacity:0;transform:translateY(-8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.heroHeadlightLayer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  overflow:hidden;
+}
+.heroBikeLight{
+  position:absolute;
+  top:22%;
+  right:32%;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,210,120,0.25) 0%, rgba(255,140,40,0.10) 40%, transparent 70%);
+  filter:blur(28px);
+  animation:heroHeadlightBreathe 5s ease-in-out infinite;
+}
+.heroCarLight{
+  position:absolute;
+  top:24%;
+  right:6%;
+  width:380px;
+  height:380px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(210,235,255,0.28) 0%, rgba(90,165,255,0.10) 45%, transparent 72%);
+  filter:blur(32px);
+  animation:heroHeadlightBreathe 5s ease-in-out infinite 2.5s;
+}
+@keyframes heroHeadlightBreathe{
+  0%,100%{opacity:0.55;transform:scale(1)}
+  50%{opacity:0.95;transform:scale(1.12)}
+}
+
+/* =========================================================
+   ENHANCEMENT 2: Service & Maintenance Essentials
+   ========================================================= */
+.homeEssentialsSection{
+  margin-top:20px;
+  margin-bottom:28px;
+}
+.homeEssentialsGrid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:16px;
+}
+.essentialCard{
+  background:linear-gradient(150deg, #131722 0%, #0d1017 100%);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:22px 20px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.28s ease;
+}
+.essentialCard:hover{
+  transform:translateY(-5px);
+  border-color:rgba(255,49,87,0.5);
+  box-shadow:0 14px 35px rgba(0,0,0,0.4), 0 0 25px rgba(255,49,87,0.16);
+}
+.essentialIconWrap{
+  width:46px;
+  height:46px;
+  border-radius:13px;
+  background:rgba(255,49,87,0.12);
+  border:1px solid rgba(255,49,87,0.28);
+  color:#ff3157;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:16px;
+  transition:transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+.essentialCard:hover .essentialIconWrap{
+  transform:scale(1.08) rotate(-4deg);
+  background:#ff3157;
+  color:#ffffff;
+}
+.essentialTag{
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  color:#ff3157;
+  margin-bottom:6px;
+  display:block;
+}
+.essentialInfo h3{
+  font-size:17px;
+  font-weight:700;
+  color:#f1f5f9;
+  margin:0 0 8px 0;
+  font-family:Sora,Inter,sans-serif;
+  letter-spacing:-0.3px;
+}
+.essentialInfo p{
+  font-size:13px;
+  line-height:1.55;
+  color:#94a3b8;
+  margin:0 0 16px 0;
+}
+.essentialAction{
+  font-size:13px;
+  font-weight:600;
+  color:#ff3157;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:auto;
+  transition:gap 0.2s ease;
+}
+.essentialCard:hover .essentialAction{
+  gap:10px;
+}
+
+/* =========================================================
+   ENHANCEMENT 3: High-Octane "Shop By Machine" Visual Cards
+   ========================================================= */
+.categories.upgradedCategories{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:20px!important;
+  margin-top:12px;
+}
+.categoryMachineCard{
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  border:1px solid rgba(255,255,255,0.10);
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:26px 28px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+.categoryMachineCard.autoCard{
+  background:linear-gradient(135deg, rgba(12,15,22,0.93) 0%, rgba(18,22,32,0.82) 55%, rgba(255,49,87,0.18) 100%), url('/70cfa8e2-2409-460c-b546-c348c0076234.png') center / cover no-repeat;
+}
+.categoryMachineCard.bikeCard{
+  background:linear-gradient(135deg, rgba(12,15,22,0.93) 0%, rgba(18,22,32,0.82) 55%, rgba(255,49,87,0.18) 100%), url('/4d727a7c-9c8a-436c-b880-9723a5762532.png') center / cover no-repeat;
+}
+.categoryMachineCard:hover{
+  transform:translateY(-6px);
+  border-color:#ff3157;
+  box-shadow:0 20px 48px rgba(0,0,0,0.5), 0 0 30px rgba(255,49,87,0.22);
+}
+.categoryMachineCard .cardAura{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 85% 85%, rgba(255,49,87,0.20) 0%, transparent 60%);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+.categoryMachineCard:hover .cardAura{
+  opacity:1;
+}
+.categoryCardContent{
+  position:relative;
+  z-index:2;
+  width:100%;
+}
+.categoryCardTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.machineTag{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1px;
+  color:#ff3157;
+  text-transform:uppercase;
+  background:rgba(255,49,87,0.14);
+  padding:4px 10px;
+  border-radius:6px;
+  border:1px solid rgba(255,49,87,0.25);
+}
+.machineStockPill{
+  font-size:12px;
+  font-weight:600;
+  color:#e2e8f0;
+  background:rgba(255,255,255,0.10);
+  padding:4px 12px;
+  border-radius:9999px;
+  border:1px solid rgba(255,255,255,0.14);
+  backdrop-filter:blur(8px);
+}
+.categoryMachineCard h3{
+  font-size:27px;
+  font-weight:800;
+  color:#ffffff;
+  margin:0 0 8px 0;
+  font-family:Sora,Inter,sans-serif;
+  letter-spacing:-0.6px;
+}
+.categoryMachineCard p{
+  font-size:14px;
+  line-height:1.55;
+  color:#cbd5e1;
+  max-width:440px;
+  margin:0 0 16px 0;
+}
+.categoryCardBottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.categoryCardAction{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  font-weight:700;
+  color:#ff3157;
+  transition:gap 0.2s ease;
+}
+.categoryMachineCard:hover .categoryCardAction{
+  gap:12px;
+}
+.machineEmoji{
+  font-size:32px;
+  line-height:1;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+  transition:transform 0.28s ease;
+}
+.categoryMachineCard:hover .machineEmoji{
+  transform:scale(1.15) rotate(-6deg);
+}
+
+/* =========================================================
+   ENHANCEMENT 4: Top Automotive Brands Strip
+   ========================================================= */
+.homeBrandsSection{
+  margin-top:24px;
+  margin-bottom:28px;
+}
+.homeBrandsGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(115px, 1fr));
+  gap:12px;
+}
+.homeBrandCard{
+  background:linear-gradient(150deg, #131722 0%, #0d1017 100%);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;
+  padding:15px 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:4px;
+  cursor:pointer;
+  transition:all 0.22s ease;
+  position:relative;
+  overflow:hidden;
+}
+.homeBrandCard:hover{
+  transform:translateY(-4px);
+  border-color:#ff3157;
+  background:#161c27;
+  box-shadow:0 12px 26px rgba(0,0,0,0.35), 0 0 18px rgba(255,49,87,0.14);
+}
+.brandDot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ff3157;
+  margin-bottom:3px;
+  box-shadow:0 0 8px #ff3157;
+}
+.homeBrandCard b{
+  font-size:15px;
+  font-weight:700;
+  color:#f8fafc;
+  letter-spacing:-0.2px;
+  font-family:Sora,Inter,sans-serif;
+}
+.homeBrandCard small{
+  font-size:10px;
+  color:#64748b;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+/* =========================================================
+   LIGHT THEME SUPPORT
+   ========================================================= */
+.light-theme .heroStockBadge{
+  background:rgba(255,255,255,0.85);
+  border-color:rgba(255,49,87,0.35);
+  color:#1e293b;
+  box-shadow:0 4px 18px rgba(0,0,0,0.06);
+}
+.light-theme .heroStockDot{
+  color:rgba(0,0,0,0.35);
+}
+.light-theme .essentialCard{
+  background:#ffffff;
+  border-color:#e2e8f0;
+  box-shadow:0 4px 18px rgba(0,0,0,0.04);
+}
+.light-theme .essentialCard:hover{
+  border-color:#ff3157;
+  box-shadow:0 12px 30px rgba(0,0,0,0.08), 0 0 20px rgba(255,49,87,0.12);
+}
+.light-theme .essentialInfo h3{
+  color:#0f172a;
+}
+.light-theme .essentialInfo p{
+  color:#64748b;
+}
+.light-theme .categoryMachineCard.autoCard{
+  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.88) 55%, rgba(255,49,87,0.12) 100%), url('/70cfa8e2-2409-460c-b546-c348c0076234.png') center / cover no-repeat;
+  border-color:#e2e8f0;
+  box-shadow:0 8px 24px rgba(0,0,0,0.06);
+}
+.light-theme .categoryMachineCard.bikeCard{
+  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.88) 55%, rgba(255,49,87,0.12) 100%), url('/4d727a7c-9c8a-436c-b880-9723a5762532.png') center / cover no-repeat;
+  border-color:#e2e8f0;
+  box-shadow:0 8px 24px rgba(0,0,0,0.06);
+}
+.light-theme .categoryMachineCard:hover{
+  border-color:#ff3157;
+  box-shadow:0 16px 36px rgba(0,0,0,0.10), 0 0 24px rgba(255,49,87,0.14);
+}
+.light-theme .categoryMachineCard h3{
+  color:#0f172a;
+}
+.light-theme .categoryMachineCard p{
+  color:#475569;
+}
+.light-theme .machineStockPill{
+  background:rgba(0,0,0,0.06);
+  color:#334155;
+  border-color:rgba(0,0,0,0.08);
+}
+.light-theme .homeBrandCard{
+  background:#ffffff;
+  border-color:#e2e8f0;
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+}
+.light-theme .homeBrandCard:hover{
+  background:#ffffff;
+  border-color:#ff3157;
+  box-shadow:0 8px 24px rgba(0,0,0,0.08), 0 0 16px rgba(255,49,87,0.12);
+}
+.light-theme .homeBrandCard b{
+  color:#0f172a;
+}
+.light-theme .homeBrandCard small{
+  color:#64748b;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
 @media(min-width:851px){
   .hero{min-height:560px}
   .hero>div:first-child{transform:translateY(-2px)}
@@ -21,7 +437,10 @@
 }
 @media(max-width:850px){
   .hero p:not(.eyebrow){font-size:16px}
-  .categories button{min-height:130px}
+  .categories.upgradedCategories{grid-template-columns:1fr!important;gap:16px!important}
+  .homeEssentialsGrid{grid-template-columns:repeat(2, 1fr)}
+  .homeBrandsGrid{grid-template-columns:repeat(auto-fit, minmax(100px, 1fr))}
+  .heroBikeLight, .heroCarLight{opacity:0.4}
 }
 @media(max-width:520px){
   .hero h1{letter-spacing:-2.2px}
@@ -29,10 +448,18 @@
   .heroBtn{box-shadow:0 7px 20px rgba(255,49,87,.10)}
   .sectionhead{margin-bottom:20px}
   .section h2{font-size:26px}
-  .categories button{min-height:116px;padding:22px}
-  .categories span{font-size:30px}
-  .grid .card{box-shadow:none}
   .stats div{min-height:72px}
+  .heroStockBadge{font-size:12px;padding:6px 12px;gap:7px}
+  .homeEssentialsGrid{grid-template-columns:1fr;gap:12px}
+  .homeBrandsGrid{grid-template-columns:repeat(3, 1fr);gap:8px}
+  .homeBrandCard{padding:12px 8px}
+  .categoryMachineCard{padding:20px 22px;min-height:190px}
+  .categoryMachineCard h3{font-size:23px}
+  .categoryMachineCard p{font-size:13px}
+  .heroBikeLight, .heroCarLight{display:none}
 }
 .light-theme .grid .card{box-shadow:0 8px 28px rgba(20,24,32,.05)}
-@media(prefers-reduced-motion:reduce){.grid .card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .grid .card:hover, .essentialCard:hover, .categoryMachineCard:hover, .homeBrandCard:hover{transform:none}
+  .heroStockPulse, .heroBikeLight, .heroCarLight{animation:none}
+}
