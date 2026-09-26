@@ -89,12 +89,12 @@ function uploadToCloudinary(file,onProgress){
 }
 
 export default function Admin(){
- const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState(()=>{try{return localStorage.getItem('motodc-admin-tab')||'dashboard'}catch{return 'dashboard'}});
+ const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState('dashboard');
  const handleTabChange=t=>{setActiveTab(t);try{localStorage.setItem('motodc-admin-tab',t)}catch{}};
- useEffect(()=>onAuthStateChanged(adminAuth,async u=>{setUser(u);setAllowed(false);if(!u){setChecking(false);return}try{const snap=await getDoc(doc(adminDb,'admins',u.uid));setAllowed(snap.exists())}catch(e){console.error(e);toast.error('Could not verify admin access')}finally{setChecking(false)}}),[]);
+ useEffect(()=>onAuthStateChanged(adminAuth,async u=>{setUser(u);setAllowed(false);if(!u){setChecking(false);return}try{const snap=await getDoc(doc(adminDb,'admins',u.uid));setAllowed(snap.exists());setActiveTab('dashboard');try{localStorage.setItem('motodc-admin-tab','dashboard')}catch{}}catch(e){console.error(e);toast.error('Could not verify admin access')}finally{setChecking(false)}}),[]);
  useEffect(()=>{if(allowed)loadProducts()},[allowed]);
  async function loadProducts(){try{const snap=await getDocs(collection(adminDb,'products'));setProducts(snap.docs.map(d=>({id:d.id,...d.data()})))}catch(e){console.error(e);toast.error(e.code==='permission-denied'?'Admin permissions are not enabled yet':'Could not load products')}}
- async function login(e){e.preventDefault();setLoginBusy(true);try{await signInWithEmailAndPassword(adminAuth,email,password);toast.success('Admin signed in')}catch(e){toast.error(e.code==='auth/invalid-credential'?'Invalid email or password':e.message)}finally{setLoginBusy(false)}}
+ async function login(e){e.preventDefault();setLoginBusy(true);try{await signInWithEmailAndPassword(adminAuth,email,password);setActiveTab('dashboard');try{localStorage.setItem('motodc-admin-tab','dashboard')}catch{};toast.success('Admin signed in')}catch(e){toast.error(e.code==='auth/invalid-credential'?'Invalid email or password':e.message)}finally{setLoginBusy(false)}}
  function edit(p){setEditing(p.id);setForm({name:p.name||'',category:p.category||'Automobile',brand:p.brand||'',fitment:p.fitment||'',price:String(p.price??''),rating:String(p.rating??''),stock:String(p.stock??''),image:p.image||'',description:p.description||''});window.scrollTo({top:0,behavior:'smooth'})}
  function reset(){setEditing(null);setForm(empty);setUploadProgress(0)}
  async function uploadImage(e){
@@ -234,14 +234,6 @@ export default function Admin(){
                   <button type="button" className="adminsignout" style={{padding:'7px 11px',fontSize:'11px'}} onClick={()=>setForm(f=>({...f,image:''}))}>
                     Remove image
                   </button>
-                )}
-              </div>
-
-              <div className={`cloudinaryStatus ${CLOUDINARY_CLOUD_NAME&&CLOUDINARY_UPLOAD_PRESET?'connected':'missing'}`}>
-                {CLOUDINARY_CLOUD_NAME&&CLOUDINARY_UPLOAD_PRESET ? (
-                  <span>🟢 Cloudinary connected ({CLOUDINARY_CLOUD_NAME})</span>
-                ) : (
-                  <span>⚠️ Cloudinary not connected yet (Set VITE_CLOUDINARY_CLOUD_NAME & VITE_CLOUDINARY_UPLOAD_PRESET in Vercel)</span>
                 )}
               </div>
 

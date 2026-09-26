@@ -19,7 +19,4 @@
 .adminuploadBtnRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .adminimagepreview{width:100%;max-height:200px;object-fit:cover;border-radius:12px;border:1px solid #252933;background:#080b10;margin-top:6px}
 .light-theme .adminimagepreview{border-color:#dfe2e8;background:#f8f9fb}
-.cloudinaryStatus{display:flex;align-items:center;gap:8px;font-size:11px;padding:7px 11px;border-radius:8px;margin-top:4px}
-.cloudinaryStatus.connected{background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.25)}
-.cloudinaryStatus.missing{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.25)}
 .adminuploadNote{font-size:11px;color:#858c98;margin-top:2px}
