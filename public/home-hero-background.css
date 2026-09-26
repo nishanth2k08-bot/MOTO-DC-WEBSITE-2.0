@@ -6,7 +6,7 @@ main:has(.hero)::before{content:"";display:block!important;position:absolute;z-i
 .hero h1{margin-bottom:20px}
 .hero p:not(.eyebrow){max-width:590px}
 .hero .eyebrow,.hero h1,.hero p:not(.eyebrow),.hero .heroBtn{position:relative;z-index:2}
-body:has(.hero) header{background:transparent!important;backdrop-filter:none!important;border-bottom:0!important}
+body:has(.hero) header{position:absolute!important;top:0!important;left:0!important;right:0!important;background:transparent!important;backdrop-filter:none!important;border-bottom:0!important;box-shadow:none!important}
 .stats{position:relative;z-index:5;max-width:1200px;margin:0 auto;background:transparent!important;backdrop-filter:none!important;border:0!important;border-radius:0;overflow:hidden}
 .stats div{padding:24px 10px;border-right:1px solid rgba(255,255,255,.18)}
 .search svg{display:block!important;visibility:visible!important;opacity:1!important;flex:0 0 18px!important;width:18px!important;height:18px!important;color:#e6e8ed!important;stroke:#e6e8ed!important;stroke-width:2.2!important}
