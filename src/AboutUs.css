@@ -27,13 +27,13 @@
 .light-theme .aboutValue{background:rgba(0,0,0,.4)!important}
 
 /* Cinematic Road Journey motion — no generic grid/diagonal page animation on About Us. */
-.motodc-bg-about{position:fixed;inset:0;z-index:0;overflow:hidden;background:#05070a;opacity:1!important;pointer-events:none}
-.motodc-bg-about::before{content:"";position:absolute;inset:-7%;background:url('/about-road-journey.jpg?v=8') center/cover no-repeat;transform:scale(1.06) translate3d(0,0,0);animation:aboutRoadDrift 15s ease-in-out infinite alternate;will-change:transform,background-position}
+.motodc-bg-about{position:fixed;inset:0;z-index:0;overflow:hidden;background:#05070a url('/about-road-journey.jpg?v=8') center/cover no-repeat!important;opacity:1!important;pointer-events:none;transform:none!important;animation:none!important}
+.motodc-bg-about::before{display:none!important;content:none!important;animation:none!important;transform:none!important}
 .motodc-bg-about::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 78%,rgba(255,49,87,.16),transparent 25%),radial-gradient(circle at 52% 30%,rgba(255,90,55,.09),transparent 22%),linear-gradient(90deg,rgba(2,4,7,.91) 0%,rgba(2,4,7,.64) 34%,rgba(2,4,7,.18) 70%,rgba(2,4,7,.46) 100%),linear-gradient(180deg,rgba(2,4,7,.06),rgba(2,4,7,.72));z-index:2;animation:aboutAtmosphere 8s ease-in-out infinite alternate}
 
 .motodc-about-road-glow{position:absolute;z-index:1;width:52vw;height:52vw;right:2vw;bottom:-10vw;border-radius:50%;background:radial-gradient(circle,rgba(255,49,87,.22) 0%,rgba(255,49,87,.09) 28%,transparent 68%);filter:blur(14px);animation:aboutGlowPulse 5s ease-in-out infinite alternate;mix-blend-mode:screen}
-.light-theme .motodc-bg-about{background:#05070a}.light-theme .motodc-bg-about::after{background:linear-gradient(90deg,rgba(2,4,7,.89) 0%,rgba(2,4,7,.64) 34%,rgba(2,4,7,.22) 70%,rgba(2,4,7,.48) 100%),linear-gradient(180deg,rgba(2,4,7,.08),rgba(2,4,7,.76))}
-@keyframes aboutRoadDrift{0%{transform:scale(1.06) translate3d(-1.2%,-.3%,0);background-position:47% 50%}50%{transform:scale(1.11) translate3d(1.3%,-1.2%,0);background-position:52% 47%}100%{transform:scale(1.07) translate3d(-.8%,.8%,0);background-position:48% 53%}}
+.light-theme .motodc-bg-about{background:#05070a url('/about-road-journey.jpg?v=8') center/cover no-repeat!important}.light-theme .motodc-bg-about::after{background:linear-gradient(90deg,rgba(2,4,7,.89) 0%,rgba(2,4,7,.64) 34%,rgba(2,4,7,.22) 70%,rgba(2,4,7,.48) 100%),linear-gradient(180deg,rgba(2,4,7,.08),rgba(2,4,7,.76))}
+@keyframes aboutRoadDrift{0%,100%{transform:none;background-position:center}}
 @keyframes aboutRoadLight{0%{left:-45%;opacity:0}12%{opacity:.15}30%{opacity:.95}52%{opacity:.6}72%{opacity:.28}100%{left:115%;opacity:0}}
 @keyframes aboutGlowPulse{from{transform:scale(.82);opacity:.32}50%{transform:scale(1.02);opacity:.68}to{transform:scale(1.16);opacity:.9}}
 @keyframes aboutAtmosphere{from{filter:saturate(.92) brightness(.94)}to{filter:saturate(1.08) brightness(1.03)}}

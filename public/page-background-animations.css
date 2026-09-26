@@ -41,7 +41,7 @@
 .motodc-bg-returns .motodc-bg-line{opacity:.35;transform:rotate(0)}
 
 /* About — Road Journey: use the exact uploaded scenic image, with a readable cinematic overlay. */
-.motodc-bg-about{position:fixed;inset:0;opacity:1;background:#05070a url('/about-road-journey.jpg?v=6') center center/cover no-repeat;animation:motodcAboutRoad 26s ease-in-out infinite alternate;z-index:0}
+.motodc-bg-about{position:fixed;inset:0;opacity:1!important;background:#05070a url('/about-road-journey.jpg?v=8') center center/cover no-repeat!important;animation:none!important;transform:none!important;z-index:0}
 .motodc-bg-about::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,5,8,.9) 0%,rgba(3,5,8,.66) 33%,rgba(3,5,8,.25) 68%,rgba(3,5,8,.5) 100%),linear-gradient(180deg,rgba(3,5,8,.12),rgba(3,5,8,.76));pointer-events:none}
 .motodc-bg-about .motodc-bg-glow,.motodc-bg-about .motodc-bg-grid,.motodc-bg-about .motodc-bg-line{z-index:1}
 .motodc-bg-about .motodc-bg-glow{opacity:.22}
@@ -100,7 +100,7 @@
 @media(prefers-reduced-motion:reduce){.motodc-page-bg *{animation:none!important;transform:none!important}}
 #root{position:relative;z-index:1}
 .motodc-page-bg{mix-blend-mode:normal}
-\n@keyframes motodcAboutRoad{0%{background-position:48% 48%;background-size:108%}50%{background-position:52% 50%;background-size:112%}100%{background-position:46% 52%;background-size:108%}}\n
+\n@keyframes motodcAboutRoad{0%,100%{background-position:center;background-size:cover}}\n
 /* Cart — Motion Trail placeholder: no synthetic overlay until the original reference background asset is supplied. */
 .motodc-bg-cart{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(circle at 82% 22%,rgba(255,49,87,.075),transparent 27%),radial-gradient(circle at 18% 80%,rgba(255,49,87,.035),transparent 28%),#05070b;opacity:1!important;pointer-events:none}
 .motodc-bg-cart::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 68% 52%,rgba(255,49,87,.045),transparent 38%);animation:cartMotionBreath 7s ease-in-out infinite alternate}

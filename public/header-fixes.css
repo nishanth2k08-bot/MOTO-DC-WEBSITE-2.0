@@ -1,4 +1,35 @@
 /* Header interaction fixes + MotoDC logo */
+/* Solid, Non-Transparent Top Menu Bar across all pages */
+header,
+body header,
+body:has(.hero) header,
+header.scrolled,
+body:has(.hero) header.scrolled{
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 50 !important;
+  background: #07090d !important;
+  background-color: #07090d !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+.light-theme header,
+.light-theme body header,
+.light-theme body:has(.hero) header,
+.light-theme header.scrolled{
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #dfe2e8 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
 .logo{color:transparent!important;display:block!important;width:205px!important;height:59px!important;flex:0 0 205px!important;font-size:0!important;line-height:0!important;letter-spacing:0!important;white-space:nowrap!important;text-decoration:none!important;position:relative!important;overflow:visible!important;background-image:url('/motodc-exact-logo.webp?v=1')!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s ease!important}
 .logo span{display:none!important}
 .logo::before,.logo::after{content:none!important;display:none!important}
