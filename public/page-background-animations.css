@@ -21,15 +21,15 @@
 .motodc-bg-cart .motodc-bg-line-b{animation-delay:-1.9s}
 .motodc-bg-cart .motodc-bg-glow{background:radial-gradient(circle at 20% 35%,rgba(255,49,87,.18),transparent 23%),radial-gradient(circle at 80% 70%,rgba(255,49,87,.1),transparent 22%)}
 
-/* Checkout — progress flow */
-.motodc-bg-checkout .motodc-bg-grid{display:block;opacity:.08}
-.motodc-bg-checkout .motodc-bg-line{width:82vw;height:4px;left:9%;right:auto;transform:rotate(0);animation:motodcProgress 4s linear infinite}
-.motodc-bg-checkout .motodc-bg-line-b{animation-delay:-2s}
-.motodc-bg-checkout .motodc-bg-orb{width:130px;height:130px}
+/* Checkout — Aerodynamic Wind Tunnel */
+.motodc-bg-checkout{position:fixed;inset:0;opacity:1!important;background:#04070c url('/bg-checkout.jpg?v=1') center center/cover no-repeat!important;animation:none!important;transform:none!important;z-index:0}
+.motodc-bg-checkout::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,7,12,.80) 0%,rgba(4,7,12,.50) 45%,rgba(4,7,12,.88) 100%),radial-gradient(ellipse at center,transparent 28%,rgba(4,7,12,.70) 100%);pointer-events:none}
+.motodc-bg-checkout .motodc-checkout-glow{position:absolute;left:50%;top:44%;width:280px;height:280px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,49,87,.22),transparent 68%);filter:blur(10px);animation:checkoutTunnelGlow 4s ease-in-out infinite alternate}
 
-/* Wishlist — red glow */
-.motodc-bg-wishlist .motodc-bg-orb{width:160px;height:160px;opacity:1}
-.motodc-bg-wishlist .motodc-bg-glow{background:radial-gradient(circle at 25% 35%,rgba(255,49,87,.2),transparent 22%),radial-gradient(circle at 75% 65%,rgba(255,49,87,.14),transparent 24%)}
+/* Wishlist — Collector Vault */
+.motodc-bg-wishlist{position:fixed;inset:0;opacity:1!important;background:#060608 url('/bg-wishlist.jpg?v=1') center center/cover no-repeat!important;animation:none!important;transform:none!important;z-index:0}
+.motodc-bg-wishlist::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,8,.78) 0%,rgba(5,5,8,.44) 40%,rgba(5,5,8,.88) 100%),radial-gradient(ellipse at 70% 25%,rgba(255,49,87,.14) 0%,transparent 62%);pointer-events:none}
+.motodc-bg-wishlist .motodc-wishlist-red-glow{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 
 /* Orders — delivery route */
 .motodc-bg-orders .motodc-bg-line{height:4px;transform:rotate(0);width:82vw;left:9%;opacity:.85;animation:motodcRoute2 4.5s linear infinite}
