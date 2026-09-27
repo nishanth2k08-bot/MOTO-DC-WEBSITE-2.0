@@ -1940,7 +1940,7 @@ export const majorSpareProducts = [
     "price": 949,
     "rating": 4.8,
     "stock": 40,
-    "image": "/images/products/sp-162_mobil_1_synthetic_atf_multi-vehicle_transmission.svg",
+    "image": "/images/products/sp-162_mobil_1_synthetic_atf_multi-vehicle_transmission.jpg",
     "description": "Full synthetic ATF offering outstanding thermal stability, oxidation resistance, and friction durability for smooth shifting."
   },
   {
@@ -1952,7 +1952,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.8,
     "stock": 55,
-    "image": "/images/products/sp-163_shell_advance_4t_ultra_15w-50_pureplus_synthetic.svg",
+    "image": "/images/products/sp-163_shell_advance_4t_ultra_15w-50_pureplus_synthetic.jpg",
     "description": "PurePlus gas-to-liquid synthetic engine oil engineered to prevent piston wear and keep engine parts clean as new."
   },
   {
@@ -1964,7 +1964,7 @@ export const majorSpareProducts = [
     "price": 3599,
     "rating": 4.9,
     "stock": 38,
-    "image": "/images/products/sp-164_shell_helix_ultra_ect_c3_5w-30_synthetic_car_oil.svg",
+    "image": "/images/products/sp-164_shell_helix_ultra_ect_c3_5w-30_synthetic_car_oil.jpg",
     "description": "Emissions Compatible Technology protects exhaust catalyst and particulate filters from blocking and soot accumulation."
   },
   {
@@ -1976,7 +1976,7 @@ export const majorSpareProducts = [
     "price": 679,
     "rating": 4.7,
     "stock": 45,
-    "image": "/images/products/sp-165_shell_spirax_s4_g_75w-90_synthetic_gear_oil.svg",
+    "image": "/images/products/sp-165_shell_spirax_s4_g_75w-90_synthetic_gear_oil.jpg",
     "description": "Extreme-pressure gear lubricant providing quiet operation and high scuffing protection under heavy towing loads."
   },
   {
@@ -2420,7 +2420,7 @@ export const majorSpareProducts = [
     "price": 1299,
     "rating": 4.7,
     "stock": 60,
-    "image": "/images/products/sp-202_castrol_gtx_20w-50_high_mileage_engine_oil.svg",
+    "image": "/images/products/sp-202_castrol_gtx_20w-50_high_mileage_engine_oil.jpg",
     "description": "Double Action formula cleans away old engine sludge and protects against new sludge build-up in high-mileage cars."
   },
   {
@@ -2432,7 +2432,7 @@ export const majorSpareProducts = [
     "price": 499,
     "rating": 4.8,
     "stock": 85,
-    "image": "/images/products/sp-203_castrol_chain_lube_racing_synthetic_spray.svg",
+    "image": "/images/products/sp-203_castrol_chain_lube_racing_synthetic_spray.jpg",
     "description": "Clear synthetic formulation with ceramic anti-friction additives for zero fling-off at speeds exceeding 200 km/h."
   },
   {
@@ -2444,7 +2444,7 @@ export const majorSpareProducts = [
     "price": 3699,
     "rating": 4.9,
     "stock": 32,
-    "image": "/images/products/sp-204_motul_8100_x-cess_5w-40_synthetic_car_oil.svg",
+    "image": "/images/products/sp-204_motul_8100_x-cess_5w-40_synthetic_car_oil.jpg",
     "description": "Full synthetic engine lubricant specially designed for powerful, high displacement modern petrol and diesel vehicles."
   },
   {
@@ -2456,7 +2456,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 50,
-    "image": "/images/products/sp-205_motul_fork_oil_expert_medium_10w_technosynthese.svg",
+    "image": "/images/products/sp-205_motul_fork_oil_expert_medium_10w_technosynthese.jpg",
     "description": "Synthetic blend fork fluid featuring anti-foaming technology for uniform damping control over bumpy terrain."
   },
   {
