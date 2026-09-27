@@ -1,0 +1,79 @@
+[
+  {
+    "id": "sp-119",
+    "name": "Philips Ultinon Pro3021 LED Fog Light Kit (H8/H11/H16)",
+    "imageName": "philips_ultinon_pro3021_fog",
+    "target": "public/images/products/sp-119_philips_ultinon_pro3021_led_fog_light_kit.jpg",
+    "prompt": "Studio product photography of a pair of Philips Ultinon Pro3021 automotive LED fog light bulbs (H8/H11/H16 fitment). Sleek silver and aluminum heatsink body, clean 6000K cool white LED chips, premium automotive box packaging in background, resting on dark reflective studio surface."
+  },
+  {
+    "id": "sp-122",
+    "name": "K&N Pro Series Heavy Duty Spin-On Oil Filter",
+    "imageName": "kn_pro_series_oil_filter",
+    "target": "public/images/products/sp-122_kn_pro_series_heavy_duty_spin_on_oil_filter.jpg",
+    "prompt": "Studio product photography of a K&N Pro Series canister spin-on automotive oil filter. Gloss black cylindrical body with high-contrast red and white K&N logo, textured grip top, resting on dark reflective metallic background with crisp studio edge lighting."
+  },
+  {
+    "id": "sp-143",
+    "name": "Uno Minda Heavy Duty Starter Motor Assembly",
+    "imageName": "uno_minda_starter_motor",
+    "target": "public/images/products/sp-143_uno_minda_heavy_duty_starter_motor_assembly.jpg",
+    "prompt": "Studio product photography of a brand new motorcycle electric starter motor assembly by Uno Minda. Heavy duty cast aluminum body with brass electrical terminal post, splined output gear shaft, clean industrial dark background with subtle rim light."
+  },
+  {
+    "id": "sp-145",
+    "name": "Akrapovič Evolution Titanium Full Exhaust System",
+    "imageName": "akrapovic_evolution_titanium_exhaust",
+    "target": "public/images/products/sp-145_akrapovic_evolution_titanium_full_exhaust_system.jpg",
+    "prompt": "Studio product photography of an Akrapovič Evolution full titanium motorcycle race exhaust system. Hydroformed lightweight titanium header pipes with rainbow heat discoloration weld beads, sleek carbon fiber end cap muffler with iconic red and yellow Akrapovič scorpion logo, displayed on luxury dark slate pedestal."
+  },
+  {
+    "id": "sp-146",
+    "name": "Akrapovič Carbon Slip-On Track Silencer",
+    "imageName": "akrapovic_carbon_track_silencer",
+    "target": "public/images/products/sp-146_akrapovic_carbon_slip_on_track_silencer.jpg",
+    "prompt": "Studio product photography of an authentic Akrapovič carbon fiber slip-on track motorcycle muffler silencer. Matte twill-weave carbon sleeve, titanium link inlet, carbon mounting strap, bright Akrapovič logo badge, isolated on sleek dark textured floor with professional studio rim lighting."
+  },
+  {
+    "id": "sp-147",
+    "name": "Akrapovič Stainless Link Pipe Kit",
+    "imageName": "akrapovic_stainless_link_pipe",
+    "target": "public/images/products/sp-147_akrapovic_stainless_link_pipe_kit.jpg",
+    "prompt": "Studio product photography of a high performance stainless steel motorcycle decat exhaust link pipe kit. Mirror polished stainless steel mandrel bends with precision TIG welds, exhaust retention springs and mounting hardware, on dark carbon floor."
+  },
+  {
+    "id": "sp-172",
+    "name": "Pricol Electric Windshield Washer Pump (12V)",
+    "imageName": "pricol_windshield_washer_pump",
+    "target": "public/images/products/sp-172_pricol_electric_windshield_washer_pump_12v.jpg",
+    "prompt": "Studio product photography of a compact 12V automotive windshield washer fluid pump motor by Pricol. Matte black engineering plastic casing with fluid barbed nozzle, rubber sealing grommet, and 2-pin electrical connector plug, on dark reflective studio surface."
+  },
+  {
+    "id": "sp-173",
+    "name": "Uno Minda Handlebar Switch Control Assembly (LH)",
+    "imageName": "uno_minda_handlebar_switch_lh",
+    "target": "public/images/products/sp-173_uno_minda_handlebar_switch_control_assembly_lh.jpg",
+    "prompt": "Studio product photography of an Uno Minda left-hand motorcycle handlebar switchgear assembly. Die-cast black metal housing with yellow pass trigger, horn button, high-low beam rocker, turn signal switch, and black braided wire harness, shot on dark textured background."
+  },
+  {
+    "id": "sp-174",
+    "name": "Uno Minda Automotive Ignition Coil Pack",
+    "imageName": "uno_minda_ignition_coil_pack",
+    "target": "public/images/products/sp-174_uno_minda_automotive_ignition_coil_pack.jpg",
+    "prompt": "Studio product photography of an automotive electronic pencil ignition coil pack by Uno Minda. Durable black composite boot with integrated dielectric silicone spark plug boot and 3-pin connector header, crisp studio lighting on dark slate."
+  },
+  {
+    "id": "sp-175",
+    "name": "Minda Waterproof Motorcycle USB Fast Charger (18W)",
+    "imageName": "minda_waterproof_usb_charger",
+    "target": "public/images/products/sp-175_minda_waterproof_motorcycle_usb_fast_charger_18w.jpg",
+    "prompt": "Studio product photography of an 18W waterproof motorcycle handlebar USB fast charger. Matte black weatherproof body with silicone protective flip cap open revealing blue LED illuminated dual USB ports, handlebar mounting clamp, on dark reflective surface."
+  },
+  {
+    "id": "sp-184",
+    "name": "Denso High-Torque Starter Motor Assembly",
+    "imageName": "denso_starter_motor_assembly",
+    "target": "public/images/products/sp-184_denso_high_torque_starter_motor_assembly.jpg",
+    "prompt": "Studio product photography of an OEM Denso high-torque car starter motor assembly. Cast aluminum mounting housing, planetary gear drive pinion, heavy-duty electromagnetic solenoid, and copper electrical contact post, set on dark steel plate with professional studio lighting."
+  }
+]

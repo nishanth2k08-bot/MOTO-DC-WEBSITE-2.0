@@ -1424,7 +1424,7 @@ export const majorSpareProducts = [
     "price": 3299,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/sp-119_philips_ultinon_pro3021_led_fog_light_kit.svg",
+    "image": "/images/products/sp-119_philips_ultinon_pro3021_led_fog_light_kit.jpg",
     "description": "Compact plug-and-play 6000K cool white LED fog lamp pair featuring precise beam cutoff to avoid blinding oncoming traffic in mist and rain."
   },
   {
@@ -1460,7 +1460,7 @@ export const majorSpareProducts = [
     "price": 899,
     "rating": 4.7,
     "stock": 55,
-    "image": "/images/products/sp-122_kn_pro_series_heavy_duty_spin_on_oil_filter.svg",
+    "image": "/images/products/sp-122_kn_pro_series_heavy_duty_spin_on_oil_filter.jpg",
     "description": "High flow rates with synthetic blend media designed to trap 99% of harmful engine contaminants, fitted with anti-drainback silicone valve."
   },
   {
@@ -1712,7 +1712,7 @@ export const majorSpareProducts = [
     "price": 2199,
     "rating": 4.7,
     "stock": 24,
-    "image": "/images/products/sp-143_uno_minda_heavy_duty_starter_motor_assembly.svg",
+    "image": "/images/products/sp-143_uno_minda_heavy_duty_starter_motor_assembly.jpg",
     "description": "High-torque armature winding and heavy-duty permanent magnets ensure instant, reliable cold starts every single time."
   },
   {
@@ -1736,7 +1736,7 @@ export const majorSpareProducts = [
     "price": 118999,
     "rating": 5,
     "stock": 3,
-    "image": "/images/products/sp-145_akrapovic_evolution_titanium_full_exhaust_system.svg",
+    "image": "/images/products/sp-145_akrapovic_evolution_titanium_full_exhaust_system.jpg",
     "description": "Full titanium race exhaust system with hydroformed headers, carbon end cap, and massive weight savings for track day performance."
   },
   {
@@ -1748,7 +1748,7 @@ export const majorSpareProducts = [
     "price": 89999,
     "rating": 5,
     "stock": 4,
-    "image": "/images/products/sp-146_akrapovic_carbon_slip_on_track_silencer.svg",
+    "image": "/images/products/sp-146_akrapovic_carbon_slip_on_track_silencer.jpg",
     "description": "Championship-developed carbon fiber sleeve with titanium internals, delivering pure race acoustic profile and high-rpm throttle gains."
   },
   {
