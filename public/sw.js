@@ -1,4 +1,4 @@
-const CACHE = "motodc-shell-v16";
+const CACHE = "motodc-shell-v17";
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();
