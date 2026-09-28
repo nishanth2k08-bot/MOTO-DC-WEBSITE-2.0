@@ -218,3 +218,117 @@
   color: #64748b;
 }
 
+/* Two-box Phone Input (Separate Country Code & Mobile Number) */
+.authform label>.phoneInputsRow {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.authform label>.phoneInputsRow:focus-within {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  transform: none !important;
+}
+.countryCodeBox {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 72px !important;
+  flex: 0 0 72px !important;
+  background: #070a0f !important;
+  border: 1px solid #292e38 !important;
+  border-radius: 11px !important;
+  padding: 0 6px !important;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease !important;
+  box-sizing: border-box !important;
+}
+.countryCodeBox:focus-within {
+  border-color: #ff3157 !important;
+  box-shadow: 0 0 0 3px rgba(255,49,87,.10) !important;
+  background: #090c12 !important;
+  transform: translateY(-1px) !important;
+}
+.countryCodeInput {
+  width: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #ff3157 !important;
+  outline: 0 !important;
+  padding: 13px 0 !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+  box-sizing: border-box !important;
+}
+.phoneNumberBox {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: #070a0f !important;
+  color: #858c98 !important;
+  border: 1px solid #292e38 !important;
+  border-radius: 11px !important;
+  padding: 0 13px !important;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease !important;
+  box-sizing: border-box !important;
+}
+.phoneNumberBox:focus-within {
+  border-color: #ff3157 !important;
+  box-shadow: 0 0 0 3px rgba(255,49,87,.10) !important;
+  background: #090c12 !important;
+  transform: translateY(-1px) !important;
+}
+.phoneNumberInput {
+  width: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #f8fafc !important;
+  outline: 0 !important;
+  padding: 13px 0 !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  box-sizing: border-box !important;
+}
+.phoneNumberInput::placeholder {
+  color: #5f6773 !important;
+}
+
+/* Light Theme Overrides */
+.light-theme .countryCodeBox,
+.light-theme .phoneNumberBox {
+  background: #f8f9fa !important;
+  border-color: #dfe2e8 !important;
+}
+.light-theme .countryCodeInput {
+  color: #ff3157 !important;
+}
+.light-theme .phoneNumberInput {
+  color: #171a21 !important;
+}
+.light-theme .phoneNumberInput::placeholder {
+  color: #9298a3 !important;
+}
+.light-theme .countryCodeBox:focus-within,
+.light-theme .phoneNumberBox:focus-within {
+  background: #fff !important;
+  border-color: #ff3157 !important;
+}
+
+@media(max-width:480px){
+  .countryCodeBox {
+    width: 64px !important;
+    flex: 0 0 64px !important;
+  }
+}
+
+
