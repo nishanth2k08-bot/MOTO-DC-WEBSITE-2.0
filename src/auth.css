@@ -165,3 +165,56 @@
   .auth{padding:16px 10px}
   .authcard{max-height:calc(100vh - 32px)}
 }
+
+/* Resend OTP text and inline link */
+.resendOtpWrap {
+  margin: 14px 0 6px;
+  text-align: center;
+  font-size: 13px;
+  color: #9299a6;
+  line-height: 1.5;
+}
+.resendCountdownText {
+  color: #858c98;
+  font-size: 13px;
+}
+.resendCountdownText b {
+  color: #ff3157;
+  font-weight: 700;
+  margin-left: 3px;
+}
+.resendActionText {
+  color: #9299a6;
+  font-size: 13px;
+}
+.resendInlineLink {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #ff3157 !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  cursor: pointer !important;
+  display: inline !important;
+  box-shadow: none !important;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.resendInlineLink:hover:not(:disabled) {
+  color: #ff6584 !important;
+}
+.resendInlineLink:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.light-theme .resendOtpWrap,
+.light-theme .resendCountdownText,
+.light-theme .resendActionText {
+  color: #64748b;
+}
+
