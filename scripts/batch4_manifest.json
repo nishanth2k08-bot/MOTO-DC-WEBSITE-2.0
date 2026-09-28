@@ -1,0 +1,79 @@
+[
+  {
+    "id": "sp-206",
+    "name": "Philips DiamondVision 5000K Halogen Headlight Bulb (H4 Pair)",
+    "imageName": "philips_diamondvision_h4",
+    "target": "public/images/products/sp-206_philips_diamondvision_5000k_halogen_headlight_bulb.jpg",
+    "prompt": "Studio product photography of a pair of Philips DiamondVision 5000K H4 automotive halogen headlight bulbs. Distinctive deep blue coated quartz glass capsules with silver tips, dual filaments, metal mounting flanges, resting in their clear acrylic retail packaging on a dark reflective surface."
+  },
+  {
+    "id": "sp-207",
+    "name": "Philips Ultinon Pro6000 LED Interior Festoon Bulb (31mm Pair)",
+    "imageName": "philips_ultinon_pro6000_festoon",
+    "target": "public/images/products/sp-207_philips_ultinon_pro6000_led_interior_festoon_bulb.jpg",
+    "prompt": "Studio product photography of a pair of Philips Ultinon Pro6000 31mm automotive LED festoon interior bulbs. Compact ceramic heatsink, frosted white diffuser lens with 6000K daylight white LED chips, silver end caps, resting beside official Philips blister packaging on dark reflective background."
+  },
+  {
+    "id": "sp-208",
+    "name": "K&N Air Filter Recharge Cleaning & Oiling Service Kit",
+    "imageName": "kn_air_filter_recharge_kit",
+    "target": "public/images/products/sp-208_kn_air_filter_recharge_cleaning_and_oiling_kit.jpg",
+    "prompt": "Studio product photography of a K&N Filter Care Service Kit. Two plastic bottles: one black spray bottle of K&N Power Kleen air filter cleaner and one red squeeze/aerosol bottle of K&N air filter oil, prominent red K&N logos, professional studio product shot on dark textured background."
+  },
+  {
+    "id": "sp-209",
+    "name": "K&N Powersports High Performance Oil Filter (KN-155)",
+    "imageName": "kn_powersports_oil_filter_kn155",
+    "target": "public/images/products/sp-209_kn_powersports_high_performance_oil_filter_kn155.jpg",
+    "prompt": "Studio product photography of a K&N KN-155 cartridge oil filter for KTM motorcycles. Cylindrical pleated synthetic micro-glass filtration media with orange-red rubber end seals and metal mesh reinforcement, isolated on dark carbon surface with professional rim lighting."
+  },
+  {
+    "id": "sp-214",
+    "name": "Royal Enfield Touring Handlebar Deluxe Mirror Set (Bar-End)",
+    "imageName": "re_touring_barend_mirrors",
+    "target": "public/images/products/sp-214_royal_enfield_touring_handlebar_deluxe_mirror_set.jpg",
+    "prompt": "Studio product photography of a pair of genuine Royal Enfield CNC machined billet aluminum bar-end touring mirrors. Matte black anodized finish, subtle laser-engraved Royal Enfield branding, convex tinted glass, mounting expansion plugs, displayed on dark granite."
+  },
+  {
+    "id": "sp-215",
+    "name": "Royal Enfield Heavy Duty Sump Guard / Bash Plate",
+    "imageName": "re_himalayan_sump_guard",
+    "target": "public/images/products/sp-215_royal_enfield_heavy_duty_sump_guard_bash_plate.jpg",
+    "prompt": "Studio product photography of a 4mm thick brushed aluminum Royal Enfield Himalayan heavy duty sump guard engine bash plate. Precision laser-cut ventilation slots, embossed Royal Enfield logo, mounting brackets and bolts, resting at an angle on rugged dark slate."
+  },
+  {
+    "id": "sp-220",
+    "name": "Hero Splendor Carburetor & Intake Manifold Assembly",
+    "imageName": "hero_splendor_carburetor",
+    "target": "public/images/products/sp-220_hero_splendor_carburetor_and_intake_manifold_assembly.jpg",
+    "prompt": "Studio product photography of a factory-new motorcycle carburetor assembly with curved intake manifold for Hero Splendor. Clean die-cast alloy body, brass choke and idle adjustment screws, float bowl, fuel overflow hose, on dark industrial steel surface."
+  },
+  {
+    "id": "sp-221",
+    "name": "Bajaj Pulsar 220F High-Output Magneto Stator Coil",
+    "imageName": "bajaj_pulsar_stator_coil",
+    "target": "public/images/products/sp-221_bajaj_pulsar_220f_high_output_magneto_stator_coil.jpg",
+    "prompt": "Studio product photography of an alternator magneto stator coil assembly for Bajaj Pulsar. Circular steel laminated core with tightly wound high-grade copper wire poles, pickup trigger coil, and rubber grommet wire harness, on dark reflective workshop table."
+  },
+  {
+    "id": "sp-224",
+    "name": "KTM PowerParts Ergonomic Rider Comfort Seat",
+    "imageName": "ktm_powerparts_rider_seat",
+    "target": "public/images/products/sp-224_ktm_powerparts_ergonomic_rider_comfort_seat.jpg",
+    "prompt": "Studio product photography of an official KTM PowerParts ergonomic comfort rider seat for Duke 390. Sculpted high-density foam profile, premium dual-texture black gripper fabric cover with vibrant KTM orange contrast stitching, isolated on dark carbon fiber floor."
+  },
+  {
+    "id": "sp-226",
+    "name": "Hyundai Creta Front Brake Disc Rotors (Pair)",
+    "imageName": "hyundai_creta_front_brake_rotors",
+    "target": "public/images/products/sp-226_hyundai_creta_front_brake_disc_rotors_pair.jpg",
+    "prompt": "Studio product photography of a pair of front ventilated cast-iron brake disc rotors for Hyundai Creta. Cross-hatched precision machined friction braking surface, center ventilation cooling vanes, 5-lug bolt pattern, anti-corrosion gray coated hub, on dark reflective floor."
+  },
+  {
+    "id": "sp-228",
+    "name": "Mahindra Thar Front Heavy Duty Brake Disc Rotors (Pair)",
+    "imageName": "mahindra_thar_heavy_duty_rotors",
+    "target": "public/images/products/sp-228_mahindra_thar_front_heavy_duty_brake_disc_rotors_pair.jpg",
+    "prompt": "Studio product photography of a pair of heavy-duty ventilated 4x4 front brake disc rotors for Mahindra Thar. Rugged cast-iron construction with directional internal cooling vanes, 5-lug mounting hub, cross-ground friction face, resting side by side on dark slate with professional lighting."
+  }
+]

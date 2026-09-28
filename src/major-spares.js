@@ -1760,7 +1760,7 @@ export const majorSpareProducts = [
     "price": 18999,
     "rating": 4.8,
     "stock": 8,
-    "image": "/images/products/sp-147_akrapovic_stainless_link_pipe_kit.svg",
+    "image": "/images/products/sp-147_akrapovic_stainless_link_pipe_kit.jpg",
     "description": "Precision CNC-bent stainless steel cat-delete link pipe designed to eliminate exhaust backpressure."
   },
   {
@@ -2060,7 +2060,7 @@ export const majorSpareProducts = [
     "price": 420,
     "rating": 4.7,
     "stock": 75,
-    "image": "/images/products/sp-172_pricol_electric_windshield_washer_pump_12v.svg",
+    "image": "/images/products/sp-172_pricol_electric_windshield_washer_pump_12v.jpg",
     "description": "Compact high-pressure 12V washer fluid motor with waterproof rubber grommet for streak-free windscreen spray."
   },
   {
