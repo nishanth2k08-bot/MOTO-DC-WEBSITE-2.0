@@ -2,6 +2,7 @@ import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 import { waitUntil } from '@vercel/functions';
 import { sendCustomerTemplateEmail } from './_send-email.js';
+import { indexOrderInAlgolia } from './_algolia.js';
 function send(res,status,body){res.status(status).json(body)}
 function getAdmin(){
   if(admin.apps.length)return admin;
@@ -47,6 +48,7 @@ export default async function handler(req,res){
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
+    waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_COD_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('COD order email error:',emailError);}})());
     else console.error('COD order email skipped: MSG91_TEMPLATE_COD_ORDER is not configured');

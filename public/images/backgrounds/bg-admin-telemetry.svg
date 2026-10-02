@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="adminCommandDark" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#14111d" />
+      <stop offset="50%" stop-color="#080a10" />
+      <stop offset="100%" stop-color="#030406" />
+    </radialGradient>
+    <radialGradient id="adminCommandLight" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="50%" stop-color="#eef3f9" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </radialGradient>
+
+    <!-- Data Stream Gradient -->
+    <linearGradient id="dataStream" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255, 49, 87, 0.1)" />
+      <stop offset="50%" stop-color="#ff3157" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+
+    <filter id="consoleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .admin-bg { fill: url(#adminCommandDark); transition: fill 0.4s ease; }
+    .console-frame { fill: #0d111a; stroke: #1e2636; stroke-width: 1.5; }
+    .grid-mesh { stroke: rgba(255, 255, 255, 0.04); stroke-width: 1; }
+    .data-bar { fill: #ff3157; opacity: 0.7; }
+    .accent-hdr { fill: #ff3157; font-family: 'Sora', sans-serif; font-weight: 700; }
+
+    @media (prefers-color-scheme: light) {
+      .admin-bg { fill: url(#adminCommandLight); }
+      .console-frame { fill: #ffffff; stroke: #cbd5e1; }
+      .grid-mesh { stroke: rgba(0, 0, 0, 0.04); }
+    }
+  </style>
+
+  <!-- Ambient Backdrop -->
+  <rect width="1920" height="1080" class="admin-bg" />
+
+  <!-- Background Data Grid Mesh -->
+  <g class="grid-mesh">
+    <line x1="320" y1="0" x2="320" y2="1080" />
+    <line x1="640" y1="0" x2="640" y2="1080" />
+    <line x1="960" y1="0" x2="960" y2="1080" />
+    <line x1="1280" y1="0" x2="1280" y2="1080" />
+    <line x1="1600" y1="0" x2="1600" y2="1080" />
+    <line x1="0" y1="240" x2="1920" y2="240" />
+    <line x1="0" y1="480" x2="1920" y2="480" />
+    <line x1="0" y1="720" x2="1920" y2="720" />
+    <line x1="0" y1="960" x2="1920" y2="960" />
+  </g>
+
+  <!-- High-Speed Data Stream Circuit (Connecting Console Nodes) -->
+  <path d="M 0 180 L 420 180 L 520 280 L 1400 280 L 1520 160 L 1920 160" stroke="url(#dataStream)" stroke-width="4" fill="none" filter="url(#consoleGlow)" />
+  <path d="M 0 180 L 420 180 L 520 280 L 1400 280 L 1520 160 L 1920 160" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.8" />
+
+  <!-- Left Console: Inventory & Live Order Flow Metrics (Faint Silhouette) -->
+  <g transform="translate(120, 340)" opacity="0.45">
+    <rect x="0" y="0" width="360" height="420" rx="12" class="console-frame" />
+    <text x="24" y="40" class="accent-hdr" font-size="11">INVENTORY THROUGHPUT // 230 SKUS</text>
+    <!-- Live Flow Bars -->
+    <rect x="24" y="70" width="180" height="12" rx="3" class="data-bar" />
+    <rect x="24" y="95" width="260" height="12" rx="3" class="data-bar" opacity="0.9" />
+    <rect x="24" y="120" width="140" height="12" rx="3" class="data-bar" opacity="0.6" />
+    <rect x="24" y="145" width="220" height="12" rx="3" class="data-bar" opacity="0.8" />
+    <rect x="24" y="170" width="290" height="12" rx="3" fill="#38bdf8" opacity="0.7" />
+    <line x1="24" y1="210" x2="336" y2="210" stroke="#1f2838" stroke-width="1" />
+    <text x="24" y="240" fill="#a0aec0" font-family="monospace" font-size="10">ORDER PROCESSING: 0.18s LATENCY</text>
+    <text x="24" y="260" fill="#a0aec0" font-family="monospace" font-size="10">FIRESTORE SYNC: LIVE WEBSOCKET</text>
+  </g>
+
+  <!-- Right Console: System Engine Diagnostics & RPM Arc -->
+  <g transform="translate(1440, 340)" opacity="0.45">
+    <rect x="0" y="0" width="360" height="420" rx="12" class="console-frame" />
+    <text x="24" y="40" class="accent-hdr" font-size="11">SERVER TELEMETRY // HIGH PERFORMANCE</text>
+    <!-- Concentric Server Health Rings -->
+    <circle cx="180" cy="180" r="100" stroke="#1f2838" stroke-width="3" fill="none" />
+    <circle cx="180" cy="180" r="80" stroke="#ff3157" stroke-width="3" stroke-dasharray="140 30" fill="none" />
+    <circle cx="180" cy="180" r="60" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="80 20" fill="none" />
+    <text x="180" y="185" text-anchor="middle" fill="#ffffff" font-family="'Sora', sans-serif" font-weight="800" font-size="20">99.9%</text>
+    <text x="180" y="205" text-anchor="middle" fill="#718096" font-family="monospace" font-size="10">UPTIME // SECURE</text>
+  </g>
+
+  <!-- Center Lower Command Line -->
+  <g opacity="0.3">
+    <line x1="480" y1="880" x2="1440" y2="880" stroke="#ff3157" stroke-width="1.5" stroke-dasharray="8 6" />
+    <circle cx="960" cy="880" r="8" fill="#ff3157" />
+  </g>
+
+  <!-- Command Header Callout -->
+  <text x="960" y="80" text-anchor="middle" class="accent-hdr" font-size="13" letter-spacing="4">MOTODC OPERATIONS COMMAND // SYSTEM CONTROL TOWER</text>
+</svg>

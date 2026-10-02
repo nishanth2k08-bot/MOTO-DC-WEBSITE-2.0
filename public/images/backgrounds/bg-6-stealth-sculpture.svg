@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="stealthBase" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#141824" />
+      <stop offset="45%" stop-color="#0a0d14" />
+      <stop offset="100%" stop-color="#040608" />
+    </radialGradient>
+    <linearGradient id="rooflineRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255, 49, 87, 0)" />
+      <stop offset="35%" stop-color="#ff3157" />
+      <stop offset="65%" stop-color="#ff6b85" />
+      <stop offset="100%" stop-color="rgba(255, 49, 87, 0)" />
+    </linearGradient>
+    <linearGradient id="bodySpecular" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0)" />
+      <stop offset="45%" stop-color="rgba(255, 255, 255, 0.35)" />
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0)" />
+    </linearGradient>
+    <filter id="softAura" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="22" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Ambient Backdrop -->
+  <rect width="1920" height="1080" fill="url(#stealthBase)" />
+
+  <!-- Sculpted Vehicle Shoulder Line Contour -->
+  <path d="M 120 720 C 450 680 750 480 1200 480 C 1580 480 1780 620 1880 700" stroke="url(#bodySpecular)" stroke-width="2.5" fill="none" opacity="0.6" />
+
+  <!-- Glowing Crimson Aero Roofline / Feature Crease -->
+  <path d="M 280 660 C 580 610 820 420 1240 420 C 1550 420 1720 540 1820 620" stroke="url(#rooflineRed)" stroke-width="4.5" fill="none" filter="url(#softAura)" />
+  <path d="M 280 660 C 580 610 820 420 1240 420 C 1550 420 1720 540 1820 620" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.8" />
+
+  <!-- Lower Rocker Panel Line -->
+  <path d="M 320 840 C 650 820 1250 820 1680 840" stroke="rgba(255, 49, 87, 0.4)" stroke-width="2" stroke-dasharray="12 10" fill="none" />
+
+  <!-- Ground Diffuser Aura -->
+  <ellipse cx="960" cy="850" rx="600" ry="60" fill="rgba(255, 49, 87, 0.12)" filter="url(#softAura)" />
+
+  <!-- Subtle Minimalist Grid in Corner -->
+  <g opacity="0.15" transform="translate(140, 180)">
+    <circle cx="40" cy="40" r="30" stroke="#ffffff" stroke-width="1" fill="none" />
+    <line x1="10" y1="40" x2="70" y2="40" stroke="#ff3157" stroke-width="1" />
+    <line x1="40" y1="10" x2="40" y2="70" stroke="#ff3157" stroke-width="1" />
+    <text x="85" y="44" fill="#ffffff" font-size="11" font-family="'Sora', sans-serif" font-weight="600" letter-spacing="2">AERO-COEFFICIENT // Cd 0.24</text>
+  </g>
+</svg>

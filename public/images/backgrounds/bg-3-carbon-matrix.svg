@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Carbon Fiber 2x2 Twill Weave Pattern -->
+    <pattern id="carbonTwill" width="16" height="16" patternUnits="userSpaceOnUse">
+      <rect width="16" height="16" fill="#07090d" />
+      <polygon points="0,0 8,0 0,8" fill="#131720" />
+      <polygon points="8,0 16,8 8,8" fill="#1b212e" />
+      <polygon points="0,8 8,16 0,16" fill="#1b212e" />
+      <polygon points="8,8 16,16 8,16" fill="#0d1016" />
+      <polygon points="8,0 16,0 16,8" fill="#0d1016" />
+    </pattern>
+
+    <!-- Honeycomb Grille Pattern -->
+    <pattern id="hexGrille" width="36" height="62" patternUnits="userSpaceOnUse">
+      <path d="M 18,0 L 36,10 L 36,31 L 18,41 L 0,31 L 0,10 Z" fill="none" stroke="rgba(255, 49, 87, 0.08)" stroke-width="1.2" />
+      <path d="M 18,41 L 36,51 L 36,72 L 18,82 L 0,72 L 0,51 Z" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+    </pattern>
+
+    <!-- Radial Crimson Ambient Highlight -->
+    <radialGradient id="carbonGlow" cx="80%" cy="20%" r="65%">
+      <stop offset="0%" stop-color="rgba(255, 49, 87, 0.22)" />
+      <stop offset="40%" stop-color="rgba(255, 49, 87, 0.06)" />
+      <stop offset="100%" stop-color="transparent" />
+    </radialGradient>
+
+    <!-- Linear Bottom Depth Gradient -->
+    <linearGradient id="depthVignette" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(7, 9, 13, 0.4)" />
+      <stop offset="100%" stop-color="rgba(7, 9, 13, 0.95)" />
+    </linearGradient>
+
+    <filter id="aeroBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Carbon Fiber Base -->
+  <rect width="1920" height="1080" fill="url(#carbonTwill)" />
+
+  <!-- Honeycomb Aerodynamic Intake Layer (Soft) -->
+  <rect width="1920" height="1080" fill="url(#hexGrille)" opacity="0.6" />
+
+  <!-- Red Ambient Glow in Upper Right & Lower Left -->
+  <rect width="1920" height="1080" fill="url(#carbonGlow)" />
+  <circle cx="200" cy="900" r="450" fill="rgba(255, 49, 87, 0.08)" filter="url(#aeroBlur)" />
+
+  <!-- Aerodynamic Streamline Curves (Wind Tunnel Vortex Lines) -->
+  <g opacity="0.65">
+    <path d="M -100 280 C 600 120 1200 580 2050 380" stroke="#ff3157" stroke-width="2.5" fill="none" filter="url(#aeroBlur)" />
+    <path d="M -100 280 C 600 120 1200 580 2050 380" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.7" />
+    
+    <path d="M -50 340 C 650 180 1250 640 2100 440" stroke="rgba(255, 49, 87, 0.4)" stroke-width="1.5" stroke-dasharray="10 8" fill="none" />
+    
+    <path d="M 100 80 C 750 380 1350 140 2000 680" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1" fill="none" />
+  </g>
+
+  <!-- Dark Top/Bottom Vignette to ensure cards pop -->
+  <rect width="1920" height="1080" fill="url(#depthVignette)" />
+
+  <!-- Technical Weave Badge -->
+  <text x="1840" y="1020" text-anchor="end" fill="#ffffff" font-size="10" font-family="'Sora', sans-serif" font-weight="700" letter-spacing="3" opacity="0.2">DRY CARBON PRE-PREG // 3K TWILL</text>
+</svg>

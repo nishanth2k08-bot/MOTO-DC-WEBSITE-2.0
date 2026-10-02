@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="dynoLabDark" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#111622" />
+      <stop offset="50%" stop-color="#070a10" />
+      <stop offset="100%" stop-color="#020306" />
+    </radialGradient>
+    <radialGradient id="dynoLabLight" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="50%" stop-color="#eef3f9" />
+      <stop offset="100%" stop-color="#e0e7f1" />
+    </radialGradient>
+
+    <linearGradient id="dynoWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255, 49, 87, 0.2)" />
+      <stop offset="40%" stop-color="#ff3157" />
+      <stop offset="70%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="rgba(56, 189, 248, 0.4)" />
+    </linearGradient>
+
+    <filter id="dynoGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .dyno-bg { fill: url(#dynoLabDark); transition: fill 0.4s ease; }
+    .lab-grid { stroke: rgba(255, 255, 255, 0.05); stroke-width: 1; }
+    .laser-cross { stroke: #ff3157; stroke-width: 1.5; stroke-dasharray: 8 6; opacity: 0.6; }
+    .scope-frame { fill: #0d111a; stroke: #1e2636; stroke-width: 2; }
+    .stamp-text { fill: #ff3157; font-family: 'Sora', sans-serif; font-weight: 800; }
+
+    @media (prefers-color-scheme: light) {
+      .dyno-bg { fill: url(#dynoLabLight); }
+      .lab-grid { stroke: rgba(0, 0, 0, 0.05); }
+      .scope-frame { fill: #ffffff; stroke: #cbd5e1; }
+    }
+  </style>
+
+  <!-- Base Canvas -->
+  <rect width="1920" height="1080" class="dyno-bg" />
+
+  <!-- Precision Engineering Grid -->
+  <g class="lab-grid">
+    <line x1="240" y1="0" x2="240" y2="1080" />
+    <line x1="480" y1="0" x2="480" y2="1080" />
+    <line x1="720" y1="0" x2="720" y2="1080" />
+    <line x1="960" y1="0" x2="960" y2="1080" />
+    <line x1="1200" y1="0" x2="1200" y2="1080" />
+    <line x1="1440" y1="0" x2="1440" y2="1080" />
+    <line x1="1680" y1="0" x2="1680" y2="1080" />
+    <line x1="0" y1="180" x2="1920" y2="180" />
+    <line x1="0" y1="360" x2="1920" y2="360" />
+    <line x1="0" y1="540" x2="1920" y2="540" />
+    <line x1="0" y1="720" x2="1920" y2="720" />
+    <line x1="0" y1="900" x2="1920" y2="900" />
+  </g>
+
+  <!-- Laser Alignment Crosshairs (Center Inspection Area) -->
+  <line x1="960" y1="120" x2="960" y2="960" class="laser-cross" />
+  <line x1="120" y1="540" x2="1800" y2="540" class="laser-cross" />
+  <circle cx="960" cy="540" r="180" stroke="#ff3157" stroke-width="1.5" stroke-dasharray="6 4" fill="none" opacity="0.35" />
+  <circle cx="960" cy="540" r="320" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="10 8" fill="none" opacity="0.2" />
+
+  <!-- Oscilloscope Waveform (Performance Test Signature across screen) -->
+  <path d="M 0 680 Q 240 680 380 620 T 640 420 T 820 640 T 960 380 T 1140 560 T 1320 280 T 1540 620 T 1920 620" stroke="url(#dynoWaveGrad)" stroke-width="6" fill="none" filter="url(#dynoGlow)" />
+  <path d="M 0 680 Q 240 680 380 620 T 640 420 T 820 640 T 960 380 T 1140 560 T 1320 280 T 1540 620 T 1920 620" stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.8" />
+
+  <!-- Quality Assurance Certified Stamp Graphic (Right Upper) -->
+  <g transform="translate(1520, 220)">
+    <circle cx="0" cy="0" r="75" stroke="#ff3157" stroke-width="3" fill="rgba(255,49,87,0.06)" />
+    <circle cx="0" cy="0" r="65" stroke="#ff3157" stroke-width="1" stroke-dasharray="4 3" fill="none" />
+    <text x="0" y="-22" text-anchor="middle" class="stamp-text" font-size="10" letter-spacing="2">MOTODC VERIFIED</text>
+    <text x="0" y="4" text-anchor="middle" fill="#ffffff" font-family="'Sora', sans-serif" font-weight="800" font-size="18">100% GENUINE</text>
+    <text x="0" y="22" text-anchor="middle" class="stamp-text" font-size="9" letter-spacing="2">HASSLE-FREE RETURN</text>
+    <!-- Stamp Checkmark -->
+    <path d="M -16 38 L -4 48 L 18 28" stroke="#ff3157" stroke-width="3" fill="none" stroke-linecap="round" />
+  </g>
+
+  <!-- Micrometer & Caliper Dimension Silhouette (Left Lower) -->
+  <g transform="translate(240, 840)" opacity="0.5">
+    <rect x="0" y="0" width="340" height="24" rx="4" fill="#1e2430" />
+    <line x1="20" y1="0" x2="20" y2="14" stroke="#ff3157" stroke-width="2" />
+    <line x1="40" y1="0" x2="40" y2="8" stroke="#ffffff" stroke-width="1" />
+    <line x1="60" y1="0" x2="60" y2="14" stroke="#ffffff" stroke-width="1.5" />
+    <line x1="80" y1="0" x2="80" y2="8" stroke="#ffffff" stroke-width="1" />
+    <line x1="100" y1="0" x2="100" y2="18" stroke="#ff3157" stroke-width="2" />
+    <text x="0" y="-12" fill="#ff3157" font-family="monospace" font-size="11">QC BENCH // ZERO DEFECT ASSURANCE</text>
+  </g>
+
+  <!-- Lab Header Status -->
+  <text x="120" y="100" class="stamp-text" font-size="13" letter-spacing="4">DIAGNOSTIC TEST RIG // RETURN VERIFICATION</text>
+</svg>

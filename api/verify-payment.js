@@ -3,6 +3,7 @@ import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 import { waitUntil } from '@vercel/functions';
 import { sendCustomerTemplateEmail } from './_send-email.js';
+import { indexOrderInAlgolia } from './_algolia.js';
 function getAdmin(){
   if(admin.apps.length)return admin;
   const raw=process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
@@ -60,6 +61,7 @@ export default async function handler(req,res){
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
+    waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_ONLINE_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('Online order email error:',emailError);}})());
     else console.error('Online order email skipped: MSG91_TEMPLATE_ONLINE_ORDER is not configured');

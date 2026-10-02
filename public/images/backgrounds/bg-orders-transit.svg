@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="transitMapDark" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#140f1a" />
+      <stop offset="50%" stop-color="#080b11" />
+      <stop offset="100%" stop-color="#030508" />
+    </radialGradient>
+    <radialGradient id="transitMapLight" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="50%" stop-color="#eef2f7" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </radialGradient>
+
+    <linearGradient id="gpsRouteGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255, 49, 87, 0.2)" />
+      <stop offset="50%" stop-color="#ff3157" />
+      <stop offset="100%" stop-color="#ff758c" />
+    </linearGradient>
+
+    <radialGradient id="radarPulse" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(255, 49, 87, 0.35)" />
+      <stop offset="60%" stop-color="rgba(255, 49, 87, 0.08)" />
+      <stop offset="100%" stop-color="transparent" />
+    </radialGradient>
+
+    <filter id="routeGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .transit-bg { fill: url(#transitMapDark); transition: fill 0.4s ease; }
+    .map-grid-line { stroke: rgba(255, 255, 255, 0.06); stroke-width: 1; }
+    .secondary-road { stroke: rgba(255, 255, 255, 0.12); stroke-width: 2; fill: none; }
+    .accent-tag { fill: #ff3157; font-family: 'Sora', sans-serif; font-weight: 700; }
+    .station-text { fill: #ffffff; font-family: 'Sora', sans-serif; font-weight: 600; font-size: 13px; }
+
+    @media (prefers-color-scheme: light) {
+      .transit-bg { fill: url(#transitMapLight); }
+      .map-grid-line { stroke: rgba(0, 0, 0, 0.06); }
+      .secondary-road { stroke: rgba(0, 0, 0, 0.12); }
+      .station-text { fill: #1e293b; }
+    }
+  </style>
+
+  <!-- Base Canvas -->
+  <rect width="1920" height="1080" class="transit-bg" />
+
+  <!-- Topographic / City Grid Coordinate Lines -->
+  <g class="map-grid-line">
+    <line x1="160" y1="0" x2="160" y2="1080" />
+    <line x1="480" y1="0" x2="480" y2="1080" />
+    <line x1="800" y1="0" x2="800" y2="1080" />
+    <line x1="1120" y1="0" x2="1120" y2="1080" />
+    <line x1="1440" y1="0" x2="1440" y2="1080" />
+    <line x1="1760" y1="0" x2="1760" y2="1080" />
+    <line x1="0" y1="200" x2="1920" y2="200" />
+    <line x1="0" y1="440" x2="1920" y2="440" />
+    <line x1="0" y1="680" x2="1920" y2="680" />
+    <line x1="0" y1="920" x2="1920" y2="920" />
+  </g>
+
+  <!-- Secondary Arterial Highway Curves -->
+  <path d="M 0 320 Q 480 380 960 220 T 1920 400" class="secondary-road" />
+  <path d="M 240 1080 Q 560 620 1200 680 T 1920 900" class="secondary-road" stroke-dasharray="8 6" />
+
+  <!-- Primary Express GPS Delivery Highway (The Hero Ribbon) -->
+  <path d="M -80 880 C 420 840 580 480 960 480 C 1380 480 1520 220 2000 160" stroke="url(#gpsRouteGrad)" stroke-width="8" fill="none" filter="url(#routeGlow)" />
+  <path d="M -80 880 C 420 840 580 480 960 480 C 1380 480 1520 220 2000 160" stroke="#ffffff" stroke-width="2.5" fill="none" />
+
+  <!-- Live In-Transit Pulse Node (Current Vehicle Position) -->
+  <g transform="translate(960, 480)">
+    <!-- Radar Pulse Waves -->
+    <circle cx="0" cy="0" r="140" fill="url(#radarPulse)" />
+    <circle cx="0" cy="0" r="90" stroke="#ff3157" stroke-width="1.5" stroke-dasharray="6 4" fill="none" opacity="0.6" />
+    <circle cx="0" cy="0" r="50" stroke="#ff3157" stroke-width="2" fill="none" opacity="0.9" />
+    <circle cx="0" cy="0" r="16" fill="#ff3157" filter="url(#routeGlow)" />
+    <circle cx="0" cy="0" r="8" fill="#ffffff" />
+    
+    <!-- Express Courier Van / Superbike Silhouette Graphic -->
+    <path d="M 28 -32 L 68 -32 L 82 -18 L 82 2 L 28 2 Z" fill="#ff3157" />
+    <circle cx="42" cy="4" r="5" fill="#ffffff" />
+    <circle cx="70" cy="4" r="5" fill="#ffffff" />
+    
+    <!-- Status Tooltip -->
+    <rect x="25" y="-72" width="220" height="34" rx="8" fill="#0d1017" stroke="#ff3157" stroke-width="1.5" opacity="0.95" />
+    <text x="38" y="-50" class="accent-tag" font-size="11">IN TRANSIT ⯈ ON SCHEDULE</text>
+  </g>
+
+  <!-- Destination Delivery Waypoint (Right Top) -->
+  <g transform="translate(1560, 280)">
+    <circle cx="0" cy="0" r="28" stroke="#ff3157" stroke-width="2" stroke-dasharray="4 4" fill="none" />
+    <circle cx="0" cy="0" r="10" fill="#ff3157" />
+    <text x="35" y="-5" class="station-text">DESTINATION HUB</text>
+    <text x="35" y="14" fill="#ff3157" font-family="monospace" font-size="10">ETA: PRIORITY DISPATCH</text>
+  </g>
+
+  <!-- Origin Warehouse Hub (Left Bottom) -->
+  <g transform="translate(320, 860)">
+    <rect x="-18" y="-18" width="36" height="36" rx="6" fill="#1e2433" stroke="#ff3157" stroke-width="2" />
+    <text x="35" y="-2" class="station-text">MOTODC FULFILLMENT CENTER</text>
+    <text x="35" y="16" fill="#718096" font-family="monospace" font-size="10">PARTS VERIFIED &amp; PACKED</text>
+  </g>
+
+  <!-- Telemetry Badge Header -->
+  <text x="1820" y="80" text-anchor="end" class="accent-tag" font-size="12" letter-spacing="4">REAL-TIME GPS TELEMETRY // 24×7 DISPATCH</text>
+</svg>

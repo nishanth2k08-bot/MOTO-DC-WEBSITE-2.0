@@ -167,3 +167,53 @@
   border-color: #ffd0d8;
   color: #e3264d;
 }
+
+.adminSyncAlgolia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(84, 104, 255, 0.45);
+  border-radius: 9px;
+  background: rgba(84, 104, 255, 0.10);
+  color: #7b8eff;
+  font: 700 11px Sora;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.adminSyncAlgolia:hover:not(:disabled) {
+  background: rgba(84, 104, 255, 0.20);
+  border-color: #5468ff;
+  color: #9ab0ff;
+}
+.adminSyncAlgolia:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+.algoliaBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(84, 104, 255, 0.12);
+  border: 1px solid rgba(84, 104, 255, 0.35);
+  color: #8da0ff;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 8px;
+}
+.light-theme .adminSyncAlgolia {
+  background: rgba(84, 104, 255, 0.08);
+  border-color: #b0bcff;
+  color: #3b50e0;
+}
+.light-theme .algoliaBadge {
+  background: rgba(84, 104, 255, 0.08);
+  border-color: #b0bcff;
+  color: #3b50e0;
+}

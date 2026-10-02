@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="pitBayDark" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#19131f" />
+      <stop offset="45%" stop-color="#0b0e14" />
+      <stop offset="100%" stop-color="#040508" />
+    </radialGradient>
+    <radialGradient id="pitBayLight" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="50%" stop-color="#e9edf5" />
+      <stop offset="100%" stop-color="#dce3ee" />
+    </radialGradient>
+
+    <!-- Track Floodlight Beams -->
+    <linearGradient id="floodlightBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.4)" />
+      <stop offset="60%" stop-color="rgba(255, 49, 87, 0.15)" />
+      <stop offset="100%" stop-color="transparent" />
+    </linearGradient>
+
+    <!-- Pit Box Yellow / Red Hazard Striping -->
+    <pattern id="hazardStripe" width="24" height="24" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="12" height="24" fill="#ff3157" />
+      <rect x="12" width="12" height="24" fill="#0d1017" />
+    </pattern>
+
+    <filter id="bayGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .bay-base { fill: url(#pitBayDark); transition: fill 0.4s ease; }
+    .garage-door-frame { stroke: #1e2430; stroke-width: 4; fill: none; }
+    .track-surface { fill: #07090e; }
+    .pit-tape { stroke: #ff3157; stroke-width: 3.5; stroke-dasharray: 18 10; fill: none; }
+
+    @media (prefers-color-scheme: light) {
+      .bay-base { fill: url(#pitBayLight); }
+      .garage-door-frame { stroke: #cbd5e1; }
+      .track-surface { fill: #cbd5e1; }
+    }
+  </style>
+
+  <!-- Sky & Ambient Base -->
+  <rect width="1920" height="1080" class="bay-base" />
+
+  <!-- The Open Garage Bay Shutter Aperture (Looking Out to Track) -->
+  <path d="M 180 0 L 180 620 Q 960 560 1740 620 L 1740 0 Z" class="garage-door-frame" />
+  
+  <!-- Outer Racetrack View Through Pit Aperture -->
+  <rect x="220" y="0" width="1480" height="580" class="track-surface" opacity="0.6" />
+  
+  <!-- Grandstand Stadium Floodlight Towers (Distant) -->
+  <g opacity="0.7" filter="url(#bayGlow)">
+    <polygon points="450,120 300,580 600,580" fill="url(#floodlightBeam)" />
+    <polygon points="1470,120 1320,580 1620,580" fill="url(#floodlightBeam)" />
+    <circle cx="450" cy="120" r="16" fill="#ffffff" />
+    <circle cx="1470" cy="120" r="16" fill="#ffffff" />
+  </g>
+
+  <!-- Pit Garage Concrete Floor -->
+  <path d="M 0 620 Q 960 560 1920 620 L 1920 1080 L 0 1080 Z" fill="#0d1118" />
+
+  <!-- Skid Marks Leading Out from Pit Bay onto Circuit -->
+  <path d="M 720 1080 C 720 850 680 720 620 560" stroke="#05070a" stroke-width="28" fill="none" opacity="0.8" />
+  <path d="M 1200 1080 C 1200 850 1240 720 1300 560" stroke="#05070a" stroke-width="28" fill="none" opacity="0.8" />
+  <path d="M 720 1080 C 720 850 680 720 620 560" stroke="rgba(255, 49, 87, 0.25)" stroke-width="4" stroke-dasharray="12 12" fill="none" />
+  <path d="M 1200 1080 C 1200 850 1240 720 1300 560" stroke="rgba(255, 49, 87, 0.25)" stroke-width="4" stroke-dasharray="12 12" fill="none" />
+
+  <!-- Pit Box Stop Line (Yellow / Red Striped Hazard Box) -->
+  <g transform="translate(660, 820)">
+    <rect x="0" y="0" width="600" height="22" rx="4" fill="url(#hazardStripe)" />
+    <text x="300" y="-12" text-anchor="middle" fill="#ff3157" font-family="'Sora', sans-serif" font-weight="800" font-size="12" letter-spacing="3">PIT BOX 01 // READY FOR LOAD</text>
+  </g>
+
+  <!-- Pit Lane Speed Limit / Ready Markers -->
+  <path d="M 180 720 L 1740 720" class="pit-tape" />
+
+  <!-- Overhead Gantry Crane & Air Gun Silhouettes -->
+  <g opacity="0.4">
+    <line x1="960" y1="0" x2="960" y2="280" stroke="#ffffff" stroke-width="3" />
+    <circle cx="960" cy="280" r="14" fill="#ff3157" />
+    <path d="M 945 294 L 975 294 L 960 330 Z" fill="#ff3157" />
+  </g>
+
+  <!-- Empty Bay Ambient Callout -->
+  <text x="960" y="940" text-anchor="middle" fill="#4a5568" font-family="'Sora', sans-serif" font-weight="700" font-size="13" letter-spacing="4">CART EMPTY // ASSEMBLE YOUR BUILD</text>
+</svg>
