@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
-import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,ShieldCheck} from 'lucide-react';
+import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,ShieldCheck,Phone} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
@@ -45,7 +45,8 @@ const unlockScroll=()=>{
 
 export default function Checkout(){
   const nav=useNavigate(),[items]=useState(getCart()),[placed,setPlaced]=useState(null),[loading,setLoading]=useState(false),user=auth.currentUser;
-  const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:user?.phoneNumber?.replace(/^\+91/,'')||'',address:'',city:'',state:'',pincode:''});
+  const [countryCode,setCountryCode]=useState('+');
+  const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:(user?.phoneNumber||'').replace(/^\+\d{1,4}/,'')||'',address:'',city:'',state:'',pincode:''});
   const [payment,setPayment]=useState('cod');
 
   useEffect(()=>{
@@ -60,6 +61,39 @@ export default function Checkout(){
 
   const subtotal=items.reduce((a,x)=>a+Number(x.price||0)*Number(x.qty||1),0);
   const update=e=>setForm({...form,[e.target.name]:e.target.value});
+
+  const handleCountryCodeChange=(e)=>{
+    let val=e.target.value.trim().replace(/[^\d+]/g,'');
+    if(!val||val==='+'){setCountryCode('+');return}
+    val='+'+val.replace(/\+/g,'');
+    if(val.length>5)val=val.slice(0,5);
+    setCountryCode(val);
+  };
+
+  const handlePhoneChange=(e)=>{
+    let val=e.target.value;
+    if(val.includes('+')){
+      const cleanFull=val.replace(/[^\d+]/g,'');
+      if(cleanFull.startsWith('+91')&&cleanFull.length>3){
+        setCountryCode('+91');
+        setForm(prev=>({...prev,phone:cleanFull.slice(3).slice(0,15)}));
+        return;
+      }else if(cleanFull.startsWith('+')&&cleanFull.length>1){
+        setForm(prev=>({...prev,phone:cleanFull.slice(1).slice(0,15)}));
+        return;
+      }
+    }
+    const digits=val.replace(/\D/g,'').slice(0,15);
+    setForm(prev=>({...prev,phone:digits}));
+  };
+
+  const getFullPhone=()=>{
+    const rawNum=form.phone.trim().replace(/\D/g,'');
+    let rawCode=countryCode.trim();
+    if(rawCode==='+'||rawCode===''){rawCode='+91'}
+    else if(!rawCode.startsWith('+')){rawCode=`+${rawCode}`}
+    return `${rawCode}${rawNum}`;
+  };
 
   if(!user)return (
     <section className="page empty checkoutLogin">
@@ -79,7 +113,8 @@ export default function Checkout(){
       nav('/products');
       return false;
     }
-    if(!/^[0-9]{10}$/.test(form.phone.replace(/\D/g,''))){
+    const rawDigits=form.phone.replace(/\D/g,'');
+    if(rawDigits.length<10){
       toast.error('Enter a valid 10-digit phone number');
       return false;
     }
@@ -92,12 +127,13 @@ export default function Checkout(){
 
   const placeCod=async()=>{
     const token=await user.getIdToken();
+    const fullPhone=getFullPhone();
     const response=await fetch('/api/place-cod',{
       method:'POST',
       headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
       body:JSON.stringify({
         items:items.map(x=>({id:x.id,qty:x.qty})),
-        customer:{name:form.name,email:form.email,phone:form.phone},
+        customer:{name:form.name,email:form.email,phone:fullPhone},
         shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode}
       })
     });
@@ -115,6 +151,7 @@ export default function Checkout(){
       body:JSON.stringify({items:items.map(x=>({id:x.id,qty:x.qty})),amount:subtotal})
     });
     const created=await readApiResponse(create);
+    const fullPhone=getFullPhone();
     const options={
       key:created.keyId,
       amount:created.amount,
@@ -122,7 +159,7 @@ export default function Checkout(){
       name:'MotoDC',
       description:'Automotive parts order',
       order_id:created.orderId,
-      prefill:{name:form.name,email:form.email,contact:form.phone},
+      prefill:{name:form.name,email:form.email,contact:fullPhone},
       theme:{color:'#ff3157'},
       modal:{
         ondismiss:()=>{
@@ -149,7 +186,7 @@ export default function Checkout(){
               razorpay_order_id:response.razorpay_order_id,
               razorpay_payment_id:response.razorpay_payment_id,
               razorpay_signature:response.razorpay_signature,
-              customer:{name:form.name,email:form.email,phone:form.phone},
+              customer:{name:form.name,email:form.email,phone:fullPhone},
               shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode},
               paymentMethod:'online'
             })
@@ -234,7 +271,36 @@ export default function Checkout(){
             <div className="formGrid">
               <label>Full name<input required name="name" value={form.name} onChange={update} placeholder="Your full name"/></label>
               <label>Email<input required type="email" name="email" value={form.email} onChange={update} placeholder="you@example.com"/></label>
-              <label>Phone<input required name="phone" value={form.phone} onChange={update} placeholder="10-digit mobile number" maxLength={10}/></label>
+              <label className="phoneLabel full">
+                <span>Mobile Phone</span>
+                <div className="phoneInputsRow">
+                  <div className="countryCodeBox">
+                    <input
+                      type="tel"
+                      className="countryCodeInput"
+                      value={countryCode}
+                      onChange={handleCountryCodeChange}
+                      placeholder="+"
+                      maxLength={5}
+                      aria-label="Country code"
+                      title="Country code (e.g. + or +91)"
+                    />
+                  </div>
+                  <div className="phoneNumberBox">
+                    <Phone size={17}/>
+                    <input
+                      required
+                      type="tel"
+                      className="phoneNumberInput"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handlePhoneChange}
+                      placeholder="10-digit mobile number"
+                      maxLength={15}
+                    />
+                  </div>
+                </div>
+              </label>
             </div>
           </div>
           <div className="checkoutBlock">

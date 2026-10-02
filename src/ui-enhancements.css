@@ -431,6 +431,107 @@ header.scrolled {
   color: #0f172a !important;
 }
 
+/* ─── 7. TWO-BOX PHONE INPUT (COUNTRY CODE + MOBILE) ──────── */
+.phoneInputsRow {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.countryCodeBox {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 72px !important;
+  flex: 0 0 72px !important;
+  background: #080b10 !important;
+  border: 1px solid #30343d !important;
+  border-radius: 9px !important;
+  padding: 0 6px !important;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.countryCodeBox:focus-within {
+  border-color: #ff3157 !important;
+  box-shadow: 0 0 0 3px rgba(255, 49, 87, .12) !important;
+  background: #0c1017 !important;
+}
+
+.countryCodeInput {
+  width: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #ff3157 !important;
+  outline: 0 !important;
+  padding: 11px 0 !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+  box-sizing: border-box !important;
+}
+
+.phoneNumberBox {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: #080b10 !important;
+  color: #858c98 !important;
+  border: 1px solid #30343d !important;
+  border-radius: 9px !important;
+  padding: 0 13px !important;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.phoneNumberBox:focus-within {
+  border-color: #ff3157 !important;
+  box-shadow: 0 0 0 3px rgba(255, 49, 87, .12) !important;
+  background: #0c1017 !important;
+}
+
+.phoneNumberInput {
+  width: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #f8fafc !important;
+  outline: 0 !important;
+  padding: 11px 0 !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+}
+
+.phoneNumberInput::placeholder {
+  color: #5f6773 !important;
+}
+
+/* Light Theme Overrides */
+.light-theme .countryCodeBox,
+.light-theme .phoneNumberBox {
+  background: #f8f9fa !important;
+  border-color: #dfe2e8 !important;
+}
+.light-theme .countryCodeInput {
+  color: #ff3157 !important;
+}
+.light-theme .phoneNumberInput {
+  color: #171a21 !important;
+}
+.light-theme .phoneNumberInput::placeholder {
+  color: #9298a3 !important;
+}
+
 /* ─── RESPONSIVE SAFEGUARDS ───────────────────────────────── */
 @media(max-width: 520px) {
   .searchDropdown {
@@ -444,3 +545,4 @@ header.scrolled {
     height: 40px;
   }
 }
+
