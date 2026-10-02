@@ -1,7 +1,7 @@
 import React,{useEffect,useState,useMemo} from 'react';
 import {collection,getDocs,orderBy,query,updateDoc,doc,deleteDoc,arrayUnion,onSnapshot} from 'firebase/firestore';
 import {adminAuth,adminDb} from './firebase';
-import {Package,RefreshCw,ChevronDown,MapPin,Phone,Mail,Users,IndianRupee,AlertTriangle,ShoppingBag,TrendingUp,Trash2} from 'lucide-react';
+import {Package,RefreshCw,ChevronDown,MapPin,Phone,Mail,Users,IndianRupee,AlertTriangle,ShoppingBag,TrendingUp,Trash2,Search,X} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import AdminCompletedOrders from './AdminCompletedOrders';
 import AdminReturns from './AdminReturns';
@@ -11,6 +11,7 @@ const statuses=['placed','confirmed','packed','shipped','out_for_delivery','deli
 const orderRecords=(payment)=>collection(adminDb,'orders',payment==='online'?'online orders':'cod orders','records');
 export default function AdminOrders({ activeTab = 'dashboard' }){
  const [orders,setOrders]=useState([]),[products,setProducts]=useState([]),[loading,setLoading]=useState(true),[busy,setBusy]=useState(''),[selected,setSelected]=useState(null),[clearing,setClearing]=useState(false);
+ const [searchQuery,setSearchQuery]=useState(''),[statusFilter,setStatusFilter]=useState('all'),[paymentFilter,setPaymentFilter]=useState('all'),[customerSearch,setCustomerSearch]=useState('');
  const load=async()=>{setLoading(true);try{const [co,oo,ps]=await Promise.all([getDocs(query(orderRecords('cod'),orderBy('createdAt','desc'))),getDocs(query(orderRecords('online'),orderBy('createdAt','desc'))),getDocs(collection(adminDb,'products'))]);setOrders([...co.docs,...oo.docs].map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0)));setProducts(ps.docs.map(d=>({id:d.id,...d.data()})))}catch(e){console.error(e);toast.error(e.code==='failed-precondition'?'Create the Firestore indexes for order records first':'Could not load admin data')}finally{setLoading(false)}};
  useEffect(()=>{const run=async()=>{try{const u=adminAuth.currentUser;if(u){const token=await u.getIdToken();await fetch('/api/migrate-firestore-structure',{method:'POST',headers:{Authorization:`Bearer ${token}`}})}}catch(e){console.error('Firestore structure migration:',e)}finally{load()}};run()},[]);
  useEffect(()=>{let active=true;const lists=[[],[]];const sync=i=>{const next=[...lists[0],...lists[1]].sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));if(active)setOrders(next)};const unsubs=['cod','online'].map((payment,i)=>onSnapshot(orderRecords(payment),snap=>{lists[i]=snap.docs.map(d=>({id:d.id,...d.data()}));sync(i)},e=>console.error(`Admin ${payment} orders listener:`,e)));return()=>{active=false;unsubs.forEach(u=>u())}},[]);
@@ -19,6 +20,9 @@ export default function AdminOrders({ activeTab = 'dashboard' }){
  const updateStatus=async(o,status)=>{setBusy(o.id);try{const oldStatus=o.orderStatus||'placed';const changes={orderStatus:status};if(status==='delivered'&&String(o.paymentMethod||'').toLowerCase()==='cod'&&o.paymentStatus!=='paid')changes.paymentStatus='paid';if(status!==oldStatus)changes.statusHistory=arrayUnion({status,updatedAt:new Date().toISOString()});await updateDoc(doc(adminDb,'orders',o.paymentMethod==='online'?'online orders':'cod orders','records',o.id),changes);const updated={...o,...changes};setOrders(xs=>xs.map(x=>x.id===o.id?updated:x));toast.success(status==='delivered'&&String(o.paymentMethod||'').toLowerCase()==='cod'?'COD order delivered — payment marked paid':`Order ${o.orderId||o.id} marked ${status.replaceAll('_',' ')}`);if(status!==oldStatus&&status==='delivered')sendEmail('status-update',o.id,o.paymentMethod,status)}catch(e){console.error(e);toast.error('Could not update order')}finally{setBusy('')}};
  const clearOrders=async()=>{if(!orders.length)return;if(!window.confirm(`Delete all ${orders.length} orders permanently from Firebase? This cannot be undone.`))return;setClearing(true);try{const [cod,online]=await Promise.all([getDocs(orderRecords('cod')),getDocs(orderRecords('online'))]);for(const d of [...cod.docs,...online.docs])await deleteDoc(d.ref);setOrders([]);setSelected(null);toast.success('All orders were cleared from Firebase')}catch(e){console.error(e);toast.error('Could not clear orders. Check Firestore permissions.')}finally{setClearing(false)}};
  const customerMap=useMemo(()=>{const m=new Map();orders.forEach(o=>{const key=o.userId||o.customer?.email||o.customer?.phone;if(!key)return;const old=m.get(key)||{name:o.customer?.name||'Customer',email:o.customer?.email||'—',phone:o.customer?.phone||'—',orders:0,spent:0};old.orders++;if((o.orderStatus||'placed')!=='cancelled')old.spent+=Number(o.total||0);m.set(key,old)});return [...m.values()].sort((a,b)=>b.spent-a.spent)},[orders]);
+ const activeOrders=useMemo(()=>orders.filter(o=>o.orderStatus!=='delivered'),[orders]);
+ const filteredOrders=useMemo(()=>{return activeOrders.filter(o=>{if(statusFilter!=='all'&&(o.orderStatus||'placed')!==statusFilter)return false;if(paymentFilter!=='all'&&String(o.paymentMethod||'').toLowerCase()!==paymentFilter)return false;if(!searchQuery.trim())return true;const q=searchQuery.toLowerCase().trim();const id=String(o.orderId||o.id||'').toLowerCase();const name=String(o.customer?.name||'').toLowerCase();const phone=String(o.customer?.phone||'').toLowerCase();const email=String(o.customer?.email||'').toLowerCase();const city=String(o.shipping?.city||'').toLowerCase();const pincode=String(o.shipping?.pincode||'').toLowerCase();const address=String(o.shipping?.address||'').toLowerCase();const items=(o.items||[]).map(it=>String(it.name||'').toLowerCase()).join(' ');return id.includes(q)||name.includes(q)||phone.includes(q)||email.includes(q)||city.includes(q)||pincode.includes(q)||address.includes(q)||items.includes(q)})},[activeOrders,searchQuery,statusFilter,paymentFilter]);
+ const filteredCustomers=useMemo(()=>{if(!customerSearch.trim())return customerMap;const q=customerSearch.toLowerCase().trim();return customerMap.filter(c=>String(c.name||'').toLowerCase().includes(q)||String(c.phone||'').toLowerCase().includes(q)||String(c.email||'').toLowerCase().includes(q))},[customerMap,customerSearch]);
 
  if(activeTab==='products')return null;
 
@@ -62,8 +66,16 @@ export default function AdminOrders({ activeTab = 'dashboard' }){
       </div>
      </div>
      <div className="dashPanel customersPanel">
-      <div className="dashPanelHead"><h3><Users size={18}/> Customers</h3><span>{customerMap.length} with orders</span></div>
-      {customerMap.length?<div className="customerTable"><div className="customerRow customerHeader"><span>Customer</span><span>Contact</span><span>Orders</span><span>Spent</span></div>{customerMap.slice(0,8).map((c,i)=><div className="customerRow" key={i}><span><b>{c.name}</b><small>{c.email}</small></span><span>{c.phone}</span><span>{c.orders}</span><strong>{money(c.spent)}</strong></div>)}</div>:<p className="dashMuted">No customer orders yet.</p>}
+      <div className="dashPanelHead">
+       <h3><Users size={18}/> Customers</h3>
+       <span>{filteredCustomers.length} of {customerMap.length}</span>
+      </div>
+      <div className="customerSearchWrap">
+       <Search size={14}/>
+       <input type="text" placeholder="Search customer name, phone, or email..." value={customerSearch} onChange={e=>setCustomerSearch(e.target.value)}/>
+       {customerSearch&&<button type="button" className="customerSearchClear" onClick={()=>setCustomerSearch('')}><X size={12}/></button>}
+      </div>
+      {filteredCustomers.length?<div className="customerTable"><div className="customerRow customerHeader"><span>Customer</span><span>Contact</span><span>Orders</span><span>Spent</span></div>{filteredCustomers.slice(0,10).map((c,i)=><div className="customerRow" key={i}><span><b>{c.name}</b><small>{c.email}</small></span><span>{c.phone}</span><span>{c.orders}</span><strong>{money(c.spent)}</strong></div>)}</div>:<p className="dashMuted">{customerSearch?'No customers match your search.':'No customer orders yet.'}</p>}
      </div>
     </div>
    )}
@@ -74,10 +86,30 @@ export default function AdminOrders({ activeTab = 'dashboard' }){
       <div>
        <p className="eyebrow">CUSTOMER ORDERS</p>
        <h2>Order <span>management.</span></h2>
-       <p>Review active orders and update their delivery status.</p>
+       <p>Review active orders, search customer details, and update delivery status.</p>
       </div>
      </div>
-     {loading?<div className="empty">Loading orders...</div>:!orders.filter(o=>o.orderStatus!=='delivered').length?<div className="ordersEmpty"><Package size={40}/><h3>No active orders</h3><p>Delivered orders are kept in Completed Orders below.</p></div>:<div className="ordersList">{orders.filter(o=>o.orderStatus!=='delivered').map(o=><div className={`orderCard ${selected===o.id?'expanded':''}`} key={`${o.paymentMethod}-${o.id}`}><div className="orderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.customer?.phone||'No phone'}</small></div><strong>{money(o.total)}</strong><select value={o.orderStatus||'placed'} disabled={busy===o.id} onChange={e=>updateStatus(o,e.target.value)}>{statuses.map(s=><option key={s}>{s}</option>)}</select><button className="orderToggle" onClick={()=>setSelected(selected===o.id?null:o.id)}><ChevronDown size={18}/></button></div>{selected===o.id&&<div className="orderDetails"><div className="detailGrid"><div><h4>Customer</h4><p><Mail size={14}/> {o.customer?.email||'—'}</p><p><Phone size={14}/> {o.customer?.phone||'—'}</p></div><div><h4>Delivery address</h4><p><MapPin size={14}/> {o.shipping?.address||'—'}, {o.shipping?.city||''}, {o.shipping?.state||''} - {o.shipping?.pincode||''}</p></div><div><h4>Payment</h4><p>{o.paymentMethod==='cod'?'Cash on Delivery':'Online Payment'} · {o.paymentStatus||'pending'}</p></div></div><div className="orderedItems"><h4>Items</h4>{(o.items||[]).map((x,i)=><div key={i}><img src={x.image} alt=""/><span><b>{x.name}</b><small>Qty {x.qty} · {money(x.price)} each</small></span><strong>{money(x.price*x.qty)}</strong></div>)}</div></div>}</div>)}</div>}
+     <div className="adminSearchBar">
+      <div className="adminSearchInputWrap">
+       <Search size={16}/>
+       <input type="text" placeholder="Search by Order ID, Customer Name, Phone, Email, City, or Product..." value={searchQuery} onChange={e=>setSearchQuery(e.target.value)}/>
+       {searchQuery&&<button type="button" className="adminSearchClear" onClick={()=>setSearchQuery('')} title="Clear search"><X size={14}/></button>}
+      </div>
+      <div className="adminSearchFilters">
+       <select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}>
+        <option value="all">All Statuses</option>
+        {statuses.filter(s=>s!=='delivered').map(s=><option key={s} value={s}>{s.replaceAll('_',' ')}</option>)}
+       </select>
+       <select value={paymentFilter} onChange={e=>setPaymentFilter(e.target.value)}>
+        <option value="all">All Payments</option>
+        <option value="cod">Cash on Delivery (COD)</option>
+        <option value="online">Online Payment</option>
+       </select>
+       {(searchQuery||statusFilter!=='all'||paymentFilter!=='all')&&<button type="button" className="adminResetBtn" onClick={()=>{setSearchQuery('');setStatusFilter('all');setPaymentFilter('all')}}>Reset</button>}
+      </div>
+      <div className="adminSearchCount">Showing <b>{filteredOrders.length}</b> of {activeOrders.length} active orders</div>
+     </div>
+     {loading?<div className="empty">Loading orders...</div>:!activeOrders.length?<div className="ordersEmpty"><Package size={40}/><h3>No active orders</h3><p>Delivered orders are kept in Completed Orders below.</p></div>:!filteredOrders.length?<div className="ordersEmpty"><Search size={38}/><h3>No matching orders</h3><p>No active orders matched your search criteria.</p><button type="button" className="adminClearOrders" onClick={()=>{setSearchQuery('');setStatusFilter('all');setPaymentFilter('all')}} style={{marginTop:'10px'}}>Clear Search & Filters</button></div>:<div className="ordersList">{filteredOrders.map(o=><div className={`orderCard ${selected===o.id?'expanded':''}`} key={`${o.paymentMethod}-${o.id}`}><div className="orderTop"><div><b>{o.orderId||o.id}</b><small>{o.customer?.name||'Customer'} · {o.customer?.phone||'No phone'}</small></div><strong>{money(o.total)}</strong><select value={o.orderStatus||'placed'} disabled={busy===o.id} onChange={e=>updateStatus(o,e.target.value)}>{statuses.map(s=><option key={s}>{s}</option>)}</select><button className="orderToggle" onClick={()=>setSelected(selected===o.id?null:o.id)}><ChevronDown size={18}/></button></div>{selected===o.id&&<div className="orderDetails"><div className="detailGrid"><div><h4>Customer</h4><p><Mail size={14}/> {o.customer?.email||'—'}</p><p><Phone size={14}/> {o.customer?.phone||'—'}</p></div><div><h4>Delivery address</h4><p><MapPin size={14}/> {o.shipping?.address||'—'}, {o.shipping?.city||''}, {o.shipping?.state||''} - {o.shipping?.pincode||''}</p></div><div><h4>Payment</h4><p>{o.paymentMethod==='cod'?'Cash on Delivery':'Online Payment'} · {o.paymentStatus||'pending'}</p></div></div><div className="orderedItems"><h4>Items</h4>{(o.items||[]).map((x,i)=><div key={i}><img src={x.image} alt=""/><span><b>{x.name}</b><small>Qty {x.qty} · {money(x.price)} each</small></span><strong>{money(x.price*x.qty)}</strong></div>)}</div></div>}</div>)}</div>}
      <AdminCompletedOrders/>
      <AdminReturns/>
     </>
