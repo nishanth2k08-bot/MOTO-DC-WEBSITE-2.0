@@ -2072,7 +2072,7 @@ export const majorSpareProducts = [
     "price": 1199,
     "rating": 4.7,
     "stock": 35,
-    "image": "/images/products/sp-173_uno_minda_handlebar_switch_control_assembly_lh.svg",
+    "image": "/images/products/sp-173_uno_minda_handlebar_switch_control_assembly_lh.jpg",
     "description": "Die-cast metal switch block featuring horn, high/low beam pass switch, and indicator toggle with weather-sealed wiring."
   },
   {
@@ -2084,7 +2084,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.8,
     "stock": 40,
-    "image": "/images/products/sp-174_uno_minda_automotive_ignition_coil_pack.svg",
+    "image": "/images/products/sp-174_uno_minda_automotive_ignition_coil_pack.jpg",
     "description": "Heavy-duty electromagnetic secondary winding delivers up to 35,000 volts for rapid combustion and zero misfires."
   },
   {
@@ -2096,7 +2096,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 80,
-    "image": "/images/products/sp-175_minda_waterproof_motorcycle_usb_fast_charger_18w.svg",
+    "image": "/images/products/sp-175_minda_waterproof_motorcycle_usb_fast_charger_18w.jpg",
     "description": "Quick Charge 3.0 dual port handlebar mount with smart voltage protection and silicone dust cap."
   },
   {
@@ -2204,7 +2204,7 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.8,
     "stock": 14,
-    "image": "/images/products/sp-184_denso_high_torque_starter_motor_assembly.svg",
+    "image": "/images/products/sp-184_denso_high_torque_starter_motor_assembly.jpg",
     "description": "Planetary gear reduction starter motor engineered for swift, low-current cranking in all weather."
   },
   {
@@ -2468,7 +2468,7 @@ export const majorSpareProducts = [
     "price": 1899,
     "rating": 4.7,
     "stock": 40,
-    "image": "/images/products/sp-206_philips_diamondvision_5000k_halogen_headlight_bulb.svg",
+    "image": "/images/products/sp-206_philips_diamondvision_5000k_halogen_headlight_bulb.jpg",
     "description": "High-temperature 5000K xenon-white styling light without requiring any relay modifications or ballast wiring."
   },
   {
@@ -2480,7 +2480,7 @@ export const majorSpareProducts = [
     "price": 799,
     "rating": 4.8,
     "stock": 65,
-    "image": "/images/products/sp-207_philips_ultinon_pro6000_led_interior_festoon_bulb.svg",
+    "image": "/images/products/sp-207_philips_ultinon_pro6000_led_interior_festoon_bulb.jpg",
     "description": "Brilliant 6000K daylight white interior illumination with uniform 360-degree light distribution."
   },
   {
@@ -2492,7 +2492,7 @@ export const majorSpareProducts = [
     "price": 1399,
     "rating": 4.9,
     "stock": 70,
-    "image": "/images/products/sp-208_kn_air_filter_recharge_cleaning_and_oiling_kit.svg",
+    "image": "/images/products/sp-208_kn_air_filter_recharge_cleaning_and_oiling_kit.jpg",
     "description": "Restores air flow efficiency and traps harmful dirt by dissolving old oil and reapplying fresh red filter oil."
   },
   {
@@ -2504,7 +2504,7 @@ export const majorSpareProducts = [
     "price": 699,
     "rating": 4.8,
     "stock": 55,
-    "image": "/images/products/sp-209_kn_powersports_high_performance_oil_filter_kn155.svg",
+    "image": "/images/products/sp-209_kn_powersports_high_performance_oil_filter_kn155.jpg",
     "description": "Synthetic media with 17mm cross-drilled removal nut for rapid track-side and home garage oil servicing."
   },
   {
@@ -2564,7 +2564,7 @@ export const majorSpareProducts = [
     "price": 4499,
     "rating": 4.9,
     "stock": 22,
-    "image": "/images/products/sp-214_royal_enfield_touring_handlebar_deluxe_mirror_set.svg",
+    "image": "/images/products/sp-214_royal_enfield_touring_handlebar_deluxe_mirror_set.jpg",
     "description": "CNC machined anodized billet aluminum bar-end mirrors with anti-glare convex glass for vibration-free rear vision."
   },
   {
@@ -2576,7 +2576,7 @@ export const majorSpareProducts = [
     "price": 2999,
     "rating": 4.8,
     "stock": 25,
-    "image": "/images/products/sp-215_royal_enfield_heavy_duty_sump_guard_bash_plate.svg",
+    "image": "/images/products/sp-215_royal_enfield_heavy_duty_sump_guard_bash_plate.jpg",
     "description": "Laser-cut 4mm thick brushed aluminum engine guard shielding the crankcase and oil filter from rocky impact."
   },
   {
@@ -2636,7 +2636,7 @@ export const majorSpareProducts = [
     "price": 1699,
     "rating": 4.6,
     "stock": 35,
-    "image": "/images/products/sp-220_hero_splendor_carburetor_and_intake_manifold_assembly.svg",
+    "image": "/images/products/sp-220_hero_splendor_carburetor_and_intake_manifold_assembly.jpg",
     "description": "Factory-tuned fuel-air mixing jet assembly engineered for optimal fuel economy and easy starting in cold winters."
   },
   {
@@ -2648,7 +2648,7 @@ export const majorSpareProducts = [
     "price": 1599,
     "rating": 4.7,
     "stock": 30,
-    "image": "/images/products/sp-221_bajaj_pulsar_220f_high_output_magneto_stator_coil.svg",
+    "image": "/images/products/sp-221_bajaj_pulsar_220f_high_output_magneto_stator_coil.jpg",
     "description": "Copper wound alternator stator charging coil delivering steady 12V output for dual projector headlamps."
   },
   {
@@ -2684,7 +2684,7 @@ export const majorSpareProducts = [
     "price": 6499,
     "rating": 4.9,
     "stock": 15,
-    "image": "/images/products/sp-224_ktm_powerparts_ergonomic_rider_comfort_seat.svg",
+    "image": "/images/products/sp-224_ktm_powerparts_ergonomic_rider_comfort_seat.jpg",
     "description": "Specially formulated 3D structural foam with non-slip dual texture cover for reduced fatigue on long highway tours."
   },
   {
