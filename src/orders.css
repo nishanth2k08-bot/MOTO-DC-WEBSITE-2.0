@@ -275,6 +275,15 @@
 
 .routeRealisticCar {
   transition: opacity 0.3s ease;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55));
+}
+
+.milestoneStation {
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.milestoneStation:hover {
+  filter: drop-shadow(0 0 10px rgba(255, 49, 87, 0.5));
 }
 
 /* Track Order Button on Order Cards */

@@ -163,62 +163,119 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
         <svg viewBox="0 0 1200 230" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="routeAsphalt" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0d1117"/>
-              <stop offset="50%" stopColor="#151b24"/>
-              <stop offset="100%" stopColor="#0d1117"/>
+              <stop offset="0%" stopColor="#090d14"/>
+              <stop offset="25%" stopColor="#151b26"/>
+              <stop offset="50%" stopColor="#1c2331"/>
+              <stop offset="75%" stopColor="#151b26"/>
+              <stop offset="100%" stopColor="#090d14"/>
             </linearGradient>
             <linearGradient id="neonTraveled" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#ff1744"/>
               <stop offset="50%" stopColor="#ff3157"/>
               <stop offset="100%" stopColor="#ff6b8b"/>
             </linearGradient>
-            <linearGradient id="carPaint" x1="0%" y1="0%" x2="100%" y2="80%">
-              <stop offset="0%" stopColor="#ff4767"/>
-              <stop offset="25%" stopColor="#e11d48"/>
-              <stop offset="65%" stopColor="#9f1239"/>
-              <stop offset="100%" stopColor="#4c0519"/>
+            <linearGradient id="hypercarBody" x1="0%" y1="0%" x2="100%" y2="80%">
+              <stop offset="0%" stopColor="#ff3864"/>
+              <stop offset="20%" stopColor="#e11d48"/>
+              <stop offset="60%" stopColor="#9f1239"/>
+              <stop offset="90%" stopColor="#4c0519"/>
+              <stop offset="100%" stopColor="#1a040b"/>
             </linearGradient>
-            <linearGradient id="carGlass" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#1e293b"/>
-              <stop offset="100%" stopColor="#090d16"/>
+            <linearGradient id="hypercarBodyHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(255,107,139,0.2)"/>
+              <stop offset="50%" stopColor="rgba(255,255,255,0.95)"/>
+              <stop offset="100%" stopColor="rgba(255,107,139,0.3)"/>
             </linearGradient>
-            <linearGradient id="headlightBeam" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(224,242,254,0.65)"/>
-              <stop offset="35%" stopColor="rgba(56,189,248,0.3)"/>
-              <stop offset="100%" stopColor="rgba(56,189,248,0)"/>
+            <linearGradient id="hypercarCanopy" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stopColor="#0f172a"/>
+              <stop offset="50%" stopColor="#020617"/>
+              <stop offset="100%" stopColor="#1e293b"/>
             </linearGradient>
-            <linearGradient id="alloyRim" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f8fafc"/>
+            <linearGradient id="carbonSplitter" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#1e2430"/>
+              <stop offset="50%" stopColor="#0b0f15"/>
+              <stop offset="100%" stopColor="#1e2430"/>
+            </linearGradient>
+            <linearGradient id="laserBeamVolumetric" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(240, 249, 255, 0.9)"/>
+              <stop offset="20%" stopColor="rgba(56, 189, 248, 0.5)"/>
+              <stop offset="60%" stopColor="rgba(14, 165, 233, 0.18)"/>
+              <stop offset="100%" stopColor="rgba(56, 189, 248, 0)"/>
+            </linearGradient>
+            <linearGradient id="laserBeamCore" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(255, 255, 255, 1)"/>
+              <stop offset="40%" stopColor="rgba(125, 211, 252, 0.6)"/>
+              <stop offset="100%" stopColor="rgba(56, 189, 248, 0)"/>
+            </linearGradient>
+            <linearGradient id="turbineAlloyRim" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff"/>
+              <stop offset="40%" stopColor="#cbd5e1"/>
+              <stop offset="80%" stopColor="#64748b"/>
+              <stop offset="100%" stopColor="#1e293b"/>
+            </linearGradient>
+            <linearGradient id="discRotor" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#cbd5e1"/>
               <stop offset="50%" stopColor="#94a3b8"/>
               <stop offset="100%" stopColor="#475569"/>
             </linearGradient>
-            <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
+            <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="3.5" result="blur"/>
               <feMerge>
                 <feMergeNode in="blur"/>
                 <feMergeNode in="SourceGraphic"/>
               </feMerge>
             </filter>
-            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3"/>
+            <filter id="superNeonGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="6" result="blur1"/>
+              <feGaussianBlur stdDeviation="2" result="blur2"/>
+              <feMerge>
+                <feMergeNode in="blur1"/>
+                <feMergeNode in="blur2"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="4"/>
             </filter>
           </defs>
 
-          <g opacity="0.18">
-            <line x1="40" y1="50" x2="1160" y2="50" stroke="#334155" strokeWidth="0.8" strokeDasharray="4 8"/>
-            <line x1="40" y1="115" x2="1160" y2="115" stroke="#334155" strokeWidth="0.8" strokeDasharray="4 8"/>
-            <line x1="40" y1="180" x2="1160" y2="180" stroke="#334155" strokeWidth="0.8" strokeDasharray="4 8"/>
-            <text x="50" y="32" fill="#64748b" fontSize="8" fontFamily="monospace">GRID 12.97°N / 77.59°E · SECTOR CORRIDOR</text>
-            <text x="1050" y="32" fill="#64748b" fontSize="8" fontFamily="monospace">DEST: 13.08°N / 80.27°E</text>
+          {/* Tactical High-Tech Grid & Telemetry Coordinates */}
+          <g opacity="0.22">
+            <line x1="30" y1="45" x2="1170" y2="45" stroke="#334155" strokeWidth="0.7" strokeDasharray="4 8"/>
+            <line x1="30" y1="115" x2="1170" y2="115" stroke="#334155" strokeWidth="0.7" strokeDasharray="4 8"/>
+            <line x1="30" y1="185" x2="1170" y2="185" stroke="#334155" strokeWidth="0.7" strokeDasharray="4 8"/>
+            {/* Crosshairs & Sector Markers */}
+            <path d="M 340 38 L 340 48 M 335 43 L 345 43" stroke="#ff3157" strokeWidth="1"/>
+            <path d="M 610 38 L 610 48 M 605 43 L 615 43" stroke="#ff3157" strokeWidth="1"/>
+            <path d="M 880 38 L 880 48 M 875 43 L 885 43" stroke="#ff3157" strokeWidth="1"/>
+            <text x="45" y="28" fill="#64748b" fontSize="8" fontFamily="monospace" letterSpacing="0.8">
+              RADAR LINK // 5.8 GHz · SECURE TELEMETRY FEED · HIGH-SPEED DISPATCH
+            </text>
+            <text x="1010" y="28" fill="#64748b" fontSize="8" fontFamily="monospace" letterSpacing="0.8">
+              CORRIDOR // KA-04 ➔ DEST
+            </text>
           </g>
 
+          {/* Road Foundation Bed & Ambient Shadow */}
           <path
             d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
             fill="none"
-            stroke="rgba(0,0,0,0.5)"
-            strokeWidth="30"
+            stroke="rgba(0,0,0,0.65)"
+            strokeWidth="32"
+            strokeLinecap="round"
+            filter="url(#softShadow)"
+          />
+
+          {/* Highway Guard Rails / Edge Curbs */}
+          <path
+            d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
+            fill="none"
+            stroke="#1e293b"
+            strokeWidth="24"
             strokeLinecap="round"
           />
+
+          {/* Highway Asphalt Road Surface */}
           <path
             ref={routePathRef}
             d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
@@ -227,82 +284,107 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
             strokeWidth="20"
             strokeLinecap="round"
           />
+
+          {/* Road Marking Outer Edge Glow */}
           <path
             d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
             fill="none"
-            stroke="#263142"
-            strokeWidth="22"
-            strokeDasharray="6 14"
-            opacity="0.45"
+            stroke="#334155"
+            strokeWidth="21"
+            strokeDasharray="4 16"
+            opacity="0.35"
           />
+
+          {/* Center Road Dividers */}
           <path
             d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
             fill="none"
             stroke="#475569"
-            strokeWidth="1.8"
+            strokeWidth="2"
             strokeDasharray="10 14"
           />
 
+          {/* Neon Traveled Corridor (Glowing Red Laser Path) */}
           <path
             ref={traveledPathRef}
             d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
             fill="none"
             stroke="url(#neonTraveled)"
-            strokeWidth="3.5"
+            strokeWidth="4"
             strokeLinecap="round"
-            filter="url(#neonGlow)"
+            filter="url(#superNeonGlow)"
           />
 
+          {/* Milestone Waypoint Stations */}
           {WAYPOINTS.map(wp=>{
             const isDone=activeStep>=wp.step;
             const isCurrent=activeStep===wp.step;
             const isAbove=wp.labelPos==='top';
-            const badgeY=isAbove?wp.y-42:wp.y+42;
+            const badgeY=isAbove?wp.y-44:wp.y+44;
             const pinY1=isAbove?wp.y-12:wp.y+12;
-            const pinY2=isAbove?wp.y-28:wp.y+28;
+            const pinY2=isAbove?wp.y-30:wp.y+30;
 
             return (
               <g key={wp.id} className="milestoneStation">
-                <line x1={wp.x} y1={pinY1} x2={wp.x} y2={pinY2} stroke={isDone?'#ff3157':'#334155'} strokeWidth="1" strokeDasharray="2 3" opacity={isDone?0.9:0.5}/>
-                <circle cx={wp.x} cy={wp.y} r="8" fill="#090c12" stroke={isDone?'#ff3157':'#334155'} strokeWidth="2.5"/>
-                <circle cx={wp.x} cy={wp.y} r="3" fill={isDone?(isCurrent?'#ffffff':'#ff3157'):'#1e293b'}/>
+                <line
+                  x1={wp.x}
+                  y1={pinY1}
+                  x2={wp.x}
+                  y2={pinY2}
+                  stroke={isCurrent?'#ff3157':isDone?'#ff4767':'#334155'}
+                  strokeWidth={isCurrent?1.6:1}
+                  strokeDasharray="2 3"
+                  opacity={isDone?1:0.45}
+                />
+                {/* Station Node Ring */}
+                <circle cx={wp.x} cy={wp.y} r="9" fill="#06090e" stroke={isCurrent?'#ff3157':isDone?'#e11d48':'#334155'} strokeWidth={isCurrent?2.5:2}/>
+                <circle cx={wp.x} cy={wp.y} r="3.5" fill={isCurrent?'#ffffff':isDone?'#ff3157':'#1e293b'}/>
 
+                {/* Animated Pulsing Sonar Rings for Current Milestone */}
                 {isCurrent&&(
-                  <circle cx={wp.x} cy={wp.y} r="14" fill="none" stroke="#ff3157" strokeWidth="1.5" opacity="0.6">
-                    <animate attributeName="r" values="8;22" dur="1.8s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="0.8;0" dur="1.8s" repeatCount="indefinite"/>
-                  </circle>
+                  <>
+                    <circle cx={wp.x} cy={wp.y} r="14" fill="none" stroke="#ff3157" strokeWidth="1.5" opacity="0.8">
+                      <animate attributeName="r" values="9;26" dur="2s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.9;0" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx={wp.x} cy={wp.y} r="10" fill="none" stroke="#38bdf8" strokeWidth="1" opacity="0.6">
+                      <animate attributeName="r" values="9;18" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.7;0" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+                    </circle>
+                  </>
                 )}
 
+                {/* Waypoint Label Badge */}
                 <g transform={`translate(${wp.x}, ${badgeY})`}>
                   <rect
-                    x="-55"
-                    y="-13"
-                    width="110"
-                    height="26"
-                    rx="13"
-                    fill={isCurrent?'rgba(255, 49, 87, 0.22)':isDone?'rgba(15, 23, 42, 0.92)':'rgba(8, 11, 16, 0.85)'}
-                    stroke={isCurrent?'#ff3157':isDone?'rgba(255, 49, 87, 0.5)':'#334155'}
-                    strokeWidth={isCurrent?1.5:1}
+                    x="-60"
+                    y="-14"
+                    width="120"
+                    height="28"
+                    rx="14"
+                    fill={isCurrent?'rgba(255, 49, 87, 0.22)':isDone?'rgba(15, 23, 42, 0.94)':'rgba(8, 11, 16, 0.88)'}
+                    stroke={isCurrent?'#ff3157':isDone?'rgba(255, 49, 87, 0.6)':'#334155'}
+                    strokeWidth={isCurrent?1.8:1}
+                    filter={isCurrent?'url(#neonGlow)':undefined}
                   />
                   <text
                     x="0"
-                    y="0"
+                    y="-0.5"
                     textAnchor="middle"
                     fill={isCurrent?'#ffffff':isDone?'#ff8599':'#94a3b8'}
-                    fontSize="8.5"
+                    fontSize="9"
                     fontWeight="800"
                     fontFamily="Sora, sans-serif"
-                    letterSpacing="0.4"
+                    letterSpacing="0.5"
                   >
                     {wp.label}
                   </text>
                   <text
                     x="0"
-                    y="8.5"
+                    y="8.8"
                     textAnchor="middle"
-                    fill={isCurrent?'#ffd1d9':'#64748b'}
-                    fontSize="6.8"
+                    fill={isCurrent?'#ffe4e8':isDone?'#cbd5e1':'#64748b'}
+                    fontSize="7"
                     fontWeight="600"
                     fontFamily="Sora, sans-serif"
                   >
@@ -313,90 +395,185 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
             );
           })}
 
+          {/* NEXT-GEN RAPID LOGISTICS HYPERCAR INTERCEPTOR */}
           <g ref={carRef} className="routeRealisticCar">
-            <ellipse cx="0" cy="1" rx="42" ry="4" fill="rgba(0,0,0,0.7)" filter="url(#softShadow)"/>
-            <ellipse cx="0" cy="0" rx="35" ry="3" fill="rgba(255,49,87,0.4)" filter="url(#neonGlow)"/>
-
-            <polygon points="36,-11 145,-26 150,10 35,-6" fill="url(#headlightBeam)" opacity="0.6" pointerEvents="none"/>
-
-            <g transform="translate(-23, -8)">
-              <circle cx="0" cy="0" r="7.5" fill="#14171d" stroke="#2a3342" strokeWidth="1.2"/>
-              <circle cx="0" cy="0" r="5" fill="url(#alloyRim)"/>
-              <path d="M 0 -4.5 L 0 4.5 M -4.5 0 L 4.5 0 M -3.2 -3.2 L 3.2 3.2 M -3.2 3.2 L 3.2 -3.2" stroke="#151921" strokeWidth="0.9"/>
-              <path d="M -3 -4 A 4 4 0 0 1 1 -5.2 L 1 -3 Z" fill="#ff3157"/>
-              <circle cx="0" cy="0" r="1.8" fill="#0d1117" stroke="#ffffff" strokeWidth="0.5"/>
+            {/* Live Telemetry HUD Badge floating above vehicle */}
+            <g transform="translate(0, -36)">
+              <rect
+                x="-64"
+                y="-11"
+                width="128"
+                height="21"
+                rx="10.5"
+                fill="rgba(6, 9, 14, 0.94)"
+                stroke="rgba(255, 49, 87, 0.75)"
+                strokeWidth="1.2"
+                filter="url(#neonGlow)"
+              />
+              <circle cx="-51" cy="-0.5" r="3.2" fill="#22c55e">
+                <animate attributeName="opacity" values="1;0.25;1" dur="1.2s" repeatCount="indefinite" />
+              </circle>
+              <text x="-43" y="3.2" fill="#f8fafc" fontSize="7.5" fontWeight="800" fontFamily="Sora, monospace" letterSpacing="0.6">
+                {meta.speed && meta.speed !== 'Stationary' && meta.speed !== '0 km/h' ? `${meta.speed} · GPS LOCKED` : `${meta.title.toUpperCase()} · UNIT #07`}
+              </text>
             </g>
 
-            <g transform="translate(23, -8)">
-              <circle cx="0" cy="0" r="7.5" fill="#14171d" stroke="#2a3342" strokeWidth="1.2"/>
-              <circle cx="0" cy="0" r="5" fill="url(#alloyRim)"/>
-              <path d="M 0 -4.5 L 0 4.5 M -4.5 0 L 4.5 0 M -3.2 -3.2 L 3.2 3.2 M -3.2 3.2 L 3.2 -3.2" stroke="#151921" strokeWidth="0.9"/>
-              <path d="M -3 -4 A 4 4 0 0 1 1 -5.2 L 1 -3 Z" fill="#ff3157"/>
-              <circle cx="0" cy="0" r="1.8" fill="#0d1117" stroke="#ffffff" strokeWidth="0.5"/>
+            {/* Ambient Ground Occlusion Contact Shadow */}
+            <ellipse cx="0" cy="2.5" rx="49" ry="4.5" fill="rgba(0,0,0,0.85)" filter="url(#softShadow)"/>
+
+            {/* Dynamic Crimson Neon Ground Effects Underglow */}
+            <ellipse cx="0" cy="1.2" rx="45" ry="4" fill="rgba(255,49,87,0.65)" filter="url(#superNeonGlow)"/>
+
+            {/* Long Volumetric Laser Projector Headlight Beam */}
+            <polygon points="45,-9.5 240,-30 250,16 44,-5" fill="url(#laserBeamVolumetric)" opacity="0.68" pointerEvents="none"/>
+            <polygon points="46,-9 150,-17 155,7 45,-6.5" fill="url(#laserBeamCore)" opacity="0.88" pointerEvents="none"/>
+
+            {/* Rear Exhaust / Afterburner Ion Pulse */}
+            <g transform="translate(-45, -8)">
+              <ellipse cx="-4" cy="0" rx="6" ry="2.5" fill="rgba(56, 189, 248, 0.55)" filter="url(#neonGlow)">
+                <animate attributeName="rx" values="4;7.5;4" dur="0.8s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.45;0.95;0.45" dur="0.8s" repeatCount="indefinite"/>
+              </ellipse>
+              <circle cx="-1" cy="0" r="2.2" fill="#ff3157"/>
             </g>
 
-            <path
-              d="
-                M -36 -7
-                L -37 -17
-                C -37 -21, -36 -23, -34 -24
-                L -7 -25
-                C 5 -25, 12 -22, 18 -17
-                C 24 -17, 30 -15, 35 -13
-                C 38 -12, 39 -9, 38 -6
-                L 35 -4
-                L 32 -4
-                C 31 -14, 15 -14, 14 -4
-                L -14 -4
-                C -15 -14, -31 -14, -32 -4
-                L -36 -7
-                Z"
-              fill="url(#carPaint)"
-              stroke="#ff6b85"
-              strokeWidth="0.6"
-            />
+            {/* Rear Wheel Assembly (x = -25, y = -7) */}
+            <g transform="translate(-25, -7)">
+              <circle cx="0" cy="0" r="8" fill="#090c12" stroke="#1e2430" strokeWidth="1.2"/>
+              <circle cx="0" cy="0" r="6" fill="url(#discRotor)"/>
+              <line x1="-4" y1="0" x2="4" y2="0" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="-3" x2="3" y2="3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="3" x2="3" y2="-3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              {/* Brembo Brake Caliper */}
+              <path d="M -4 -6 A 5.5 5.5 0 0 1 2 -6 L 1.5 -3.5 L -3.5 -3.5 Z" fill="#ff1744" stroke="#ffffff" strokeWidth="0.3"/>
+              {/* Directional Turbine Rim Spokes */}
+              <circle cx="0" cy="0" r="5" fill="none" stroke="url(#turbineAlloyRim)" strokeWidth="1"/>
+              <path d="M 0 -5 C 1.5 -3, 3 -1.5, 4.5 0 M 0 5 C -1.5 3, -3 1.5, -4.5 0 M -5 0 C -3 -1.5, -1.5 -3, 0 -4.5 M 5 0 C 3 1.5, 1.5 3, 0 4.5" stroke="#cbd5e1" strokeWidth="1.1" strokeLinecap="round"/>
+              <circle cx="0" cy="0" r="1.8" fill="#ff1744" stroke="#ffffff" strokeWidth="0.6"/>
+            </g>
 
+            {/* Front Wheel Assembly (x = 25, y = -7) */}
+            <g transform="translate(25, -7)">
+              <circle cx="0" cy="0" r="8" fill="#090c12" stroke="#1e2430" strokeWidth="1.2"/>
+              <circle cx="0" cy="0" r="6" fill="url(#discRotor)"/>
+              <line x1="-4" y1="0" x2="4" y2="0" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="-3" x2="3" y2="3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="3" x2="3" y2="-3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              {/* Brembo Brake Caliper */}
+              <path d="M -4 -6 A 5.5 5.5 0 0 1 2 -6 L 1.5 -3.5 L -3.5 -3.5 Z" fill="#ff1744" stroke="#ffffff" strokeWidth="0.3"/>
+              {/* Directional Turbine Rim Spokes */}
+              <circle cx="0" cy="0" r="5" fill="none" stroke="url(#turbineAlloyRim)" strokeWidth="1"/>
+              <path d="M 0 -5 C 1.5 -3, 3 -1.5, 4.5 0 M 0 5 C -1.5 3, -3 1.5, -4.5 0 M -5 0 C -3 -1.5, -1.5 -3, 0 -4.5 M 5 0 C 3 1.5, 1.5 3, 0 4.5" stroke="#cbd5e1" strokeWidth="1.1" strokeLinecap="round"/>
+              <circle cx="0" cy="0" r="1.8" fill="#ff1744" stroke="#ffffff" strokeWidth="0.6"/>
+            </g>
+
+            {/* Carbon Fiber Aero Underbody Skirt & Diffusers */}
             <path
-              d="M 35 -4 L 32 -4 C 31 -13, 15 -13, 14 -4 L -14 -4 C -15 -13, -31 -13, -32 -4 L -36 -7 L -36 -4 L 35 -4 Z"
-              fill="#11141a"
-              stroke="#1e2430"
+              d="M -44 -6 L -35 -6 C -34 -15, -16 -15, -15 -6 L 15 -6 C 16 -15, 34 -15, 35 -6 L 45 -6 L 46 -4 L -44 -4 Z"
+              fill="url(#carbonSplitter)"
+              stroke="#334155"
               strokeWidth="0.5"
             />
+            {/* Side Skirt Neon Blade Pinstripe */}
+            <line x1="-15" y1="-4.5" x2="15" y2="-4.5" stroke="#ff3157" strokeWidth="1.2" filter="url(#neonGlow)"/>
 
-            <path d="M 38 -8 C 38 -7, 36 -6, 34 -6 L 34 -9 C 36 -9, 38 -9, 38 -8 Z" fill="#090d14"/>
+            {/* Front Aero Splitter & Canard Dive Planes */}
+            <polygon points="42,-5 47,-4 46,-8 43,-7" fill="#090d14" stroke="#ff3157" strokeWidth="0.6"/>
 
-            <path d="M 4 -24 L 16 -17.5 L 14 -17.5 L 3 -24 Z" fill="#090d14" opacity="0.9"/>
-            <path d="M -5 -23.5 L 2.5 -23.5 L 13.5 -17.5 L 13.5 -13 L -5 -13 Z" fill="url(#carGlass)" stroke="#1e293b" strokeWidth="0.5"/>
-            <path d="M -22 -23 L -7 -23 L -7 -13 L -22 -13 Z" fill="url(#carGlass)" stroke="#1e293b" strokeWidth="0.5"/>
-            <path d="M -15 -23 L -19 -13 M 0 -23.5 L -4 -13" stroke="rgba(255,255,255,0.45)" strokeWidth="0.8" strokeLinecap="round"/>
+            {/* Main Hypercar Aerodynamic Silhouette Body */}
+            <path
+              d="
+                M -42 -7
+                L -44 -15
+                C -44 -17, -42 -19, -38 -20
+                L -22 -21
+                C -20 -23, -16 -26, -10 -26.5
+                L 5 -26.5
+                C 14 -26.5, 22 -22, 28 -17
+                L 38 -14
+                C 43 -12, 46 -10, 46 -7
+                L 45 -5
+                L 35 -5
+                C 34 -14, 16 -14, 15 -5
+                L -15 -5
+                C -16 -14, -34 -14, -35 -5
+                L -42 -7
+                Z
+              "
+              fill="url(#hypercarBody)"
+              stroke="#ff6b8b"
+              strokeWidth="0.8"
+            />
 
-            <path d="M 12 -16.5 C 15 -16.5 16 -15 14.5 -14 L 11 -14 Z" fill="#ff2247" stroke="#090d14" strokeWidth="0.5"/>
-            <rect x="13.5" y="-15.5" width="1.5" height="1" rx="0.5" fill="#ffffff" opacity="0.8"/>
+            {/* Metallic Waistline Reflection Highlight Line */}
+            <path
+              d="M -38 -15 Q -10 -18 36 -11"
+              fill="none"
+              stroke="url(#hypercarBodyHighlight)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
 
-            <text x="-6" y="-15.5" fill="#ffffff" fontSize="4.2" fontWeight="900" fontFamily="Sora, sans-serif" letterSpacing="0.4">
+            {/* Side Radiator Cooling Scoop Channel */}
+            <path
+              d="M -8 -16 L 8 -16 L 4 -9 L -10 -9 Z"
+              fill="#080b11"
+              stroke="#ff3157"
+              strokeWidth="0.6"
+              opacity="0.9"
+            />
+
+            {/* Panoramic Jet Cockpit Canopy Glass */}
+            <path
+              d="M -18 -21 L -8 -25.5 L 6 -25.5 L 18 -18 L 18 -14 L -18 -14 Z"
+              fill="url(#hypercarCanopy)"
+              stroke="#38bdf8"
+              strokeWidth="0.6"
+            />
+            {/* Interior Holographic Dashboard Arc Glow */}
+            <path d="M 6 -22 Q 12 -20 15 -16" fill="none" stroke="#00f5ff" strokeWidth="1.4" opacity="0.85" filter="url(#neonGlow)"/>
+            {/* Cockpit Glare Streaks */}
+            <path d="M -14 -24 L -17 -15 M -4 -25 L -8 -15 M 4 -25 L 1 -15" stroke="rgba(255,255,255,0.65)" strokeWidth="0.9" strokeLinecap="round"/>
+
+            {/* Swan-Neck Carbon Fiber Rear GT Wing */}
+            <path d="M -36 -19 L -34 -24 L -45 -24 L -43 -19 Z" fill="#090d14" stroke="#1e293b" strokeWidth="0.5"/>
+            <rect x="-46" y="-25" width="13" height="2.2" rx="1" fill="#ff1744" stroke="#ffffff" strokeWidth="0.4" filter="url(#superNeonGlow)"/>
+
+            {/* Door Livery Typography */}
+            <text x="-6" y="-10.5" fill="#ffffff" fontSize="4.6" fontWeight="900" fontFamily="Sora, sans-serif" letterSpacing="0.4">
               MOTO<tspan fill="#ff3157">DC</tspan>
             </text>
-            <text x="-6" y="-11.5" fill="#cbd5e1" fontSize="2.2" fontWeight="700" fontFamily="Sora, sans-serif" letterSpacing="0.6">
-              RAPID LOGISTICS
+            <text x="-6" y="-7.2" fill="#94a3b8" fontSize="2.3" fontWeight="700" fontFamily="Sora, sans-serif" letterSpacing="0.6">
+              RAPID INTERCEPTOR // 07
             </text>
-            <path d="M -30 -9.5 L 8 -9.5" stroke="#ff3157" strokeWidth="0.8" opacity="0.8"/>
-            <path d="M -30 -8 L 0 -8" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5"/>
 
-            <polygon points="34,-12 37,-10.5 36,-7.5 33,-8" fill="#e0f2fe" stroke="#38bdf8" strokeWidth="0.5"/>
-            <circle cx="35" cy="-9" r="1.3" fill="#ffffff"/>
-            <circle cx="35" cy="-9" r="2.8" fill="rgba(56,189,248,0.4)" filter="url(#neonGlow)"/>
+            {/* Front Matrix Dual Projector LED Headlamps */}
+            <polygon points="40,-11 45,-9 44,-6.5 39,-8.5" fill="#f8fafc" stroke="#38bdf8" strokeWidth="0.6" filter="url(#neonGlow)"/>
+            <circle cx="43" cy="-8.5" r="1.6" fill="#ffffff"/>
+            <circle cx="43" cy="-8.5" r="3.2" fill="rgba(56,189,248,0.7)" filter="url(#superNeonGlow)"/>
 
-            <rect x="-37" y="-16.5" width="1.8" height="5" rx="0.8" fill="#ff2247" stroke="#ffffff" strokeWidth="0.3"/>
-            <circle cx="-38" cy="-14" r="3.5" fill="rgba(255,34,71,0.6)" filter="url(#neonGlow)"/>
+            {/* Rear Full-Width Photon LED Taillight Bar */}
+            <rect x="-44.5" y="-15.5" width="2.5" height="5.5" rx="1" fill="#ff0033" stroke="#ffffff" strokeWidth="0.4" filter="url(#superNeonGlow)"/>
+            <circle cx="-45" cy="-13" r="4" fill="rgba(255,0,51,0.75)" filter="url(#superNeonGlow)"/>
 
-            <path d="M -26 -24 L -23 -26.5 L -20 -24 Z" fill="#14171d"/>
-            <circle cx="-23" cy="-27.5" r="1.5" fill="#22c55e">
-              <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="-23" cy="-27.5" r="3.5" fill="none" stroke="#22c55e" strokeWidth="0.5" opacity="0.6">
-              <animate attributeName="r" values="1.5;5" dur="1s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.8;0" dur="1s" repeatCount="indefinite"/>
-            </circle>
+            {/* Roof Shark Telemetry Sensor Pod & Expanding Radar Sonar Waves */}
+            <g transform="translate(-12, -26.5)">
+              <polygon points="0,0 -3,-3 3,-3" fill="#090d14" stroke="#ff3157" strokeWidth="0.5"/>
+              <circle cx="0" cy="-3.5" r="1.5" fill="#22c55e">
+                <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
+              </circle>
+              {/* Sonar Radar Wave Pulses */}
+              <circle cx="0" cy="-3.5" r="4" fill="none" stroke="#22c55e" strokeWidth="0.6" opacity="0.8">
+                <animate attributeName="r" values="3;15" dur="1.6s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.9;0" dur="1.6s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="0" cy="-3.5" r="7" fill="none" stroke="#38bdf8" strokeWidth="0.5" opacity="0.5">
+                <animate attributeName="r" values="5;22" dur="1.6s" begin="0.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.7;0" dur="1.6s" begin="0.5s" repeatCount="indefinite"/>
+              </circle>
+            </g>
           </g>
         </svg>
       </div>
