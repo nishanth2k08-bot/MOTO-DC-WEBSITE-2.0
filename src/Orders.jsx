@@ -588,7 +588,6 @@ export default function Orders(){
     [orders,setOrders]=useState([]),
     [loading,setLoading]=useState(true),
     [open,setOpen]=useState(null),
-    [filter,setFilter]=useState('all'),
     [activeOrderId,setActiveOrderId]=useState(()=>location.state?.orderId||null);
 
   useEffect(()=>{
@@ -655,11 +654,6 @@ export default function Orders(){
     }
   };
 
-  const filteredOrders=filter==='all'?displayOrders:displayOrders.filter(o=>{
-    const s=o.orderStatus||'placed';
-    return filter==='placed'?['placed','confirmed','packed'].includes(s):s===filter;
-  });
-
   return (
     <section className="page ordersPage">
       {justPlacedData&&(
@@ -691,28 +685,22 @@ export default function Orders(){
         setActiveOrderId={setActiveOrderId}
       />
 
-      <div className="orderFilters" role="tablist" aria-label="Order filters">
-        {[
-          ['all','All Orders'],
-          ['placed','Processing'],
-          ['shipped','Shipped'],
-          ['out_for_delivery','Out for Delivery'],
-          ['delivered','Delivered'],
-          ['cancelled','Cancelled']
-        ].map(([key,label])=>(
-          <button key={key} className={filter===key?'active':''} onClick={()=>setFilter(key)} role="tab" aria-selected={filter===key}>
-            {label}
-          </button>
-        ))}
+      <div className="ordersSectionHeader">
+        <div className="ordersSectionTitleGroup">
+          <h2>All Orders</h2>
+          <span className="ordersCountBadge">
+            {displayOrders.length} {displayOrders.length===1?'Order':'Orders'}
+          </span>
+        </div>
       </div>
 
-      {loading?<div className="empty">Loading your orders...</div>:!filteredOrders.length?<div className="ordersEmpty">
+      {loading&&!displayOrders.length?<div className="empty">Loading your orders...</div>:!displayOrders.length?<div className="ordersEmpty">
         <Package size={42}/>
         <h2>No orders found</h2>
-        <p>Your orders matching this status will appear here.</p>
+        <p>Your orders will appear here once placed.</p>
         <button className="heroBtn" onClick={()=>nav('/products')}>Start Shopping</button>
       </div>:<div className="customerOrders">
-        {filteredOrders.map(o=>{
+        {displayOrders.map(o=>{
           const status=o.orderStatus||'placed',
             cancelled=status==='cancelled',
             afterSales=status==='returned'||status==='replaced',

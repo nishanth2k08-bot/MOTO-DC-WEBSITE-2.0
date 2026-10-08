@@ -183,8 +183,8 @@ export default function Checkout(){
 
   const placeOnline=async()=>{
     setProcessingState({
-      title:'Opening secure payment gateway...',
-      subtitle:'Connecting to Razorpay payment portal...'
+      title:'Please wait, processing your payment...',
+      subtitle:'Connecting securely to payment gateway and loading payment options...'
     });
     let token, created;
     try{
@@ -225,14 +225,14 @@ export default function Checkout(){
       },
       handler:async response=>{
         unlockScroll();
+        setProcessingState({
+          title:'Please wait, confirming your order...',
+          subtitle:'Payment received! Verifying transaction and finalizing your order...'
+        });
         try{
           const frames=document.querySelectorAll('.razorpay-checkout-frame,.razorpay-backdrop,.razorpay-container');
           frames.forEach(f=>f.remove());
         }catch(_){}
-        setProcessingState({
-          title:'Please wait, processing your payment...',
-          subtitle:'Verifying payment with your bank and confirming your order...'
-        });
         const instantOrderId=`MDC-${(response.razorpay_payment_id||'').slice(-8).toUpperCase()||Date.now().toString().slice(-8)}`;
 
         try{
@@ -284,7 +284,6 @@ export default function Checkout(){
       toast.error(response.error?.description||'Payment failed');
     });
     lockScroll();
-    setProcessingState(null);
     rzp.open();
   };
 

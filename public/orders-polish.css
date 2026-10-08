@@ -169,3 +169,54 @@
     font-size: 12.5px;
   }
 }
+
+/* All Orders Header */
+.ordersSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0 16px;
+  padding: 0 4px;
+}
+
+.ordersSectionTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ordersSectionTitleGroup h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0;
+  letter-spacing: -0.6px;
+}
+
+.ordersCountBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(255, 49, 87, 0.12);
+  border: 1px solid rgba(255, 49, 87, 0.28);
+  border-radius: 999px;
+  color: #ff3157;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.light-theme .ordersSectionTitleGroup h2 {
+  color: #0f172a;
+}
+
+.light-theme .ordersCountBadge {
+  background: rgba(255, 49, 87, 0.08);
+  border-color: rgba(255, 49, 87, 0.22);
+  color: #e11d48;
+}
+
+.orderFilters {
+  display: none !important;
+}
