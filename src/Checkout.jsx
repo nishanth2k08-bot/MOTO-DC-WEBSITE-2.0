@@ -75,9 +75,10 @@ export default function Checkout(){
 
   const handleCountryCodeChange=(e)=>{
     let val=e.target.value.trim().replace(/[^\d+]/g,'');
-    if(!val||val==='+'){setCountryCode('+');return}
-    val='+'+val.replace(/\+/g,'');
-    if(val.length>5)val=val.slice(0,5);
+    if(!val){setCountryCode('');return}
+    if(!val.startsWith('+')) val='+'+val.replace(/\+/g,'');
+    else val='+'+val.slice(1).replace(/\+/g,'');
+    if(val.length>5) val=val.slice(0,5);
     setCountryCode(val);
   };
 
@@ -87,21 +88,25 @@ export default function Checkout(){
       const cleanFull=val.replace(/[^\d+]/g,'');
       if(cleanFull.startsWith('+91')&&cleanFull.length>3){
         setCountryCode('+91');
-        setForm(prev=>({...prev,phone:cleanFull.slice(3).slice(0,15)}));
+        setForm(prev=>({...prev,phone:cleanFull.slice(3).slice(0,10)}));
         return;
       }else if(cleanFull.startsWith('+')&&cleanFull.length>1){
-        setForm(prev=>({...prev,phone:cleanFull.slice(1).slice(0,15)}));
-        return;
+        const match=cleanFull.match(/^(\+\d{1,3})(.*)$/);
+        if(match){
+          setCountryCode(match[1]);
+          setForm(prev=>({...prev,phone:match[2].replace(/\D/g,'').slice(0,10)}));
+          return;
+        }
       }
     }
-    const digits=val.replace(/\D/g,'').slice(0,15);
+    const digits=val.replace(/\D/g,'').slice(0,10);
     setForm(prev=>({...prev,phone:digits}));
   };
 
   const getFullPhone=()=>{
-    const rawNum=form.phone.trim().replace(/\D/g,'');
+    const rawNum=form.phone.trim().replace(/\D/g,'').slice(0,10);
     let rawCode=countryCode.trim();
-    if(rawCode==='+'||rawCode===''){rawCode='+91'}
+    if(!rawCode||rawCode==='+'){rawCode='+91'}
     else if(!rawCode.startsWith('+')){rawCode=`+${rawCode}`}
     return `${rawCode}${rawNum}`;
   };
@@ -124,9 +129,14 @@ export default function Checkout(){
       nav('/products');
       return false;
     }
+    const cleanCode=countryCode.trim();
+    if(!cleanCode||cleanCode==='+'||!/^\+\d{1,4}$/.test(cleanCode)){
+      toast.error('Country code is compulsory (e.g. +91)');
+      return false;
+    }
     const rawDigits=form.phone.replace(/\D/g,'');
-    if(rawDigits.length<10){
-      toast.error('Enter a valid 10-digit phone number');
+    if(rawDigits.length!==10){
+      toast.error('Mobile number must be exactly 10 digits');
       return false;
     }
     if(!/^[0-9]{6}$/.test(form.pincode)){
@@ -200,8 +210,13 @@ export default function Checkout(){
       description:'Automotive parts order',
       order_id:created.orderId,
       prefill:{name:form.name,email:form.email,contact:fullPhone},
-      theme:{color:'#ff3157'},
+      theme:{color:'#ff3157',backdrop_color:'rgba(0,0,0,0.85)'},
       modal:{
+        backdropclose:false,
+        escape:false,
+        handleback:true,
+        confirm_close:true,
+        animation:true,
         ondismiss:()=>{
           unlockScroll();
           setProcessingState(null);
@@ -210,6 +225,10 @@ export default function Checkout(){
       },
       handler:async response=>{
         unlockScroll();
+        try{
+          const frames=document.querySelectorAll('.razorpay-checkout-frame,.razorpay-backdrop,.razorpay-container');
+          frames.forEach(f=>f.remove());
+        }catch(_){}
         setProcessingState({
           title:'Please wait, processing your payment...',
           subtitle:'Verifying payment with your bank and confirming your order...'
@@ -356,14 +375,15 @@ export default function Checkout(){
                   <div className="phoneInputsRow">
                     <div className="countryCodeBox">
                       <input
+                        required
                         type="tel"
                         className="countryCodeInput"
                         value={countryCode}
                         onChange={handleCountryCodeChange}
-                        placeholder="+"
+                        placeholder="+91"
                         maxLength={5}
                         aria-label="Country code"
-                        title="Country code (e.g. + or +91)"
+                        title="Country code is compulsory (e.g. +91)"
                       />
                     </div>
                     <div className="phoneNumberBox">
@@ -376,7 +396,7 @@ export default function Checkout(){
                         value={form.phone}
                         onChange={handlePhoneChange}
                         placeholder="10-digit mobile number"
-                        maxLength={15}
+                        maxLength={10}
                       />
                     </div>
                   </div>
