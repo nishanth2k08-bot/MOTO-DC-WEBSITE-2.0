@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
-import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,ShieldCheck,Phone} from 'lucide-react';
+import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,ShieldCheck,Phone,Clock} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
@@ -48,6 +48,7 @@ export default function Checkout(){
   const [countryCode,setCountryCode]=useState('+');
   const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:(user?.phoneNumber||'').replace(/^\+\d{1,4}/,'')||'',address:'',city:'',state:'',pincode:''});
   const [payment,setPayment]=useState('cod');
+  const [processingState,setProcessingState]=useState(null);
 
   useEffect(()=>{
     if(user){
@@ -126,31 +127,60 @@ export default function Checkout(){
   };
 
   const placeCod=async()=>{
-    const token=await user.getIdToken();
-    const fullPhone=getFullPhone();
-    const response=await fetch('/api/place-cod',{
-      method:'POST',
-      headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
-      body:JSON.stringify({
-        items:items.map(x=>({id:x.id,qty:x.qty})),
-        customer:{name:form.name,email:form.email,phone:fullPhone},
-        shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode}
-      })
+    setProcessingState({
+      title:'Please wait, confirming your order...',
+      subtitle:'Recording your Cash on Delivery order and preparing express dispatch...'
     });
-    const result=await readApiResponse(response);
-    clearCart();
-    setPlaced({orderId:result.orderId,total:result.total});
-    toast.success('Order placed successfully');
+    try{
+      const token=await user.getIdToken();
+      const fullPhone=getFullPhone();
+      const response=await fetch('/api/place-cod',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
+        body:JSON.stringify({
+          items:items.map(x=>({id:x.id,qty:x.qty})),
+          customer:{name:form.name,email:form.email,phone:fullPhone},
+          shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode}
+        })
+      });
+      const result=await readApiResponse(response);
+      clearCart();
+      toast.success('Order placed successfully');
+      nav('/orders',{
+        replace:true,
+        state:{
+          justPlaced:true,
+          orderId:result.orderId,
+          total:result.total,
+          method:'cod'
+        }
+      });
+    }catch(err){
+      setProcessingState(null);
+      throw err;
+    }
   };
 
   const placeOnline=async()=>{
-    const [_,token]=await Promise.all([loadRazorpay(),user.getIdToken()]);
-    const create=await fetch('/api/create-payment',{
-      method:'POST',
-      headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
-      body:JSON.stringify({items:items.map(x=>({id:x.id,qty:x.qty})),amount:subtotal})
+    setProcessingState({
+      title:'Opening secure payment gateway...',
+      subtitle:'Connecting to Razorpay payment portal...'
     });
-    const created=await readApiResponse(create);
+    let token, created;
+    try{
+      const [_,t]=await Promise.all([loadRazorpay(),user.getIdToken()]);
+      token=t;
+      const create=await fetch('/api/create-payment',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
+        body:JSON.stringify({items:items.map(x=>({id:x.id,qty:x.qty})),amount:subtotal})
+      });
+      created=await readApiResponse(create);
+    }catch(err){
+      setProcessingState(null);
+      throw err;
+    }
+
     const fullPhone=getFullPhone();
     const options={
       key:created.keyId,
@@ -164,20 +194,18 @@ export default function Checkout(){
       modal:{
         ondismiss:()=>{
           unlockScroll();
+          setProcessingState(null);
           setLoading(false);
         }
       },
       handler:async response=>{
-        // 1. Immediately unlock background scroll
         unlockScroll();
-        // 2. Instantly clear cart
-        clearCart();
-        // 3. Show order confirmation screen INSTANTANEOUSLY (0ms delay)
+        setProcessingState({
+          title:'Please wait, processing your payment...',
+          subtitle:'Verifying payment with your bank and confirming your order...'
+        });
         const instantOrderId=`MDC-${(response.razorpay_payment_id||'').slice(-8).toUpperCase()||Date.now().toString().slice(-8)}`;
-        setPlaced({orderId:instantOrderId,total:subtotal});
-        toast.success('Payment successful! Order confirmed.');
 
-        // 4. Finalize server verification in the background without blocking the UI
         try{
           const verify=await fetch('/api/verify-payment',{
             method:'POST',
@@ -192,22 +220,42 @@ export default function Checkout(){
             })
           });
           const result=await readApiResponse(verify);
-          if(result?.orderId){
-            setPlaced(prev=>prev?{...prev,orderId:result.orderId,total:result.total||prev.total}:prev);
-          }
+          clearCart();
+          toast.success('Payment verified! Order confirmed.');
+          nav('/orders',{
+            replace:true,
+            state:{
+              justPlaced:true,
+              orderId:result?.orderId||instantOrderId,
+              total:result?.total||subtotal,
+              method:'online'
+            }
+          });
         }catch(e){
-          console.error('Background payment verification error:',e);
+          console.error('Payment verification error:',e);
+          clearCart();
+          toast.success('Payment received! Order confirmed.');
+          nav('/orders',{
+            replace:true,
+            state:{
+              justPlaced:true,
+              orderId:instantOrderId,
+              total:subtotal,
+              method:'online'
+            }
+          });
         }
       }
     };
     const rzp=new window.Razorpay(options);
     rzp.on('payment.failed',response=>{
       unlockScroll();
+      setProcessingState(null);
       setLoading(false);
       toast.error(response.error?.description||'Payment failed');
     });
-    // Lock background scroll while payment modal is open
     lockScroll();
+    setProcessingState(null);
     rzp.open();
   };
 
@@ -220,6 +268,7 @@ export default function Checkout(){
       else await placeOnline();
     }catch(err){
       unlockScroll();
+      setProcessingState(null);
       console.error(err);
       toast.error(err.message||'Could not place the order');
     }finally{
@@ -252,93 +301,115 @@ export default function Checkout(){
   );
 
   return (
-    <section className="page checkoutPage">
-      <button type="button" className="backBtn" onClick={()=>nav('/cart')}><ArrowLeft size={16}/> Back to Cart</button>
-      <div className="pagehead">
-        <p className="eyebrow">SECURE CHECKOUT</p>
-        <h1>Complete your <span>order.</span></h1>
-        <p>Enter your delivery details and choose a payment method.</p>
-      </div>
-      <div className="checkoutSteps">
-        <div className="checkoutStep done"><div className="checkoutStepDot">✓</div><span className="checkoutStepLabel">Cart</span></div>
-        <div className="checkoutStep active"><div className="checkoutStepDot">2</div><span className="checkoutStepLabel">Details</span></div>
-        <div className="checkoutStep"><div className="checkoutStepDot">3</div><span className="checkoutStepLabel">Review</span></div>
-      </div>
-      <div className="checkoutLayout">
-        <form className="checkoutForm" onSubmit={submit}>
-          <div className="checkoutBlock">
-            <h2>Contact details</h2>
-            <div className="formGrid">
-              <label>Full name<input required name="name" value={form.name} onChange={update} placeholder="Your full name"/></label>
-              <label>Email<input required type="email" name="email" value={form.email} onChange={update} placeholder="you@example.com"/></label>
-              <label className="phoneLabel full">
-                <span>Mobile Phone</span>
-                <div className="phoneInputsRow">
-                  <div className="countryCodeBox">
-                    <input
-                      type="tel"
-                      className="countryCodeInput"
-                      value={countryCode}
-                      onChange={handleCountryCodeChange}
-                      placeholder="+"
-                      maxLength={5}
-                      aria-label="Country code"
-                      title="Country code (e.g. + or +91)"
-                    />
+    <>
+      {processingState&&(
+        <div className="checkoutProcessingWhiteScreen" role="alert" aria-live="polite">
+          <div className="checkoutProcessingCard">
+            <div className="checkoutProcessingSpinnerWrap">
+              <div className="checkoutProcessingSpinner"/>
+              <div className="checkoutProcessingInnerLogo">Moto<span>DC</span></div>
+            </div>
+            <h2>{processingState.title}</h2>
+            <p>{processingState.subtitle}</p>
+            <div className="checkoutProcessingSecurity">
+              <ShieldCheck size={16}/>
+              <span>256-Bit SSL Secured · MotoDC Rapid Fleet</span>
+            </div>
+            <div className="checkoutProcessingNotice">
+              <Clock size={13}/>
+              <span>Please do not refresh, close, or press the back button.</span>
+            </div>
+          </div>
+        </div>
+      )}
+      <section className="page checkoutPage">
+        <button type="button" className="backBtn" onClick={()=>nav('/cart')}><ArrowLeft size={16}/> Back to Cart</button>
+        <div className="pagehead">
+          <p className="eyebrow">SECURE CHECKOUT</p>
+          <h1>Complete your <span>order.</span></h1>
+          <p>Enter your delivery details and choose a payment method.</p>
+        </div>
+        <div className="checkoutSteps">
+          <div className="checkoutStep done"><div className="checkoutStepDot">✓</div><span className="checkoutStepLabel">Cart</span></div>
+          <div className="checkoutStep active"><div className="checkoutStepDot">2</div><span className="checkoutStepLabel">Details</span></div>
+          <div className="checkoutStep"><div className="checkoutStepDot">3</div><span className="checkoutStepLabel">Review</span></div>
+        </div>
+        <div className="checkoutLayout">
+          <form className="checkoutForm" onSubmit={submit}>
+            <div className="checkoutBlock">
+              <h2>Contact details</h2>
+              <div className="formGrid">
+                <label>Full name<input required name="name" value={form.name} onChange={update} placeholder="Your full name"/></label>
+                <label>Email<input required type="email" name="email" value={form.email} onChange={update} placeholder="you@example.com"/></label>
+                <label className="phoneLabel full">
+                  <span>Mobile Phone</span>
+                  <div className="phoneInputsRow">
+                    <div className="countryCodeBox">
+                      <input
+                        type="tel"
+                        className="countryCodeInput"
+                        value={countryCode}
+                        onChange={handleCountryCodeChange}
+                        placeholder="+"
+                        maxLength={5}
+                        aria-label="Country code"
+                        title="Country code (e.g. + or +91)"
+                      />
+                    </div>
+                    <div className="phoneNumberBox">
+                      <Phone size={17}/>
+                      <input
+                        required
+                        type="tel"
+                        className="phoneNumberInput"
+                        name="phone"
+                        value={form.phone}
+                        onChange={handlePhoneChange}
+                        placeholder="10-digit mobile number"
+                        maxLength={15}
+                      />
+                    </div>
                   </div>
-                  <div className="phoneNumberBox">
-                    <Phone size={17}/>
-                    <input
-                      required
-                      type="tel"
-                      className="phoneNumberInput"
-                      name="phone"
-                      value={form.phone}
-                      onChange={handlePhoneChange}
-                      placeholder="10-digit mobile number"
-                      maxLength={15}
-                    />
-                  </div>
-                </div>
-              </label>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className="checkoutBlock">
-            <h2><MapPin size={19}/> Delivery address</h2>
-            <div className="formGrid">
-              <label className="full">Address<input required name="address" value={form.address} onChange={update} placeholder="House / street / area"/></label>
-              <label>City<input required name="city" value={form.city} onChange={update} placeholder="City"/></label>
-              <label>State<input required name="state" value={form.state} onChange={update} placeholder="State"/></label>
-              <label>PIN code<input required name="pincode" value={form.pincode} onChange={update} placeholder="6-digit PIN" maxLength={6}/></label>
+            <div className="checkoutBlock">
+              <h2><MapPin size={19}/> Delivery address</h2>
+              <div className="formGrid">
+                <label className="full">Address<input required name="address" value={form.address} onChange={update} placeholder="House / street / area"/></label>
+                <label>City<input required name="city" value={form.city} onChange={update} placeholder="City"/></label>
+                <label>State<input required name="state" value={form.state} onChange={update} placeholder="State"/></label>
+                <label>PIN code<input required name="pincode" value={form.pincode} onChange={update} placeholder="6-digit PIN" maxLength={6}/></label>
+              </div>
             </div>
-          </div>
-          <div className="checkoutBlock">
-            <h2><Wallet size={19}/> Payment method</h2>
-            <div className="paymentOptions">
-              <label className={payment==='cod'?'selected':''}>
-                <input type="radio" name="payment" checked={payment==='cod'} onChange={()=>setPayment('cod')}/>
-                <span><b>Cash on Delivery</b><small>Pay when your order arrives</small></span>
-              </label>
-              <label className={payment==='online'?'selected':''}>
-                <input type="radio" name="payment" checked={payment==='online'} onChange={()=>setPayment('online')}/>
-                <span><b>Online Payment</b><small>Secure Razorpay checkout</small></span>
-              </label>
+            <div className="checkoutBlock">
+              <h2><Wallet size={19}/> Payment method</h2>
+              <div className="paymentOptions">
+                <label className={payment==='cod'?'selected':''}>
+                  <input type="radio" name="payment" checked={payment==='cod'} onChange={()=>setPayment('cod')}/>
+                  <span><b>Cash on Delivery</b><small>Pay when your order arrives</small></span>
+                </label>
+                <label className={payment==='online'?'selected':''}>
+                  <input type="radio" name="payment" checked={payment==='online'} onChange={()=>setPayment('online')}/>
+                  <span><b>Online Payment</b><small>Secure Razorpay checkout</small></span>
+                </label>
+              </div>
             </div>
-          </div>
-          <button className="heroBtn placeOrder" disabled={loading}>
-            {loading?'Processing...':payment==='online'?<>Pay Securely · {money(subtotal)} <ShieldCheck size={17}/></>:<>Place Order · {money(subtotal)}</>}
-          </button>
-        </form>
-        <aside className="checkoutSummary">
-          <h2>Order Summary</h2>
-          {items.map(x=><div className="summaryItem" key={x.id}><img src={x.image} alt=""/><div><b>{x.name}</b><small>Qty {x.qty}</small></div><strong>{money(x.price*x.qty)}</strong></div>)}
-          <hr/>
-          <p>Subtotal <b>{money(subtotal)}</b></p>
-          <p>Delivery <b>FREE</b></p>
-          <h3>Total <span>{money(subtotal)}</span></h3>
-          <div className="trust"><Truck size={17}/> Free delivery on this order</div>
-        </aside>
-      </div>
-    </section>
+            <button className="heroBtn placeOrder" disabled={loading}>
+              {loading?'Processing...':payment==='online'?<>Pay Securely · {money(subtotal)} <ShieldCheck size={17}/></>:<>Place Order · {money(subtotal)}</>}
+            </button>
+          </form>
+          <aside className="checkoutSummary">
+            <h2>Order Summary</h2>
+            {items.map(x=><div className="summaryItem" key={x.id}><img src={x.image} alt={x.name} loading="lazy" decoding="async"/><div><b>{x.name}</b><small>Qty {x.qty}</small></div><strong>{money(x.price*x.qty)}</strong></div>)}
+            <hr/>
+            <p>Subtotal <b>{money(subtotal)}</b></p>
+            <p>Delivery <b>FREE</b></p>
+            <h3>Total <span>{money(subtotal)}</span></h3>
+            <div className="trust"><Truck size={17}/> Free delivery on this order</div>
+          </aside>
+        </div>
+      </section>
+    </>
   );
 }

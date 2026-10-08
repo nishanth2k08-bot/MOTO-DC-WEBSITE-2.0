@@ -40,8 +40,10 @@ export default async function handler(req,res){
     const data=await response.json().catch(()=>({}));
     if(!response.ok)return send(res,502,{error:data.error?.description||'Razorpay rejected the server credentials or request'});
     const categoryRef=db.collection('paymentIntents').doc('online payment intents');
-    await categoryRef.set({name:'online payment intents',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
-    await categoryRef.collection('records').doc(data.id).set({userId:decoded.uid,amount:total,currency:'INR',items:safeItems,status:'created',createdAt:admin.firestore.FieldValue.serverTimestamp()});
+    await Promise.all([
+      categoryRef.set({name:'online payment intents',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true}),
+      categoryRef.collection('records').doc(data.id).set({userId:decoded.uid,amount:total,currency:'INR',items:safeItems,status:'created',createdAt:admin.firestore.FieldValue.serverTimestamp()})
+    ]);
     return send(res,200,{keyId,orderId:data.id,amount:data.amount,currency:data.currency});
   }catch(e){
     console.error('create-payment error:',e);

@@ -35,3 +35,137 @@
 }
 @media(max-width:380px){.ordersPage .pagehead h1{font-size:29px}.returnActions{padding:14px 12px}.returnActions button{flex-basis:100%}}
 @media(prefers-reduced-motion:reduce){.returnActions button{transition:none}.returnActions button:hover:not(:disabled){transform:none}}
+
+/* Order Confirmed Celebration Banner */
+.orderJustPlacedBanner {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(13, 16, 22, 0.95) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 18px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25), 0 0 30px rgba(16, 185, 129, 0.08);
+  animation: justPlacedSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes justPlacedSlideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.justPlacedBannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.justPlacedCheckCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1.5px solid rgba(16, 185, 129, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.justPlacedBadge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #10b981;
+  margin-bottom: 4px;
+}
+
+.justPlacedBannerText h2 {
+  margin: 0 0 4px 0;
+  font-size: 19px;
+  font-weight: 800;
+  font-family: 'Sora', sans-serif;
+  color: #f8fafc;
+  line-height: 1.3;
+}
+.justPlacedBannerText h2 span {
+  color: #ff3157;
+}
+
+.justPlacedBannerText p {
+  margin: 0;
+  font-size: 13.5px;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+.justPlacedBannerText p b {
+  color: #f8fafc;
+}
+
+.justPlacedDismissBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.justPlacedDismissBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.light-theme .orderJustPlacedBanner {
+  background: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.12);
+}
+.light-theme .justPlacedBannerText h2 {
+  color: #0f172a !important;
+}
+.light-theme .justPlacedBannerText p {
+  color: #475569 !important;
+}
+.light-theme .justPlacedBannerText p b {
+  color: #0f172a !important;
+}
+.light-theme .justPlacedDismissBtn {
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+.light-theme .justPlacedDismissBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+@media(max-width: 640px) {
+  .orderJustPlacedBanner {
+    padding: 18px 16px;
+    align-items: flex-start;
+  }
+  .justPlacedBannerLeft {
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .justPlacedCheckCircle {
+    width: 38px;
+    height: 38px;
+  }
+  .justPlacedBannerText h2 {
+    font-size: 16px;
+  }
+  .justPlacedBannerText p {
+    font-size: 12.5px;
+  }
+}

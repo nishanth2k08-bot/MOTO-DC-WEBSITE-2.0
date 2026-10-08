@@ -39,3 +39,144 @@
   .checkoutBlock,.checkoutSummary{padding:14px}
 }
 @media(prefers-reduced-motion:reduce){.checkoutPage *{scroll-behavior:auto}}
+
+/* MotoDC White Processing Screen for COD and Online Payment */
+.checkoutProcessingWhiteScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  animation: checkoutWhiteFadeIn 0.22s ease-out forwards;
+}
+
+@keyframes checkoutWhiteFadeIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.checkoutProcessingCard {
+  max-width: 480px;
+  width: 100%;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 44px 36px;
+  text-align: center;
+  box-shadow: 0 25px 65px -15px rgba(15, 23, 42, 0.14), 0 10px 25px -10px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.checkoutProcessingSpinnerWrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkoutProcessingSpinner {
+  width: 100%;
+  height: 100%;
+  border: 4px solid #f1f5f9;
+  border-top-color: #ff3157;
+  border-right-color: #ff3157;
+  border-radius: 50%;
+  animation: checkoutSpinLoop 0.8s cubic-bezier(0.5, 0.15, 0.5, 0.85) infinite;
+}
+
+@keyframes checkoutSpinLoop {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.checkoutProcessingInnerLogo {
+  position: absolute;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  color: #0f172a !important;
+  letter-spacing: -0.5px;
+  user-select: none;
+}
+.checkoutProcessingInnerLogo span {
+  color: #ff3157 !important;
+}
+
+.checkoutProcessingCard h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+  color: #0f172a !important;
+  margin: 0 0 10px 0;
+  line-height: 1.28;
+  letter-spacing: -0.5px;
+}
+
+.checkoutProcessingCard p {
+  font-size: 14.5px;
+  color: #64748b !important;
+  margin: 0 0 24px 0;
+  line-height: 1.55;
+}
+
+.checkoutProcessingSecurity {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  color: #10b981;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.checkoutProcessingSecurity svg {
+  color: #10b981 !important;
+}
+.checkoutProcessingSecurity span {
+  color: #334155 !important;
+}
+
+.checkoutProcessingNotice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #94a3b8 !important;
+  line-height: 1.4;
+}
+.checkoutProcessingNotice svg {
+  color: #94a3b8 !important;
+}
+
+@media(max-width: 520px) {
+  .checkoutProcessingCard {
+    padding: 34px 22px;
+    border-radius: 20px;
+  }
+  .checkoutProcessingSpinnerWrap {
+    width: 66px;
+    height: 66px;
+    margin-bottom: 20px;
+  }
+  .checkoutProcessingCard h2 {
+    font-size: 20px;
+  }
+  .checkoutProcessingCard p {
+    font-size: 13.5px;
+    margin-bottom: 20px;
+  }
+}

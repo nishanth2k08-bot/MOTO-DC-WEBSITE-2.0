@@ -3,7 +3,7 @@ import {collection,onSnapshot,query,where} from 'firebase/firestore';
 import {auth,db} from './firebase';
 import {Package,ChevronDown,MapPin,Truck,CheckCircle,Clock,XCircle,RotateCcw,History,Download,Ban} from 'lucide-react';
 import {jsPDF} from 'jspdf';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate,useLocation} from 'react-router-dom';
 import {toast} from 'react-hot-toast';
 import './orders.css';
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
@@ -583,11 +583,20 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
 
 export default function Orders(){
   const nav=useNavigate(),
+    location=useLocation(),
+    [justPlacedData,setJustPlacedData]=useState(()=>location.state?.justPlaced?location.state:null),
     [orders,setOrders]=useState([]),
     [loading,setLoading]=useState(true),
     [open,setOpen]=useState(null),
     [filter,setFilter]=useState('all'),
-    [activeOrderId,setActiveOrderId]=useState(null);
+    [activeOrderId,setActiveOrderId]=useState(()=>location.state?.orderId||null);
+
+  useEffect(()=>{
+    if(location.state?.justPlaced&&location.state?.orderId){
+      setActiveOrderId(location.state.orderId);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  },[location.state]);
 
   useEffect(()=>{
     const u=auth.currentUser;
@@ -608,7 +617,7 @@ export default function Orders(){
       if(active){
         setOrders(next);
         if(!activeOrderId&&next.length>0){
-          setActiveOrderId(next[0].id);
+          setActiveOrderId(location.state?.orderId||next[0].id);
         }
         setLoading(false);
       }
@@ -617,26 +626,67 @@ export default function Orders(){
       if(active){toast.error('Could not load your orders.');setLoading(false)}
     }));
     return()=>{active=false;unsubs.forEach(u=>u())};
-  },[activeOrderId]);
+  },[activeOrderId,location.state]);
+
+  const displayOrders=React.useMemo(()=>{
+    if(justPlacedData?.orderId&&!orders.some(o=>o.orderId===justPlacedData.orderId||o.id===justPlacedData.orderId)){
+      const provisional={
+        id:justPlacedData.orderId,
+        orderId:justPlacedData.orderId,
+        total:justPlacedData.total,
+        paymentMethod:justPlacedData.method,
+        orderStatus:'placed',
+        createdAt:new Date(),
+        items:[{name:'MotoDC Order #'+justPlacedData.orderId,price:justPlacedData.total,qty:1}],
+        delivery:'FREE',
+        statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}]
+      };
+      return [provisional,...orders];
+    }
+    return orders;
+  },[orders,justPlacedData]);
 
   const removeLocal=id=>{
     setOrders(xs=>xs.filter(x=>x.id!==id));
     setOpen(v=>v===id?null:v);
     if(activeOrderId===id){
-      const remaining=orders.filter(x=>x.id!==id);
+      const remaining=displayOrders.filter(x=>x.id!==id);
       setActiveOrderId(remaining[0]?.id||null);
     }
   };
 
-  const filteredOrders=filter==='all'?orders:orders.filter(o=>{
+  const filteredOrders=filter==='all'?displayOrders:displayOrders.filter(o=>{
     const s=o.orderStatus||'placed';
     return filter==='placed'?['placed','confirmed','packed'].includes(s):s===filter;
   });
 
   return (
     <section className="page ordersPage">
+      {justPlacedData&&(
+        <div className="orderJustPlacedBanner" role="status" aria-live="polite">
+          <div className="justPlacedBannerLeft">
+            <div className="justPlacedCheckCircle">
+              <CheckCircle size={26}/>
+            </div>
+            <div className="justPlacedBannerText">
+              <span className="justPlacedBadge">ORDER CONFIRMED · {justPlacedData.method==='cod'?'CASH ON DELIVERY':'ONLINE PAYMENT'}</span>
+              <h2>Thank you! Your order <span>#{justPlacedData.orderId}</span> is confirmed.</h2>
+              <p>Total: <b>{money(justPlacedData.total)}</b> · Our dispatch team has queued your package for express fulfillment.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="justPlacedDismissBtn"
+            onClick={()=>setJustPlacedData(null)}
+            aria-label="Dismiss confirmation banner"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <TrackingHeroMap
-        orders={orders}
+        orders={displayOrders}
         activeOrderId={activeOrderId}
         setActiveOrderId={setActiveOrderId}
       />
@@ -674,7 +724,7 @@ export default function Orders(){
             <article className="customerOrder" key={o.id}>
               <div className="customerOrderTop">
                 <div className="orderProductPreview">
-                  {o.items?.[0]?.image?<img src={o.items[0].image} alt=""/>:<Package size={30}/>}
+                  {o.items?.[0]?.image?<img src={o.items[0].image} alt={o.items[0].name||'Product'} loading="lazy" decoding="async"/>:<Package size={30}/>}
                 </div>
                 <div className="orderIdentity">
                   <b>Order #{o.orderId||o.id}</b>
@@ -729,7 +779,7 @@ export default function Orders(){
                     <h3><Truck size={16}/> Items</h3>
                     {(o.items||[]).map((x,i)=>(
                       <div className="customerItem" key={i}>
-                        <img src={x.image} alt=""/>
+                        <img src={x.image} alt={x.name||'Product'} loading="lazy" decoding="async"/>
                         <span><b>{x.name}</b><small>Qty {x.qty}</small></span>
                         <strong>{money(x.price*x.qty)}</strong>
                       </div>
