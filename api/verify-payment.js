@@ -4,6 +4,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { waitUntil } from '@vercel/functions';
 import { sendCustomerTemplateEmail } from './_send-email.js';
 import { indexOrderInAlgolia } from './_algolia.js';
+import { getCatalogProduct } from './_catalog.js';
 function getAdmin(){
   if(admin.apps.length)return admin;
   const raw=process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
@@ -48,14 +49,31 @@ export default async function handler(req,res){
       const productMap=new Map(productSnaps.map(snap=>[snap.id,snap]));
       for(const item of requestedItems){
         const snap=productMap.get(item.id);
-        if(!snap?.exists)throw new Error('A product is no longer available');
-        const p=snap.data(),qty=item.qty,stock=Number(p.stock||0);
+        let p=snap?.exists?snap.data():null;
+        if(!p){
+          const catP=getCatalogProduct(item.id);
+          if(catP) p=catP;
+        }
+        if(!p)throw new Error('A product is no longer available');
+        const qty=item.qty,stock=Number(p.stock||0);
         if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
         const price=Number(p.price||0);total+=price*qty;
-        finalItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty,image:p.image||''});
+        finalItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
       }
       if(Math.round(total*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
-      for(const item of requestedItems){const snap=productMap.get(item.id),p=snap.data();tx.update(snap.ref,{stock:Number(p.stock||0)-item.qty});}
+      for(const item of requestedItems){
+        const snap=productMap.get(item.id);
+        const p=snap?.exists?snap.data():getCatalogProduct(item.id);
+        const ref=db.collection('products').doc(item.id);
+        if(snap?.exists){
+          tx.update(snap.ref,{stock:Number(p.stock||0)-item.qty});
+        }else if(p){
+          tx.set(ref,{
+            name:p.name,category:p.category||'',brand:p.brand||'',price:p.price,
+            stock:Math.max(0,Number(p.stock||0)-item.qty),rating:p.rating||4.5,image:p.image||'',description:p.description||''
+          });
+        }
+      }
       tx.set(orderCategoryRef,{name:'online orders',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});

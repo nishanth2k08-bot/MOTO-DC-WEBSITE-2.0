@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getCatalogProduct } from './_catalog.js';
 function send(res,status,body){res.status(status).json(body)}
 function getAdmin(){
   if(admin.apps.length)return admin;
@@ -26,11 +27,24 @@ export default async function handler(req,res){
     let total=0;const safeItems=[];
     for(let i=0;i<snaps.length;i++){
       const snap=snaps[i],requested=Math.max(1,Math.floor(Number(items[i].qty||1)));
-      if(!snap.exists)return send(res,400,{error:'A product is no longer available'});
-      const p=snap.data(),stock=Number(p.stock||0);
+      let p=snap.exists?snap.data():null;
+      if(!p){
+        const catP=getCatalogProduct(items[i].id);
+        if(catP){
+          p=catP;
+          try{
+            await db.collection('products').doc(String(items[i].id)).set({
+              name:catP.name,category:catP.category||'',brand:catP.brand||'',price:Number(catP.price||0),
+              stock:Number(catP.stock||50),rating:Number(catP.rating||4.5),image:catP.image||'',description:catP.description||''
+            },{merge:true});
+          }catch(_){}
+        }
+      }
+      if(!p)return send(res,400,{error:'A product is no longer available'});
+      const stock=Number(p.stock||0);
       if(requested>stock)return send(res,400,{error:`Insufficient stock for ${p.name}`});
       const price=Number(p.price||0);total+=price*requested;
-      safeItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty:requested,image:p.image||''});
+      safeItems.push({id:String(items[i].id),name:p.name,category:p.category||'',price,qty:requested,image:p.image||''});
     }
     if(Math.round(total*100)!==Math.round(Number(amount)*100))return send(res,400,{error:'Cart total changed. Please refresh and try again.'});
     const keyId=process.env.RAZORPAY_KEY_ID,keySecret=process.env.RAZORPAY_KEY_SECRET;

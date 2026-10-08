@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { waitUntil } from '@vercel/functions';
 import { sendCustomerTemplateEmail } from './_send-email.js';
 import { indexOrderInAlgolia } from './_algolia.js';
+import { getCatalogProduct } from './_catalog.js';
 function send(res,status,body){res.status(status).json(body)}
 function getAdmin(){
   if(admin.apps.length)return admin;
@@ -33,17 +34,31 @@ export default async function handler(req,res){
       const snapshots=await Promise.all(productRefs.map(ref=>tx.get(ref)));
       snapshots.forEach((snap,index)=>{
         const item=items[index];
-        if(!snap.exists)throw new Error('A product is no longer available');
-        const p=snap.data(),qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
+        let p=snap.exists?snap.data():null;
+        if(!p){
+          const catP=getCatalogProduct(item.id);
+          if(catP) p=catP;
+        }
+        if(!p)throw new Error('A product is no longer available');
+        const qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
         if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
         const price=Number(p.price||0);total+=price*qty;
-        safeItems.push({id:snap.id,name:p.name,category:p.category||'',price,qty,image:p.image||''});
+        safeItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
       });
       tx.set(categoryRef,{name:'cod orders',paymentMethod:'cod',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(paymentCategoryRef,{name:'cod payment intents',paymentMethod:'cod',note:'COD does not use a Razorpay payment intent.',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       snapshots.forEach((snap,index)=>{
-        const item=items[index],p=snap.data(),qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
-        tx.update(productRefs[index],{stock:stock-qty});
+        const item=items[index];
+        let p=snap.exists?snap.data():getCatalogProduct(item.id);
+        const qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
+        if(snap.exists){
+          tx.update(productRefs[index],{stock:stock-qty});
+        }else if(p){
+          tx.set(productRefs[index],{
+            name:p.name,category:p.category||'',brand:p.brand||'',price:p.price,
+            stock:Math.max(0,stock-qty),rating:p.rating||4.5,image:p.image||'',description:p.description||''
+          });
+        }
       });
       tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });

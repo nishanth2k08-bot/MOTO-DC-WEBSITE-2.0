@@ -43,10 +43,20 @@ const unlockScroll=()=>{
   document.body.classList.remove('motodc-payment-modal-open');
 };
 
+const parseInitialPhone=(raw)=>{
+  if(!raw)return {code:'+91',phone:''};
+  const str=String(raw).trim();
+  if(str.startsWith('+91'))return {code:'+91',phone:str.slice(3).replace(/\D/g,'')};
+  const m=str.match(/^(\+\d{1,3})(.*)$/);
+  if(m)return {code:m[1],phone:m[2].replace(/\D/g,'')};
+  return {code:'+91',phone:str.replace(/\D/g,'')};
+};
+
 export default function Checkout(){
   const nav=useNavigate(),[items]=useState(getCart()),[placed,setPlaced]=useState(null),[loading,setLoading]=useState(false),user=auth.currentUser;
-  const [countryCode,setCountryCode]=useState('+');
-  const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:(user?.phoneNumber||'').replace(/^\+\d{1,4}/,'')||'',address:'',city:'',state:'',pincode:''});
+  const initialContact=parseInitialPhone(user?.phoneNumber);
+  const [countryCode,setCountryCode]=useState(initialContact.code);
+  const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:initialContact.phone,address:'',city:'',state:'',pincode:''});
   const [payment,setPayment]=useState('cod');
   const [processingState,setProcessingState]=useState(null);
 
