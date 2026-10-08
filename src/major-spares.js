@@ -2708,7 +2708,7 @@ export const majorSpareProducts = [
     "price": 4799,
     "rating": 4.8,
     "stock": 20,
-    "image": "/images/products/sp-226_hyundai_creta_front_brake_disc_rotors_pair.svg",
+    "image": "/images/products/sp-226_hyundai_creta_front_brake_disc_rotors_pair.jpg",
     "description": "Precision balanced ventilated cast iron brake discs providing fade-resistant highway stopping confidence."
   },
   {
@@ -2732,7 +2732,7 @@ export const majorSpareProducts = [
     "price": 5899,
     "rating": 4.8,
     "stock": 16,
-    "image": "/images/products/sp-228_mahindra_thar_front_heavy_duty_brake_disc_rotors_pair.svg",
+    "image": "/images/products/sp-228_mahindra_thar_front_heavy_duty_brake_disc_rotors_pair.jpg",
     "description": "High-grade alloy cast iron brake discs built to endure extreme mud, rock crawling, and heavy off-road braking."
   }
 ];
