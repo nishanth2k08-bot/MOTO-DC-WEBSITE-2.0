@@ -344,18 +344,3 @@
 .light-theme .motodc-bg-wishlist::after {
   background: linear-gradient(180deg, rgba(248, 250, 252, 0.86) 0%, rgba(248, 250, 252, 0.60) 45%, rgba(248, 250, 252, 0.92) 100%) !important;
 }
-
-/* 8. Home Page Ambient Horizon */
-.motodc-bg-home {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
-  background: #05080c url('/bg-account-dark.jpg') center 30%/cover no-repeat fixed !important;
-  opacity: 0.28 !important;
-  transition: background-image 0.45s ease, opacity 0.45s ease !important;
-}
-.light-theme .motodc-bg-home {
-  background: #f8fafc url('/bg-account-light.jpg') center 30%/cover no-repeat fixed !important;
-  opacity: 0.24 !important;
-}
