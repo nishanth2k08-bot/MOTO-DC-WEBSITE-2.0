@@ -192,3 +192,170 @@
 @keyframes checkoutGlowFlow{0%,100%{opacity:.18;transform:translate(-50%,-50%) scale(.8)}50%{opacity:.7;transform:translate(-50%,-50%) scale(1.15)}}
 @media(max-width:700px){.motodc-bg-checkout .motodc-checkout-progress{left:8%;right:8%;top:52%}.motodc-bg-checkout .motodc-checkout-step b{font-size:8px}.motodc-bg-checkout .motodc-checkout-glow{top:52%}}
 @media(prefers-reduced-motion:reduce){.motodc-bg-checkout .motodc-checkout-progress-line,.motodc-bg-checkout .motodc-checkout-step i,.motodc-bg-checkout .motodc-checkout-glow{animation:none!important}.motodc-bg-checkout .motodc-checkout-progress-line{transform:none;opacity:.5}}
+
+/* ============================================================
+   MOTODC THEME-RESPONSIVE CINEMATIC BACKGROUND SYSTEM
+   ============================================================ */
+
+/* 1. Account & Auth Page (/account, /login, /register) */
+.motodc-bg-account {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: #06090e url('/bg-account-dark.jpg') center center/cover no-repeat fixed !important;
+  opacity: 1 !important;
+  transition: background-image 0.45s ease, background-color 0.45s ease !important;
+}
+.motodc-bg-account::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(6, 9, 14, 0.74) 0%, rgba(6, 9, 14, 0.46) 45%, rgba(6, 9, 14, 0.88) 100%),
+              radial-gradient(ellipse at center, transparent 35%, rgba(6, 9, 14, 0.75) 100%) !important;
+  pointer-events: none !important;
+}
+.light-theme .motodc-bg-account {
+  background: #f8fafc url('/bg-account-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-account::after {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.82) 0%, rgba(248, 250, 252, 0.54) 45%, rgba(248, 250, 252, 0.90) 100%),
+              radial-gradient(ellipse at center, transparent 35%, rgba(248, 250, 252, 0.68) 100%) !important;
+}
+
+/* 2. Admin Operations Deck (/admin) */
+.motodc-bg-admin {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: #04070c url('/bg-admin-dark.jpg') center center/cover no-repeat fixed !important;
+  opacity: 1 !important;
+  transition: background-image 0.45s ease, background-color 0.45s ease !important;
+}
+.motodc-bg-admin::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.84) 0%, rgba(4, 7, 12, 0.58) 48%, rgba(4, 7, 12, 0.92) 100%),
+              radial-gradient(ellipse at center, transparent 30%, rgba(4, 7, 12, 0.78) 100%) !important;
+  pointer-events: none !important;
+}
+.light-theme .motodc-bg-admin {
+  background: #f1f5f9 url('/bg-admin-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-admin::after {
+  background: linear-gradient(180deg, rgba(241, 245, 249, 0.86) 0%, rgba(241, 245, 249, 0.62) 48%, rgba(241, 245, 249, 0.93) 100%),
+              radial-gradient(ellipse at center, transparent 30%, rgba(241, 245, 249, 0.72) 100%) !important;
+}
+
+/* 3. Orders & Fleet Radar Corridor (/orders) */
+.motodc-bg-orders {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: #04060a url('/bg-orders-dark.jpg') center center/cover no-repeat fixed !important;
+  opacity: 1 !important;
+  transition: background-image 0.45s ease, background-color 0.45s ease !important;
+}
+.motodc-bg-orders::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(4, 6, 10, 0.76) 0%, rgba(4, 6, 10, 0.45) 50%, rgba(4, 6, 10, 0.90) 100%),
+              radial-gradient(ellipse at center, transparent 30%, rgba(4, 6, 10, 0.80) 100%) !important;
+  pointer-events: none !important;
+}
+.light-theme .motodc-bg-orders {
+  background: #f0f4f8 url('/bg-orders-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-orders::after {
+  background: linear-gradient(180deg, rgba(240, 244, 248, 0.84) 0%, rgba(240, 244, 248, 0.58) 50%, rgba(240, 244, 248, 0.92) 100%),
+              radial-gradient(ellipse at center, transparent 30%, rgba(240, 244, 248, 0.72) 100%) !important;
+}
+
+/* 4. Products & Catalog (/products) */
+.motodc-bg-products {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  background: #04070c url('/bg-catalog-dark.jpg') center center/cover no-repeat fixed !important;
+  opacity: 1 !important;
+  transition: background-image 0.45s ease, background-color 0.45s ease !important;
+}
+.motodc-bg-products::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(4, 7, 12, 0.84) 0%, rgba(4, 7, 12, 0.55) 50%, rgba(4, 7, 12, 0.92) 100%),
+              radial-gradient(ellipse at center, transparent 32%, rgba(4, 7, 12, 0.80) 100%) !important;
+  pointer-events: none !important;
+}
+.light-theme .motodc-bg-products {
+  background: #f8fafc url('/bg-catalog-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-products::after {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.86) 0%, rgba(248, 250, 252, 0.62) 50%, rgba(248, 250, 252, 0.94) 100%),
+              radial-gradient(ellipse at center, transparent 32%, rgba(248, 250, 252, 0.74) 100%) !important;
+}
+
+/* 5. Cart Aerodynamic Wind Tunnel (/cart) */
+.motodc-bg-cart {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  background: #040609 url('/bg-cart-dark.jpg') center center/cover no-repeat fixed !important;
+  opacity: 1 !important;
+  transition: background-image 0.45s ease, background-color 0.45s ease !important;
+}
+.motodc-bg-cart::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(4, 6, 9, 0.80) 0%, rgba(4, 6, 9, 0.50) 50%, rgba(4, 6, 9, 0.90) 100%),
+              radial-gradient(ellipse at center, transparent 30%, rgba(4, 6, 9, 0.78) 100%) !important;
+  pointer-events: none !important;
+}
+.light-theme .motodc-bg-cart {
+  background: #f8fafc url('/bg-cart-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-cart::after {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.85) 0%, rgba(248, 250, 252, 0.58) 50%, rgba(248, 250, 252, 0.92) 100%),
+              radial-gradient(ellipse at center, transparent 30%, rgba(248, 250, 252, 0.72) 100%) !important;
+}
+
+/* 6. Checkout Page (/checkout) */
+.light-theme .motodc-bg-checkout {
+  background: #f8fafc url('/bg-cart-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-checkout::after {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.86) 0%, rgba(248, 250, 252, 0.62) 45%, rgba(248, 250, 252, 0.94) 100%) !important;
+}
+
+/* 7. Wishlist Vault (/wishlist) */
+.light-theme .motodc-bg-wishlist {
+  background: #f8fafc url('/bg-account-light.jpg') center center/cover no-repeat fixed !important;
+}
+.light-theme .motodc-bg-wishlist::after {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.86) 0%, rgba(248, 250, 252, 0.60) 45%, rgba(248, 250, 252, 0.92) 100%) !important;
+}
+
+/* 8. Home Page Ambient Horizon */
+.motodc-bg-home {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: #05080c url('/bg-account-dark.jpg') center 30%/cover no-repeat fixed !important;
+  opacity: 0.28 !important;
+  transition: background-image 0.45s ease, opacity 0.45s ease !important;
+}
+.light-theme .motodc-bg-home {
+  background: #f8fafc url('/bg-account-light.jpg') center 30%/cover no-repeat fixed !important;
+  opacity: 0.24 !important;
+}
