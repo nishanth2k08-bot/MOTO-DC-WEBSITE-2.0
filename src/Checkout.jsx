@@ -103,6 +103,20 @@ export default function Checkout(){
     setForm(prev=>({...prev,phone:digits}));
   };
 
+  const handlePhoneKeyDown=(e)=>{
+    if(['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End','Enter'].includes(e.key)||e.ctrlKey||e.metaKey){
+      return;
+    }
+    if(!/^\d$/.test(e.key)){
+      e.preventDefault();
+      return;
+    }
+    const hasSelection=e.target.selectionStart!==e.target.selectionEnd;
+    if((form.phone||'').length>=10&&!hasSelection){
+      e.preventDefault();
+    }
+  };
+
   const getFullPhone=()=>{
     const rawNum=form.phone.trim().replace(/\D/g,'').slice(0,10);
     let rawCode=countryCode.trim();
@@ -394,7 +408,11 @@ export default function Checkout(){
                         name="phone"
                         value={form.phone}
                         onChange={handlePhoneChange}
+                        onKeyDown={handlePhoneKeyDown}
                         placeholder="10-digit mobile number"
+                        autoComplete="tel-national"
+                        inputMode="numeric"
+                        pattern="[0-9]{10}"
                         maxLength={10}
                       />
                     </div>
