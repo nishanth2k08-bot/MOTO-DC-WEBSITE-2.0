@@ -48,7 +48,10 @@ export default async function handler(req, res) {
     let cleanOrigin = 'https://moto-dc-website-2-0-peach.vercel.app';
     try {
       const u = new URL(originHeader);
-      cleanOrigin = `${u.protocol}//${u.host}`;
+      const host = u.host.toLowerCase();
+      if (host.includes('motodc.in') || host.includes('vercel.app')) {
+        cleanOrigin = `${u.protocol}//${u.host}`;
+      }
     } catch {
       cleanOrigin = 'https://moto-dc-website-2-0-peach.vercel.app';
     }
