@@ -1,5 +1,5 @@
-const CACHE = "motodc-shell-v19";
-const IMAGE_CACHE = "motodc-images-v19";
+const CACHE = "motodc-shell-v20";
+const IMAGE_CACHE = "motodc-images-v20";
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();
@@ -48,7 +48,7 @@ self.addEventListener("fetch", (e) => {
               cache.put(e.request, res.clone());
             }
             return res;
-          });
+          }).catch(() => caches.match('/images/products/sp-1_honda_activa_6g_air_filter.jpg'));
         })
       )
     );

@@ -203,7 +203,7 @@
   inset: 0 !important;
   z-index: 0 !important;
   pointer-events: none !important;
-  background: #06090e url('/bg-account-dark.jpg') center center/cover no-repeat fixed !important;
+  background: url('/bg-account-dark.jpg') center center/cover no-repeat fixed !important;
   opacity: 1 !important;
   transition: background-image 0.45s ease, background-color 0.45s ease !important;
 }
@@ -211,16 +211,14 @@
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
-  background: linear-gradient(180deg, rgba(6, 9, 14, 0.74) 0%, rgba(6, 9, 14, 0.46) 45%, rgba(6, 9, 14, 0.88) 100%),
-              radial-gradient(ellipse at center, transparent 35%, rgba(6, 9, 14, 0.75) 100%) !important;
+  background: linear-gradient(180deg, rgba(6, 9, 14, 0.32) 0%, rgba(6, 9, 14, 0.12) 50%, rgba(6, 9, 14, 0.42) 100%) !important;
   pointer-events: none !important;
 }
 .light-theme .motodc-bg-account {
-  background: #f8fafc url('/bg-account-light.jpg') center center/cover no-repeat fixed !important;
+  background: url('/bg-account-light.jpg') center center/cover no-repeat fixed !important;
 }
 .light-theme .motodc-bg-account::after {
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.82) 0%, rgba(248, 250, 252, 0.54) 45%, rgba(248, 250, 252, 0.90) 100%),
-              radial-gradient(ellipse at center, transparent 35%, rgba(248, 250, 252, 0.68) 100%) !important;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.35) 0%, rgba(248, 250, 252, 0.15) 50%, rgba(248, 250, 252, 0.45) 100%) !important;
 }
 
 /* 2. Admin Operations Deck (/admin) */
