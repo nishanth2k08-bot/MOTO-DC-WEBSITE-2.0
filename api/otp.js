@@ -44,10 +44,20 @@ export default async function handler(req, res) {
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
     else if (rawPhone.length === 11 && rawPhone.startsWith('0')) rawPhone = '91' + rawPhone.slice(1);
 
+    const originHeader = req.headers['origin'] || req.headers['referer'] || 'https://moto-dc-website-2-0-peach.vercel.app';
+    let cleanOrigin = 'https://moto-dc-website-2-0-peach.vercel.app';
+    try {
+      const u = new URL(originHeader);
+      cleanOrigin = `${u.protocol}//${u.host}`;
+    } catch {
+      cleanOrigin = 'https://moto-dc-website-2-0-peach.vercel.app';
+    }
+
     const headers = {
       'Content-Type': 'application/json',
-      'Origin': 'https://motodc.in',
-      'Referer': 'https://motodc.in/'
+      'Accept': 'application/json',
+      'Origin': cleanOrigin,
+      'Referer': `${cleanOrigin}/`
     };
 
     // ─── ACTION: SEND OTP ──────────────────────────────────────────────
