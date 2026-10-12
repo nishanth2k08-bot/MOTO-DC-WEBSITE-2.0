@@ -71,8 +71,13 @@ export default async function handler(req, res) {
       try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
 
       if (!response.ok || data.type === 'error' || data.status === 'fail' || data.hasError) {
-        const errMsg = data.message || data.error || 'Could not send verification code';
-        return send(res, 400, { error: typeof errMsg === 'string' ? errMsg : JSON.stringify(errMsg) });
+        let errMsg = data.message || data.error || 'Could not send verification code';
+        if (Array.isArray(errMsg)) errMsg = errMsg.join(', ');
+        if (typeof errMsg !== 'string') errMsg = JSON.stringify(errMsg);
+        if (errMsg.includes('Invalid request') || errMsg.includes('IPBlocked') || data.code === 408 || data.code === '408' || response.status === 403) {
+          errMsg = 'MSG91 Whitelist: Please add moto-dc-website-2-0-peach.vercel.app to Allowed Domains in your MSG91 Widget dashboard.';
+        }
+        return send(res, 400, { error: errMsg, raw: data });
       }
 
       const reqId = data.message || data.reqId || data.data?.reqId;
