@@ -30,11 +30,202 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
  const getFullPhone=()=>{const rawNum=phone.trim().replace(/\D/g,'').slice(0,10);let rawCode=countryCode.trim();if(!rawCode||rawCode==='+'){rawCode='+91'}else if(!rawCode.startsWith('+')){rawCode=`+${rawCode}`}return{code:rawCode,number:rawNum,full:`${rawCode}${rawNum}`}};
  async function social(provider){setBusy(true);try{const cred=await signInWithPopup(auth,provider);await saveUserProfile(cred.user);toast.success('Welcome back to MotoDC!');nav('/',{replace:true})}catch(e){console.error(e);const m={'auth/popup-closed-by-user':'Sign-in window was closed','auth/popup-blocked':'Your browser blocked the sign-in popup','auth/account-exists-with-different-credential':'This email is already registered with another sign-in method'};toast.error(m[e.code]||e.message||'Social sign-in failed')}finally{setBusy(false)}}
  async function submitEmail(e){e.preventDefault();if(password.length<6){toast.error('Password must be at least 6 characters');return}setBusy(true);try{let cred;if(mode==='signup'){if(!name.trim()){toast.error('Please enter your name');setBusy(false);return}cred=await createUserWithEmailAndPassword(auth,email.trim(),password);await updateProfile(cred.user,{displayName:name.trim()});await saveUserProfile(cred.user,name.trim());toast.success('Account created successfully!')}else{cred=await signInWithEmailAndPassword(auth,email.trim(),password);await saveUserProfile(cred.user);toast.success('Welcome back to MotoDC!')}setPassword('');nav('/',{replace:true})}catch(e){console.error(e);const messages={'auth/email-already-in-use':'An account with this email already exists','auth/invalid-email':'Please enter a valid email address','auth/invalid-credential':'Invalid email or password','auth/weak-password':'Password is too weak','auth/network-request-failed':'Network error. Please try again'};toast.error(messages[e.code]||e.message||'Authentication failed')}finally{setBusy(false)}}
- async function sendCode(e){if(e)e.preventDefault();const {code:rawCode,number:rawNum,full:clean}=getFullPhone();if(!countryCode.trim()||countryCode.trim()==='+'){toast.error('Country code is compulsory (e.g. +91)');return}if(!rawNum){toast.error('Please enter your 10-digit mobile number');return}if(rawNum.length!==10){toast.error('Mobile number must be exactly 10 digits');return}if(!/^\+[1-9]\d{7,14}$/.test(clean)){toast.error('Please enter a valid country code and 10-digit mobile number');return}if(!widgetReady||!window.sendOtp){toast.error('OTP service is warming up. Please tap again in a moment.');return}setBusy(true);try{await new Promise((resolve,reject)=>window.sendOtp(clean.slice(1),data=>{const id=data?.message||data?.reqId||data?.requestId;if(!id)reject(new Error('MSG91 did not return a request ID'));else{setReqId(String(id));resolve(data)}},error=>reject(new Error(error?.message||error?.type||'Could not send verification code'))));setOtpDigits(Array(6).fill(''));setCode('');setResendTimer(40);setConfirmation(true);toast.success('Verification code sent to your mobile')}catch(e){console.error('MSG91 send OTP error:',e);toast.error(e.message||'Could not send verification code')}finally{setBusy(false)}}
- async function handleResendCode(){if(resendTimer>0||busy)return;const {full:clean}=getFullPhone();setBusy(true);try{await new Promise((resolve,reject)=>{const onSuccess=data=>{const id=data?.message||data?.reqId||data?.requestId;if(id)setReqId(String(id));resolve(data)};const fallbackToSendOtp=()=>{if(typeof window.sendOtp==='function'){window.sendOtp(clean.slice(1),onSuccess,err=>reject(new Error(err?.message||err?.type||'Could not resend verification code')))}else{reject(new Error('OTP service unavailable'))}};if(typeof window.retryOtp==='function'&&reqId){try{window.retryOtp(11,onSuccess,fallbackToSendOtp,reqId)}catch{fallbackToSendOtp()}}else{fallbackToSendOtp()}});setOtpDigits(Array(6).fill(''));setCode('');setResendTimer(40);toast.success('New verification code sent!');setTimeout(()=>otpRefs.current[0]?.focus(),50)}catch(e){console.error('MSG91 resend OTP error:',e);toast.error(e.message||'Could not resend verification code')}finally{setBusy(false)}}
- async function finishPhoneSignIn(token){const {full:fullPhone}=getFullPhone();const response=await fetch('/api/verify-msg91-token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:fullPhone,accessToken:token})});const data=await response.json().catch(()=>({}));if(!response.ok||(!data.ok&&!data.needsName))throw new Error(data.error||'Could not complete phone sign-in');if(data.needsName){if(!data.customToken)throw new Error('Could not prepare your account. Please try again.');setPendingCustomToken(data.customToken);setNeedsName(true);setName('');return false}await signInWithCustomToken(auth,data.customToken);const current=auth.currentUser;if(current)await saveUserProfile(current,data.name||'');return true}
- async function verifyCode(e){e.preventDefault();if(!confirmation||!reqId)return;if(!/^\d{6}$/.test(code)){toast.error('Enter all 6 digits of the verification code');return}setBusy(true);try{const result=await new Promise((resolve,reject)=>window.verifyOtp(code,data=>resolve(data),error=>reject(new Error(error?.message||error?.type||'Incorrect or expired verification code')),reqId));const token=typeof result==='string'?result:(result?.['access-token']||result?.accessToken||result?.token||result?.message);if(!token)throw new Error('MSG91 did not return a verification token');const signedIn=await finishPhoneSignIn(token);if(signedIn){toast.success('Welcome back to MotoDC!');resetOtp();nav('/',{replace:true})}else toast.success('New number verified. Enter your name to finish account setup.')}catch(e){console.error('MSG91 verify OTP error:',e);toast.error(e.message||'Verification failed')}finally{setBusy(false)}}
- async function submitPhoneName(e){e.preventDefault();if(!name.trim()){toast.error('Please enter your name');return}if(!pendingCustomToken){toast.error('Verification session expired. Please request a new code.');resetOtp();return}setBusy(true);try{await signInWithCustomToken(auth,pendingCustomToken);const current=auth.currentUser;if(!current)throw new Error('Could not sign in to your new account');await updateProfile(current,{displayName:name.trim()});await saveUserProfile(current,name.trim());toast.success('Account created. Welcome to MotoDC!');resetOtp();nav('/',{replace:true})}catch(e){console.error('MSG91 name setup error:',e);toast.error(e.message||'Could not create your account')}finally{setBusy(false)}}
+ async function sendCode(e){
+  if(e)e.preventDefault();
+  const {code:rawCode,number:rawNum,full:clean}=getFullPhone();
+  if(!countryCode.trim()||countryCode.trim()==='+'){toast.error('Country code is compulsory (e.g. +91)');return}
+  if(!rawNum){toast.error('Please enter your 10-digit mobile number');return}
+  if(rawNum.length!==10){toast.error('Mobile number must be exactly 10 digits');return}
+  if(!/^\+[1-9]\d{7,14}$/.test(clean)){toast.error('Please enter a valid country code and 10-digit mobile number');return}
+  setBusy(true);
+  try{
+    let successReqId='';
+    // 1. Try high-speed server-to-server MSG91 API without client-side captcha block
+    try{
+      const resp=await fetch('/api/send-otp',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({phone:clean})
+      });
+      const data=await resp.json().catch(()=>({}));
+      if(resp.ok&&data.ok){
+        successReqId=String(data.reqId||'');
+      }else if(resp.status!==404){
+        throw new Error(data.error||'Could not send verification code');
+      }
+    }catch(err){
+      if(!err.message.includes('404'))throw err;
+    }
+
+    // 2. If server API returned 404 in local dev, fallback to widget
+    if(!successReqId&&window.sendOtp){
+      await new Promise((resolve,reject)=>window.sendOtp(clean.slice(1),data=>{
+        const id=data?.reqId||data?.message||data?.requestId||data?.data?.reqId;
+        successReqId=String(id||'');
+        resolve(data);
+      },err=>{
+        const msg=typeof err==='string'?err:(err?.message||err?.type||'Could not send verification code');
+        reject(new Error(msg));
+      }));
+    }
+
+    if(!successReqId)successReqId='otp_sent';
+    setReqId(successReqId);
+    setOtpDigits(Array(6).fill(''));
+    setCode('');
+    setResendTimer(40);
+    // Instantly transition to 6-digit OTP view
+    setConfirmation(true);
+    toast.success('Verification code sent to your mobile');
+    setTimeout(()=>otpRefs.current[0]?.focus(),50);
+  }catch(e){
+    console.error('Send OTP error:',e);
+    toast.error(e.message||'Could not send verification code');
+  }finally{
+    setBusy(false);
+  }
+ }
+ async function handleResendCode(){
+  if(resendTimer>0||busy)return;
+  const {full:clean}=getFullPhone();
+  setBusy(true);
+  try{
+    let resent=false;
+    try{
+      const resp=await fetch('/api/retry-otp',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({phone:clean,reqId})
+      });
+      const data=await resp.json().catch(()=>({}));
+      if(resp.ok&&data.ok){
+        if(data.reqId)setReqId(String(data.reqId));
+        resent=true;
+      }
+    }catch{}
+
+    if(!resent&&typeof window.sendOtp==='function'){
+      await new Promise((resolve,reject)=>window.sendOtp(clean.slice(1),data=>{
+        const id=data?.reqId||data?.message||data?.requestId;
+        if(id)setReqId(String(id));
+        resolve(data);
+      },err=>reject(new Error(err?.message||'Could not resend verification code'))));
+    }
+
+    setOtpDigits(Array(6).fill(''));
+    setCode('');
+    setResendTimer(40);
+    toast.success('New verification code sent!');
+    setTimeout(()=>otpRefs.current[0]?.focus(),50);
+  }catch(e){
+    console.error('Resend OTP error:',e);
+    toast.error(e.message||'Could not resend verification code');
+  }finally{
+    setBusy(false);
+  }
+ }
+ async function finishPhoneSignIn(token){
+  const {full:fullPhone}=getFullPhone();
+  const response=await fetch('/api/verify-msg91-token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:fullPhone,accessToken:token})});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok||(!data.ok&&!data.needsName))throw new Error(data.error||'Could not complete phone sign-in');
+  if(data.needsName){
+    if(!data.customToken)throw new Error('Could not prepare your account. Please try again.');
+    setPendingCustomToken(data.customToken);
+    setNeedsName(true);
+    setName('');
+    return false;
+  }
+  await signInWithCustomToken(auth,data.customToken);
+  const current=auth.currentUser;
+  if(current)await saveUserProfile(current,data.name||'');
+  return true;
+ }
+ async function verifyCode(e){
+  e.preventDefault();
+  if(!confirmation)return;
+  if(!/^\d{6}$/.test(code)){toast.error('Enter all 6 digits of the verification code');return}
+  setBusy(true);
+  try{
+    const {full:clean}=getFullPhone();
+    let signedIn=false;
+
+    // 1. Try high-speed serverless verify-otp endpoint
+    try{
+      const resp=await fetch('/api/verify-otp',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({phone:clean,otp:code,reqId,name})
+      });
+      const data=await resp.json().catch(()=>({}));
+      if(resp.ok){
+        if(data.needsName){
+          if(!data.customToken)throw new Error('Could not prepare your account. Please try again.');
+          setPendingCustomToken(data.customToken);
+          setNeedsName(true);
+          setName('');
+          toast.success('Number verified! Enter your name to finish.');
+          return;
+        }
+        if(data.ok&&data.customToken){
+          await signInWithCustomToken(auth,data.customToken);
+          const current=auth.currentUser;
+          if(current)await saveUserProfile(current,data.name||'');
+          signedIn=true;
+        }
+      }else if(resp.status!==404){
+        throw new Error(data.error||'Incorrect or expired verification code');
+      }
+    }catch(err){
+      if(!err.message.includes('404'))throw err;
+    }
+
+    // 2. Fallback to client widget verify if server endpoint returned 404
+    if(!signedIn&&window.verifyOtp){
+      const result=await new Promise((resolve,reject)=>window.verifyOtp(code,data=>resolve(data),err=>{
+        const msg=typeof err==='string'?err:(err?.message||err?.type||'Incorrect or expired verification code');
+        reject(new Error(msg));
+      },reqId));
+      const token=typeof result==='string'?result:(result?.['access-token']||result?.accessToken||result?.token||result?.message);
+      if(!token)throw new Error('MSG91 did not return a verification token');
+      signedIn=await finishPhoneSignIn(token);
+    }
+
+    if(signedIn){
+      toast.success('Welcome back to MotoDC!');
+      resetOtp();
+      nav('/',{replace:true});
+    }else if(!needsName){
+      toast.success('Number verified! Enter your name to finish account setup.');
+    }
+  }catch(e){
+    console.error('Verify OTP error:',e);
+    toast.error(e.message||'Verification failed');
+  }finally{
+    setBusy(false);
+  }
+ }
+ async function submitPhoneName(e){
+  e.preventDefault();
+  if(!name.trim()){toast.error('Please enter your name');return}
+  if(!pendingCustomToken){toast.error('Verification session expired. Please request a new code.');resetOtp();return}
+  setBusy(true);
+  try{
+    await signInWithCustomToken(auth,pendingCustomToken);
+    const current=auth.currentUser;
+    if(!current)throw new Error('Could not sign in to your new account');
+    await updateProfile(current,{displayName:name.trim()});
+    await saveUserProfile(current,name.trim());
+    toast.success('Account created. Welcome to MotoDC!');
+    resetOtp();
+    nav('/',{replace:true});
+  }catch(e){
+    console.error('Name setup error:',e);
+    toast.error(e.message||'Could not create your account');
+  }finally{
+    setBusy(false);
+  }
+ }
  const logout=async()=>{setBusy(true);try{await signOut(auth);nav('/account',{replace:true})}catch{toast.error('Could not sign out');setBusy(false)}};
  if(checking)return <section className="auth page"><div className="authcard"><p>Loading account...</p></div></section>;
  if(user)return <section className="auth page"><div className="accountcard"><div className="accounticon"><User size={30}/></div><p className="eyebrow">MOTODC ACCOUNT</p><h1>Welcome, <span>{user.displayName||'Rider'}.</span></h1><p className="accountmuted">Your customer account is connected to Firebase.</p><div className="accountinfo"><div><small>Name</small><b>{user.displayName||'Not set'}</b></div><div><small>Email</small><b>{user.email||'Phone account'}</b></div>{user.phoneNumber&&<div><small>Phone</small><b>{user.phoneNumber}</b></div>}</div><button className="heroBtn" onClick={logout} disabled={busy}><LogOut size={17}/>{busy?'Signing out...':'Sign out'}</button></div></section>;
