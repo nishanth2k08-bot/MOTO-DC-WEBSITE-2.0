@@ -1,0 +1,405 @@
+/* =========================================================
+   MOTODC START ENGINE INTRO GATEWAY (FULLSCREEN EXPERIENCE)
+   ========================================================= */
+
+.engineIntroOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #05070a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 24px;
+  overflow: hidden;
+  user-select: none;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.55s;
+}
+
+.engineIntroOverlay.introFinished {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+/* Background Atmosphere */
+.introBackdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.introRadialGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 49, 87, 0.22) 0%, rgba(255, 49, 87, 0.05) 45%, transparent 70%);
+  filter: blur(50px);
+  animation: introGlowBreathe 4s ease-in-out infinite alternate;
+}
+
+@keyframes introGlowBreathe {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.95; }
+}
+
+.introGridFloor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 49, 87, 0.06) 100%),
+              repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(255, 255, 255, 0.03) 48px, rgba(255, 255, 255, 0.03) 50px);
+  perspective: 600px;
+  transform: rotateX(60deg) scale(1.8);
+  transform-origin: bottom center;
+  opacity: 0.45;
+}
+
+/* Top Branding & Sound Selection */
+.introTopBar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 580px;
+}
+
+.introBrand {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-top: 6px;
+}
+
+.introLogo {
+  font-size: 38px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1.2px;
+  display: inline-block;
+  text-shadow: 0 0 25px rgba(255, 49, 87, 0.4);
+}
+
+.introLogo span {
+  color: #ff3157;
+}
+
+.introTagline {
+  margin: 6px 0 0 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #8b949e;
+  text-transform: uppercase;
+}
+
+.introSoundSelector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 22, 30, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  border-radius: 30px;
+  backdrop-filter: blur(12px);
+}
+
+.soundChoiceBtn {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.soundChoiceBtn:hover {
+  color: #fff;
+}
+
+.soundChoiceBtn.active {
+  background: #ff3157;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255, 49, 87, 0.6);
+}
+
+.introStartBtn.supercarTheme .btnLedGlow {
+  border-color: rgba(255, 120, 20, 0.7);
+  box-shadow: 0 0 24px rgba(255, 120, 20, 0.8);
+}
+.introStartBtn.supercarTheme .btnPowerIcon {
+  color: #ff7814;
+  filter: drop-shadow(0 0 10px #ff7814);
+}
+
+
+/* Center Start Button Container */
+.introCenterBox {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ambient Pulsing Halo Rings */
+.introButtonRings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.introRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 49, 87, 0.4);
+}
+
+.introRing1 {
+  width: 220px;
+  height: 220px;
+  animation: introPulseRing 2.4s ease-out infinite;
+}
+
+.introRing2 {
+  width: 270px;
+  height: 270px;
+  animation: introPulseRing 2.4s ease-out infinite 0.75s;
+}
+
+.introRing3 {
+  width: 320px;
+  height: 320px;
+  animation: introPulseRing 2.4s ease-out infinite 1.5s;
+}
+
+@keyframes introPulseRing {
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.35); opacity: 0; }
+}
+
+/* The Start Engine Button */
+.introStartBtn {
+  width: 154px;
+  height: 154px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #2d333f 0%, #151a22 65%, #0d1117 100%);
+  border: 4px solid #30363d;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7),
+              0 0 35px rgba(255, 49, 87, 0.35),
+              inset 0 3px 6px rgba(255, 255, 255, 0.22);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.introStartBtn:hover {
+  transform: scale(1.08);
+  border-color: #ff3157;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.8),
+              0 0 50px rgba(255, 49, 87, 0.65),
+              inset 0 3px 8px rgba(255, 255, 255, 0.35);
+}
+
+.introStartBtn:active {
+  transform: scale(0.96);
+}
+
+/* Metallic Bezel Layer */
+.btnMetallicBezel {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.btnLedGlow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 49, 87, 0.6);
+  box-shadow: 0 0 20px #ff3157;
+  pointer-events: none;
+  animation: ledPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.btnInnerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.btnPowerIcon {
+  color: #ff3157;
+  filter: drop-shadow(0 0 8px #ff3157);
+  transition: transform 0.2s;
+}
+
+.introStartBtn:hover .btnPowerIcon {
+  transform: scale(1.12);
+}
+
+.btnMainText {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.btnSubText {
+  font-size: 10px;
+  font-weight: 800;
+  color: #8b949e;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Igniting Animation State */
+.introStartBtn.btnIgniting {
+  border-color: #ffaa00;
+  background: radial-gradient(circle at 35% 30%, #3a2212 0%, #1c0e07 70%, #0d0703 100%);
+  box-shadow: 0 0 60px rgba(255, 120, 0, 0.9),
+              0 0 100px rgba(255, 49, 87, 0.9),
+              inset 0 0 25px rgba(255, 200, 0, 0.8);
+  animation: buttonRumble 0.1s infinite;
+}
+
+@keyframes buttonRumble {
+  0% { transform: scale(1.05) translate(0, 0); }
+  25% { transform: scale(1.05) translate(-2px, 1px); }
+  50% { transform: scale(1.05) translate(1px, -2px); }
+  75% { transform: scale(1.05) translate(-1px, -1px); }
+  100% { transform: scale(1.05) translate(2px, 1px); }
+}
+
+.introStartBtn.btnIgniting .btnPowerIcon {
+  color: #ffaa00;
+  filter: drop-shadow(0 0 15px #ffaa00);
+}
+
+.introStartBtn.btnIgniting .btnLedGlow {
+  border-color: #ffaa00;
+  box-shadow: 0 0 35px #ffaa00;
+}
+
+/* Hint & Audio Indicator */
+.introHintWrap {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.introHint {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  color: #c9d1d9;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.introHintRevving {
+  color: #ffaa00;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 900;
+  text-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
+  animation: revBlink 0.2s infinite alternate;
+}
+
+@keyframes revBlink {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.introAudioBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #8b949e;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Screen Ignition Xenon Flash */
+.introIgnitionFlash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 240, 200, 0.95) 0%, rgba(255, 90, 40, 0.6) 40%, transparent 80%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+}
+
+.introIgniting .introIgnitionFlash {
+  opacity: 0.85;
+  animation: flashShockwave 0.8s ease-out forwards;
+}
+
+@keyframes flashShockwave {
+  0% { opacity: 0; transform: scale(0.6); }
+  25% { opacity: 0.95; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+
+@media (max-width: 520px) {
+  .introStartBtn {
+    width: 136px;
+    height: 136px;
+  }
+  .introRing1 { width: 180px; height: 180px; }
+  .introRing2 { width: 220px; height: 220px; }
+  .introRing3 { width: 260px; height: 260px; }
+  .introLogo { font-size: 32px; }
+}
