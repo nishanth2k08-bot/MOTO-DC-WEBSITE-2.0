@@ -155,26 +155,33 @@ export default function StartEngineIntro({ onIgnite }) {
           </div>
         </div>
 
-        {/* Physical Billet Aluminum Start / Stop Button */}
-        <div className="consolePlate">
+        {/* Physical Billet Console Plate */}
+        <div className="consolePlate crystalConsolePlate">
           {/* 4 Machine Screws for Industrial Realism */}
           <span className="hexScrew hexScrewTl" />
           <span className="hexScrew hexScrewTr" />
           <span className="hexScrew hexScrewBl" />
           <span className="hexScrew hexScrewBr" />
 
-          {/* Knurled Outer Bezel */}
-          <div className="starterBezel">
+          {/* Outer Breathing Jewel Halo Ring */}
+          <div className={`crystalAmbientHalo ${igniting ? 'haloFired' : ''}`} />
+
+          {/* Titanium Knurled Bezel with Smoked Ruby Core */}
+          <div className="starterBezel crystalBezel">
             <button
               type="button"
-              className={`starterPushBtn ${igniting ? 'btnDepressed' : ''}`}
+              className={`starterPushBtn crystalButton ${igniting ? 'btnDepressed' : ''}`}
               onClick={handleIgnite}
               aria-label="Start Engine"
             >
-              {/* Status Indicator LED */}
-              <div className={`starterLedBar ${igniting ? 'ledFired' : 'ledStandby'}`} />
+              {/* Internal Glass Facet Reflections */}
+              <span className="crystalGlassFacet" aria-hidden="true" />
+              <span className="crystalCoreGlow" aria-hidden="true" />
 
-              <div className="starterTypography">
+              {/* Status Indicator LED */}
+              <div className={`starterLedBar crystalLedBar ${igniting ? 'ledFired' : 'ledStandby'}`} />
+
+              <div className="starterTypography crystalTypography">
                 <span className="starterWordTop">ENGINE</span>
                 <span className="starterWordMain">START</span>
                 <span className="starterWordBottom">STOP</span>
