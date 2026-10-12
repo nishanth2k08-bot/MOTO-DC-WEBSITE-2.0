@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Wrench, ShieldAlert, CheckCircle2, Clock, ArrowRight, ShoppingCart, Sparkles, AlertTriangle, Layers } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -139,7 +139,7 @@ const SYMPTOMS_DATABASE = [
   }
 ];
 
-export default function MechanicCopilot() {
+export default function MechanicCopilot({ isModal = false, onClose }) {
   const nav = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -191,26 +191,30 @@ export default function MechanicCopilot() {
   };
 
   return (
-    <section className="section mechanicCopilotSection" id="ai-mechanic">
-      <div className="sectionhead">
-        <div>
-          <p className="eyebrow">
-            <Sparkles size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />
-            MOTODC INTELLIGENT WORKSHOP
-          </p>
-          <h2>AI Mechanic Copilot: Instant Symptom Diagnosis</h2>
-        </div>
-        <button type="button" onClick={() => nav('/products')}>
-          Explore Full Parts Catalog <ArrowRight size={16} />
-        </button>
-      </div>
+    <div className={isModal ? 'copilotModalContainer' : 'section mechanicCopilotSection'} id={isModal ? undefined : 'ai-mechanic'}>
+      {!isModal && (
+        <>
+          <div className="sectionhead">
+            <div>
+              <p className="eyebrow">
+                <Sparkles size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />
+                MOTODC INTELLIGENT WORKSHOP
+              </p>
+              <h2>AI Mechanic Copilot: Instant Symptom Diagnosis</h2>
+            </div>
+            <button type="button" onClick={() => nav('/products')}>
+              Explore Full Parts Catalog <ArrowRight size={16} />
+            </button>
+          </div>
 
-      <p className="copilotSubtitle">
-        Don’t know the part number? Describe what your car or motorcycle is doing. Our AI Mechanic diagnoses probable root causes, rates DIY difficulty, and matches precision repair bundles.
-      </p>
+          <p className="copilotSubtitle">
+            Don’t know the part number? Describe what your car or motorcycle is doing. Our AI Mechanic diagnoses probable root causes, rates DIY difficulty, and matches precision repair bundles.
+          </p>
+        </>
+      )}
 
       {/* Main Copilot Card */}
-      <div className="copilotContainer">
+      <div className={`copilotContainer ${isModal ? 'inModal' : ''}`}>
         {/* Search & Category Filter Toolbar */}
         <div className="copilotSearchRow">
           <div className="copilotSearchInputWrap">
@@ -377,6 +381,74 @@ export default function MechanicCopilot() {
           )}
         </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+// Floating AI Launcher & Slide-Over Modal for ALL pages
+export function MechanicCopilotFloatingLauncher() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      {/* Floating AI Icon Launcher on all pages */}
+      <button
+        type="button"
+        className={`aiMechanicFloatBtn ${isOpen ? 'active' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Open AI Mechanic Diagnostic Copilot"
+        title="AI Mechanic Diagnostic Copilot"
+      >
+        <span className="aiFloatIconWrap">
+          <Wrench size={19} className="aiWrenchIcon" />
+          <Sparkles size={13} className="aiSparkleBadge" />
+        </span>
+        <span className="aiFloatText">AI Mechanic</span>
+        <span className="aiPulseDot" />
+      </button>
+
+      {/* Slide-over Diagnostic Modal */}
+      {isOpen && (
+        <div className="aiModalOverlay" onClick={() => setIsOpen(false)}>
+          <div className="aiModalContent" onClick={(e) => e.stopPropagation()}>
+            <div className="aiModalTopBar">
+              <div className="aiModalTitleGroup">
+                <span className="aiModalBadge">
+                  <Sparkles size={14} /> AI DIAGNOSTIC COPILOT
+                </span>
+                <h3>MotoDC Workshop Assistant</h3>
+              </div>
+              <button
+                type="button"
+                className="aiModalCloseBtn"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close AI Mechanic Copilot"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="aiModalBody">
+              <MechanicCopilot isModal={true} onClose={() => setIsOpen(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

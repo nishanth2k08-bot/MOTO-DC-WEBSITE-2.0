@@ -7,10 +7,10 @@ export default function StartEngineIntro({ onIgnite }) {
   const [needleRpm, setNeedleRpm] = useState(0);
   const audioRef = useRef(null);
 
-  // Preload real superbike audio on component mount
+  // Preload superbike audio on component mount
   useEffect(() => {
     try {
-      const a = new Audio('/audio/superbike-rev.mp3');
+      const a = new Audio('/audio/superbike-short-rev.mp3');
       a.preload = 'auto';
       audioRef.current = a;
     } catch (_) {}
@@ -20,38 +20,36 @@ export default function StartEngineIntro({ onIgnite }) {
     if (igniting || ignited) return;
     setIgniting(true);
 
-    // 1. Play real recorded superbike engine rev sound
+    // 1. Play quick single superbike rev (snappy ~1.2s blip, no 5-second drag)
     try {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.volume = 0.95;
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((e) => {
-            console.log('Audio autoplay policy note:', e);
-            // Fallback audio trigger if needed
-            playWebAudioRevFallback();
-          });
-        }
-      } else {
-        const a = new Audio('/audio/superbike-rev.mp3');
-        a.volume = 0.95;
-        a.play().catch(() => playWebAudioRevFallback());
+      const a = audioRef.current || new Audio('/audio/superbike-short-rev.mp3');
+      a.currentTime = 0;
+      a.volume = 0.95;
+      const playPromise = a.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => playWebAudioRevFallback());
       }
+      // Stop/fade out sound right after single rev completes (~1.25s)
+      setTimeout(() => {
+        try {
+          a.pause();
+          a.currentTime = 0;
+        } catch (_) {}
+      }, 1250);
     } catch (_) {
       playWebAudioRevFallback();
     }
 
-    // 2. Animate tachometer needle sweep (0 -> 14,000 RPM)
+    // 2. Animate tachometer needle sweep
     setNeedleRpm(14000);
 
-    // 3. Smooth cinematic transition into website home page
+    // 3. Smooth transition into website home page immediately after the single rev
     setTimeout(() => {
       setIgnited(true);
       setTimeout(() => {
         if (onIgnite) onIgnite();
-      }, 600);
-    }, 1300);
+      }, 450);
+    }, 1100);
   };
 
   const handleSkip = (e) => {
@@ -70,15 +68,18 @@ export default function StartEngineIntro({ onIgnite }) {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(120, t);
-      osc.frequency.exponentialRampToValueAtTime(780, t + 0.6);
-      osc.frequency.exponentialRampToValueAtTime(320, t + 1.2);
-      gain.gain.setValueAtTime(0.4, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 1.25);
+      // Crisp 1.1s single rev blip
+      osc.frequency.setValueAtTime(140, t);
+      osc.frequency.exponentialRampToValueAtTime(820, t + 0.45);
+      osc.frequency.exponentialRampToValueAtTime(260, t + 1.05);
+      gain.gain.setValueAtTime(0.001, t);
+      gain.gain.exponentialRampToValueAtTime(0.55, t + 0.15);
+      gain.gain.setValueAtTime(0.6, t + 0.45);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(t);
-      osc.stop(t + 1.3);
+      osc.stop(t + 1.15);
     } catch (_) {}
   };
 
