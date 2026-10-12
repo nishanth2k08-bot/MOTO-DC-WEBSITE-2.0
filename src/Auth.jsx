@@ -42,10 +42,10 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
     let successReqId='';
     // 1. Try high-speed server-to-server MSG91 API without client-side captcha block
     try{
-      const resp=await fetch('/api/send-otp',{
+      const resp=await fetch('/api/otp',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({phone:clean})
+        body:JSON.stringify({action:'send',phone:clean})
       });
       const data=await resp.json().catch(()=>({}));
       if(resp.ok&&data.ok){
@@ -92,10 +92,10 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
   try{
     let resent=false;
     try{
-      const resp=await fetch('/api/retry-otp',{
+      const resp=await fetch('/api/otp',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({phone:clean,reqId})
+        body:JSON.stringify({action:'retry',phone:clean,reqId})
       });
       const data=await resp.json().catch(()=>({}));
       if(resp.ok&&data.ok){
@@ -150,12 +150,12 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
     const {full:clean}=getFullPhone();
     let signedIn=false;
 
-    // 1. Try high-speed serverless verify-otp endpoint
+    // 1. Try high-speed serverless verify action on /api/otp
     try{
-      const resp=await fetch('/api/verify-otp',{
+      const resp=await fetch('/api/otp',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({phone:clean,otp:code,reqId,name})
+        body:JSON.stringify({action:'verify',phone:clean,otp:code,reqId,name})
       });
       const data=await resp.json().catch(()=>({}));
       if(resp.ok){
