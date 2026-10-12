@@ -51,8 +51,15 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
     const cleanPhoneForMsg91=clean.replace(/^\+/,'');
     const result=await new Promise((resolve,reject)=>{
       window.sendOtp(cleanPhoneForMsg91,data=>resolve(data),err=>{
-        const msg=typeof err==='string'?err:(err?.message||err?.type||'Could not send verification code');
-        reject(new Error(msg));
+        console.error('MSG91 raw sendOtp error payload:',err);
+        let detail='';
+        if(typeof err==='string')detail=err;
+        else if(err?.message)detail=err.message;
+        else if(err?.error)detail=err.error;
+        else if(err?.type)detail=err.type;
+        else if(err?.status)detail=`Status: ${err.status}`;
+        else{try{detail=JSON.stringify(err)}catch{detail=''}}
+        reject(new Error(detail||'Could not send verification code'));
       });
     });
     const id=result?.reqId||result?.message||result?.requestId||result?.data?.reqId;
@@ -69,6 +76,8 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
     let errMsg=e.message||'Could not send verification code';
     if(errMsg.toLowerCase().includes('captcha')){
       errMsg='Please complete the captcha check above, or toggle off Captcha in your MSG91 dashboard.';
+    }else if(errMsg.toLowerCase().includes('403')||errMsg.toLowerCase().includes('forbidden')){
+      errMsg='MSG91 403 Forbidden: please check allowed domain / widget status in your MSG91 dashboard.';
     }
     toast.error(errMsg);
   }finally{
