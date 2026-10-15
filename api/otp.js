@@ -58,9 +58,12 @@ export default async function handler(req, res) {
     const forwarded = req.headers['x-forwarded-for'];
     const clientIp = (typeof forwarded === 'string' ? forwarded.split(',')[0] : (req.headers['x-real-ip'] || req.socket?.remoteAddress || '')).trim();
 
+    const authKey = (process.env.MSG91_AUTHKEY || '').trim();
+
     const headers = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      ...(authKey ? { 'authkey': authKey } : {})
     };
 
     // ─── ACTION: SEND OTP ──────────────────────────────────────────────
@@ -74,10 +77,13 @@ export default async function handler(req, res) {
       let lastErrMsg = '';
 
       try {
+        const payload = { widgetId, identifier: rawPhone };
+        if (!authKey) payload.tokenAuth = tokenAuth;
+
         const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
+          body: JSON.stringify(payload)
         });
         const text = await resp.text();
         let data = {};
@@ -110,10 +116,12 @@ export default async function handler(req, res) {
       let retrySuccess = false;
 
       try {
+        const payload = { widgetId, reqId, retryChannel: 11 };
+        if (!authKey) payload.tokenAuth = tokenAuth;
         const resp = await fetch('https://api.msg91.com/api/v5/widget/retryOtp', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11 })
+          body: JSON.stringify(payload)
         });
         const data = await resp.json().catch(() => ({}));
         if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
@@ -123,10 +131,12 @@ export default async function handler(req, res) {
 
       if (!retrySuccess) {
         try {
+          const payload = { widgetId, identifier: rawPhone };
+          if (!authKey) payload.tokenAuth = tokenAuth;
           const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
             method: 'POST',
             headers,
-            body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
+            body: JSON.stringify(payload)
           });
           const data = await resp.json().catch(() => ({}));
           if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
@@ -159,10 +169,12 @@ export default async function handler(req, res) {
 
       if (!isVerified) {
         try {
+          const payload = { widgetId, reqId, otp, identifier: rawPhone };
+          if (!authKey) payload.tokenAuth = tokenAuth;
           const resp = await fetch('https://api.msg91.com/api/v5/widget/verifyOtp', {
             method: 'POST',
             headers,
-            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone })
+            body: JSON.stringify(payload)
           });
           const text = await resp.text();
           let data = {};
