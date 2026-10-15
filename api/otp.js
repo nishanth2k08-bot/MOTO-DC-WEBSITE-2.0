@@ -40,12 +40,16 @@ export default async function handler(req, res) {
     const widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '366a6f6c5846393532323030').trim().replace(/^["']|["']$/g, '');
     const tokenAuth = (process.env.MSG91_TOKEN_AUTH || process.env.TOKEN_AUTH || process.env.MSG91_TOKEN || process.env.VITE_MSG91_TOKEN_AUTH || '581935TGJobIRJ68W6ad0cc84P1').trim().replace(/^["']|["']$/g, '');
 
+    const authKey = (process.env.MSG91_AUTHKEY || '581935AFRUsSRC8lRR6ad0efb4P1').trim().replace(/^["']|["']$/g, '');
+
     if (action === 'ping') {
       return send(res, 200, {
         ok: true,
-        version: 'v_7b1facb_ping',
+        version: 'v_authkey_active',
         hasEnvWidget: Boolean(process.env.MSG91_WIDGET_ID),
         hasEnvToken: Boolean(process.env.MSG91_TOKEN_AUTH),
+        hasEnvAuthKey: Boolean(process.env.MSG91_AUTHKEY),
+        authKeyPrefix: authKey.slice(0, 8),
         widgetPrefix: widgetId.slice(0, 8),
         tokenPrefix: tokenAuth.slice(0, 8)
       });
@@ -57,8 +61,6 @@ export default async function handler(req, res) {
 
     const forwarded = req.headers['x-forwarded-for'];
     const clientIp = (typeof forwarded === 'string' ? forwarded.split(',')[0] : (req.headers['x-real-ip'] || req.socket?.remoteAddress || '')).trim();
-
-    const authKey = (process.env.MSG91_AUTHKEY || '581935AFRUsSRC8lRR6ad0efb4P1').trim().replace(/^["']|["']$/g, '');
 
     const headers = {
       'Content-Type': 'application/json',
