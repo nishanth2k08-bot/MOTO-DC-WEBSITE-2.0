@@ -44,10 +44,13 @@ export default async function handler(req, res) {
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
     else if (rawPhone.length === 11 && rawPhone.startsWith('0')) rawPhone = '91' + rawPhone.slice(1);
 
+    const forwarded = req.headers['x-forwarded-for'];
+    const clientIp = (typeof forwarded === 'string' ? forwarded.split(',')[0] : (req.headers['x-real-ip'] || req.socket?.remoteAddress || '')).trim();
+
     const candidateHeaders = [
-      { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': 'https://motodc.in', 'Referer': 'https://motodc.in/' },
-      { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': 'https://moto-dc-website-2-0-peach.vercel.app', 'Referer': 'https://moto-dc-website-2-0-peach.vercel.app/' },
-      { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+      { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': 'https://motodc.in', 'Referer': 'https://motodc.in/', ...(clientIp ? { 'X-Forwarded-For': clientIp, 'X-Real-IP': clientIp } : {}) },
+      { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': 'https://moto-dc-website-2-0-peach.vercel.app', 'Referer': 'https://moto-dc-website-2-0-peach.vercel.app/', ...(clientIp ? { 'X-Forwarded-For': clientIp, 'X-Real-IP': clientIp } : {}) },
+      { 'Content-Type': 'application/json', 'Accept': 'application/json', ...(clientIp ? { 'X-Forwarded-For': clientIp, 'X-Real-IP': clientIp } : {}) }
     ];
 
     // ─── ACTION: SEND OTP ──────────────────────────────────────────────
@@ -65,7 +68,7 @@ export default async function handler(req, res) {
           const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
             method: 'POST',
             headers: h,
-            body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
+            body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone, user_ip: clientIp || undefined })
           });
           const text = await resp.text();
           let data = {};
@@ -119,7 +122,7 @@ export default async function handler(req, res) {
           const resp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
             method: 'POST',
             headers: h,
-            body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11 })
+            body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11, user_ip: clientIp || undefined })
           });
           const data = await resp.json().catch(() => ({}));
           if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
@@ -135,7 +138,7 @@ export default async function handler(req, res) {
             const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
               method: 'POST',
               headers: h,
-              body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
+              body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone, user_ip: clientIp || undefined })
             });
             const data = await resp.json().catch(() => ({}));
             if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
@@ -168,7 +171,7 @@ export default async function handler(req, res) {
           const resp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
             method: 'POST',
             headers: h,
-            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone })
+            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone, user_ip: clientIp || undefined })
           });
           const text = await resp.text();
           let data = {};

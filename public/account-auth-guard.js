@@ -4,14 +4,11 @@
     if(document.getElementById(STYLE_ID))return;
     const style=document.createElement('style');
     style.id=STYLE_ID;
-    style.textContent='html.motodc-auth-only header,html.motodc-auth-only footer{display:none!important}';
+    style.textContent='header{display:block!important;visibility:visible!important;opacity:1!important}';
     document.head.appendChild(style);
   }
   function syncAuthPage(){
     installStyle();
-    const isAccount=window.location.pathname==='/account';
-    const signedInAccount=!!document.querySelector('#root .accountcard');
-    document.documentElement.classList.toggle('motodc-auth-only',isAccount&&!signedInAccount);
   }
   function handleProfileClick(event){
     const button=event.target.closest('.account:not(.accountName)');
