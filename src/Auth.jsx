@@ -45,8 +45,8 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
-          widgetId: '366a6f6a6e66333835303837',
-          tokenAuth: '566450TEc4JqSNlGt6ad0c4fcP1',
+          widgetId: '366a6f6c5846393532323030',
+          tokenAuth: '581935TGJobIRJ68W6ad0cc84P1',
           identifier: clientPhone
         })
       });
@@ -103,7 +103,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
        const clientResp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-         body: JSON.stringify({ widgetId: '366a6f6a6e66333835303837', tokenAuth: '566450TEc4JqSNlGt6ad0c4fcP1', reqId, retryChannel: 11 })
+         body: JSON.stringify({ widgetId: '366a6f6c5846393532323030', tokenAuth: '581935TGJobIRJ68W6ad0cc84P1', reqId, retryChannel: 11 })
        });
        const clientData = await clientResp.json().catch(() => ({}));
        if (clientResp.ok && (clientData.type === 'success' || clientData.message)) {
@@ -144,7 +144,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
        const clientResp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-         body: JSON.stringify({ widgetId: '366a6f6a6e66333835303837', tokenAuth: '566450TEc4JqSNlGt6ad0c4fcP1', reqId, otp: currentCode, identifier: clientPhone })
+         body: JSON.stringify({ widgetId: '366a6f6c5846393532323030', tokenAuth: '581935TGJobIRJ68W6ad0cc84P1', reqId, otp: currentCode, identifier: clientPhone })
        });
        const clientData = await clientResp.json().catch(() => ({}));
        if (clientResp.ok && (clientData.type === 'success' || (clientData.message && String(clientData.message).toLowerCase().includes('success')))) {

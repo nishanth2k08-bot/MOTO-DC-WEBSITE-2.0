@@ -37,8 +37,8 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed' });
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
-    const widgetId = '366a6f6a6e66333835303837';
-    const tokenAuth = '566450TEc4JqSNlGt6ad0c4fcP1';
+    const widgetId = '366a6f6c5846393532323030';
+    const tokenAuth = '581935TGJobIRJ68W6ad0cc84P1';
 
     let rawPhone = String(req.body?.phone || '').trim().replace(/\D/g, '');
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
