@@ -224,6 +224,7 @@ export default async function handler(req, res) {
       let lastErrMsg = '';
 
       // 1. Primary: Verify via MSG91 Core OTP API
+      let coreOtpEvaluated = false;
       if (!isVerified && authKey) {
         try {
           const resp = await fetch(`https://api.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=${rawPhone}`, {
@@ -236,23 +237,18 @@ export default async function handler(req, res) {
           if (resp.ok && (data.type === 'success' || (data.message && String(data.message).toLowerCase().includes('success')))) {
             isVerified = true;
           } else {
-            const m = String(data.message || data.error || '');
-            if (m.toLowerCase().includes('not match') || m.toLowerCase().includes('no request') || m.toLowerCase().includes('expired')) {
-              lastErrMsg = 'Incorrect or expired verification code';
-            } else {
-              lastErrMsg = m || 'Incorrect or expired verification code';
-            }
+            coreOtpEvaluated = true;
+            lastErrMsg = 'Incorrect or expired verification code';
           }
         } catch (e) {
           lastErrMsg = e.message;
         }
       }
 
-      // 2. Secondary fallback: Verify via MSG91 Widget API
-      if (!isVerified && reqId && reqId !== 'otp_active') {
+      // 2. Secondary fallback: Verify via MSG91 Widget API (only if core OTP was not evaluated)
+      if (!isVerified && !coreOtpEvaluated && reqId && reqId !== 'otp_active') {
         try {
-          const payload = { widgetId, reqId, otp, identifier: rawPhone };
-          if (!authKey) payload.tokenAuth = tokenAuth;
+          const payload = { widgetId, reqId, otp, identifier: rawPhone, tokenAuth };
           const resp = await fetch('https://api.msg91.com/api/v5/widget/verifyOtp', {
             method: 'POST',
             headers,
@@ -264,7 +260,7 @@ export default async function handler(req, res) {
           if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
             isVerified = true;
           } else {
-            lastErrMsg = data.message || data.error || lastErrMsg || 'Incorrect or expired verification code';
+            lastErrMsg = 'Incorrect or expired verification code';
           }
         } catch (e) {
           lastErrMsg = e.message;
@@ -274,7 +270,14 @@ export default async function handler(req, res) {
       if (!isVerified) {
         let err = typeof lastErrMsg === 'string' ? lastErrMsg : 'Incorrect or expired verification code';
         const lower = err.toLowerCase();
-        if (lower.includes('not match') || lower.includes('no request') || lower.includes('expired') || lower.includes('invalid otp')) {
+        if (
+          lower.includes('not match') ||
+          lower.includes('no request') ||
+          lower.includes('expired') ||
+          lower.includes('invalid') ||
+          lower.includes('failure') ||
+          lower.includes('authentication')
+        ) {
           err = 'Incorrect or expired verification code';
         }
         return send(res, 400, { error: err });
