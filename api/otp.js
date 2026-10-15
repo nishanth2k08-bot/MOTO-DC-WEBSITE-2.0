@@ -37,10 +37,12 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed' });
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
+    let authKey = (process.env.MSG91_AUTHKEY || '').trim().replace(/^["']|["']$/g, '');
+    if (!authKey || authKey.startsWith('566450')) {
+      authKey = '581935AFRUsSRC8lRR6ad0efb4P1';
+    }
     const widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '366a6f6c5846393532323030').trim().replace(/^["']|["']$/g, '');
     const tokenAuth = (process.env.MSG91_TOKEN_AUTH || process.env.TOKEN_AUTH || process.env.MSG91_TOKEN || process.env.VITE_MSG91_TOKEN_AUTH || '581935TGJobIRJ68W6ad0cc84P1').trim().replace(/^["']|["']$/g, '');
-
-    const authKey = (process.env.MSG91_AUTHKEY || '581935AFRUsSRC8lRR6ad0efb4P1').trim().replace(/^["']|["']$/g, '');
 
     if (action === 'ping') {
       return send(res, 200, {
