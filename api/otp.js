@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
     let authKey = (process.env.MSG91_AUTHKEY || '').trim().replace(/^["']|["']$/g, '');
-    if (!authKey || authKey.startsWith('581935')) {
+    if (!authKey || authKey.startsWith('581935') || authKey.startsWith('566450A4') || authKey !== '566450An3dRn7d396a9693d5P1') {
       authKey = '566450An3dRn7d396a9693d5P1';
     }
     let widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '').trim().replace(/^["']|["']$/g, '');
