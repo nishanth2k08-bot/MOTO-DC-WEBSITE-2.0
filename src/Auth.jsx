@@ -50,7 +50,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
  async function handleResendCode(){
   if(resendTimer>0||busy)return;
   const {full:clean}=getFullPhone();
-  if(!reqId||reqId==='otp_sent'){toast.error('Please request a new verification code');return}
+  if(!reqId){toast.error('Please request a new verification code');return}
   setBusy(true);
   try{
     const resp=await fetch('/api/otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'retry',phone:clean,reqId})});
@@ -70,7 +70,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
   if(!confirmation)return;
   const currentCode=(otpDigits.join('')||code).trim();
   if(!/^\d{6}$/.test(currentCode)){toast.error('Enter all 6 digits of the verification code');return}
-  if(!reqId||reqId==='otp_sent'){toast.error('Verification session is missing. Please request a new code.');return}
+  if(!reqId){toast.error('Verification session is missing. Please request a new code.');return}
   setBusy(true);
   try{
     const {full:clean}=getFullPhone();

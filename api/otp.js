@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     if (action === 'ping') {
       return send(res, 200, {
         ok: true,
-        version: 'v_authkey_active',
+        version: 'v_core_otp_unblocked',
         hasEnvWidget: Boolean(process.env.MSG91_WIDGET_ID),
         hasEnvToken: Boolean(process.env.MSG91_TOKEN_AUTH),
         hasEnvAuthKey: Boolean(process.env.MSG91_AUTHKEY),
@@ -80,27 +80,55 @@ export default async function handler(req, res) {
       let lastReqId = '';
       let lastErrMsg = '';
 
-      try {
-        const payload = { widgetId, identifier: rawPhone };
-        if (!authKey) payload.tokenAuth = tokenAuth;
-
-        const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(payload)
-        });
-        const text = await resp.text();
-        let data = {};
-        try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
-        if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
-          lastReqId = data.reqId || data.data?.reqId || data.message || '';
-          if (lastReqId) sentSuccess = true;
-          else lastErrMsg = 'MSG91 accepted the request but did not return a request ID. Check the MSG91 response and widget configuration.';
-        } else {
-          lastErrMsg = (data.message || data.error || (typeof text === 'string' ? text : JSON.stringify(text))) + (resp.status !== 200 ? ` (MSG91 HTTP ${resp.status})` : '');
+      // 1. Primary: MSG91 Core OTP API (Server-to-Server authenticated via master authkey)
+      if (authKey) {
+        try {
+          const resp = await fetch(`https://api.msg91.com/api/v5/otp?mobile=${rawPhone}&otp_length=6`, {
+            method: 'POST',
+            headers: {
+              'authkey': authKey,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+          const text = await resp.text();
+          let data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
+            lastReqId = data.request_id || data.reqId || data.message || 'otp_active';
+            sentSuccess = true;
+          } else {
+            lastErrMsg = data.message || data.error || text;
+          }
+        } catch (e) {
+          lastErrMsg = e.message;
         }
-      } catch (e) {
-        lastErrMsg = e.message;
+      }
+
+      // 2. Secondary fallback: MSG91 Widget sendOtp API
+      if (!sentSuccess) {
+        try {
+          const payload = { widgetId, identifier: rawPhone };
+          if (!authKey) payload.tokenAuth = tokenAuth;
+
+          const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload)
+          });
+          const text = await resp.text();
+          let data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
+            lastReqId = data.reqId || data.data?.reqId || data.message || '';
+            if (lastReqId) sentSuccess = true;
+            else lastErrMsg = 'MSG91 accepted the request but did not return a request ID. Check the MSG91 response and widget configuration.';
+          } else {
+            lastErrMsg = (data.message || data.error || (typeof text === 'string' ? text : JSON.stringify(text))) + (resp.status !== 200 ? ` (MSG91 HTTP ${resp.status})` : '');
+          }
+        } catch (e) {
+          lastErrMsg = e.message;
+        }
       }
 
       if (!sentSuccess) {
@@ -116,41 +144,62 @@ export default async function handler(req, res) {
     // ─── ACTION: RETRY OTP ─────────────────────────────────────────────
     if (action === 'retry') {
       const reqId = String(req.body?.reqId || '').trim();
-      if (!reqId || reqId === 'otp_sent') return send(res, 400, { error: 'Verification request ID is missing. Please request a new code.' });
       let retrySuccess = false;
+      let newReqId = '';
 
-      try {
-        const payload = { widgetId, reqId, retryChannel: 11 };
-        if (!authKey) payload.tokenAuth = tokenAuth;
-        const resp = await fetch('https://api.msg91.com/api/v5/widget/retryOtp', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(payload)
-        });
-        const data = await resp.json().catch(() => ({}));
-        if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
-          retrySuccess = true;
-        }
-      } catch {}
-
-      if (!retrySuccess) {
+      // 1. Primary: Core OTP retry API
+      if (authKey) {
         try {
-          const payload = { widgetId, identifier: rawPhone };
+          const resp = await fetch(`https://api.msg91.com/api/v5/otp/retry?authkey=${authKey}&mobile=${rawPhone}&retrytype=text`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data.type === 'success') {
+            retrySuccess = true;
+            newReqId = reqId || 'otp_active';
+          }
+        } catch {}
+      }
+
+      // 2. Core OTP fresh send if retry was not supported
+      if (!retrySuccess && authKey) {
+        try {
+          const resp = await fetch(`https://api.msg91.com/api/v5/otp?mobile=${rawPhone}&otp_length=6`, {
+            method: 'POST',
+            headers: { 'authkey': authKey, 'Content-Type': 'application/json' }
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
+            retrySuccess = true;
+            newReqId = data.request_id || data.reqId || data.message || 'otp_active';
+          }
+        } catch {}
+      }
+
+      // 3. Fallback to widget retry
+      if (!retrySuccess && reqId && reqId !== 'otp_active') {
+        try {
+          const payload = { widgetId, reqId, retryChannel: 11 };
           if (!authKey) payload.tokenAuth = tokenAuth;
-          const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
+          const resp = await fetch('https://api.msg91.com/api/v5/widget/retryOtp', {
             method: 'POST',
             headers,
             body: JSON.stringify(payload)
           });
           const data = await resp.json().catch(() => ({}));
-          if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
-            const newReqId = data.message || data.reqId;
-            return send(res, 200, { ok: true, reqId: String(newReqId || ''), message: 'New code sent' });
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
+            retrySuccess = true;
+            newReqId = reqId;
           }
         } catch {}
       }
 
-      return send(res, 400, { error: 'MSG91 could not resend the verification code. Please request a new code and try again.' });
+      if (retrySuccess) {
+        return send(res, 200, { ok: true, reqId: String(newReqId || reqId || 'otp_active'), message: 'New code sent' });
+      }
+
+      return send(res, 400, { error: 'MSG91 could not resend the verification code. Please request a new code.' });
     }
 
     // ─── ACTION: VERIFY OTP ────────────────────────────────────────────
@@ -160,9 +209,6 @@ export default async function handler(req, res) {
       const phone = normalizePhone(req.body?.phone);
       const name = String(req.body?.name || '').trim();
 
-      if (!reqId || reqId === 'otp_sent') {
-        return send(res, 400, { error: 'Verification request ID is missing. Please request a new code.' });
-      }
       if (!/^\d{6}$/.test(otp)) {
         return send(res, 400, { error: 'Please enter all 6 digits of the verification code' });
       }
@@ -171,7 +217,33 @@ export default async function handler(req, res) {
       let isVerified = verifiedDirectly;
       let lastErrMsg = '';
 
-      if (!isVerified) {
+      // 1. Primary: Verify via MSG91 Core OTP API
+      if (!isVerified && authKey) {
+        try {
+          const resp = await fetch(`https://api.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=${rawPhone}`, {
+            method: 'GET',
+            headers: { 'authkey': authKey, 'Accept': 'application/json' }
+          });
+          const text = await resp.text();
+          let data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+          if (resp.ok && (data.type === 'success' || (data.message && String(data.message).toLowerCase().includes('success')))) {
+            isVerified = true;
+          } else {
+            const m = String(data.message || data.error || '');
+            if (m.toLowerCase().includes('not match') || m.toLowerCase().includes('no request') || m.toLowerCase().includes('expired')) {
+              lastErrMsg = 'Incorrect or expired verification code';
+            } else {
+              lastErrMsg = m || 'Incorrect or expired verification code';
+            }
+          }
+        } catch (e) {
+          lastErrMsg = e.message;
+        }
+      }
+
+      // 2. Secondary fallback: Verify via MSG91 Widget API
+      if (!isVerified && reqId && reqId !== 'otp_active') {
         try {
           const payload = { widgetId, reqId, otp, identifier: rawPhone };
           if (!authKey) payload.tokenAuth = tokenAuth;
@@ -186,26 +258,11 @@ export default async function handler(req, res) {
           if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
             isVerified = true;
           } else {
-            lastErrMsg = data.message || data.error || 'Incorrect or expired verification code';
+            lastErrMsg = data.message || data.error || lastErrMsg || 'Incorrect or expired verification code';
           }
         } catch (e) {
           lastErrMsg = e.message;
         }
-      }
-
-      // If widget verification was not successful, try server-side verify
-      if (!isVerified) {
-        const authKey = process.env.MSG91_AUTHKEY || tokenAuth;
-        try {
-          const resp = await fetch(`https://api.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=${rawPhone}`, {
-            method: 'GET',
-            headers: { 'authkey': authKey, 'Accept': 'application/json' }
-          });
-          const data = await resp.json().catch(() => ({}));
-          if (resp.ok && (data.type === 'success' || (data.message && String(data.message).toLowerCase().includes('success')))) {
-            isVerified = true;
-          }
-        } catch {}
       }
 
       if (!isVerified) {
