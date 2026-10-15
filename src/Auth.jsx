@@ -41,7 +41,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
     // 1. Direct browser-to-MSG91 dispatch (runs from user device IP, bypassing cloud IP blocks)
     try {
       const clientPhone = rawNum.length === 10 ? '91' + rawNum : clean.replace(/\D/g, '');
-      const clientResp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
+      const clientResp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -100,7 +100,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
      let resendSuccess = false;
      let newReqId = '';
      try {
-       const clientResp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
+       const clientResp = await fetch('https://api.msg91.com/api/v5/widget/retryOtp', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
          body: JSON.stringify({ widgetId: '366a6f6c5846393532323030', tokenAuth: '581935TGJobIRJ68W6ad0cc84P1', reqId, retryChannel: 11 })
@@ -141,7 +141,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
      const clientPhone = rawNum.length === 10 ? '91' + rawNum : clean.replace(/\D/g, '');
      let verifiedDirectly = false;
      try {
-       const clientResp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
+       const clientResp = await fetch('https://api.msg91.com/api/v5/widget/verifyOtp', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
          body: JSON.stringify({ widgetId: '366a6f6c5846393532323030', tokenAuth: '581935TGJobIRJ68W6ad0cc84P1', reqId, otp: currentCode, identifier: clientPhone })

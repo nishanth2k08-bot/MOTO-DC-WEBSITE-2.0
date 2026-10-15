@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       let lastErrMsg = '';
 
       try {
-        const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
+        const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
           method: 'POST',
           headers,
           body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
@@ -97,7 +97,7 @@ export default async function handler(req, res) {
       let retrySuccess = false;
 
       try {
-        const resp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
+        const resp = await fetch('https://api.msg91.com/api/v5/widget/retryOtp', {
           method: 'POST',
           headers,
           body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11 })
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
 
       if (!retrySuccess) {
         try {
-          const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
+          const resp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
             method: 'POST',
             headers,
             body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
@@ -143,7 +143,7 @@ export default async function handler(req, res) {
 
       if (!isVerified) {
         try {
-          const resp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
+          const resp = await fetch('https://api.msg91.com/api/v5/widget/verifyOtp', {
             method: 'POST',
             headers,
             body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone })
@@ -165,7 +165,7 @@ export default async function handler(req, res) {
       if (!isVerified) {
         const authKey = process.env.MSG91_AUTHKEY || tokenAuth;
         try {
-          const resp = await fetch(`https://control.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=${rawPhone}`, {
+          const resp = await fetch(`https://api.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=${rawPhone}`, {
             method: 'GET',
             headers: { 'authkey': authKey, 'Accept': 'application/json' }
           });
