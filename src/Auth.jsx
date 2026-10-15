@@ -229,6 +229,35 @@ export default function Auth(){
  const phoneNameForm=<form className="authform" onSubmit={submitPhoneName}><label><span>Your name</span><div><User size={17}/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Enter your full name" autoComplete="name" required autoFocus/></div></label><p className="authhint"><ShieldCheck size={15}/> Mobile verified. Enter your name to create your MotoDC account.</p><button className="heroBtn" disabled={busy}>{busy?'Creating account...':'Continue'}<ArrowRight size={17}/></button></form>;
  const phoneForm=<form className="authform" onSubmit={sendCode}><label><span>Mobile number</span><div className="phoneInputsRow"><div className="countryCodeBox"><input type="tel" className="countryCodeInput" value={countryCode} onChange={handleCountryCodeChange} placeholder="+91" maxLength={5} required aria-label="Country code" title="Country code is compulsory (e.g. +91)"/></div><div className="phoneNumberBox"><Phone size={17}/><input type="tel" className="phoneNumberInput" value={phone} onChange={handlePhoneChange} onKeyDown={handlePhoneKeyDown} placeholder="10-digit mobile number" autoComplete="tel-national" inputMode="numeric" pattern="[0-9]{10}" maxLength={10} required autoFocus/></div></div></label><p className="authhint"><ShieldCheck size={15}/> We'll send a verification code by SMS.</p><button className="heroBtn" disabled={busy}>{busy?'Sending code...':'Send verification code'}<ArrowRight size={17}/></button></form>;
  const otpForm=<form className="authform" onSubmit={verifyCode}><label><span>6-digit verification code</span><div className="otpInputWrap"><ShieldCheck size={17}/><div className="otpBoxes" role="group" aria-label="6-digit verification code" onPaste={handleOtpPaste}>{Array.from({length:6},(_,index)=><input key={index} ref={el=>{otpRefs.current[index]=el}} className="otpBox" type="text" inputMode="numeric" pattern="[0-9]*" maxLength="1" value={otpDigits[index]} onChange={e=>handleOtpChange(index,e.target.value)} onKeyDown={e=>handleOtpKeyDown(index,e)} autoComplete={index===0?'one-time-code':'off'} aria-label={`OTP digit ${index+1}`} disabled={busy}/>)}</div></div></label><p className="authhint">Code sent to <b>{getFullPhone().code} {getFullPhone().number}</b></p><button className="heroBtn" disabled={busy}>{busy?'Verifying...':'Verify & continue'}<ArrowRight size={17}/></button><div className="resendOtpWrap">{resendTimer>0?<span className="resendCountdownText">Didn't receive code? Resend OTP in <b>{resendTimer}s</b></span>:<span className="resendActionText">Didn't receive code? <button type="button" className="resendInlineLink" onClick={handleResendCode} disabled={busy}>{busy?'Sending...':'Resend OTP'}</button></span>}</div><button type="button" className="textBtn" onClick={()=>{setConfirmation(false);setOtpDigits(Array(6).fill(''));setCode('');setConfirmationResult(null);window.confirmationResult=null;setResendTimer(40)}}>Use a different number</button></form>;
- let methodForm=signInForm;if(method==='phone')methodForm=needsName?phoneNameForm:(confirmation?otpForm:phoneForm);
- return <section className="auth page"><div className="authcard"><div id="recaptcha-container"></div><div className="authintro"><p className="eyebrow">MOTODC ACCOUNT</p><h1>{mode==='signin'?<>Welcome <span>back.</span></>:<>Join the <span>ride.</span></>}</h1><p>{mode==='signin'?'Sign in to keep your cart, orders and wishlist connected to your account.':'Create your customer account to shop faster and keep your purchases connected.'}</p></div><div className="authswitch"><button type="button" className={mode==='signin'?'active':''} onClick={()=>{setMode('signin');resetOtp()}}>Sign in</button><button type="button" className={mode==='signup'?'active':''} onClick={()=>{setMode('signup');resetOtp()}}>Create account</button></div><div className="authsocial"><button type="button" onClick={()=>social(google)} disabled={busy}><img src="/google-icon.svg?v=2" alt="Google"/> Continue with Google</button><button type="button" onClick={()=>social(apple)} disabled={busy}><img src="/apple-icon.svg?v=2" alt="Apple"/> Continue with Apple</button></div><div className="authdivider"><span>or continue with</span></div><div className="authmethods"><button type="button" className={method==='email'?'active':''} onClick={()=>{setMethod('email');resetOtp()}}><Mail size={16}/> Email</button><button type="button" className={method==='phone'?'active':''} onClick={()=>{setMethod('phone');resetOtp()}}><Phone size={16}/> Mobile</button></div>{methodForm}</div></section>;
+ const SHOW_PHONE_AUTH=false;
+ let methodForm=signInForm;
+ if(SHOW_PHONE_AUTH&&method==='phone')methodForm=needsName?phoneNameForm:(confirmation?otpForm:phoneForm);
+ return (
+  <section className="auth page">
+   <div className="authcard">
+    {SHOW_PHONE_AUTH&&<div id="recaptcha-container"></div>}
+    <div className="authintro">
+     <p className="eyebrow">MOTODC ACCOUNT</p>
+     <h1>{mode==='signin'?<>Welcome <span>back.</span></>:<>Join the <span>ride.</span></>}</h1>
+     <p>{mode==='signin'?'Sign in to keep your cart, orders and wishlist connected to your account.':'Create your customer account to shop faster and keep your purchases connected.'}</p>
+    </div>
+    <div className="authswitch">
+     <button type="button" className={mode==='signin'?'active':''} onClick={()=>{setMode('signin');resetOtp()}}>Sign in</button>
+     <button type="button" className={mode==='signup'?'active':''} onClick={()=>{setMode('signup');resetOtp()}}>Create account</button>
+    </div>
+    <div className="authsocial">
+     <button type="button" onClick={()=>social(google)} disabled={busy}><img src="/google-icon.svg?v=2" alt="Google"/> Continue with Google</button>
+     <button type="button" onClick={()=>social(apple)} disabled={busy}><img src="/apple-icon.svg?v=2" alt="Apple"/> Continue with Apple</button>
+    </div>
+    <div className="authdivider"><span>{SHOW_PHONE_AUTH?'or continue with':'or continue with email'}</span></div>
+    {SHOW_PHONE_AUTH&&(
+     <div className="authmethods">
+      <button type="button" className={method==='email'?'active':''} onClick={()=>{setMethod('email');resetOtp()}}><Mail size={16}/> Email</button>
+      <button type="button" className={method==='phone'?'active':''} onClick={()=>{setMethod('phone');resetOtp()}}><Phone size={16}/> Mobile</button>
+     </div>
+    )}
+    {methodForm}
+   </div>
+  </section>
+ );
 }
