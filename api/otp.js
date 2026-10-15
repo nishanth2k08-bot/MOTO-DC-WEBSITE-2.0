@@ -266,7 +266,12 @@ export default async function handler(req, res) {
       }
 
       if (!isVerified) {
-        return send(res, 400, { error: typeof lastErrMsg === 'string' ? lastErrMsg : 'Incorrect or expired verification code' });
+        let err = typeof lastErrMsg === 'string' ? lastErrMsg : 'Incorrect or expired verification code';
+        const lower = err.toLowerCase();
+        if (lower.includes('not match') || lower.includes('no request') || lower.includes('expired') || lower.includes('invalid otp')) {
+          err = 'Incorrect or expired verification code';
+        }
+        return send(res, 400, { error: err });
       }
 
       // OTP verified successfully! Connect to Firebase
