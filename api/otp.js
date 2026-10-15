@@ -37,8 +37,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed' });
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
-    const widgetId = '366a6f6c5846393532323030';
-    const tokenAuth = '581935TGJobIRJ68W6ad0cc84P1';
+    const widgetId = process.env.MSG91_WIDGET_ID;
+    const tokenAuth = process.env.MSG91_TOKEN_AUTH;
+    if (!widgetId || !tokenAuth) {
+      return send(res, 500, { error: 'MSG91 widget configuration is missing. Set MSG91_WIDGET_ID and MSG91_TOKEN_AUTH in Vercel.' });
+    }
 
     let rawPhone = String(req.body?.phone || '').trim().replace(/\D/g, '');
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
@@ -72,8 +75,9 @@ export default async function handler(req, res) {
         let data = {};
         try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
         if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
-          sentSuccess = true;
-          lastReqId = data.message || data.reqId || data.data?.reqId;
+          lastReqId = data.reqId || data.data?.reqId || data.message || '';
+          if (lastReqId) sentSuccess = true;
+          else lastErrMsg = 'MSG91 accepted the request but did not return a request ID. Check the MSG91 response and widget configuration.';
         } else {
           lastErrMsg = data.message || data.error || text;
         }
@@ -88,12 +92,13 @@ export default async function handler(req, res) {
         return send(res, 400, { error: msg });
       }
 
-      return send(res, 200, { ok: true, reqId: String(lastReqId || 'otp_sent'), message: 'OTP sent successfully' });
+      return send(res, 200, { ok: true, reqId: String(lastReqId), message: 'OTP sent successfully' });
     }
 
     // ─── ACTION: RETRY OTP ─────────────────────────────────────────────
     if (action === 'retry') {
       const reqId = String(req.body?.reqId || '').trim();
+      if (!reqId || reqId === 'otp_sent') return send(res, 400, { error: 'Verification request ID is missing. Please request a new code.' });
       let retrySuccess = false;
 
       try {
@@ -103,7 +108,7 @@ export default async function handler(req, res) {
           body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11 })
         });
         const data = await resp.json().catch(() => ({}));
-        if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
+        if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
           retrySuccess = true;
         }
       } catch {}
@@ -123,7 +128,7 @@ export default async function handler(req, res) {
         } catch {}
       }
 
-      return send(res, 200, { ok: true, message: 'Verification code resent' });
+      return send(res, 400, { error: 'MSG91 could not resend the verification code. Please request a new code and try again.' });
     }
 
     // ─── ACTION: VERIFY OTP ────────────────────────────────────────────
@@ -133,7 +138,10 @@ export default async function handler(req, res) {
       const phone = normalizePhone(req.body?.phone);
       const name = String(req.body?.name || '').trim();
 
-      if (!otp || otp.length < 4) {
+      if (!reqId || reqId === 'otp_sent') {
+        return send(res, 400, { error: 'Verification request ID is missing. Please request a new code.' });
+      }
+      if (!/^\\d{6}$/.test(otp)) {
         return send(res, 400, { error: 'Please enter all 6 digits of the verification code' });
       }
 
