@@ -69,7 +69,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
   if(e)e.preventDefault();
   if(!confirmation)return;
   const currentCode=(otpDigits.join('')||code).trim();
-  if(!/^\\d{6}$/.test(currentCode)){toast.error('Enter all 6 digits of the verification code');return}
+  if(!/^\d{6}$/.test(currentCode)){toast.error('Enter all 6 digits of the verification code');return}
   if(!reqId||reqId==='otp_sent'){toast.error('Verification session is missing. Please request a new code.');return}
   setBusy(true);
   try{
