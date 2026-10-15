@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
     const widgetId = '366a6f6a6e66333835303837';
-    const tokenAuth = '566450TeAGmYSf56ad0a7b5P1';
+    const tokenAuth = '566450TEc4JqSNlGt6ad0c4fcP1';
 
     let rawPhone = String(req.body?.phone || '').trim().replace(/\D/g, '');
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
