@@ -37,11 +37,8 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed' });
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
-    const widgetId = process.env.MSG91_WIDGET_ID;
-    const tokenAuth = process.env.MSG91_TOKEN_AUTH;
-    if (!widgetId || !tokenAuth) {
-      return send(res, 500, { error: 'MSG91 widget configuration is missing. Set MSG91_WIDGET_ID and MSG91_TOKEN_AUTH in Vercel.' });
-    }
+    const widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '366a6f6c5846393532323030').trim().replace(/^["']|["']$/g, '');
+    const tokenAuth = (process.env.MSG91_TOKEN_AUTH || process.env.TOKEN_AUTH || process.env.MSG91_TOKEN || process.env.VITE_MSG91_TOKEN_AUTH || '581935TGJobIRJ68W6ad0cc84P1').trim().replace(/^["']|["']$/g, '');
 
     let rawPhone = String(req.body?.phone || '').trim().replace(/\D/g, '');
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
