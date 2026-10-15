@@ -44,24 +44,11 @@ export default async function handler(req, res) {
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
     else if (rawPhone.length === 11 && rawPhone.startsWith('0')) rawPhone = '91' + rawPhone.slice(1);
 
-    const originHeader = req.headers['origin'] || req.headers['referer'] || 'https://moto-dc-website-2-0-peach.vercel.app';
-    let cleanOrigin = 'https://moto-dc-website-2-0-peach.vercel.app';
-    try {
-      const u = new URL(originHeader);
-      const host = u.host.toLowerCase();
-      if (host.includes('motodc.in') || host.includes('vercel.app')) {
-        cleanOrigin = `${u.protocol}//${u.host}`;
-      }
-    } catch {
-      cleanOrigin = 'https://moto-dc-website-2-0-peach.vercel.app';
-    }
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Origin': cleanOrigin,
-      'Referer': `${cleanOrigin}/`
-    };
+    const candidateHeaders = [
+      { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': 'https://motodc.in', 'Referer': 'https://motodc.in/' },
+      { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': 'https://moto-dc-website-2-0-peach.vercel.app', 'Referer': 'https://moto-dc-website-2-0-peach.vercel.app/' },
+      { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+    ];
 
     // ─── ACTION: SEND OTP ──────────────────────────────────────────────
     if (action === 'send') {
@@ -69,59 +56,96 @@ export default async function handler(req, res) {
         return send(res, 400, { error: 'Please enter a valid 10-digit mobile number' });
       }
 
-      const response = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          widgetId,
-          tokenAuth,
-          identifier: rawPhone
-        })
-      });
+      let sentSuccess = false;
+      let lastReqId = '';
+      let lastErrMsg = '';
 
-      const text = await response.text();
-      let data = {};
-      try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
-
-      if (!response.ok || data.type === 'error' || data.status === 'fail' || data.hasError) {
-        let errMsg = data.message || data.error || 'Could not send verification code';
-        if (Array.isArray(errMsg)) errMsg = errMsg.join(', ');
-        if (typeof errMsg !== 'string') errMsg = JSON.stringify(errMsg);
-        if (errMsg.includes('Invalid request') || errMsg.includes('IPBlocked') || data.code === 408 || data.code === '408' || response.status === 403) {
-          errMsg = 'MSG91 Whitelist: Please add moto-dc-website-2-0-peach.vercel.app to Allowed Domains in your MSG91 Widget dashboard.';
+      for (const h of candidateHeaders) {
+        try {
+          const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
+            method: 'POST',
+            headers: h,
+            body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
+          });
+          const text = await resp.text();
+          let data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
+            sentSuccess = true;
+            lastReqId = data.message || data.reqId || data.data?.reqId;
+            break;
+          }
+          lastErrMsg = data.message || data.error || text;
+        } catch (e) {
+          lastErrMsg = e.message;
         }
-        return send(res, 400, { error: errMsg, raw: data });
       }
 
-      const reqId = data.message || data.reqId || data.data?.reqId;
-      return send(res, 200, { ok: true, reqId: String(reqId || ''), message: 'OTP sent successfully' });
+      // If widget endpoint was blocked, try direct server-to-server OTP API
+      if (!sentSuccess) {
+        const authKey = process.env.MSG91_AUTHKEY || tokenAuth;
+        try {
+          const resp = await fetch(`https://control.msg91.com/api/v5/otp?mobile=${rawPhone}&otp_length=6&authkey=${authKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data.type === 'success') {
+            sentSuccess = true;
+            lastReqId = data.request_id || data.message || 'otp_sent';
+          }
+        } catch (e) {
+          console.error('Server OTP API fallback error:', e);
+        }
+      }
+
+      if (!sentSuccess) {
+        let msg = lastErrMsg || 'Could not send verification code';
+        if (Array.isArray(msg)) msg = msg.join(', ');
+        if (typeof msg !== 'string') msg = JSON.stringify(msg);
+        return send(res, 400, { error: msg });
+      }
+
+      return send(res, 200, { ok: true, reqId: String(lastReqId || 'otp_sent'), message: 'OTP sent successfully' });
     }
 
     // ─── ACTION: RETRY OTP ─────────────────────────────────────────────
     if (action === 'retry') {
       const reqId = String(req.body?.reqId || '').trim();
-      const response = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          widgetId,
-          tokenAuth,
-          reqId,
-          retryChannel: 11
-        })
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || data.type === 'error' || data.status === 'fail') {
-        // Fallback to fresh sendOtp
-        const freshResp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
-        });
-        const freshData = await freshResp.json().catch(() => ({}));
-        const newReqId = freshData.message || freshData.reqId;
-        return send(res, 200, { ok: true, reqId: String(newReqId || ''), message: 'New code sent' });
+      let retrySuccess = false;
+
+      for (const h of candidateHeaders) {
+        try {
+          const resp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
+            method: 'POST',
+            headers: h,
+            body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11 })
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
+            retrySuccess = true;
+            break;
+          }
+        } catch {}
       }
+
+      if (!retrySuccess) {
+        for (const h of candidateHeaders) {
+          try {
+            const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
+              method: 'POST',
+              headers: h,
+              body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
+              const newReqId = data.message || data.reqId;
+              return send(res, 200, { ok: true, reqId: String(newReqId || ''), message: 'New code sent' });
+            }
+          } catch {}
+        }
+      }
+
       return send(res, 200, { ok: true, message: 'Verification code resent' });
     }
 
@@ -136,26 +160,46 @@ export default async function handler(req, res) {
         return send(res, 400, { error: 'Please enter all 6 digits of the verification code' });
       }
 
-      const response = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          widgetId,
-          tokenAuth,
-          reqId,
-          otp,
-          identifier: rawPhone
-        })
-      });
+      let isVerified = false;
+      let lastErrMsg = '';
 
-      const text = await response.text();
-      let data = {};
-      try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+      for (const h of candidateHeaders) {
+        try {
+          const resp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
+            method: 'POST',
+            headers: h,
+            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone })
+          });
+          const text = await resp.text();
+          let data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
+            isVerified = true;
+            break;
+          }
+          lastErrMsg = data.message || data.error || 'Incorrect or expired verification code';
+        } catch (e) {
+          lastErrMsg = e.message;
+        }
+      }
 
-      const isVerified = (response.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError);
+      // If widget verification was not successful, try server-side verify
       if (!isVerified) {
-        const errMsg = data.message || data.error || 'Incorrect or expired verification code';
-        return send(res, 400, { error: typeof errMsg === 'string' ? errMsg : 'Incorrect or expired verification code' });
+        const authKey = process.env.MSG91_AUTHKEY || tokenAuth;
+        try {
+          const resp = await fetch(`https://control.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=${rawPhone}`, {
+            method: 'GET',
+            headers: { 'authkey': authKey, 'Accept': 'application/json' }
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && (data.type === 'success' || (data.message && String(data.message).toLowerCase().includes('success')))) {
+            isVerified = true;
+          }
+        } catch {}
+      }
+
+      if (!isVerified) {
+        return send(res, 400, { error: typeof lastErrMsg === 'string' ? lastErrMsg : 'Incorrect or expired verification code' });
       }
 
       // OTP verified successfully! Connect to Firebase
