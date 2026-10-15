@@ -141,7 +141,7 @@ export default async function handler(req, res) {
       if (!reqId || reqId === 'otp_sent') {
         return send(res, 400, { error: 'Verification request ID is missing. Please request a new code.' });
       }
-      if (!/^\\d{6}$/.test(otp)) {
+      if (!/^\d{6}$/.test(otp)) {
         return send(res, 400, { error: 'Please enter all 6 digits of the verification code' });
       }
 
