@@ -38,16 +38,22 @@ export default async function handler(req, res) {
   try {
     const action = String(req.body?.action || 'send').toLowerCase();
     let authKey = (process.env.MSG91_AUTHKEY || '').trim().replace(/^["']|["']$/g, '');
-    if (!authKey || authKey.startsWith('566450')) {
-      authKey = '581935AFRUsSRC8lRR6ad0efb4P1';
+    if (!authKey || authKey.startsWith('581935')) {
+      authKey = '566450An3dRn7d396a9693d5P1';
     }
-    const widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '366a6f6c5846393532323030').trim().replace(/^["']|["']$/g, '');
-    const tokenAuth = (process.env.MSG91_TOKEN_AUTH || process.env.TOKEN_AUTH || process.env.MSG91_TOKEN || process.env.VITE_MSG91_TOKEN_AUTH || '581935TGJobIRJ68W6ad0cc84P1').trim().replace(/^["']|["']$/g, '');
+    let widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '').trim().replace(/^["']|["']$/g, '');
+    if (!widgetId || widgetId.startsWith('366a6f6c')) {
+      widgetId = '36696a6b507a303132373731';
+    }
+    let tokenAuth = (process.env.MSG91_TOKEN_AUTH || process.env.TOKEN_AUTH || process.env.MSG91_TOKEN || process.env.VITE_MSG91_TOKEN_AUTH || '').trim().replace(/^["']|["']$/g, '');
+    if (!tokenAuth || tokenAuth.startsWith('581935')) {
+      tokenAuth = '566450TEc4JqSNlGt6ad0c4fcP1';
+    }
 
     if (action === 'ping') {
       return send(res, 200, {
         ok: true,
-        version: 'v_core_otp_unblocked',
+        version: 'v_566450_active',
         hasEnvWidget: Boolean(process.env.MSG91_WIDGET_ID),
         hasEnvToken: Boolean(process.env.MSG91_TOKEN_AUTH),
         hasEnvAuthKey: Boolean(process.env.MSG91_AUTHKEY),
