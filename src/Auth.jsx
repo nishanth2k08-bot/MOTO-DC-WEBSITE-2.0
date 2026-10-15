@@ -31,7 +31,7 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
   if(!countryCode.trim()||countryCode.trim()==='+'){toast.error('Country code is compulsory (e.g. +91)');return}
   if(!rawNum){toast.error('Please enter your 10-digit mobile number');return}
   if(rawNum.length!==10){toast.error('Mobile number must be exactly 10 digits');return}
-  if(!/^\\+[1-9]\\d{7,14}$/.test(clean)){toast.error('Please enter a valid country code and 10-digit mobile number');return}
+  if(!/^\+[1-9]\d{7,14}$/.test(clean)){toast.error('Please enter a valid country code and 10-digit mobile number');return}
   setBusy(true);
   try{
     const resp=await fetch('/api/otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'send',phone:clean})});
