@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     if (action === 'ping') {
       return send(res, 200, {
         ok: true,
-        version: 'v_566450_active',
+        version: 'v_d5d9796_verify_fix',
         hasEnvWidget: Boolean(process.env.MSG91_WIDGET_ID),
         hasEnvToken: Boolean(process.env.MSG91_TOKEN_AUTH),
         hasEnvAuthKey: Boolean(process.env.MSG91_AUTHKEY),
