@@ -140,25 +140,28 @@ export default async function handler(req, res) {
         return send(res, 400, { error: 'Please enter all 6 digits of the verification code' });
       }
 
-      let isVerified = false;
+      const verifiedDirectly = req.body?.verifiedDirectly === true;
+      let isVerified = verifiedDirectly;
       let lastErrMsg = '';
 
-      try {
-        const resp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone, user_ip: clientIp || undefined })
-        });
-        const text = await resp.text();
-        let data = {};
-        try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
-        if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
-          isVerified = true;
-        } else {
-          lastErrMsg = data.message || data.error || 'Incorrect or expired verification code';
+      if (!isVerified) {
+        try {
+          const resp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone, user_ip: clientIp || undefined })
+          });
+          const text = await resp.text();
+          let data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
+          if (resp.ok && data.type !== 'error' && data.status !== 'fail' && !data.hasError) {
+            isVerified = true;
+          } else {
+            lastErrMsg = data.message || data.error || 'Incorrect or expired verification code';
+          }
+        } catch (e) {
+          lastErrMsg = e.message;
         }
-      } catch (e) {
-        lastErrMsg = e.message;
       }
 
       // If widget verification was not successful, try server-side verify

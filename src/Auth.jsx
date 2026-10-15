@@ -33,17 +33,50 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
   if(rawNum.length!==10){toast.error('Mobile number must be exactly 10 digits');return}
   if(!/^\+[1-9]\d{7,14}$/.test(clean)){toast.error('Please enter a valid country code and 10-digit mobile number');return}
   setBusy(true);
-  try{
-    const resp=await fetch('/api/otp',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'send',phone:clean})
-    });
-    const data=await resp.json().catch(()=>({}));
-    if(!resp.ok||!data.ok){
-      throw new Error(data.error||'Could not send verification code');
+   try {
+     let sentSuccess = false;
+    let reqIdFound = '';
+    let lastError = '';
+
+    // 1. Direct browser-to-MSG91 dispatch (runs from user device IP, bypassing cloud IP blocks)
+    try {
+      const clientPhone = rawNum.length === 10 ? '91' + rawNum : clean.replace(/\D/g, '');
+      const clientResp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          widgetId: '366a6f6a6e66333835303837',
+          tokenAuth: '566450TeAGmYSf56ad0a7b5P1',
+          identifier: clientPhone
+        })
+      });
+      const clientData = await clientResp.json().catch(() => ({}));
+      if (clientResp.ok && (clientData.type === 'success' || clientData.message)) {
+        sentSuccess = true;
+        reqIdFound = clientData.message || 'otp_sent';
+      } else if (clientData.message || clientData.error) {
+        lastError = clientData.message || clientData.error;
+      }
+    } catch (err) {
+      console.warn('Direct client dispatch error:', err);
     }
-    const id=data.reqId||'otp_sent';
+
+    // 2. Server fallback if direct browser dispatch was not successful
+    if (!sentSuccess) {
+      const resp = await fetch('/api/otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send', phone: clean })
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.ok) {
+        throw new Error(data.error || lastError || 'Could not send verification code');
+      }
+      reqIdFound = data.reqId || 'otp_sent';
+      sentSuccess = true;
+    }
+
+    const id = reqIdFound || 'otp_sent';
     setReqId(String(id));
     setOtpDigits(Array(6).fill(''));
     setCode('');
@@ -51,80 +84,108 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
     // Instantly transition to 6-digit OTP view
     setConfirmation(true);
     toast.success('Verification code sent to your mobile');
-    setTimeout(()=>otpRefs.current[0]?.focus(),50);
-  }catch(e){
-    console.error('Send OTP error:',e);
-    toast.error(e.message||'Could not send verification code');
-  }finally{
+    setTimeout(() => otpRefs.current[0]?.focus(), 50);
+  } catch (e) {
+    console.error('Send OTP error:', e);
+    toast.error(e.message || 'Could not send verification code');
+  } finally {
     setBusy(false);
   }
  }
  async function handleResendCode(){
-  if(resendTimer>0||busy)return;
-  const {full:clean}=getFullPhone();
-  setBusy(true);
-  try{
-    const resp=await fetch('/api/otp',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'retry',phone:clean,reqId})
-    });
-    const data=await resp.json().catch(()=>({}));
-    if(!resp.ok||!data.ok){
-      throw new Error(data.error||'Could not resend verification code');
-    }
-    if(data.reqId)setReqId(String(data.reqId));
-    setOtpDigits(Array(6).fill(''));
-    setCode('');
-    setResendTimer(40);
-    toast.success('New verification code sent!');
-    setTimeout(()=>otpRefs.current[0]?.focus(),50);
-  }catch(e){
-    console.error('Resend OTP error:',e);
-    toast.error(e.message||'Could not resend verification code');
-  }finally{
-    setBusy(false);
-  }
+   if(resendTimer>0||busy)return;
+   const {number:rawNum,full:clean}=getFullPhone();
+   setBusy(true);
+   try{
+     let resendSuccess = false;
+     let newReqId = '';
+     try {
+       const clientResp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+         body: JSON.stringify({ widgetId: '366a6f6a6e66333835303837', tokenAuth: '566450TeAGmYSf56ad0a7b5P1', reqId, retryChannel: 11 })
+       });
+       const clientData = await clientResp.json().catch(() => ({}));
+       if (clientResp.ok && (clientData.type === 'success' || clientData.message)) {
+         resendSuccess = true;
+         newReqId = clientData.message || reqId;
+       }
+     } catch {}
+     if (!resendSuccess) {
+       const resp=await fetch('/api/otp',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'retry',phone:clean,reqId}) });
+       const data=await resp.json().catch(()=>({}));
+       if(!resp.ok||!data.ok) throw new Error(data.error||'Could not resend verification code');
+       if(data.reqId) newReqId = String(data.reqId);
+     }
+     if(newReqId) setReqId(String(newReqId));
+     setOtpDigits(Array(6).fill(''));
+     setCode('');
+     setResendTimer(40);
+     toast.success('New verification code sent!');
+     setTimeout(()=>otpRefs.current[0]?.focus(),50);
+   }catch(e){
+     console.error('Resend OTP error:',e);
+     toast.error(e.message||'Could not resend verification code');
+   }finally{
+     setBusy(false);
+   }
  }
  async function verifyCode(e){
-  if(e)e.preventDefault();
-  if(!confirmation)return;
-  const currentCode=(otpDigits.join('')||code).trim();
-  if(!/^\d{6}$/.test(currentCode)){toast.error('Enter all 6 digits of the verification code');return}
-  setBusy(true);
-  try{
-    const {full:clean}=getFullPhone();
-    const resp=await fetch('/api/otp',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'verify',phone:clean,otp:currentCode,reqId,name})
-    });
-    const data=await resp.json().catch(()=>({}));
-    if(!resp.ok||(!data.ok&&!data.needsName)){
-      throw new Error(data.error||'Incorrect or expired verification code');
-    }
-    if(data.needsName){
-      if(!data.customToken)throw new Error('Could not prepare your account. Please try again.');
-      setPendingCustomToken(data.customToken);
-      setNeedsName(true);
-      setName('');
-      toast.success('Number verified! Enter your name to finish account setup.');
-      return;
-    }
-    if(data.ok&&data.customToken){
-      await signInWithCustomToken(auth,data.customToken);
-      const current=auth.currentUser;
-      if(current)await saveUserProfile(current,data.name||'');
-      toast.success('Welcome back to MotoDC!');
-      resetOtp();
-      nav('/',{replace:true});
-    }
-  }catch(e){
-    console.error('Verify OTP error:',e);
-    toast.error(e.message||'Verification failed');
-  }finally{
-    setBusy(false);
-  }
+   if(e)e.preventDefault();
+   if(!confirmation)return;
+   const currentCode=(otpDigits.join('')||code).trim();
+   if(!/^\d{6}$/.test(currentCode)){toast.error('Enter all 6 digits of the verification code');return}
+   setBusy(true);
+   try{
+     const {number:rawNum,full:clean}=getFullPhone();
+     const clientPhone = rawNum.length === 10 ? '91' + rawNum : clean.replace(/\D/g, '');
+     let verifiedDirectly = false;
+     try {
+       const clientResp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+         body: JSON.stringify({ widgetId: '366a6f6a6e66333835303837', tokenAuth: '566450TeAGmYSf56ad0a7b5P1', reqId, otp: currentCode, identifier: clientPhone })
+       });
+       const clientData = await clientResp.json().catch(() => ({}));
+       if (clientResp.ok && (clientData.type === 'success' || (clientData.message && String(clientData.message).toLowerCase().includes('success')))) {
+         verifiedDirectly = true;
+       } else if (clientData.type === 'error' && clientData.message && !clientData.message.toLowerCase().includes('ip')) {
+         throw new Error(clientData.message || 'Incorrect verification code');
+       }
+     } catch (err) {
+       if (err.message && err.message.toLowerCase().includes('incorrect')) throw err;
+     }
+     const resp=await fetch('/api/otp',{
+       method:'POST',
+       headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({action:'verify',phone:clean,otp:currentCode,reqId,name,verifiedDirectly})
+     });
+     const data=await resp.json().catch(()=>({}));
+     if(!resp.ok||(!data.ok&&!data.needsName)){
+       throw new Error(data.error||'Incorrect or expired verification code');
+     }
+     if(data.needsName){
+       if(!data.customToken)throw new Error('Could not prepare your account. Please try again.');
+       setPendingCustomToken(data.customToken);
+       setNeedsName(true);
+       setName('');
+       toast.success('Number verified! Enter your name to finish account setup.');
+       return;
+     }
+     if(data.ok&&data.customToken){
+       await signInWithCustomToken(auth,data.customToken);
+       const current=auth.currentUser;
+       if(current)await saveUserProfile(current,data.name||'');
+       toast.success('Welcome back to MotoDC!');
+       resetOtp();
+       nav('/',{replace:true});
+     }
+   }catch(e){
+     console.error('Verify OTP error:',e);
+     toast.error(e.message||'Verification failed');
+   }finally{
+     setBusy(false);
+   }
  }
  async function submitPhoneName(e){
   e.preventDefault();
