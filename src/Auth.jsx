@@ -34,42 +34,10 @@ export default function Auth(){const nav=useNavigate();const otpRefs=useRef([]);
   if(!/^\+[1-9]\d{7,14}$/.test(clean)){toast.error('Please enter a valid country code and 10-digit mobile number');return}
   setBusy(true);
   try{
-    let sentSuccess = false;
-    let reqIdFound = '';
-    let lastError = '';
-
-    // 1. Direct browser-to-MSG91 dispatch (runs from user device IP, bypassing cloud IP blocks)
-    try {
-      const clientPhone = rawNum.length === 10 ? '91' + rawNum : clean.replace(/\D/g, '');
-      const clientResp = await fetch('https://api.msg91.com/api/v5/widget/sendOtp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          widgetId: '366a6f6c5846393532323030',
-          tokenAuth: '581935TGJobIRJ68W6ad0cc84P1',
-          identifier: clientPhone
-        })
-      });
-      const clientData = await clientResp.json().catch(() => ({}));
-      if (clientResp.ok && (clientData.type === 'success' || (clientData.message && !clientData.hasError))) {
-        sentSuccess = true;
-        reqIdFound = clientData.message || 'otp_sent';
-      } else if (clientData.message || clientData.error) {
-        lastError = clientData.message || clientData.error;
-      }
-    } catch (err) {
-      console.warn('Direct client dispatch error:', err);
-    }
-
-    // 2. Server fallback if direct browser dispatch was not successful
-    if (!sentSuccess) {
-      const resp=await fetch('/api/otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'send',phone:clean})});
-      const data=await resp.json().catch(()=>({}));
-      if(!resp.ok||!data.ok||!data.reqId)throw new Error(data.error||lastError||'Could not send verification code');
-      reqIdFound = data.reqId;
-    }
-
-    setReqId(String(reqIdFound || 'otp_sent'));
+    const resp=await fetch('/api/otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'send',phone:clean})});
+    const data=await resp.json().catch(()=>({}));
+    if(!resp.ok||!data.ok||!data.reqId)throw new Error(data.error||'Could not send verification code');
+    setReqId(String(data.reqId));
     setOtpDigits(Array(6).fill(''));
     setCode('');
     setResendTimer(40);

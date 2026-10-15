@@ -58,7 +58,7 @@ export default async function handler(req, res) {
     const forwarded = req.headers['x-forwarded-for'];
     const clientIp = (typeof forwarded === 'string' ? forwarded.split(',')[0] : (req.headers['x-real-ip'] || req.socket?.remoteAddress || '')).trim();
 
-    const authKey = (process.env.MSG91_AUTHKEY || '').trim();
+    const authKey = (process.env.MSG91_AUTHKEY || '581935AFRUsSRC8lRR6ad0efb4P1').trim().replace(/^["']|["']$/g, '');
 
     const headers = {
       'Content-Type': 'application/json',
