@@ -49,10 +49,7 @@ export default async function handler(req, res) {
 
     const headers = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Origin': 'https://moto-dc-website-2-0-peach.vercel.app',
-      'Referer': 'https://moto-dc-website-2-0-peach.vercel.app/',
-      ...(clientIp ? { 'X-Forwarded-For': clientIp, 'X-Real-IP': clientIp } : {})
+      'Accept': 'application/json'
     };
 
     // ─── ACTION: SEND OTP ──────────────────────────────────────────────
@@ -69,7 +66,7 @@ export default async function handler(req, res) {
         const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone, user_ip: clientIp || undefined })
+          body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
         });
         const text = await resp.text();
         let data = {};
@@ -103,7 +100,7 @@ export default async function handler(req, res) {
         const resp = await fetch('https://control.msg91.com/api/v5/widget/retryOtp', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11, user_ip: clientIp || undefined })
+          body: JSON.stringify({ widgetId, tokenAuth, reqId, retryChannel: 11 })
         });
         const data = await resp.json().catch(() => ({}));
         if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
@@ -116,7 +113,7 @@ export default async function handler(req, res) {
           const resp = await fetch('https://control.msg91.com/api/v5/widget/sendOtp', {
             method: 'POST',
             headers,
-            body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone, user_ip: clientIp || undefined })
+            body: JSON.stringify({ widgetId, tokenAuth, identifier: rawPhone })
           });
           const data = await resp.json().catch(() => ({}));
           if (resp.ok && data.type !== 'error' && data.status !== 'fail') {
@@ -149,7 +146,7 @@ export default async function handler(req, res) {
           const resp = await fetch('https://control.msg91.com/api/v5/widget/verifyOtp', {
             method: 'POST',
             headers,
-            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone, user_ip: clientIp || undefined })
+            body: JSON.stringify({ widgetId, tokenAuth, reqId, otp, identifier: rawPhone })
           });
           const text = await resp.text();
           let data = {};
