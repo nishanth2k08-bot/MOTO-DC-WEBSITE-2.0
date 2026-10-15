@@ -40,6 +40,17 @@ export default async function handler(req, res) {
     const widgetId = (process.env.MSG91_WIDGET_ID || process.env.WIDGET_ID || process.env.VITE_MSG91_WIDGET_ID || '366a6f6c5846393532323030').trim().replace(/^["']|["']$/g, '');
     const tokenAuth = (process.env.MSG91_TOKEN_AUTH || process.env.TOKEN_AUTH || process.env.MSG91_TOKEN || process.env.VITE_MSG91_TOKEN_AUTH || '581935TGJobIRJ68W6ad0cc84P1').trim().replace(/^["']|["']$/g, '');
 
+    if (action === 'ping') {
+      return send(res, 200, {
+        ok: true,
+        version: 'v_7b1facb_ping',
+        hasEnvWidget: Boolean(process.env.MSG91_WIDGET_ID),
+        hasEnvToken: Boolean(process.env.MSG91_TOKEN_AUTH),
+        widgetPrefix: widgetId.slice(0, 8),
+        tokenPrefix: tokenAuth.slice(0, 8)
+      });
+    }
+
     let rawPhone = String(req.body?.phone || '').trim().replace(/\D/g, '');
     if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
     else if (rawPhone.length === 11 && rawPhone.startsWith('0')) rawPhone = '91' + rawPhone.slice(1);
@@ -76,7 +87,7 @@ export default async function handler(req, res) {
           if (lastReqId) sentSuccess = true;
           else lastErrMsg = 'MSG91 accepted the request but did not return a request ID. Check the MSG91 response and widget configuration.';
         } else {
-          lastErrMsg = data.message || data.error || text;
+          lastErrMsg = (data.message || data.error || (typeof text === 'string' ? text : JSON.stringify(text))) + (resp.status !== 200 ? ` (MSG91 HTTP ${resp.status})` : '');
         }
       } catch (e) {
         lastErrMsg = e.message;
