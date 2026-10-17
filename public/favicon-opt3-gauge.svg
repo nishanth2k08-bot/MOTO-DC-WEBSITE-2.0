@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3157" />
+      <stop offset="100%" stop-color="#ff6b8b" />
+    </linearGradient>
+  </defs>
+  <!-- Background Badge -->
+  <rect width="64" height="64" rx="16" fill="#0d1016" stroke="#252b36" stroke-width="1.5" />
+  
+  <!-- Outer Gauge Ring -->
+  <path d="M14 46 A22 22 0 1 1 50 46" fill="none" stroke="#252b36" stroke-width="5" stroke-linecap="round" />
+  
+  <!-- Redline Power Arc (Right side) -->
+  <path d="M32 10 A22 22 0 0 1 50 46" fill="none" stroke="url(#gaugeGrad)" stroke-width="5" stroke-linecap="round" />
+  
+  <!-- Gauge Calibration Tick Marks -->
+  <line x1="17" y1="41" x2="20" y2="39" stroke="#f8fafc" stroke-width="2" stroke-linecap="round" />
+  <line x1="14" y1="28" x2="18" y2="29" stroke="#f8fafc" stroke-width="2" stroke-linecap="round" />
+  <line x1="22" y1="18" x2="25" y2="21" stroke="#f8fafc" stroke-width="2" stroke-linecap="round" />
+  <line x1="32" y1="14" x2="32" y2="18" stroke="#f8fafc" stroke-width="2" stroke-linecap="round" />
+  <line x1="42" y1="18" x2="39" y2="21" stroke="#ff3157" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="49" y1="28" x2="45" y2="29" stroke="#ff3157" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="47" y1="41" x2="44" y2="39" stroke="#ff3157" stroke-width="2.5" stroke-linecap="round" />
+  
+  <!-- Gauge Center Pivot -->
+  <circle cx="32" cy="38" r="6" fill="#1e2430" stroke="#ff3157" stroke-width="2" />
+  <circle cx="32" cy="38" r="2.5" fill="#f8fafc" />
+  
+  <!-- Redline Needle Sweeping to Max RPM -->
+  <polygon points="32,36 46,19 44,18 31,37" fill="#ff3157" />
+  
+  <!-- Speed Flame / Nitro Dot -->
+  <circle cx="45" cy="18" r="2.5" fill="#ffaa00" />
+</svg>
