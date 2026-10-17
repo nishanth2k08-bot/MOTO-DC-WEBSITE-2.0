@@ -225,6 +225,30 @@ export default function Checkout(){
       order_id:created.orderId,
       prefill:{name:form.name,email:form.email,contact:fullPhone},
       theme:{color:'#ff3157',backdrop_color:'rgba(0,0,0,0.85)'},
+      config:{
+        display:{
+          blocks:{
+            upi:{
+              name:'Pay via UPI (Google Pay, PhonePe, Paytm, QR)',
+              instruments:[
+                {method:'upi'}
+              ]
+            },
+            other:{
+              name:'Cards, NetBanking & Wallets',
+              instruments:[
+                {method:'card'},
+                {method:'netbanking'},
+                {method:'wallet'}
+              ]
+            }
+          },
+          sequence:['block.upi','block.other'],
+          preferences:{
+            show_default_blocks:true
+          }
+        }
+      },
       modal:{
         backdropclose:false,
         escape:false,
