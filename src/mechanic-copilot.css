@@ -1,0 +1,930 @@
+/* =========================================================
+   MOTODC AI MECHANIC COPILOT & CHAT ASSISTANT STYLES
+   ========================================================= */
+
+/* ─── 1. FLOATING ACTION BUTTON (ICON ONLY LAUNCHER) ─── */
+.aiMechanicFloatBtn {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  max-width: 58px !important;
+  max-height: 58px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  z-index: 999999 !important;
+  box-shadow: 0 10px 32px rgba(255, 49, 87, 0.45), 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease !important;
+  user-select: none !important;
+  touch-action: manipulation !important;
+  outline: none !important;
+}
+
+.aiMechanicFloatBtn:hover {
+  transform: translateY(-3px) scale(1.08) !important;
+  box-shadow: 0 16px 42px rgba(255, 49, 87, 0.65), 0 0 20px rgba(255, 49, 87, 0.5) !important;
+  background: linear-gradient(135deg, #ff476c 0%, #e11944 100%) !important;
+}
+
+.aiMechanicFloatBtn:active {
+  transform: translateY(0) scale(0.95) !important;
+}
+
+.aiMechanicFloatBtn.active {
+  background: linear-gradient(135deg, #181d26 0%, #0d1117 100%) !important;
+  border-color: rgba(255, 49, 87, 0.5) !important;
+  color: #ff3157 !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 49, 87, 0.3) !important;
+}
+
+.aiFloatIcon {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.aiBotSvg {
+  stroke-width: 2.2 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+}
+
+.aiWrenchBadge {
+  position: absolute !important;
+  bottom: 11px !important;
+  right: 10px !important;
+  width: 17px !important;
+  height: 17px !important;
+  background: #0d1117 !important;
+  color: #ff3157 !important;
+  border: 1.5px solid #ff3157 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+.aiOnlineDot {
+  position: absolute !important;
+  top: 3px !important;
+  right: 3px !important;
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  border: 2.5px solid #0d1117 !important;
+  box-shadow: 0 0 8px #10b981 !important;
+}
+
+.aiPulseRing {
+  position: absolute !important;
+  inset: -6px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255, 49, 87, 0.45) !important;
+  animation: aiFabPulse 2.8s infinite cubic-bezier(0.24, 0, 0.38, 1) !important;
+  pointer-events: none !important;
+}
+
+@keyframes aiFabPulse {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  50% { transform: scale(1.22); opacity: 0; }
+  100% { transform: scale(0.9); opacity: 0; }
+}
+
+.aiFloatTooltip {
+  position: absolute !important;
+  right: 70px !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(6px) !important;
+  background: #0d1117 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 49, 87, 0.35) !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.aiMechanicFloatBtn:hover .aiFloatTooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
+}
+
+/* ─── 2. FLOATING CHAT DRAWER / POPUP CARD ─── */
+.aiFloatingChatWidget {
+  position: fixed !important;
+  bottom: 92px !important;
+  right: 24px !important;
+  width: 410px !important;
+  max-width: calc(100vw - 32px) !important;
+  height: 590px !important;
+  max-height: calc(100vh - 110px) !important;
+  background: #0d1117 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 49, 87, 0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  z-index: 999998 !important;
+  animation: aiDrawerSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+@keyframes aiDrawerSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+body.light-theme .aiFloatingChatWidget {
+  background: #ffffff !important;
+  border-color: #d0d7de !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22), 0 0 25px rgba(255, 49, 87, 0.12) !important;
+}
+
+/* Header */
+.aiChatWidgetHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 18px !important;
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  flex: none !important;
+}
+
+body.light-theme .aiChatWidgetHeader {
+  background: linear-gradient(180deg, #f6f8fa 0%, #ffffff 100%) !important;
+  border-bottom-color: #d0d7de !important;
+}
+
+.aiHeaderProfile {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.aiHeaderAvatar {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 12px rgba(255, 49, 87, 0.35) !important;
+}
+
+.aiHeaderOnlineDot {
+  position: absolute !important;
+  bottom: -2px !important;
+  right: -2px !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  border: 2px solid #0d1117 !important;
+}
+
+.aiHeaderInfo {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.aiHeaderTitleRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.aiHeaderTitleRow h4 {
+  margin: 0 !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.2px !important;
+}
+
+body.light-theme .aiHeaderTitleRow h4 {
+  color: #1f2328 !important;
+}
+
+.aiHeaderTag {
+  font-size: 9.5px !important;
+  font-weight: 900 !important;
+  color: #ff3157 !important;
+  background: rgba(255, 49, 87, 0.12) !important;
+  border: 1px solid rgba(255, 49, 87, 0.25) !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.5px !important;
+}
+
+.aiHeaderSubtext {
+  font-size: 11.5px !important;
+  color: #8b949e !important;
+  font-weight: 500 !important;
+}
+
+body.light-theme .aiHeaderSubtext {
+  color: #656d76 !important;
+}
+
+/* Header Actions */
+.aiHeaderActions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.aiHeaderTabBtn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #8b949e !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.aiHeaderTabBtn:hover {
+  background: rgba(255, 49, 87, 0.15) !important;
+  color: #ff3157 !important;
+  border-color: #ff3157 !important;
+}
+
+.aiHeaderTabBtn.active {
+  background: #ff3157 !important;
+  color: #ffffff !important;
+  border-color: #ff3157 !important;
+}
+
+body.light-theme .aiHeaderTabBtn {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+  color: #57606a !important;
+}
+
+body.light-theme .aiHeaderTabBtn.active {
+  background: #ff3157 !important;
+  color: #ffffff !important;
+}
+
+.aiChatCloseBtn {
+  background: transparent !important;
+  border: none !important;
+  color: #8b949e !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.aiChatCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+body.light-theme .aiChatCloseBtn:hover {
+  background: #eaeef2 !important;
+  color: #1f2328 !important;
+}
+
+/* ─── 3. CHAT BODY & STREAM ─── */
+.aiChatWidgetBody {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.copilotModalContainer {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.copilotChatContainer {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+.copilotChatStream {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 16px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  scrollbar-width: thin !important;
+}
+
+.copilotChatStream::-webkit-scrollbar {
+  width: 5px;
+}
+
+.copilotChatStream::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Chat Message Rows */
+.chatMessageRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: chatMsgIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes chatMsgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chatMessageRow.user {
+  flex-direction: row-reverse;
+}
+
+.chatAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  font-size: 15px;
+}
+
+.chatAvatar.aiAvatar {
+  background: linear-gradient(135deg, #ff3157, #c81e3d);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(255, 49, 87, 0.35);
+}
+
+.chatAvatar.userAvatar {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .chatAvatar.userAvatar {
+  background: #eaeef2;
+  color: #24292f;
+  border-color: #d0d7de;
+}
+
+/* Bubbles */
+.chatBubble {
+  max-width: 82%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e6edf3;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.chatMessageRow.user .chatBubble {
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%);
+  border-color: #ff3157;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.3);
+}
+
+body.light-theme .chatBubble {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #1f2328;
+}
+
+body.light-theme .chatMessageRow.user .chatBubble {
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%);
+  color: #ffffff;
+}
+
+.chatBubbleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #ff3157;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+.chatBubbleTitle {
+  margin: 0 0 6px 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+body.light-theme .chatBubbleTitle {
+  color: #1f2328;
+}
+
+.chatBubbleText {
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* Actionable Tips */
+.chatTipsList {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid #ffaa00;
+  border-radius: 0 8px 8px 0;
+}
+
+body.light-theme .chatTipsList {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.chatTipsList strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffaa00;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.chatTipsList ul {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12.5px;
+  color: #cbd5e1;
+}
+
+body.light-theme .chatTipsList ul {
+  color: #475569;
+}
+
+/* Matching Spare Parts */
+.chatPartsCard {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 49, 87, 0.08);
+  border: 1px solid rgba(255, 49, 87, 0.25);
+  border-radius: 10px;
+}
+
+.chatPartsHeading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ff476c;
+  font-size: 11.5px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.chatPartsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chatPartItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+body.light-theme .chatPartItem {
+  background: #ffffff;
+  border-color: #d0d7de;
+}
+
+.chatPartName {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f0f6fc;
+  flex: 1;
+}
+
+body.light-theme .chatPartName {
+  color: #24292f;
+}
+
+.chatPartPrice {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #ff3157;
+}
+
+.chatPartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 49, 87, 0.15);
+  border: 1px solid rgba(255, 49, 87, 0.35);
+  color: #ff3157;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chatPartBtn:hover {
+  background: #ff3157;
+  color: #fff;
+}
+
+/* Suggested Chips */
+.chatSuggestionsWrap {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .chatSuggestionsWrap {
+  border-top-color: #e1e4e8;
+}
+
+.suggestionsLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #8b949e;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.suggestionsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.suggestionChip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e6edf3;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.suggestionChip:hover {
+  background: rgba(255, 49, 87, 0.15);
+  color: #ff3157;
+  border-color: #ff3157;
+  transform: translateY(-1px);
+}
+
+body.light-theme .suggestionChip {
+  background: #ffffff;
+  border-color: #d0d7de;
+  color: #24292f;
+}
+
+/* ─── 4. INPUT BAR ─── */
+.copilotChatInputBar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 14px !important;
+  background: #161b22 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  flex: none !important;
+}
+
+body.light-theme .copilotChatInputBar {
+  background: #f6f8fa !important;
+  border-top-color: #d0d7de !important;
+}
+
+.chatTextInput {
+  flex: 1 !important;
+  background: #090d14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+
+body.light-theme .chatTextInput {
+  background: #ffffff !important;
+  border-color: #d0d7de !important;
+  color: #1f2328 !important;
+}
+
+.chatTextInput:focus {
+  border-color: #ff3157 !important;
+  box-shadow: 0 0 0 3px rgba(255, 49, 87, 0.2) !important;
+}
+
+.chatSendBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #ff3157 !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 10px 16px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(255, 49, 87, 0.35) !important;
+}
+
+.chatSendBtn:hover:not(:disabled) {
+  background: #e61e45 !important;
+  transform: translateY(-1px) !important;
+}
+
+.chatSendBtn:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+/* ─── 5. WORKSHOP SYMPTOM LIBRARY IN WIDGET ─── */
+.copilotContainer.inModal {
+  padding: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  overflow-y: auto !important;
+  flex: 1 !important;
+}
+
+.copilotSearchRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.copilotSearchInputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.copilotSearchIcon {
+  position: absolute;
+  left: 12px;
+  color: #8b949e;
+  pointer-events: none;
+}
+
+.copilotSearchInput {
+  width: 100%;
+  background: #090d14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 9px 34px 9px 36px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+body.light-theme .copilotSearchInput {
+  background: #ffffff;
+  border-color: #d0d7de;
+  color: #1f2328;
+}
+
+.copilotSearchInput:focus {
+  border-color: #ff3157;
+}
+
+.copilotCategoryPills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.copilotCategoryPill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8b949e;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copilotCategoryPill.active {
+  background: #ff3157;
+  color: #fff;
+  border-color: #ff3157;
+}
+
+body.light-theme .copilotCategoryPill {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #57606a;
+}
+
+body.light-theme .copilotCategoryPill.active {
+  background: #ff3157;
+  color: #fff;
+}
+
+.copilotGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.copilotSymptomsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.symptomItemCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(22, 27, 34, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  color: #c9d1d9;
+}
+
+body.light-theme .symptomItemCard {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #24292f;
+}
+
+.symptomItemCard:hover,
+.symptomItemCard.selected {
+  background: rgba(255, 49, 87, 0.12);
+  border-color: #ff3157;
+}
+
+.symptomItemTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+body.light-theme .symptomItemTitle {
+  color: #1f2328;
+}
+
+.symptomItemDesc {
+  font-size: 11px;
+  color: #8b949e;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Dossier details in widget */
+.copilotDossierPanel {
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+body.light-theme .copilotDossierPanel {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+}
+
+.dossierTitle {
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  color: #fff;
+}
+
+body.light-theme .dossierTitle {
+  color: #1f2328;
+}
+
+.dossierCauseText {
+  font-size: 12px;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+
+.bundleAddToCartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ff3157;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* ─── 6. MOBILE RESPONSIVE ─── */
+@media (max-width: 520px) {
+  .aiMechanicFloatBtn {
+    bottom: 18px !important;
+    right: 18px !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  .aiFloatTooltip {
+    display: none !important;
+  }
+  .aiFloatingChatWidget {
+    bottom: 78px !important;
+    right: 10px !important;
+    left: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    height: calc(100vh - 96px) !important;
+    max-height: calc(100vh - 96px) !important;
+    border-radius: 16px !important;
+  }
+}

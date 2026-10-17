@@ -188,7 +188,7 @@ header.scrolled {
 /* ─── 5. SPEEDOMETER "BACK TO TOP" DIAL ───────────────────── */
 .backToTopBtn {
   position: fixed;
-  bottom: 28px;
+  bottom: 92px;
   right: 28px;
   width: 44px;
   height: 44px;
@@ -539,7 +539,7 @@ header.scrolled {
     width: calc(100vw - 32px);
   }
   .backToTopBtn {
-    bottom: 20px;
+    bottom: 80px;
     right: 20px;
     width: 40px;
     height: 40px;

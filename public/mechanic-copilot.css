@@ -1,1006 +1,439 @@
 /* =========================================================
-   MOTODC AI MECHANIC COPILOT STYLES
+   MOTODC AI MECHANIC COPILOT & CHAT ASSISTANT STYLES
    ========================================================= */
 
-.mechanicCopilotSection {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-
-.copilotSubtitle {
-  max-width: 680px;
-  color: #8b949e;
-  font-size: 14.5px;
-  line-height: 1.6;
-  margin: -10px 0 28px 0;
-}
-
-body.light-theme .copilotSubtitle {
-  color: #57606a;
-}
-
-.copilotContainer {
-  background: rgba(13, 17, 23, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(14px);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-body.light-theme .copilotContainer {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.06);
-}
-
-/* Search & Tabs Row */
-.copilotSearchRow {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.copilotSearchInputWrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.copilotSearchIcon {
-  position: absolute;
-  left: 14px;
-  color: #8b949e;
-  pointer-events: none;
-}
-
-.copilotSearchInput {
-  width: 100%;
-  background: #090d14;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #fff;
-  padding: 12px 40px 12px 42px;
-  border-radius: 12px;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s;
-}
-
-body.light-theme .copilotSearchInput {
-  background: #f6f8fa;
-  border-color: #d0d7de;
-  color: #1f2328;
-}
-
-.copilotSearchInput:focus {
-  border-color: #ff3157;
-  box-shadow: 0 0 0 3px rgba(255, 49, 87, 0.2);
-}
-
-.copilotSearchClear {
-  position: absolute;
-  right: 12px;
-  background: transparent;
-  border: none;
-  color: #8b949e;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.copilotCategoryPills {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.copilotCategoryPill {
-  background: rgba(22, 27, 34, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #8b949e;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12.5px;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-
-body.light-theme .copilotCategoryPill {
-  background: #f6f8fa;
-  border-color: #d0d7de;
-  color: #57606a;
-}
-
-.copilotCategoryPill:hover {
-  color: #fff;
-  border-color: rgba(255, 49, 87, 0.3);
-}
-
-body.light-theme .copilotCategoryPill:hover {
-  color: #1f2328;
-  border-color: #ff3157;
-}
-
-.copilotCategoryPill.active {
-  background: #ff3157;
-  color: #fff;
-  border-color: #ff3157;
-  box-shadow: 0 0 14px rgba(255, 49, 87, 0.4);
-}
-
-/* Master Grid */
-.copilotGrid {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 20px;
-}
-
-/* Left Symptoms List */
-.copilotSymptomsList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 600px;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-.copilotListHeader {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: #8b949e;
-  text-transform: uppercase;
-}
-
-body.light-theme .copilotListHeader {
-  color: #656d76;
-}
-
-.symptomItemCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(22, 27, 34, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 12px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  color: #c9d1d9;
-}
-
-body.light-theme .symptomItemCard {
-  background: #f6f8fa;
-  border-color: #d0d7de;
-  color: #24292f;
-}
-
-.symptomItemCard:hover {
-  background: rgba(30, 37, 48, 0.9);
-  border-color: rgba(255, 49, 87, 0.35);
-  transform: translateX(3px);
-}
-
-body.light-theme .symptomItemCard:hover {
-  background: #eaeef2;
-}
-
-.symptomItemCard.selected {
-  background: linear-gradient(135deg, rgba(255, 49, 87, 0.14) 0%, rgba(22, 27, 34, 0.95) 100%);
-  border-color: #ff3157;
-  box-shadow: 0 4px 18px rgba(255, 49, 87, 0.2);
-}
-
-body.light-theme .symptomItemCard.selected {
-  background: #fff0f3;
-  border-color: #ff3157;
-}
-
-.symptomIconBadge {
-  font-size: 20px;
-  line-height: 1;
-  padding-top: 2px;
-}
-
-.symptomItemMeta {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.symptomItemTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
-.symptomCategoryTag {
-  font-size: 10px;
-  font-weight: 800;
-  color: #8b949e;
-  text-transform: uppercase;
-}
-
-.symptomProbBadge {
-  font-size: 9.5px;
-  font-weight: 800;
-  color: #2ea043;
-  background: rgba(46, 160, 67, 0.12);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.symptomItemTitle {
-  font-size: 13px;
-  font-weight: 700;
-  margin: 0;
-  color: #fff;
-  line-height: 1.35;
-}
-
-body.light-theme .symptomItemTitle {
-  color: #1f2328;
-}
-
-.symptomItemCause {
-  font-size: 11px;
-  color: #8b949e;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.copilotEmptySearch {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-  padding: 30px 14px;
-  color: #8b949e;
-  background: rgba(22, 27, 34, 0.4);
-  border-radius: 12px;
-  font-size: 12.5px;
-}
-
-/* Right In-Depth Diagnostic Dossier */
-.copilotDossier {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: #090d14;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 22px;
-}
-
-body.light-theme .copilotDossier {
-  background: #ffffff;
-  border-color: #d0d7de;
-}
-
-.dossierTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 16px;
-}
-
-body.light-theme .dossierTop {
-  border-bottom-color: #eaeef2;
-}
-
-.dossierCategoryPill {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #ff3157;
-  text-transform: uppercase;
-}
-
-.dossierTitle {
-  font-size: 18px;
-  font-weight: 800;
-  color: #fff;
-  margin: 4px 0 0 0;
-  line-height: 1.35;
-}
-
-body.light-theme .dossierTitle {
-  color: #1f2328;
-}
-
-.dossierProbabilityMeter {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.meterVal {
-  font-size: 28px;
-  font-weight: 900;
-  color: #2ea043;
-  line-height: 1;
-}
-
-.meterLabel {
-  font-size: 9.5px;
-  font-weight: 800;
-  color: #8b949e;
-  letter-spacing: 0.8px;
-  margin-top: 4px;
-}
-
-/* Cause Card */
-.dossierCauseCard {
-  background: rgba(22, 27, 34, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-left: 4px solid #ff3157;
-  border-radius: 10px;
-  padding: 14px 16px;
-}
-
-body.light-theme .dossierCauseCard {
-  background: #f6f8fa;
-  border-color: #d0d7de;
-  border-left-color: #ff3157;
-}
-
-.causeLabelWrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #ff3157;
-  letter-spacing: 1px;
-}
-
-.causeHeading {
-  font-size: 15px;
-  font-weight: 800;
-  color: #fff;
-  margin: 6px 0 4px 0;
-}
-
-body.light-theme .causeHeading {
-  color: #1f2328;
-}
-
-.causeDesc {
-  font-size: 13px;
-  color: #8b949e;
-  line-height: 1.55;
-  margin: 0;
-}
-
-body.light-theme .causeDesc {
-  color: #57606a;
-}
-
-/* Metrics Grid */
-.dossierMetricsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.metricBox {
-  background: rgba(22, 27, 34, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 10px 12px;
-  border-radius: 10px;
-}
-
-body.light-theme .metricBox {
-  background: #f6f8fa;
-  border-color: #eaeef2;
-}
-
-.metricTitle {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 800;
-  color: #8b949e;
-  letter-spacing: 0.8px;
-}
-
-.metricValue {
-  display: block;
-  font-size: 13px;
-  font-weight: 800;
-  color: #fff;
-  margin-top: 4px;
-}
-
-body.light-theme .metricValue {
-  color: #1f2328;
-}
-
-.metricValue.severity-danger {
-  color: #ff3157;
-}
-
-.metricValue.severity-warning {
-  color: #ffaa00;
-}
-
-/* Tools Section */
-.dossierToolsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.dossierSubhead {
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #8b949e;
-  text-transform: uppercase;
-}
-
-.toolsChipsList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.toolChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #c9d1d9;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-body.light-theme .toolChip {
-  color: #24292f;
-  background: #f6f8fa;
-  border-color: #d0d7de;
-}
-
-/* Parts Bundle Card */
-.dossierBundleCard {
-  background: linear-gradient(135deg, rgba(255, 49, 87, 0.08) 0%, rgba(22, 27, 34, 0.8) 100%);
-  border: 1px solid rgba(255, 49, 87, 0.3);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-body.light-theme .dossierBundleCard {
-  background: #fff5f7;
-  border-color: rgba(255, 49, 87, 0.25);
-}
-
-.bundleHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.bundleEyebrow {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #ff3157;
-  text-transform: uppercase;
-}
-
-.bundleTitle {
-  font-size: 14.5px;
-  font-weight: 800;
-  color: #fff;
-  margin: 3px 0 0 0;
-}
-
-body.light-theme .bundleTitle {
-  color: #1f2328;
-}
-
-.bundleAddToCartBtn {
-  background: #ff3157;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.4);
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.bundleAddToCartBtn:hover {
-  background: #e0264b;
-  transform: translateY(-1px);
-}
-
-.bundleItemsList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.bundleItemRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(13, 17, 23, 0.6);
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-body.light-theme .bundleItemRow {
-  background: #ffffff;
-  border-color: #eaeef2;
-}
-
-.bundleItemBullet {
-  color: #ff3157;
-  display: flex;
-  align-items: center;
-}
-
-.bundleItemName {
-  flex: 1;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #c9d1d9;
-}
-
-body.light-theme .bundleItemName {
-  color: #24292f;
-}
-
-.bundleItemPrice {
-  font-size: 13px;
-  font-weight: 800;
-  color: #fff;
-}
-
-body.light-theme .bundleItemPrice {
-  color: #1f2328;
-}
-
-.bundleItemInspectBtn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #8b949e;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-body.light-theme .bundleItemInspectBtn {
-  border-color: #d0d7de;
-  color: #57606a;
-}
-
-.bundleItemInspectBtn:hover {
-  border-color: #ff3157;
-  color: #ff3157;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .copilotGrid {
-    grid-template-columns: 1fr;
-  }
-  .copilotSymptomsList {
-    max-height: 360px;
-  }
-}
-
-@media (max-width: 600px) {
-  .dossierTop {
-    flex-direction: column;
-  }
-  .dossierProbabilityMeter {
-    align-items: flex-start;
-    text-align: left;
-  }
-  .dossierMetricsGrid {
-    grid-template-columns: 1fr;
-  }
-  .bundleHeader {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-/* =========================================================
-   FLOATING AI MECHANIC LAUNCHER & MODAL STYLES (ALL PAGES)
-   ========================================================= */
-
+/* ─── 1. FLOATING ACTION BUTTON (ICON ONLY LAUNCHER) ─── */
 .aiMechanicFloatBtn {
-  position: fixed;
-  bottom: 84px;
-  right: 24px;
-  z-index: 99990;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
-  border: 1.5px solid #ff3157;
-  color: #fff;
-  padding: 10px 18px 10px 14px;
-  border-radius: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
-              0 0 20px rgba(255, 49, 87, 0.45);
-  cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
-}
-
-body.light-theme .aiMechanicFloatBtn {
-  background: #ffffff;
-  color: #1f2328;
-  border-color: #ff3157;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15),
-              0 0 16px rgba(255, 49, 87, 0.3);
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  max-width: 58px !important;
+  max-height: 58px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  z-index: 999999 !important;
+  box-shadow: 0 10px 32px rgba(255, 49, 87, 0.45), 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease !important;
+  user-select: none !important;
+  touch-action: manipulation !important;
+  outline: none !important;
 }
 
 .aiMechanicFloatBtn:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7),
-              0 0 30px rgba(255, 49, 87, 0.7);
+  transform: translateY(-3px) scale(1.08) !important;
+  box-shadow: 0 16px 42px rgba(255, 49, 87, 0.65), 0 0 20px rgba(255, 49, 87, 0.5) !important;
+  background: linear-gradient(135deg, #ff476c 0%, #e11944 100%) !important;
+}
+
+.aiMechanicFloatBtn:active {
+  transform: translateY(0) scale(0.95) !important;
 }
 
 .aiMechanicFloatBtn.active {
-  background: #ff3157;
-  color: #fff;
+  background: linear-gradient(135deg, #181d26 0%, #0d1117 100%) !important;
+  border-color: rgba(255, 49, 87, 0.5) !important;
+  color: #ff3157 !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 49, 87, 0.3) !important;
 }
 
-.aiFloatIconWrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.aiFloatIcon {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.aiWrenchIcon {
-  color: #ff3157;
-  filter: drop-shadow(0 0 4px #ff3157);
+.aiBotSvg {
+  stroke-width: 2.2 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
 }
 
-.aiMechanicFloatBtn.active .aiWrenchIcon {
-  color: #fff;
-  filter: none;
+.aiWrenchBadge {
+  position: absolute !important;
+  bottom: 11px !important;
+  right: 10px !important;
+  width: 17px !important;
+  height: 17px !important;
+  background: #0d1117 !important;
+  color: #ff3157 !important;
+  border: 1.5px solid #ff3157 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
 }
 
-.aiSparkleBadge {
-  position: absolute;
-  top: -6px;
-  right: -7px;
-  color: #ffaa00;
-  animation: sparkleTwinkle 1.8s ease-in-out infinite alternate;
+.aiOnlineDot {
+  position: absolute !important;
+  top: 3px !important;
+  right: 3px !important;
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  border: 2.5px solid #0d1117 !important;
+  box-shadow: 0 0 8px #10b981 !important;
 }
 
-@keyframes sparkleTwinkle {
-  0% { transform: scale(0.85) rotate(0deg); opacity: 0.7; }
-  100% { transform: scale(1.2) rotate(25deg); opacity: 1; }
+.aiPulseRing {
+  position: absolute !important;
+  inset: -6px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255, 49, 87, 0.45) !important;
+  animation: aiFabPulse 2.8s infinite cubic-bezier(0.24, 0, 0.38, 1) !important;
+  pointer-events: none !important;
 }
 
-.aiFloatText {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
+@keyframes aiFabPulse {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  50% { transform: scale(1.22); opacity: 0; }
+  100% { transform: scale(0.9); opacity: 0; }
 }
 
-.aiPulseDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #2ea043;
-  box-shadow: 0 0 8px #2ea043;
-  animation: dotLive 1.4s ease-in-out infinite alternate;
+.aiFloatTooltip {
+  position: absolute !important;
+  right: 70px !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(6px) !important;
+  background: #0d1117 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 49, 87, 0.35) !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
 }
 
-@keyframes dotLive {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  100% { transform: scale(1.3); opacity: 1; }
+.aiMechanicFloatBtn:hover .aiFloatTooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
 }
 
-/* Modal Overlay */
-.aiModalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 999995;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+/* ─── 2. FLOATING CHAT DRAWER / POPUP CARD ─── */
+.aiFloatingChatWidget {
+  position: fixed !important;
+  bottom: 92px !important;
+  right: 24px !important;
+  width: 410px !important;
+  max-width: calc(100vw - 32px) !important;
+  height: 590px !important;
+  max-height: calc(100vh - 110px) !important;
+  background: #0d1117 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 49, 87, 0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  z-index: 999998 !important;
+  animation: aiDrawerSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) both !important;
 }
 
-@keyframes modalFadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.aiModalContent {
-  background: #0d1117;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
-  width: 100%;
-  max-width: 960px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85),
-              0 0 35px rgba(255, 49, 87, 0.25);
-  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-body.light-theme .aiModalContent {
-  background: #ffffff;
-  border-color: #dfe2e8;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
-}
-
-@keyframes modalSlideUp {
-  0% { transform: translateY(24px) scale(0.97); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-.aiModalTopBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(22, 27, 34, 0.85);
-}
-
-body.light-theme .aiModalTopBar {
-  background: #f6f8fa;
-  border-bottom-color: #eaeef2;
-}
-
-.aiModalTitleGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.aiModalBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #ff3157;
-  text-transform: uppercase;
-}
-
-.aiModalTitleGroup h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  color: #fff;
-}
-
-body.light-theme .aiModalTitleGroup h3 {
-  color: #1f2328;
-}
-
-.aiModalCloseBtn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #8b949e;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-size: 16px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.aiModalCloseBtn:hover {
-  background: #ff3157;
-  color: #fff;
-  border-color: #ff3157;
-}
-
-.aiModalBody {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.copilotContainer.inModal {
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
-  border: none;
-}
-
-@media (max-width: 600px) {
-  .aiMechanicFloatBtn {
-    bottom: 76px;
-    right: 16px;
-    padding: 8px 14px;
+@keyframes aiDrawerSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
   }
-  .aiFloatText {
-    display: none;
-  }
-  .aiModalOverlay {
-    padding: 12px;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-/* =========================================================
-   COPILOT CHAT & DOUBT CLEARING SYSTEM
-   ========================================================= */
-
-.copilotViewTabs {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+body.light-theme .aiFloatingChatWidget {
+  background: #ffffff !important;
+  border-color: #d0d7de !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22), 0 0 25px rgba(255, 49, 87, 0.12) !important;
 }
 
-body.light-theme .copilotViewTabs {
-  border-bottom-color: #eaeef2;
+/* Header */
+.aiChatWidgetHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 18px !important;
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  flex: none !important;
 }
 
-.copilotTabBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #8b949e;
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+body.light-theme .aiChatWidgetHeader {
+  background: linear-gradient(180deg, #f6f8fa 0%, #ffffff 100%) !important;
+  border-bottom-color: #d0d7de !important;
 }
 
-.copilotTabBtn:hover {
-  background: rgba(255, 49, 87, 0.12);
-  color: #ff3157;
-  border-color: rgba(255, 49, 87, 0.3);
+.aiHeaderProfile {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
 }
 
-.copilotTabBtn.active {
-  background: #ff3157;
-  color: #fff;
-  border-color: #ff3157;
-  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.35);
+.aiHeaderAvatar {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 12px rgba(255, 49, 87, 0.35) !important;
 }
 
-body.light-theme .copilotTabBtn {
-  background: #f6f8fa;
-  border-color: #d0d7de;
-  color: #57606a;
+.aiHeaderOnlineDot {
+  position: absolute !important;
+  bottom: -2px !important;
+  right: -2px !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  border: 2px solid #0d1117 !important;
 }
 
-body.light-theme .copilotTabBtn.active {
-  background: #ff3157;
-  color: #fff;
-  border-color: #ff3157;
+.aiHeaderInfo {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
 }
 
-/* Chat Container */
+.aiHeaderTitleRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.aiHeaderTitleRow h4 {
+  margin: 0 !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.2px !important;
+}
+
+body.light-theme .aiHeaderTitleRow h4 {
+  color: #1f2328 !important;
+}
+
+.aiHeaderTag {
+  font-size: 9.5px !important;
+  font-weight: 900 !important;
+  color: #ff3157 !important;
+  background: rgba(255, 49, 87, 0.12) !important;
+  border: 1px solid rgba(255, 49, 87, 0.25) !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.5px !important;
+}
+
+.aiHeaderSubtext {
+  font-size: 11.5px !important;
+  color: #8b949e !important;
+  font-weight: 500 !important;
+}
+
+body.light-theme .aiHeaderSubtext {
+  color: #656d76 !important;
+}
+
+/* Header Actions */
+.aiHeaderActions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.aiHeaderTabBtn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #8b949e !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.aiHeaderTabBtn:hover {
+  background: rgba(255, 49, 87, 0.15) !important;
+  color: #ff3157 !important;
+  border-color: #ff3157 !important;
+}
+
+.aiHeaderTabBtn.active {
+  background: #ff3157 !important;
+  color: #ffffff !important;
+  border-color: #ff3157 !important;
+}
+
+body.light-theme .aiHeaderTabBtn {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+  color: #57606a !important;
+}
+
+body.light-theme .aiHeaderTabBtn.active {
+  background: #ff3157 !important;
+  color: #ffffff !important;
+}
+
+.aiChatCloseBtn {
+  background: transparent !important;
+  border: none !important;
+  color: #8b949e !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.aiChatCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+body.light-theme .aiChatCloseBtn:hover {
+  background: #eaeef2 !important;
+  color: #1f2328 !important;
+}
+
+/* ─── 3. CHAT BODY & STREAM ─── */
+.aiChatWidgetBody {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.copilotModalContainer {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
 .copilotChatContainer {
-  display: flex;
-  flex-direction: column;
-  height: 520px;
-  max-height: 60vh;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding: 0 !important;
 }
 
 .copilotChatStream {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px 4px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 16px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  scrollbar-width: thin !important;
 }
 
+.copilotChatStream::-webkit-scrollbar {
+  width: 5px;
+}
+
+.copilotChatStream::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Chat Message Rows */
 .chatMessageRow {
   display: flex;
-  gap: 12px;
   align-items: flex-start;
-  max-width: 92%;
+  gap: 10px;
+  animation: chatMsgIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.chatMessageRow.ai {
-  align-self: flex-start;
+@keyframes chatMsgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .chatMessageRow.user {
-  align-self: flex-end;
   flex-direction: row-reverse;
 }
 
 .chatAvatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
+  font-size: 15px;
 }
 
-.aiAvatar {
-  background: linear-gradient(135deg, #ff3157, #c9183b);
+.chatAvatar.aiAvatar {
+  background: linear-gradient(135deg, #ff3157, #c81e3d);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(255, 49, 87, 0.4);
+  box-shadow: 0 4px 10px rgba(255, 49, 87, 0.35);
 }
 
-.userAvatar {
+.chatAvatar.userAvatar {
   background: #21262d;
-  color: #8b949e;
+  color: #c9d1d9;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-body.light-theme .userAvatar {
+body.light-theme .chatAvatar.userAvatar {
   background: #eaeef2;
   color: #24292f;
   border-color: #d0d7de;
 }
 
+/* Bubbles */
 .chatBubble {
-  background: #161b22;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 14px 16px;
-  color: #e6edf3;
+  max-width: 82%;
+  padding: 12px 14px;
+  border-radius: 14px;
   font-size: 13.5px;
   line-height: 1.55;
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e6edf3;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .chatMessageRow.user .chatBubble {
-  background: linear-gradient(135deg, #1f2735, #141a24);
-  border-color: rgba(255, 49, 87, 0.35);
-  color: #fff;
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%);
+  border-color: #ff3157;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.3);
 }
 
 body.light-theme .chatBubble {
@@ -1010,27 +443,27 @@ body.light-theme .chatBubble {
 }
 
 body.light-theme .chatMessageRow.user .chatBubble {
-  background: #eef2f8;
-  border-color: rgba(255, 49, 87, 0.3);
+  background: linear-gradient(135deg, #ff3157 0%, #d4143d 100%);
+  color: #ffffff;
 }
 
 .chatBubbleBadge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 800;
   color: #ff3157;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   letter-spacing: 0.5px;
 }
 
 .chatBubbleTitle {
-  margin: 0 0 8px 0;
-  font-size: 15px;
+  margin: 0 0 6px 0;
+  font-size: 14.5px;
   font-weight: 800;
-  color: #fff;
+  color: #ffffff;
 }
 
 body.light-theme .chatBubbleTitle {
@@ -1042,17 +475,17 @@ body.light-theme .chatBubbleTitle {
   white-space: pre-line;
 }
 
-/* Chat Tips */
+/* Actionable Tips */
 .chatTipsList {
-  margin-top: 12px;
-  padding: 10px 14px;
+  margin-top: 10px;
+  padding: 10px 12px;
   background: rgba(0, 0, 0, 0.25);
   border-left: 3px solid #ffaa00;
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 8px 8px 0;
 }
 
 body.light-theme .chatTipsList {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .chatTipsList strong {
@@ -1061,12 +494,12 @@ body.light-theme .chatTipsList {
   gap: 6px;
   color: #ffaa00;
   font-size: 12px;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .chatTipsList ul {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -1078,21 +511,21 @@ body.light-theme .chatTipsList ul {
   color: #475569;
 }
 
-/* Chat Parts Card */
+/* Matching Spare Parts */
 .chatPartsCard {
-  margin-top: 14px;
-  padding: 12px;
-  background: rgba(255, 49, 87, 0.06);
-  border: 1px solid rgba(255, 49, 87, 0.2);
-  border-radius: 12px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 49, 87, 0.08);
+  border: 1px solid rgba(255, 49, 87, 0.25);
+  border-radius: 10px;
 }
 
 .chatPartsHeading {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #ff5575;
-  font-size: 12px;
+  color: #ff476c;
+  font-size: 11.5px;
   font-weight: 800;
   margin-bottom: 8px;
 }
@@ -1100,27 +533,27 @@ body.light-theme .chatTipsList ul {
 .chatPartsList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .chatPartItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 8px;
+  padding: 7px 10px;
   background: #0d1117;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
 }
 
 body.light-theme .chatPartItem {
   background: #ffffff;
-  border-color: #e1e4e8;
+  border-color: #d0d7de;
 }
 
 .chatPartName {
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   color: #f0f6fc;
   flex: 1;
@@ -1131,7 +564,7 @@ body.light-theme .chatPartName {
 }
 
 .chatPartPrice {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 800;
   color: #ff3157;
 }
@@ -1139,13 +572,13 @@ body.light-theme .chatPartName {
 .chatPartBtn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   background: rgba(255, 49, 87, 0.15);
   border: 1px solid rgba(255, 49, 87, 0.35);
   color: #ff3157;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 6px;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -1156,9 +589,9 @@ body.light-theme .chatPartName {
   color: #fff;
 }
 
-/* Chat Quick Suggestions */
+/* Suggested Chips */
 .chatSuggestionsWrap {
-  margin-top: 14px;
+  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -1169,7 +602,7 @@ body.light-theme .chatSuggestionsWrap {
 
 .suggestionsLabel {
   display: block;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
   color: #8b949e;
   margin-bottom: 8px;
@@ -1187,9 +620,9 @@ body.light-theme .chatSuggestionsWrap {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #e6edf3;
-  padding: 6px 12px;
-  border-radius: 18px;
-  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -1208,66 +641,290 @@ body.light-theme .suggestionChip {
   color: #24292f;
 }
 
-/* Chat Input Bar */
+/* ─── 4. INPUT BAR ─── */
 .copilotChatInputBar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 14px !important;
+  background: #161b22 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  flex: none !important;
 }
 
 body.light-theme .copilotChatInputBar {
-  border-top-color: #eaeef2;
+  background: #f6f8fa !important;
+  border-top-color: #d0d7de !important;
 }
 
 .chatTextInput {
-  flex: 1;
-  background: #090d14;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 13.5px;
-  outline: none;
-  transition: all 0.2s ease;
+  flex: 1 !important;
+  background: #090d14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
 }
 
 body.light-theme .chatTextInput {
-  background: #f6f8fa;
+  background: #ffffff !important;
+  border-color: #d0d7de !important;
+  color: #1f2328 !important;
+}
+
+.chatTextInput:focus {
+  border-color: #ff3157 !important;
+  box-shadow: 0 0 0 3px rgba(255, 49, 87, 0.2) !important;
+}
+
+.chatSendBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #ff3157 !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 10px 16px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(255, 49, 87, 0.35) !important;
+}
+
+.chatSendBtn:hover:not(:disabled) {
+  background: #e61e45 !important;
+  transform: translateY(-1px) !important;
+}
+
+.chatSendBtn:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+/* ─── 5. WORKSHOP SYMPTOM LIBRARY IN WIDGET ─── */
+.copilotContainer.inModal {
+  padding: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  overflow-y: auto !important;
+  flex: 1 !important;
+}
+
+.copilotSearchRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.copilotSearchInputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.copilotSearchIcon {
+  position: absolute;
+  left: 12px;
+  color: #8b949e;
+  pointer-events: none;
+}
+
+.copilotSearchInput {
+  width: 100%;
+  background: #090d14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 9px 34px 9px 36px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+body.light-theme .copilotSearchInput {
+  background: #ffffff;
   border-color: #d0d7de;
   color: #1f2328;
 }
 
-.chatTextInput:focus {
+.copilotSearchInput:focus {
   border-color: #ff3157;
-  box-shadow: 0 0 0 3px rgba(255, 49, 87, 0.2);
 }
 
-.chatSendBtn {
-  display: inline-flex;
+.copilotCategoryPills {
+  display: flex;
   align-items: center;
   gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.copilotCategoryPill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8b949e;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copilotCategoryPill.active {
+  background: #ff3157;
+  color: #fff;
+  border-color: #ff3157;
+}
+
+body.light-theme .copilotCategoryPill {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #57606a;
+}
+
+body.light-theme .copilotCategoryPill.active {
+  background: #ff3157;
+  color: #fff;
+}
+
+.copilotGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.copilotSymptomsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.symptomItemCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(22, 27, 34, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  color: #c9d1d9;
+}
+
+body.light-theme .symptomItemCard {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #24292f;
+}
+
+.symptomItemCard:hover,
+.symptomItemCard.selected {
+  background: rgba(255, 49, 87, 0.12);
+  border-color: #ff3157;
+}
+
+.symptomItemTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+body.light-theme .symptomItemTitle {
+  color: #1f2328;
+}
+
+.symptomItemDesc {
+  font-size: 11px;
+  color: #8b949e;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Dossier details in widget */
+.copilotDossierPanel {
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+body.light-theme .copilotDossierPanel {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+}
+
+.dossierTitle {
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  color: #fff;
+}
+
+body.light-theme .dossierTitle {
+  color: #1f2328;
+}
+
+.dossierCauseText {
+  font-size: 12px;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+
+.bundleAddToCartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: #ff3157;
   color: #fff;
   border: none;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-size: 13.5px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.35);
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
 }
 
-.chatSendBtn:hover:not(:disabled) {
-  background: #e61e45;
-  transform: translateY(-1px);
+/* ─── 6. MOBILE RESPONSIVE ─── */
+@media (max-width: 520px) {
+  .aiMechanicFloatBtn {
+    bottom: 18px !important;
+    right: 18px !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  .aiFloatTooltip {
+    display: none !important;
+  }
+  .aiFloatingChatWidget {
+    bottom: 78px !important;
+    right: 10px !important;
+    left: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    height: calc(100vh - 96px) !important;
+    max-height: calc(100vh - 96px) !important;
+    border-radius: 16px !important;
+  }
 }
-
-.chatSendBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
