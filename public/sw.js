@@ -1,5 +1,5 @@
-const CACHE = "motodc-shell-v24";
-const IMAGE_CACHE = "motodc-images-v24";
+const CACHE = "motodc-shell-v25";
+const IMAGE_CACHE = "motodc-images-v25";
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();

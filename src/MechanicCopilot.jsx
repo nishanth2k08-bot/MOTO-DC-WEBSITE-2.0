@@ -236,11 +236,12 @@ function answerUserQuestion(rawQuery) {
     };
   }
 
-  // 4. AUTOMOTIVE SYMPTOMS & DIAGNOSTICS (Precise Root Cause & Actionable Advice)
+    // 4. AUTOMOTIVE SYMPTOMS & WORKSHOP MECHANIC DIAGNOSTICS
   // Brakes
   if (clean.includes('brake') || clean.includes('squeal') || clean.includes('grind') || clean.includes('rotor') || clean.includes('pad') || clean.includes('caliper') || clean.includes('stopping')) {
     return {
       text: "Brake squealing or grinding indicates your brake pads have worn past the 2mm wear indicator shim and the metal backing is rubbing against the rotor disc. A spongy lever means air or moisture is trapped in the hydraulic brake fluid.",
+      diy: "Moderate (35 - 45 mins) | Tools: 10mm/12mm Hex Socket, Caliper Piston Spreader, Torque Wrench",
       tips: [
         "Inspect brake pad thickness inside the caliper slot.",
         "Clean rotor surfaces with brake parts cleaner to remove dust and glaze.",
@@ -258,6 +259,7 @@ function answerUserQuestion(rawQuery) {
   if (clean.includes('misfire') || clean.includes('sputter') || clean.includes('hesitat') || clean.includes('jerk') || clean.includes('spark plug') || clean.includes('plug') || clean.includes('ignition') || clean.includes('starting trouble')) {
     return {
       text: "Engine hesitation or sputtering under throttle acceleration is usually caused by carbon-fouled spark plug electrodes, a clogged air intake filter, or a failing ignition coil.",
+      diy: "Easy (20 - 30 mins) | Tools: 16mm Magnetic Spark Plug Socket, Feeler Gauge",
       tips: [
         "Inspect spark plug tip: tan/light brown is normal; heavy black soot means fouling.",
         "Check and replace dirty air filter element.",
@@ -275,6 +277,7 @@ function answerUserQuestion(rawQuery) {
   if (clean.includes('oil') || clean.includes('motul') || clean.includes('castrol') || clean.includes('10w40') || clean.includes('10w50') || clean.includes('15w50') || clean.includes('20w50') || clean.includes('synthetic') || clean.includes('lubricant')) {
     return {
       text: "Recommended oil viscosities:\n• High-RPM Bikes (KTM, R15, Pulsar): 10W40 or 10W50 Full Synthetic (JASO MA2 rating).\n• Cruisers (Royal Enfield): 15W50 Semi-Synthetic.\n• Modern Automobiles (Cars): 5W30 or 0W20 Full Synthetic.\n\nAlways change your oil filter when draining engine oil. Never use car oil in a motorcycle wet clutch.",
+      diy: "Easy (25 mins) | Tools: 17mm/19mm Drain Bolt Wrench, Oil Drain Pan, Funnel",
       parts: [
         { name: "Motul 7100 10W50 100% Synthetic 4T Oil", price: 1150, query: "motul" },
         { name: "Castrol Power1 Ultimate 10W40 Synthetic", price: 820, query: "castrol" },
@@ -287,6 +290,7 @@ function answerUserQuestion(rawQuery) {
   if (clean.includes('chain') || clean.includes('sprocket') || clean.includes('slack') || clean.includes('rattle') || clean.includes('slap') || clean.includes('lube')) {
     return {
       text: "A loud chain rattling or slapping noise means excessive chain slack (> 35mm) striking the swingarm. Worn sprockets develop hooked teeth that slip under acceleration.",
+      diy: "Moderate (45 - 60 mins) | Tools: Rear Axle Wrench (27mm/32mm), Chain Alignment Tool",
       tips: [
         "Set chain slack to 25–30mm of vertical play at the midpoint.",
         "Clean and lubricate every 500 km with O-Ring safe chain wax.",
@@ -304,6 +308,7 @@ function answerUserQuestion(rawQuery) {
   if (clean.includes('battery') || clean.includes('click') || clean.includes('crank') || clean.includes('headlight') || clean.includes('starter') || clean.includes('stator') || clean.includes('bulb')) {
     return {
       text: "A rapid clicking sound with no engine crank indicates battery voltage drops below 10.5V under load. This is caused by sulfated battery plates, loose terminals, or a weak charging stator.",
+      diy: "Easy (20 mins) | Tools: 10mm Wrench, Digital Multimeter, Terminal Grease",
       tips: [
         "Resting battery voltage should be 12.6V–12.8V. When running, stator should charge at 14.0V–14.4V.",
         "Clean terminal corrosion with warm baking soda water and coat with terminal grease."
@@ -320,9 +325,11 @@ function answerUserQuestion(rawQuery) {
   if (clean.includes('clutch') || clean.includes('slip') || clean.includes('gear') || clean.includes('shift')) {
     return {
       text: "When engine RPM revs up quickly but vehicle speed climbs sluggishly, your clutch friction plates are slipping due to heat glazing or worn friction lining.",
+      diy: "Advanced (1.5 - 2 hrs) | Tools: Clutch Holding Tool, 8mm/10mm T-Handle, Fresh Engine Oil",
       tips: [
         "Check clutch cable freeplay: ensure 2–3mm of free play before tension engages.",
-        "Soak new friction plates in fresh engine oil for 15 minutes before installing."
+        "Soak new friction plates in fresh engine oil for 15 minutes before installing.",
+        "Replace clutch springs together with plates to restore full clamping force."
       ],
       parts: [
         { name: "Kevlar Reinforced Clutch Friction Plate Set", price: 1850, query: "clutch" },
@@ -335,9 +342,11 @@ function answerUserQuestion(rawQuery) {
   if (clean.includes('heat') || clean.includes('overheat') || clean.includes('coolant') || clean.includes('radiator') || clean.includes('temperature') || clean.includes('fan')) {
     return {
       text: "Engine overheating is caused by low coolant level, clogged radiator core fins, airlocks in hoses, or a faulty radiator pressure cap.",
+      diy: "Moderate (40 mins) | Tools: Funnel, Radiator Fin Comb, Distilled Water",
       tips: [
         "Never open radiator cap while engine is warm (scalding danger).",
-        "Inspect expansion bottle and top up with premixed coolant."
+        "Inspect expansion bottle and top up with premixed coolant.",
+        "Check cooling fan operation when temperature reaches operating threshold."
       ],
       parts: [
         { name: "Engine Ice High-Performance Coolant 1.89L", price: 1450, query: "coolant" },
@@ -367,65 +376,87 @@ function answerUserQuestion(rawQuery) {
     };
   }
 
-  // 5. NATURAL INTELLIGENT FALLBACK (NO FAKE DIAGNOSTICS!)
+  // 5. OFFSIDE & GENERAL KNOWLEDGE QUESTIONS (Always answer helpfully!)
+  // Math Calculations (e.g. "what is 2 + 2", "25 * 4")
+  const mathMatch = clean.match(/(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)/);
+  if (mathMatch) {
+    const a = parseFloat(mathMatch[1]);
+    const op = mathMatch[2];
+    const b = parseFloat(mathMatch[3]);
+    let ans = 0;
+    if (op === '+') ans = a + b;
+    else if (op === '-') ans = a - b;
+    else if (op === '*') ans = a * b;
+    else if (op === '/') ans = b !== 0 ? (a / b) : 'undefined';
+    return {
+      text: `${a} ${op} ${b} = ${ans}`
+    };
+  }
+
+  // Humor & Jokes
+  if (clean.includes('joke') || clean.includes('funny') || clean.includes('laugh')) {
+    return {
+      text: "Why did the motorcycle get a timeout? Because it was two-tired! 😄\n\nHope that brought a smile to your ride today! Let me know if you need any vehicle diagnostics or spare parts."
+    };
+  }
+
+  // Offside rule in Sports
+  if (clean.includes('offside')) {
+    return {
+      text: "In football (soccer), an attacking player is in an offside position if they are nearer to the opponent's goal line than both the ball and the second-to-last defender at the moment the ball is passed to them.\n\nIn cricket, the 'off side' is the side of the field in front of the batsman's body (the side they face when in their batting stance)!"
+    };
+  }
+
+  // Weather inquiries
+  if (clean.includes('weather') || clean.includes('rain') || clean.includes('temperature today')) {
+    return {
+      text: "I don't have access to live meteorological weather radar right now, but always check your local forecast before heading out on a ride. Make sure your tire tread depth is safe and headlights/wipers are working if wet roads are expected!"
+    };
+  }
+
+  // General Questions / Friendly Intelligent Fallback (NO REJECTIONS!)
+  if (clean.startsWith('what') || clean.startsWith('who') || clean.startsWith('why') || clean.startsWith('how') || clean.startsWith('can you') || clean.startsWith('tell me') || clean.startsWith('explain')) {
+    return {
+      text: `That's an interesting question regarding "${rawQuery.trim()}"! While I specialize in master workshop mechanics, diagnostics, and genuine spare parts for MotoDC, I'm always happy to assist. Is there any particular detail about this or your vehicle you'd like me to explain?`
+    };
+  }
+
+  // Clean Natural Fallback (Welcoming and helpful, never refuses!)
   return {
-    text: "Could you please specify your question, your vehicle model, or the issue you're facing? I can help with spare parts recommendations, diagnostics, COD, delivery, and returns."
+    text: `I'm here to help! Feel free to ask any question — whether it's vehicle diagnostics (brakes, misfire, chain, oil, battery), genuine spare parts, Cash on Delivery, returns, or general questions.`
   };
 }
 
 // Main Component exported for modal or widget
-export default function MechanicCopilot({ isModal = true, onClose, activeTab: externalTab, setActiveTab: setExternalTab }) {
+export default function MechanicCopilot({ isModal = true, onClose }) {
   const nav = useNavigate();
-  const [internalTab, setInternalTab] = useState('chat');
-  const activeTab = externalTab || internalTab;
-  const setActiveTab = setExternalTab || setInternalTab;
 
   // Chat State
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hello Rider! 👋 I'm your MotoDC AI Assistant.\n\nDescribe any issue with your vehicle (noises, vibrations, starting trouble) or ask questions about spare parts, COD, delivery, and returns.\n\nHow can I help you today?",
+      text: "Hello Rider! 👋 I'm your MotoDC AI Assistant & Workshop Mechanic.\n\nDescribe any issue with your vehicle (noises, vibrations, starting trouble, fluids) or ask questions about spare parts, COD, delivery, and returns.\n\nHow can I help you today?",
       suggestions: [
-        "📦 COD & Free Delivery policy",
-        "🔄 7-Day Returns & Guarantee",
         "🛑 Squealing brakes or grinding",
         "⚡ Engine sputtering / misfire",
-        "🛢️ Which engine oil should I choose?",
+        "⚙️ Clutch slipping under revs",
         "🔗 Chain loose or rattling",
+        "🌡️ Engine overheating & coolant",
         "🔋 Battery clicking / won't start",
-        "⚙️ Clutch slipping under revs"
+        "🛢️ Which engine oil should I choose?",
+        "📦 COD & Free Delivery policy",
+        "🔄 7-Day Returns & Guarantee"
       ]
     }
   ]);
   const [inputQuery, setInputQuery] = useState('');
   const chatEndRef = useRef(null);
-
-  // Library State
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [activeSymptom, setActiveSymptom] = useState(SYMPTOMS_DATABASE[0]);
-
-  const categories = ['All', 'Braking', 'Engine', 'Transmission', 'Drivetrain', 'Cooling', 'Electrical'];
-
-  const filteredSymptoms = useMemo(() => {
-    const q = searchTerm.trim().toLowerCase();
-    return SYMPTOMS_DATABASE.filter((s) => {
-      const matchCat = selectedCategory === 'All' || s.category === selectedCategory;
-      if (!matchCat) return false;
-      if (!q) return true;
-      const haystack = [s.title, s.rootCause, s.description, ...s.keywords].join(' ').toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [searchTerm, selectedCategory]);
-
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    if (activeTab === 'chat') {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, isTyping, activeTab]);
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
 
   const handleSendMessage = async (textToSend) => {
     const q = (textToSend || inputQuery).trim();
@@ -461,6 +492,7 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
             id: 'ai-' + Date.now(),
             sender: 'ai',
             text: data.text,
+            diy: data.diy,
             parts: data.parts,
             source: 'gemini'
           };
@@ -482,6 +514,7 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
         badge: result.badge,
         title: result.title,
         text: result.text || result.answer || '',
+        diy: result.diy,
         tips: result.tips,
         parts: result.parts,
         source: 'local'
@@ -491,32 +524,6 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
     }, 280);
   };
 
-  const handleAddBundleToCart = (symptom) => {
-    const p = symptom.bundleProducts[0];
-    try {
-      const cart = JSON.parse(localStorage.getItem('motodc-cart') || '[]');
-      const item = {
-        id: `bundle-${symptom.id}`,
-        name: `${symptom.bundleName} (${p.name})`,
-        price: p.price,
-        image: '/motodc-hero.jpg',
-        category: symptom.category,
-        qty: 1,
-        stock: 10
-      };
-      const existing = cart.findIndex((x) => x.id === item.id);
-      if (existing >= 0) cart[existing].qty += 1;
-      else cart.push(item);
-      localStorage.setItem('motodc-cart', JSON.stringify(cart));
-      window.dispatchEvent(new Event('cartchange'));
-      toast.success(`Diagnostic bundle added to cart! (${p.name})`);
-    } catch (_) {
-      toast.success(`Bundle saved. Navigating to catalog.`);
-    }
-    if (onClose) onClose();
-    nav(`/products?q=${encodeURIComponent(p.query)}`);
-  };
-
   const handleInspectPart = (query) => {
     if (onClose) onClose();
     nav(`/products?q=${encodeURIComponent(query)}`);
@@ -524,228 +531,151 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
 
   return (
     <div className="copilotModalContainer">
-      {/* =========================================================
-          VIEW 1: INTERACTIVE AI CHAT & DOUBT CLEARING
-          ========================================================= */}
-      {activeTab === 'chat' && (
-        <div className="copilotChatContainer">
-          <div className="copilotChatStream">
-            {messages.map((m) => (
-              <div key={m.id} className={`chatMessageRow ${m.sender}`}>
-                {m.sender === 'ai' ? (
-                  <div className="chatAvatar aiAvatar">
-                    <Bot size={17} />
-                  </div>
-                ) : (
-                  <div className="chatAvatar userAvatar">
-                    <User size={17} />
-                  </div>
-                )}
-
-                <div className="chatBubble">
-                  {m.source === 'gemini' && (
-                    <span className="geminiPill">
-                      <Sparkles size={10} /> Gemini AI
-                    </span>
-                  )}
-
-                  {m.badge && (
-                    <div className="chatBubbleBadge">
-                      <Sparkles size={12} /> {m.badge}
-                    </div>
-                  )}
-
-                  {m.title && <h4 className="chatBubbleTitle">{m.title}</h4>}
-
-                  <p className="chatBubbleText">{m.text}</p>
-
-                  {/* Troubleshooting & Advice Tips */}
-                  {m.tips && m.tips.length > 0 && (
-                    <div className="chatTipsList">
-                      <strong>
-                        <CheckCircle2 size={14} /> Actionable Steps & Guidance:
-                      </strong>
-                      <ul>
-                        {m.tips.map((tip, idx) => (
-                          <li key={idx}>{tip}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Matching Spare Parts */}
-                  {m.parts && m.parts.length > 0 && (
-                    <div className="chatPartsCard">
-                      <span className="chatPartsHeading">
-                        <Package size={14} /> Recommended Genuine Parts on MotoDC:
-                      </span>
-                      <div className="chatPartsList">
-                        {m.parts.map((p, idx) => (
-                          <div key={idx} className="chatPartItem">
-                            <span className="chatPartName">{p.name}</span>
-                            {p.price > 0 && (
-                              <span className="chatPartPrice">₹{p.price.toLocaleString('en-IN')}</span>
-                            )}
-                            <button
-                              type="button"
-                              className="chatPartBtn"
-                              onClick={() => handleInspectPart(p.query)}
-                            >
-                              View Part <ArrowRight size={13} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Quick Suggestions for Initial Greeting */}
-                  {m.suggestions && (
-                    <div className="chatSuggestionsWrap">
-                      <span className="suggestionsLabel">Suggested Topics & Common Doubts:</span>
-                      <div className="suggestionsGrid">
-                        {m.suggestions.map((s, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            className="suggestionChip"
-                            onClick={() => handleSendMessage(s)}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-
-            {/* Live AI Typing Indicator */}
-            {isTyping && (
-              <div className="chatMessageRow ai">
+      <div className="copilotChatContainer">
+        <div className="copilotChatStream">
+          {messages.map((m) => (
+            <div key={m.id} className={`chatMessageRow ${m.sender}`}>
+              {m.sender === 'ai' ? (
                 <div className="chatAvatar aiAvatar">
                   <Bot size={17} />
                 </div>
-                <div className="chatBubble chatBubbleTyping">
-                  <span className="typingDot" />
-                  <span className="typingDot" />
-                  <span className="typingDot" />
+              ) : (
+                <div className="chatAvatar userAvatar">
+                  <User size={17} />
                 </div>
-              </div>
-            )}
-
-            <div ref={chatEndRef} />
-          </div>
-
-          {/* Chat Input Bar */}
-          <form
-            className="copilotChatInputBar"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendMessage();
-            }}
-          >
-            <input
-              type="text"
-              value={inputQuery}
-              onChange={(e) => setInputQuery(e.target.value)}
-              placeholder="Ask anything about parts, symptoms, COD, delivery..."
-              className="chatTextInput"
-              disabled={isTyping}
-              autoFocus
-            />
-            <button
-              type="submit"
-              className="chatSendBtn"
-              disabled={!inputQuery.trim() || isTyping}
-              aria-label="Send query to AI Assistant"
-            >
-              <Send size={15} />
-              <span>{isTyping ? 'Thinking...' : 'Ask'}</span>
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* =========================================================
-          VIEW 2: WORKSHOP SYMPTOM LIBRARY (DETAILED DOSSIERS)
-          ========================================================= */}
-      {activeTab === 'library' && (
-        <div className="copilotContainer inModal">
-          <div className="copilotSearchRow">
-            <div className="copilotSearchInputWrap">
-              <Search size={16} className="copilotSearchIcon" />
-              <input
-                type="text"
-                placeholder="Search symptom (e.g., squeal, rattle, misfire)..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="copilotSearchInput"
-              />
-              {searchTerm && (
-                <button
-                  type="button"
-                  className="copilotSearchClear"
-                  onClick={() => setSearchTerm('')}
-                >
-                  ×
-                </button>
               )}
-            </div>
 
-            <div className="copilotCategoryPills">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  className={`copilotCategoryPill ${selectedCategory === cat ? 'active' : ''}`}
-                  onClick={() => setSelectedCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
+              <div className="chatBubble">
+                {m.source === 'gemini' && (
+                  <span className="geminiPill">
+                    <Sparkles size={10} /> Gemini AI
+                  </span>
+                )}
 
-          <div className="copilotGrid">
-            <div className="copilotSymptomsList">
-              {filteredSymptoms.map((s) => (
-                <div
-                  key={s.id}
-                  className={`symptomItemCard ${activeSymptom.id === s.id ? 'selected' : ''}`}
-                  onClick={() => setActiveSymptom(s)}
-                >
-                  <span className="symptomIconBadge">{s.icon}</span>
-                  <div className="symptomItemMeta">
-                    <h5 className="symptomItemTitle">{s.title}</h5>
-                    <p className="symptomItemDesc">{s.rootCause}</p>
+                {m.badge && (
+                  <div className="chatBubbleBadge">
+                    <Sparkles size={12} /> {m.badge}
                   </div>
-                </div>
-              ))}
-            </div>
+                )}
 
-            {activeSymptom && (
-              <div className="copilotDossierPanel">
-                <h4 className="dossierTitle">{activeSymptom.title}</h4>
-                <div className="dossierCauseText">
-                  <strong>Root Cause:</strong> {activeSymptom.rootCause}
-                </div>
-                <p className="symptomItemDesc" style={{ marginBottom: 10 }}>
-                  {activeSymptom.description}
-                </p>
-                <button
-                  type="button"
-                  className="bundleAddToCartBtn"
-                  onClick={() => handleAddBundleToCart(activeSymptom)}
-                >
-                  <ShoppingCart size={15} /> Add Bundle ({activeSymptom.bundleProducts[0].name})
-                </button>
+                {m.title && <h4 className="chatBubbleTitle">{m.title}</h4>}
+
+                <p className="chatBubbleText">{m.text}</p>
+
+                {/* Workshop Mechanic DIY Badge */}
+                {m.diy && (
+                  <div className="chatDiyBadge">
+                    <Wrench size={12} /> {m.diy}
+                  </div>
+                )}
+
+                {/* Troubleshooting & Advice Tips */}
+                {m.tips && m.tips.length > 0 && (
+                  <div className="chatTipsList">
+                    <strong>
+                      <CheckCircle2 size={14} /> Actionable Steps & Guidance:
+                    </strong>
+                    <ul>
+                      {m.tips.map((tip, idx) => (
+                        <li key={idx}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Matching Spare Parts */}
+                {m.parts && m.parts.length > 0 && (
+                  <div className="chatPartsCard">
+                    <span className="chatPartsHeading">
+                      <Package size={14} /> Recommended Genuine Parts on MotoDC:
+                    </span>
+                    <div className="chatPartsList">
+                      {m.parts.map((p, idx) => (
+                        <div key={idx} className="chatPartItem">
+                          <span className="chatPartName">{p.name}</span>
+                          {p.price > 0 && (
+                            <span className="chatPartPrice">₹{p.price.toLocaleString('en-IN')}</span>
+                          )}
+                          <button
+                            type="button"
+                            className="chatPartBtn"
+                            onClick={() => handleInspectPart(p.query)}
+                          >
+                            View Part <ArrowRight size={13} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick Suggestions for Initial Greeting */}
+                {m.suggestions && (
+                  <div className="chatSuggestionsWrap">
+                    <span className="suggestionsLabel">Suggested Workshop & Store Topics:</span>
+                    <div className="suggestionsGrid">
+                      {m.suggestions.map((s, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          className="suggestionChip"
+                          onClick={() => handleSendMessage(s)}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          ))}
+
+          {/* Live AI Typing Indicator */}
+          {isTyping && (
+            <div className="chatMessageRow ai">
+              <div className="chatAvatar aiAvatar">
+                <Bot size={17} />
+              </div>
+              <div className="chatBubble chatBubbleTyping">
+                <span className="typingDot" />
+                <span className="typingDot" />
+                <span className="typingDot" />
+              </div>
+            </div>
+          )}
+
+          <div ref={chatEndRef} />
         </div>
-      )}
+
+        {/* Chat Input Bar */}
+        <form
+          className="copilotChatInputBar"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSendMessage();
+          }}
+        >
+          <input
+            type="text"
+            value={inputQuery}
+            onChange={(e) => setInputQuery(e.target.value)}
+            placeholder="Ask anything about mechanics, symptoms, parts, or any topic..."
+            className="chatTextInput"
+            disabled={isTyping}
+            autoFocus
+          />
+          <button
+            type="submit"
+            className="chatSendBtn"
+            disabled={!inputQuery.trim() || isTyping}
+            aria-label="Send query to AI Assistant"
+          >
+            <Send size={15} />
+            <span>{isTyping ? 'Thinking...' : 'Ask'}</span>
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
@@ -753,34 +683,10 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
 // Floating AI Launcher Icon & Slide-Over Chat Widget for ALL pages
 export function MechanicCopilotFloatingLauncher() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'library'
-  const [showKeyModal, setShowKeyModal] = useState(false);
-  const [customKey, setCustomKey] = useState(() => localStorage.getItem('motodc_gemini_key') || '');
-  const [keyInput, setKeyInput] = useState('');
-
-  const handleSaveKey = () => {
-    const k = keyInput.trim();
-    if (!k) return;
-    localStorage.setItem('motodc_gemini_key', k);
-    setCustomKey(k);
-    setKeyInput('');
-    setShowKeyModal(false);
-    toast.success('Gemini AI Key saved! Live AI activated.');
-  };
-
-  const handleRemoveKey = () => {
-    localStorage.removeItem('motodc_gemini_key');
-    setCustomKey('');
-    setShowKeyModal(false);
-    toast.success('Custom key removed.');
-  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (showKeyModal) setShowKeyModal(false);
-        else setIsOpen(false);
-      }
+      if (e.key === 'Escape') setIsOpen(false);
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
@@ -788,7 +694,7 @@ export function MechanicCopilotFloatingLauncher() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, showKeyModal]);
+  }, [isOpen]);
 
   return (
     <>
@@ -835,45 +741,15 @@ export function MechanicCopilotFloatingLauncher() {
               <div className="aiHeaderInfo">
                 <div className="aiHeaderTitleRow">
                   <h4>MotoDC AI Copilot</h4>
-                  <span className="aiHeaderTag">AI HELP</span>
+                  <span className="aiHeaderTag">AI MECHANIC</span>
                 </div>
                 <span className="aiHeaderSubtext">
-                  ● Online · Powered by Gemini & Workshop Intelligence
+                  ● Online · Master Workshop & Live AI
                 </span>
               </div>
             </div>
 
             <div className="aiHeaderActions">
-              <button
-                type="button"
-                className={`aiHeaderTabBtn ${showKeyModal || customKey ? 'active' : ''}`}
-                onClick={() => {
-                  setShowKeyModal((v) => !v);
-                  if (!showKeyModal && customKey) setKeyInput(customKey);
-                }}
-                title={customKey ? "Gemini Key Active" : "Connect Free Gemini API Key"}
-                aria-label="Connect Free Gemini API Key"
-              >
-                <Key size={14} />
-              </button>
-              <button
-                type="button"
-                className={`aiHeaderTabBtn ${activeTab === 'chat' ? 'active' : ''}`}
-                onClick={() => setActiveTab('chat')}
-                title="Q&A Chat"
-                aria-label="Q&A Chat view"
-              >
-                <MessageSquare size={15} />
-              </button>
-              <button
-                type="button"
-                className={`aiHeaderTabBtn ${activeTab === 'library' ? 'active' : ''}`}
-                onClick={() => setActiveTab('library')}
-                title="Symptom Library"
-                aria-label="Workshop Symptom Library"
-              >
-                <Wrench size={15} />
-              </button>
               <button
                 type="button"
                 className="aiChatCloseBtn"
@@ -886,70 +762,9 @@ export function MechanicCopilotFloatingLauncher() {
             </div>
           </div>
 
-          {/* Gemini Key Settings Popover */}
-          {showKeyModal && (
-            <div className="geminiKeyPopover">
-              <div className="geminiKeyTitle">
-                <span>Free Google Gemini AI</span>
-                <button
-                  type="button"
-                  style={{ background: 'none', border: 'none', color: '#8b949e', cursor: 'pointer', padding: 2 }}
-                  onClick={() => setShowKeyModal(false)}
-                  aria-label="Close settings"
-                >
-                  <X size={15} />
-                </button>
-              </div>
-              <p className="geminiKeyDesc">
-                Get your free API key at{' '}
-                <a
-                  href="https://aistudio.google.com/app/apikey"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: '#ff3157', textDecoration: 'underline' }}
-                >
-                  Google AI Studio
-                </a>{' '}
-                (no credit card needed). Paste below for live AI responses, or set <code>GEMINI_API_KEY</code> on Vercel.
-              </p>
-              <div className="geminiKeyInputRow">
-                <input
-                  type="password"
-                  placeholder="Paste Key (AIzaSy...)"
-                  value={keyInput}
-                  onChange={(e) => setKeyInput(e.target.value)}
-                  className="geminiKeyInput"
-                />
-                <button
-                  type="button"
-                  className="geminiKeySaveBtn"
-                  onClick={handleSaveKey}
-                >
-                  Save
-                </button>
-              </div>
-              {customKey && (
-                <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 11, color: '#3fb950', display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <CheckCircle2 size={12} /> Live Key Active
-                  </span>
-                  <button
-                    type="button"
-                    style={{ background: 'none', border: 'none', color: '#f85149', fontSize: 11, cursor: 'pointer' }}
-                    onClick={handleRemoveKey}
-                  >
-                    Remove Key
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
           <div className="aiChatWidgetBody">
             <MechanicCopilot
               isModal={true}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
               onClose={() => setIsOpen(false)}
             />
           </div>

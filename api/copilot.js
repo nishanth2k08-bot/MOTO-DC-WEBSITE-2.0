@@ -37,8 +37,50 @@ function findRelevantCatalogParts(queryText, aiResponseText) {
   return matched;
 }
 
+// Ensure Gemini contents are strictly valid: first turn is 'user', alternating roles
+function buildGeminiContents(history, currentMessage) {
+  const turns = [];
+
+  if (Array.isArray(history)) {
+    for (const item of history.slice(-8)) {
+      if (!item || !item.text) continue;
+      // Skip the initial welcome greeting
+      if (item.id === 'welcome' || item.sender === 'system') continue;
+      const role = item.sender === 'user' ? 'user' : 'model';
+      turns.push({ role, text: String(item.text).slice(0, 600) });
+    }
+  }
+
+  // Ensure current user message is appended
+  turns.push({ role: 'user', text: String(currentMessage).slice(0, 800) });
+
+  // Drop any leading 'model' turns so it always begins with 'user'
+  while (turns.length > 0 && turns[0].role !== 'user') {
+    turns.shift();
+  }
+
+  if (turns.length === 0) {
+    return [{ role: 'user', parts: [{ text: String(currentMessage).slice(0, 800) }] }];
+  }
+
+  // Merge consecutive turns with identical roles to satisfy Gemini alternating requirement
+  const alternating = [];
+  for (const turn of turns) {
+    if (alternating.length > 0 && alternating[alternating.length - 1].role === turn.role) {
+      alternating[alternating.length - 1].parts[0].text += `\n${turn.text}`;
+    } else {
+      alternating.push({
+        role: turn.role,
+        parts: [{ text: turn.text }]
+      });
+    }
+  }
+
+  return alternating;
+}
+
 export default async function handler(req, res) {
-  // Support CORS for local dev / cross-origin if needed
+  // Support CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -58,7 +100,6 @@ export default async function handler(req, res) {
 
   const apiKey = clientApiKey || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
-  // If no Gemini API key is configured anywhere, signal the client to use the built-in intelligent engine
   if (!apiKey) {
     return send(res, 200, {
       fallback: true,
@@ -67,83 +108,84 @@ export default async function handler(req, res) {
     });
   }
 
-  const systemPrompt = `You are MotoDC AI, the expert automotive and customer support assistant for MotoDC — a premier automotive and motorcycle spare parts platform in India (motodc-official.vercel.app).
+  const systemPrompt = `You are MotoDC AI, the expert master workshop mechanic and friendly assistant for MotoDC — India's premier auto & motorcycle spare parts store (motodc-official.vercel.app).
 
-RULES & PERSONALITY:
-1. PRECISE & NATURAL: Answer concisely and directly. Never output long essays, boilerplate disclaimers, or generic diagnostic dumps.
-2. GREETINGS & CASUAL TALK: If the user says "hi", "hello", "hey", or casual phrases, respond warmly in 1 or 2 friendly sentences. Do not dump a technical diagnostic lecture on a simple greeting.
-3. STORE POLICIES (MOTODC):
-   - Cash on Delivery (COD): 100% Cash on Delivery available across India with zero advance payment.
-   - Delivery: Dispatched within 24 hours, delivered in 3-5 business days. Free shipping on orders over ₹2,000 (flat ₹99 otherwise).
+CORE CAPABILITIES & BEHAVIORS:
+1. MASTER AUTOMOTIVE MECHANIC:
+   - You are a certified automobile and motorcycle mechanic with deep workshop experience.
+   - When asked about any vehicle symptom (e.g., brake squeal, engine sputtering/misfire, clutch slip, chain slack/rattle, overheating, battery clicking, weird sounds, vibrations, oil selection):
+     - Identify the root cause in 1-2 clear, direct sentences.
+     - Provide 2-3 actionable, numbered or bulleted diagnostic or repair tips.
+     - Mention tools required and DIY difficulty (Easy/Moderate/Advanced) when helpful.
+     - Recommend matching genuine OEM replacement parts available on MotoDC.
+
+2. MOTODC STORE POLICIES (ALWAYS ACCURATE):
+   - Cash on Delivery (COD): 100% Cash on Delivery available across all pin codes in India with zero advance payment.
+   - Delivery: Dispatched within 24 hours, delivered in 3-5 business days across India. Free shipping on orders over ₹2,000 (flat ₹99 otherwise).
    - Returns: 7-Day Hassle-Free Return & Replacement Guarantee with free door pickup via "My Orders".
    - Authenticity: 100% Genuine OEM/OES components backed by manufacturer warranty (Brembo, Bosch, Motul, Castrol, NGK, Philips, Rolon).
-4. VEHICLE DIAGNOSTICS:
-   - Identify the probable root cause in 1-2 sentences.
-   - Provide 2-3 actionable, bulleted maintenance steps.
-   - Recommend genuine replacement parts.
-5. Formatting: Use clean bullet points when listing steps or policies. Keep answers under 120 words unless answering a complex multi-part automotive question.`;
+
+3. OFFSIDE & GENERAL KNOWLEDGE QUESTIONS:
+   - You are also a fully capable, friendly, general-purpose AI.
+   - If the user asks ANY offside or non-automotive question (general knowledge, science, math, coding, life advice, trivia, jokes, sports, casual chat):
+     - ALWAYS answer helpfully, accurately, and naturally!
+     - NEVER refuse to answer. Never say "I can only answer automotive questions".
+     - Answer directly and concisely.
+
+4. TONE & STYLE:
+   - Friendly, expert, warm, and concise (under 130 words unless answering a complex multi-step technical inquiry).
+   - Never output boilerplate disclaimers, walls of text, or generic essay dumps.`;
 
   try {
-    const contents = [];
+    const contents = buildGeminiContents(history, message);
 
-    // Append recent conversational context (last 6 messages)
-    if (Array.isArray(history)) {
-      for (const turn of history.slice(-6)) {
-        if (turn.sender === 'user' && turn.text) {
-          contents.push({
-            role: 'user',
-            parts: [{ text: turn.text.slice(0, 500) }]
-          });
-        } else if (turn.sender === 'ai' && turn.text) {
-          contents.push({
-            role: 'model',
-            parts: [{ text: turn.text.slice(0, 500) }]
-          });
+    const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+    let textOutput = '';
+    let lastError = null;
+
+    for (const modelName of models) {
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+
+        const apiRes = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: systemPrompt }]
+            },
+            contents,
+            generationConfig: {
+              temperature: 0.6,
+              maxOutputTokens: 420,
+              topP: 0.95
+            }
+          })
+        });
+
+        clearTimeout(timeout);
+
+        if (apiRes.ok) {
+          const data = await apiRes.json();
+          textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (textOutput) break;
+        } else {
+          const errDetail = await apiRes.text();
+          console.warn(`Gemini model ${modelName} returned status ${apiRes.status}:`, errDetail);
+          lastError = `${apiRes.status}: ${errDetail}`;
         }
+      } catch (e) {
+        console.warn(`Gemini model ${modelName} request error:`, e.message);
+        lastError = e.message;
       }
     }
 
-    // Append current user message
-    contents.push({
-      role: 'user',
-      parts: [{ text: message.slice(0, 600) }]
-    });
-
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8500);
-
-    const apiRes = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: systemPrompt }]
-        },
-        contents,
-        generationConfig: {
-          temperature: 0.5,
-          maxOutputTokens: 380,
-          topP: 0.95
-        }
-      })
-    });
-
-    clearTimeout(timeout);
-
-    if (!apiRes.ok) {
-      const errText = await apiRes.text();
-      console.warn('Gemini API call failed with status:', apiRes.status, errText);
-      return send(res, 200, { fallback: true, reason: 'api_error', status: apiRes.status });
-    }
-
-    const data = await apiRes.json();
-    const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
     if (!textOutput) {
-      return send(res, 200, { fallback: true, reason: 'empty_response' });
+      console.warn('All Gemini models failed or returned empty. Last error:', lastError);
+      return send(res, 200, { fallback: true, reason: 'api_error', error: lastError });
     }
 
     // Find matching catalog parts if relevant
