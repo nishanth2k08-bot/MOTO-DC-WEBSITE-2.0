@@ -102,16 +102,9 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
 
   return (
     <div className="ordersHero" id="order-tracking-hero">
-      {/* Tactical Aerospace Radar Corner HUD Brackets & Scanning Beam */}
-      <div className="radarCornerHud tl" aria-hidden="true" />
-      <div className="radarCornerHud tr" aria-hidden="true" />
-      <div className="radarCornerHud bl" aria-hidden="true" />
-      <div className="radarCornerHud br" aria-hidden="true" />
-      <div className="radarGlobalScanline" aria-hidden="true" />
-
       <div className="ordersHeroHeader">
         <div className="ordersHeroCopy">
-          <p className="eyebrow"><span className="radarPingIndicator" aria-hidden="true" /> LIVE GPS FLEET DISPATCH · 5.8 GHz LIDAR SWEEP</p>
+          <p className="eyebrow"><i/> LIVE GPS FLEET DISPATCH</p>
           <h1>Real-Time <span>Delivery Radar.</span></h1>
           <p>Autonomous shipment telemetry and route tracking from garage to doorstep.</p>
         </div>
@@ -162,15 +155,7 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
         <div className="telemetryCard">
           <div className="telemetryCardLabel"><Truck size={13}/> FLEET TELEMETRY</div>
           <div className="telemetryCardValue">ETA: {meta.eta}</div>
-          <div className="telemetryCardSub">
-            <span>Unit #KA-04-MD · {meta.speed}</span>
-            <span className="radarSignalMeter" title="Telemetry Signal Strength">
-              <span className="bar b1" />
-              <span className="bar b2" />
-              <span className="bar b3" />
-              <span className="bar b4" />
-            </span>
-          </div>
+          <div className="telemetryCardSub">Courier Unit #KA-04-MD · {meta.speed}</div>
         </div>
       </div>
 
@@ -188,29 +173,6 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
               <stop offset="0%" stopColor="#ff1744"/>
               <stop offset="50%" stopColor="#ff3157"/>
               <stop offset="100%" stopColor="#ff6b8b"/>
-            </linearGradient>
-            <linearGradient id="satelliteDownlinkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(0, 245, 255, 0)"/>
-              <stop offset="35%" stopColor="rgba(0, 245, 255, 0.45)"/>
-              <stop offset="75%" stopColor="rgba(0, 245, 255, 0.85)"/>
-              <stop offset="100%" stopColor="rgba(255, 255, 255, 1)"/>
-            </linearGradient>
-            <radialGradient id="radarSweepGradient" cx="0%" cy="0%" r="100%">
-              <stop offset="0%" stopColor="rgba(0, 245, 255, 0.45)"/>
-              <stop offset="25%" stopColor="rgba(255, 49, 87, 0.25)"/>
-              <stop offset="60%" stopColor="rgba(0, 245, 255, 0.08)"/>
-              <stop offset="100%" stopColor="rgba(0, 0, 0, 0)"/>
-            </radialGradient>
-            <radialGradient id="destinationPulseGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(0, 245, 255, 0.8)"/>
-              <stop offset="40%" stopColor="rgba(0, 245, 255, 0.25)"/>
-              <stop offset="100%" stopColor="rgba(0, 245, 255, 0)"/>
-            </radialGradient>
-            <linearGradient id="plasmaThrustGrad" x1="100%" y1="0%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#ffffff"/>
-              <stop offset="30%" stopColor="#00f5ff"/>
-              <stop offset="70%" stopColor="#ff3157"/>
-              <stop offset="100%" stopColor="rgba(255, 49, 87, 0)"/>
             </linearGradient>
             <linearGradient id="hypercarBody" x1="0%" y1="0%" x2="100%" y2="80%">
               <stop offset="0%" stopColor="#ff3864"/>
@@ -278,64 +240,20 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
           </defs>
 
           {/* Tactical High-Tech Grid & Telemetry Coordinates */}
-          <g opacity="0.25">
+          <g opacity="0.22">
             <line x1="30" y1="45" x2="1170" y2="45" stroke="#334155" strokeWidth="0.7" strokeDasharray="4 8"/>
             <line x1="30" y1="115" x2="1170" y2="115" stroke="#334155" strokeWidth="0.7" strokeDasharray="4 8"/>
             <line x1="30" y1="185" x2="1170" y2="185" stroke="#334155" strokeWidth="0.7" strokeDasharray="4 8"/>
-            <line x1="200" y1="20" x2="200" y2="210" stroke="#334155" strokeWidth="0.5" strokeDasharray="3 9"/>
-            <line x1="400" y1="20" x2="400" y2="210" stroke="#334155" strokeWidth="0.5" strokeDasharray="3 9"/>
-            <line x1="600" y1="20" x2="600" y2="210" stroke="#334155" strokeWidth="0.6" strokeDasharray="4 8"/>
-            <line x1="800" y1="20" x2="800" y2="210" stroke="#334155" strokeWidth="0.5" strokeDasharray="3 9"/>
-            <line x1="1000" y1="20" x2="1000" y2="210" stroke="#334155" strokeWidth="0.5" strokeDasharray="3 9"/>
             {/* Crosshairs & Sector Markers */}
-            <path d="M 340 38 L 340 48 M 335 43 L 345 43" stroke="#ff3157" strokeWidth="1.2"/>
-            <path d="M 610 38 L 610 48 M 605 43 L 615 43" stroke="#00f5ff" strokeWidth="1.2"/>
-            <path d="M 880 38 L 880 48 M 875 43 L 885 43" stroke="#ff3157" strokeWidth="1.2"/>
+            <path d="M 340 38 L 340 48 M 335 43 L 345 43" stroke="#ff3157" strokeWidth="1"/>
+            <path d="M 610 38 L 610 48 M 605 43 L 615 43" stroke="#ff3157" strokeWidth="1"/>
+            <path d="M 880 38 L 880 48 M 875 43 L 885 43" stroke="#ff3157" strokeWidth="1"/>
             <text x="45" y="28" fill="#64748b" fontSize="8" fontFamily="monospace" letterSpacing="0.8">
-              RADAR LINK // 5.8 GHz · LIDAR TELEMETRY SCANNER · REAL-TIME CORRIDOR
+              RADAR LINK // 5.8 GHz · SECURE TELEMETRY FEED · HIGH-SPEED DISPATCH
             </text>
-            <text x="960" y="28" fill="#64748b" fontSize="8" fontFamily="monospace" letterSpacing="0.8">
-              BEARING 042° · SAT LOCK 14/14 · LAT 12.97°N
+            <text x="1010" y="28" fill="#64748b" fontSize="8" fontFamily="monospace" letterSpacing="0.8">
+              CORRIDOR // KA-04 ➔ DEST
             </text>
-          </g>
-
-          {/* Tactical Radar Concentric Range Rings & Rotating Radar Sector Sweep */}
-          <g className="radarTelemetryLayer">
-            {/* Range distance rings */}
-            <circle cx="600" cy="115" r="65" fill="none" stroke="rgba(255, 49, 87, 0.14)" strokeWidth="1" strokeDasharray="3 6"/>
-            <circle cx="600" cy="115" r="135" fill="none" stroke="rgba(0, 245, 255, 0.12)" strokeWidth="1" strokeDasharray="4 8"/>
-            <circle cx="600" cy="115" r="215" fill="none" stroke="rgba(255, 49, 87, 0.09)" strokeWidth="1" strokeDasharray="5 10"/>
-            <circle cx="600" cy="115" r="295" fill="none" stroke="rgba(0, 245, 255, 0.06)" strokeWidth="1" strokeDasharray="6 12"/>
-            
-            {/* Range labels */}
-            <text x="604" y="54" fill="rgba(255, 49, 87, 0.4)" fontSize="7" fontFamily="monospace">R-50KM</text>
-            <text x="604" y="-16" fill="rgba(0, 245, 255, 0.35)" fontSize="7" fontFamily="monospace">R-100KM</text>
-            
-            {/* 360-Degree Animated Rotating Conical Radar Sweep Scanner */}
-            <g transform="translate(600, 115)" className="radarSweepConical">
-              <path d="M 0 0 L 290 -85 A 310 310 0 0 1 310 55 Z" fill="url(#radarSweepGradient)" />
-              <line x1="0" y1="0" x2="310" y2="55" stroke="#00f5ff" strokeWidth="1.6" filter="url(#superNeonGlow)" opacity="0.85" />
-              <circle cx="300" cy="53" r="3" fill="#ffffff" filter="url(#neonGlow)" />
-            </g>
-
-            {/* Hub Radar Reticle (Bangalore Central Warehouse x=90, y=135) */}
-            <g transform="translate(90, 135)">
-              <circle cx="0" cy="0" r="22" fill="none" stroke="rgba(255, 49, 87, 0.4)" strokeWidth="1.2" strokeDasharray="4 4" className="radarReticleCounterSpin" />
-              <circle cx="0" cy="0" r="32" fill="none" stroke="rgba(255, 49, 87, 0.2)" strokeWidth="0.8" strokeDasharray="2 6" className="radarReticleSpin" />
-            </g>
-
-            {/* Destination Landing Beacon & Satellite Target Lock (Doorstep x=1120, y=133) */}
-            <g transform="translate(1120, 133)" className="destinationTargetZone">
-              {/* Expanding target landing pulses */}
-              <circle cx="0" cy="0" r="16" fill="url(#destinationPulseGrad)" className="radarPulseExpansion" />
-              <circle cx="0" cy="0" r="24" fill="none" stroke="#00f5ff" strokeWidth="1.2" strokeDasharray="4 5" className="radarReticleSpin" />
-              <circle cx="0" cy="0" r="34" fill="none" stroke="rgba(0, 245, 255, 0.35)" strokeWidth="0.8" strokeDasharray="3 7" className="radarReticleCounterSpin" />
-              <line x1="-38" y1="0" x2="38" y2="0" stroke="rgba(0, 245, 255, 0.5)" strokeWidth="1" strokeDasharray="2 3" />
-              <line x1="0" y1="-38" x2="0" y2="38" stroke="rgba(0, 245, 255, 0.5)" strokeWidth="1" strokeDasharray="2 3" />
-              {/* Satellite Orbital Downlink Beam */}
-              <line x1="0" y1="-95" x2="0" y2="0" stroke="url(#satelliteDownlinkGrad)" strokeWidth="2" strokeDasharray="6 4" className="satelliteDownlinkBeam" filter="url(#neonGlow)" />
-              <polygon points="0,-98 -5,-93 5,-93" fill="#00f5ff" filter="url(#neonGlow)" />
-            </g>
           </g>
 
           {/* Road Foundation Bed & Ambient Shadow */}
@@ -397,25 +315,6 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
             filter="url(#superNeonGlow)"
           />
 
-          {/* Animated High-Speed Cyber Data Packets / Photon Stream flowing along corridor */}
-          <path
-            d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
-            fill="none"
-            stroke="#00f5ff"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            className="radarPhotonStream"
-            filter="url(#neonGlow)"
-          />
-          <path
-            d="M 30 140 C 130 140, 220 90, 340 90 C 460 90, 490 145, 610 145 C 730 145, 760 85, 880 85 C 1000 85, 1030 135, 1170 135"
-            fill="none"
-            stroke="#ff3157"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            className="radarPhotonStreamFast"
-          />
-
           {/* Milestone Waypoint Stations */}
           {WAYPOINTS.map(wp=>{
             const isDone=activeStep>=wp.step;
@@ -437,17 +336,6 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
                   strokeDasharray="2 3"
                   opacity={isDone?1:0.45}
                 />
-                {/* Station Outer Rotating Radar Reticle */}
-                <circle
-                  cx={wp.x}
-                  cy={wp.y}
-                  r="15"
-                  fill="none"
-                  stroke={isCurrent?'#ff3157':isDone?'rgba(255,49,87,0.4)':'rgba(51,65,85,0.4)'}
-                  strokeWidth="1"
-                  strokeDasharray="3 4"
-                  className={isCurrent?'radarReticleSpin':undefined}
-                />
                 {/* Station Node Ring */}
                 <circle cx={wp.x} cy={wp.y} r="9" fill="#06090e" stroke={isCurrent?'#ff3157':isDone?'#e11d48':'#334155'} strokeWidth={isCurrent?2.5:2}/>
                 <circle cx={wp.x} cy={wp.y} r="3.5" fill={isCurrent?'#ffffff':isDone?'#ff3157':'#1e293b'}/>
@@ -456,12 +344,12 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
                 {isCurrent&&(
                   <>
                     <circle cx={wp.x} cy={wp.y} r="14" fill="none" stroke="#ff3157" strokeWidth="1.5" opacity="0.8">
-                      <animate attributeName="r" values="9;28" dur="2s" repeatCount="indefinite"/>
+                      <animate attributeName="r" values="9;26" dur="2s" repeatCount="indefinite"/>
                       <animate attributeName="opacity" values="0.9;0" dur="2s" repeatCount="indefinite"/>
                     </circle>
-                    <circle cx={wp.x} cy={wp.y} r="10" fill="none" stroke="#00f5ff" strokeWidth="1.2" opacity="0.7">
-                      <animate attributeName="r" values="9;20" dur="2s" begin="0.5s" repeatCount="indefinite"/>
-                      <animate attributeName="opacity" values="0.8;0" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+                    <circle cx={wp.x} cy={wp.y} r="10" fill="none" stroke="#38bdf8" strokeWidth="1" opacity="0.6">
+                      <animate attributeName="r" values="9;18" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.7;0" dur="2s" begin="0.6s" repeatCount="indefinite"/>
                     </circle>
                   </>
                 )}
@@ -537,14 +425,11 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
             <ellipse cx="0" cy="1.2" rx="45" ry="4" fill="rgba(255,49,87,0.65)" filter="url(#superNeonGlow)"/>
 
             {/* Long Volumetric Laser Projector Headlight Beam */}
-            <g className="headlightBreathingBeam">
-              <polygon points="45,-9.5 240,-30 250,16 44,-5" fill="url(#laserBeamVolumetric)" opacity="0.68" pointerEvents="none"/>
-              <polygon points="46,-9 150,-17 155,7 45,-6.5" fill="url(#laserBeamCore)" opacity="0.88" pointerEvents="none"/>
-            </g>
+            <polygon points="45,-9.5 240,-30 250,16 44,-5" fill="url(#laserBeamVolumetric)" opacity="0.68" pointerEvents="none"/>
+            <polygon points="46,-9 150,-17 155,7 45,-6.5" fill="url(#laserBeamCore)" opacity="0.88" pointerEvents="none"/>
 
-            {/* Rear Exhaust / Afterburner Ion Pulse & Flickering Plasma Thrust */}
+            {/* Rear Exhaust / Afterburner Ion Pulse */}
             <g transform="translate(-45, -8)">
-              <ellipse cx="-10" cy="0" rx="9" ry="2.2" fill="url(#plasmaThrustGrad)" className="exhaustPlasmaFlicker" />
               <ellipse cx="-4" cy="0" rx="6" ry="2.5" fill="rgba(56, 189, 248, 0.55)" filter="url(#neonGlow)">
                 <animate attributeName="rx" values="4;7.5;4" dur="0.8s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values="0.45;0.95;0.45" dur="0.8s" repeatCount="indefinite"/>
@@ -556,17 +441,15 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
             <g transform="translate(-25, -7)">
               <circle cx="0" cy="0" r="8" fill="#090c12" stroke="#1e2430" strokeWidth="1.2"/>
               <circle cx="0" cy="0" r="6" fill="url(#discRotor)"/>
+              <line x1="-4" y1="0" x2="4" y2="0" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="-3" x2="3" y2="3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="3" x2="3" y2="-3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
               {/* Brembo Brake Caliper */}
               <path d="M -4 -6 A 5.5 5.5 0 0 1 2 -6 L 1.5 -3.5 L -3.5 -3.5 Z" fill="#ff1744" stroke="#ffffff" strokeWidth="0.3"/>
-              {/* Animated Directional Turbine Rim Spokes */}
-              <g className="radarSpinningWheel">
-                <line x1="-4" y1="0" x2="4" y2="0" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <line x1="-3" y1="-3" x2="3" y2="3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <line x1="-3" y1="3" x2="3" y2="-3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <circle cx="0" cy="0" r="5" fill="none" stroke="url(#turbineAlloyRim)" strokeWidth="1"/>
-                <path d="M 0 -5 C 1.5 -3, 3 -1.5, 4.5 0 M 0 5 C -1.5 3, -3 1.5, -4.5 0 M -5 0 C -3 -1.5, -1.5 -3, 0 -4.5 M 5 0 C 3 1.5, 1.5 3, 0 4.5" stroke="#cbd5e1" strokeWidth="1.1" strokeLinecap="round"/>
-              </g>
+              {/* Directional Turbine Rim Spokes */}
+              <circle cx="0" cy="0" r="5" fill="none" stroke="url(#turbineAlloyRim)" strokeWidth="1"/>
+              <path d="M 0 -5 C 1.5 -3, 3 -1.5, 4.5 0 M 0 5 C -1.5 3, -3 1.5, -4.5 0 M -5 0 C -3 -1.5, -1.5 -3, 0 -4.5 M 5 0 C 3 1.5, 1.5 3, 0 4.5" stroke="#cbd5e1" strokeWidth="1.1" strokeLinecap="round"/>
               <circle cx="0" cy="0" r="1.8" fill="#ff1744" stroke="#ffffff" strokeWidth="0.6"/>
             </g>
 
@@ -574,17 +457,15 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
             <g transform="translate(25, -7)">
               <circle cx="0" cy="0" r="8" fill="#090c12" stroke="#1e2430" strokeWidth="1.2"/>
               <circle cx="0" cy="0" r="6" fill="url(#discRotor)"/>
+              <line x1="-4" y1="0" x2="4" y2="0" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="-3" x2="3" y2="3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
+              <line x1="-3" y1="3" x2="3" y2="-3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
               {/* Brembo Brake Caliper */}
               <path d="M -4 -6 A 5.5 5.5 0 0 1 2 -6 L 1.5 -3.5 L -3.5 -3.5 Z" fill="#ff1744" stroke="#ffffff" strokeWidth="0.3"/>
-              {/* Animated Directional Turbine Rim Spokes */}
-              <g className="radarSpinningWheel">
-                <line x1="-4" y1="0" x2="4" y2="0" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <line x1="-3" y1="-3" x2="3" y2="3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <line x1="-3" y1="3" x2="3" y2="-3" stroke="#1e293b" strokeWidth="0.6" strokeDasharray="1 1.5"/>
-                <circle cx="0" cy="0" r="5" fill="none" stroke="url(#turbineAlloyRim)" strokeWidth="1"/>
-                <path d="M 0 -5 C 1.5 -3, 3 -1.5, 4.5 0 M 0 5 C -1.5 3, -3 1.5, -4.5 0 M -5 0 C -3 -1.5, -1.5 -3, 0 -4.5 M 5 0 C 3 1.5, 1.5 3, 0 4.5" stroke="#cbd5e1" strokeWidth="1.1" strokeLinecap="round"/>
-              </g>
+              {/* Directional Turbine Rim Spokes */}
+              <circle cx="0" cy="0" r="5" fill="none" stroke="url(#turbineAlloyRim)" strokeWidth="1"/>
+              <path d="M 0 -5 C 1.5 -3, 3 -1.5, 4.5 0 M 0 5 C -1.5 3, -3 1.5, -4.5 0 M -5 0 C -3 -1.5, -1.5 -3, 0 -4.5 M 5 0 C 3 1.5, 1.5 3, 0 4.5" stroke="#cbd5e1" strokeWidth="1.1" strokeLinecap="round"/>
               <circle cx="0" cy="0" r="1.8" fill="#ff1744" stroke="#ffffff" strokeWidth="0.6"/>
             </g>
 
@@ -683,8 +564,6 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
               <circle cx="0" cy="-3.5" r="1.5" fill="#22c55e">
                 <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
               </circle>
-              {/* Spinning Micro-Radar Dish Reticle */}
-              <circle cx="0" cy="-3.5" r="3.2" fill="none" stroke="#00f5ff" strokeWidth="0.8" strokeDasharray="2 2" className="radarReticleSpin" />
               {/* Sonar Radar Wave Pulses */}
               <circle cx="0" cy="-3.5" r="4" fill="none" stroke="#22c55e" strokeWidth="0.6" opacity="0.8">
                 <animate attributeName="r" values="3;15" dur="1.6s" repeatCount="indefinite"/>
