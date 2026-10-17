@@ -9,6 +9,27 @@ function findRelevantCatalogParts(queryText, aiResponseText) {
   const combined = `${queryText || ''} ${aiResponseText || ''}`.toLowerCase();
   const matched = [];
 
+  // Special thematic matching for popular modifications and brands
+  if (combined.includes('modification') || combined.includes('modify') || combined.includes('custom') || combined.includes('exhaust') || combined.includes('tuning')) {
+    const perfParts = majorSpareProducts.filter(p => 
+      p.name.includes('Akrapovic') || p.name.includes('K&N Performance') || p.name.includes('Brembo RCS 19') || p.name.includes('Rolon Brass')
+    );
+    for (const p of perfParts.slice(0, 3)) {
+      matched.push({ id: p.id, name: p.name, price: p.price, query: p.name });
+    }
+    if (matched.length > 0) return matched;
+  }
+
+  if (combined.includes('ktm') || combined.includes('duke') || combined.includes('rc 200') || combined.includes('rc 390')) {
+    const ktmParts = majorSpareProducts.filter(p => 
+      p.brand === 'KTM' || (p.fitment && p.fitment.toLowerCase().includes('ktm')) || p.name.includes('Motul 7100')
+    );
+    for (const p of ktmParts.slice(0, 3)) {
+      matched.push({ id: p.id, name: p.name, price: p.price, query: p.name });
+    }
+    if (matched.length > 0) return matched;
+  }
+
   for (const p of majorSpareProducts) {
     const nameLow = (p.name || '').toLowerCase();
     const fitLow = (p.fitment || '').toLowerCase();
@@ -51,8 +72,11 @@ function buildGeminiContents(history, currentMessage) {
     }
   }
 
-  // Ensure current user message is appended
-  turns.push({ role: 'user', text: String(currentMessage).slice(0, 800) });
+  // Ensure current user message is appended if not already the last turn
+  const lastTurn = turns[turns.length - 1];
+  if (!lastTurn || lastTurn.role !== 'user' || lastTurn.text !== String(currentMessage).slice(0, 600)) {
+    turns.push({ role: 'user', text: String(currentMessage).slice(0, 800) });
+  }
 
   // Drop any leading 'model' turns so it always begins with 'user'
   while (turns.length > 0 && turns[0].role !== 'user') {
@@ -98,7 +122,14 @@ export default async function handler(req, res) {
     return send(res, 400, { error: 'Message is required' });
   }
 
-  const apiKey = clientApiKey || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+  const rawKey = clientApiKey || 
+                 process.env.GEMINI_API_KEY || 
+                 process.env.VITE_GEMINI_API_KEY || 
+                 process.env.GOOGLE_API_KEY || 
+                 process.env.GEMINI_KEY || 
+                 process.env.VITE_GOOGLE_API_KEY;
+
+  const apiKey = rawKey ? String(rawKey).trim().replace(/^["']|["']$/g, '') : '';
 
   if (!apiKey) {
     return send(res, 200, {
@@ -111,13 +142,16 @@ export default async function handler(req, res) {
   const systemPrompt = `You are MotoDC AI, the expert master workshop mechanic and friendly assistant for MotoDC — India's premier auto & motorcycle spare parts store (motodc-official.vercel.app).
 
 CORE CAPABILITIES & BEHAVIORS:
-1. MASTER AUTOMOTIVE MECHANIC:
+1. MASTER AUTOMOTIVE & MOTORCYCLE MECHANIC:
    - You are a certified automobile and motorcycle mechanic with deep workshop experience.
-   - When asked about any vehicle symptom (e.g., brake squeal, engine sputtering/misfire, clutch slip, chain slack/rattle, overheating, battery clicking, weird sounds, vibrations, oil selection):
-     - Identify the root cause in 1-2 clear, direct sentences.
-     - Provide 2-3 actionable, numbered or bulleted diagnostic or repair tips.
-     - Mention tools required and DIY difficulty (Easy/Moderate/Advanced) when helpful.
+   - For vehicle symptoms (brake squeal, sputtering/misfire, clutch slip, chain slack/rattle, overheating, battery clicking, weird sounds, vibrations, oil viscosity):
+     - State root causes directly.
+     - Provide 2-3 actionable diagnostic or repair tips.
      - Recommend matching genuine OEM replacement parts available on MotoDC.
+   - For BIKE MODIFICATIONS & CUSTOM BUILDS (full modifications, performance exhaust, intake, ECU remap/piggyback, Brembo brakes, re-gearing):
+     - Give an expert workshop blueprint: intake breathing, tuned exhaust, fuel mapping/ECU, suspension/brake upgrades, and Indian RTO street legality guidelines.
+   - For SPECIFIC VEHICLES & BRANDS (KTM Duke/RC/Adventure, Royal Enfield, Yamaha, Bajaj, TVS, Honda, passenger cars):
+     - Provide exact OEM fluids (e.g. Motul 7100 10W50 for KTM), capacities, spark plug grades, and maintenance specs.
 
 2. MOTODC STORE POLICIES (ALWAYS ACCURATE):
    - Cash on Delivery (COD): 100% Cash on Delivery available across all pin codes in India with zero advance payment.
@@ -133,7 +167,7 @@ CORE CAPABILITIES & BEHAVIORS:
      - Answer directly and concisely.
 
 4. TONE & STYLE:
-   - Friendly, expert, warm, and concise (under 130 words unless answering a complex multi-step technical inquiry).
+   - Friendly, expert, warm, and concise (under 140 words unless answering a complex multi-step technical inquiry).
    - Never output boilerplate disclaimers, walls of text, or generic essay dumps.`;
 
   try {

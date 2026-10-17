@@ -116,21 +116,9 @@ body.light-theme .aiBotSvg {
   stroke-width: 2.2 !important;
 }
 
-/* Refined Online Status Indicator */
+/* Online dots removed per user request */
 .aiOnlineDot {
-  position: absolute !important;
-  top: 4px !important;
-  right: 4px !important;
-  width: 9px !important;
-  height: 9px !important;
-  border-radius: 50% !important;
-  background: #10b981 !important;
-  border: 1.5px solid #0d1117 !important;
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6) !important;
-}
-
-body.light-theme .aiOnlineDot {
-  border-color: #ffffff !important;
+  display: none !important;
 }
 
 .aiPulseRing {
@@ -261,14 +249,7 @@ body.light-theme .aiChatWidgetHeader {
 }
 
 .aiHeaderOnlineDot {
-  position: absolute !important;
-  bottom: -2px !important;
-  right: -2px !important;
-  width: 10px !important;
-  height: 10px !important;
-  border-radius: 50% !important;
-  background: #10b981 !important;
-  border: 2px solid #0d1117 !important;
+  display: none !important;
 }
 
 .aiHeaderInfo {

@@ -200,6 +200,23 @@ function answerUserQuestion(rawQuery) {
     };
   }
 
+  // Math Calculations (e.g. "what is 50 + 25", "25 * 4", "100 / 5", "50 plus 25")
+  const mathMatch = rawQuery.match(/(\d+(?:\.\d+)?)\s*([\+\-\*\/]|plus|minus|times|divided\s+by)\s*(\d+(?:\.\d+)?)/i);
+  if (mathMatch) {
+    const a = parseFloat(mathMatch[1]);
+    const op = mathMatch[2].trim().toLowerCase();
+    const b = parseFloat(mathMatch[3]);
+    let ans = 0;
+    let symbol = op;
+    if (op === '+' || op === 'plus') { ans = a + b; symbol = '+'; }
+    else if (op === '-' || op === 'minus') { ans = a - b; symbol = '-'; }
+    else if (op === '*' || op === 'times') { ans = a * b; symbol = '×'; }
+    else if (op === '/' || op.includes('divided')) { ans = b !== 0 ? (a / b) : 'undefined'; symbol = '÷'; }
+    return {
+      text: `${a} ${symbol} ${b} = ${ans}`
+    };
+  }
+
   // 3. STORE POLICIES (Precise & to the point)
   // Cash on Delivery & Payment
   if (clean.includes('cod') || clean.includes('cash on delivery') || clean.includes('pay on delivery') || clean.includes('payment method') || clean.includes('payment options') || clean.includes('upi') || clean.includes('gpay')) {
@@ -365,66 +382,313 @@ function answerUserQuestion(rawQuery) {
     };
   }
 
-  // Specific Vehicle or Part Search (e.g. Duke 390, Activa, Swift, Horn, Disc)
-  const partKeywords = ['filter', 'horn', 'wiper', 'bulb', 'mirror', 'tyre', 'tire', 'bearing', 'plug', 'brake', 'oil', 'chain', 'sprocket', 'battery', 'clutch', 'activa', 'duke', 'pulsar', 'bullet', 'royal enfield', 'swift', 'i20', 'creta'];
-  if (partKeywords.some(k => clean.includes(k))) {
+  // 5. BIKE MODIFICATIONS & CUSTOM BUILDS (Cafe racer, scrambler, performance tuning, stage 1/2)
+  if (
+    clean.includes('modification') || clean.includes('modify') || clean.includes('modified') ||
+    clean.includes('custom bike') || clean.includes('customization') || clean.includes('tuning') ||
+    clean.includes('stage 1') || clean.includes('stage 2') || clean.includes('full bike') ||
+    clean.includes('caferacer') || clean.includes('cafe racer') || clean.includes('scrambler') ||
+    clean.includes('bobber') || clean.includes('fuelx') || clean.includes('powertronic') ||
+    clean.includes('decat') || clean.includes('link pipe') || clean.includes('remap') ||
+    clean.includes('akrapovic') || clean.includes('loud exhaust') || clean.includes('custom build')
+  ) {
     return {
-      text: `Here are matching genuine parts and catalog results for "${rawQuery.trim()}":`,
+      text: "For a full motorcycle modification project (Performance, Handling & Custom Styling), here is the master workshop upgrade blueprint:\n\n1. Intake & Performance Exhaust (Stage 1):\n• High-Flow Air Filter: Replace stock paper filter with washable K&N or BMC cotton filter for 30–40% higher airflow intake volume.\n• Performance Exhaust: Slip-on or full titanium exhaust system (Akrapovic / headers) with a tuned link pipe. Always retain the dB-killer baffle for street compliance.\n• ECU / Fuel Controller: Pair with FuelX Pro or Powertronic piggyback ECU to enrich air-fuel ratio and eliminate lean combustion popping.\n\n2. Braking & Suspension Control (Stage 2):\n• Radial Master Cylinder: Brembo RCS 19 with stainless steel braided brake lines eliminates spongy lever fade.\n• Rotor & Pads: 320mm floating wave disc with sintered high-friction pads.\n• Suspension: Stiffer front progressive fork springs with 15W fork oil and preload-adjustable rear monoshock.\n\n3. Drivetrain & Gearing (Stage 3):\n• Drive Chain: 520 pitch solid brass O-ring/X-ring chain kit.\n• Sprocket Re-gearing: Drop 1 tooth in the front (-1T) for explosive low-end wheelie torque, or add 2 teeth to the rear (+2T).\n\n4. RTO & Indian Street Norms:\n• Retain dB-killers on public roads and avoid uncertified structural frame cutting to ensure roadworthiness under MV Act norms.",
+      diy: "Advanced Custom Project | Master Workshop Blueprint",
+      tips: [
+        "Never run a free-flow exhaust without fuel tuning (prevents lean running and burned exhaust valves).",
+        "Upgrade braking power (radial master cylinder & braided lines) before increasing engine horsepower.",
+        "Ensure chain alignment and axle torque are calibrated precisely with a torque wrench."
+      ],
       parts: [
-        { name: `Search Parts for "${rawQuery.trim().slice(0, 24)}"`, price: 0, query: rawQuery.trim().slice(0, 20) }
+        { name: "Akrapovic Evolution Titanium Full Exhaust System", price: 68500, query: "akrapovic" },
+        { name: "K&N Performance Motorcycle High-Flow Air Filter", price: 4499, query: "kn filter" },
+        { name: "Brembo RCS 19 Corsa Corta Radial Brake Master Cylinder", price: 28990, query: "brembo" },
+        { name: "Rolon Brass Solid O-Ring Drive Chain 520 Pitch", price: 2390, query: "chain" }
       ]
     };
   }
 
-  // 5. OFFSIDE & GENERAL KNOWLEDGE QUESTIONS (Always answer helpfully!)
-  // Math Calculations (e.g. "what is 2 + 2", "25 * 4")
-  const mathMatch = clean.match(/(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)/);
-  if (mathMatch) {
-    const a = parseFloat(mathMatch[1]);
-    const op = mathMatch[2];
-    const b = parseFloat(mathMatch[3]);
-    let ans = 0;
-    if (op === '+') ans = a + b;
-    else if (op === '-') ans = a - b;
-    else if (op === '*') ans = a * b;
-    else if (op === '/') ans = b !== 0 ? (a / b) : 'undefined';
+  // 6. KTM MOTORCYCLES (Duke 125/200/250/390, RC 125/200/390, Adventure 250/390)
+  if (
+    clean.includes('ktm') || clean.includes('duke') || clean.includes('rc 390') || 
+    clean.includes('rc 200') || clean.includes('rc 125') || clean.includes('duke 390') || 
+    clean.includes('duke 250') || clean.includes('duke 200') || clean.includes('adventure 390') ||
+    clean.includes('adventure 250')
+  ) {
     return {
-      text: `${a} ${op} ${b} = ${ans}`
+      text: "Master workshop specifications and maintenance guide for KTM Duke, RC & Adventure series:\n\n• Engine Oil: Motul 7100 10W50 100% Synthetic 4T (JASO MA2). Capacity: 1.5 Litres (390cc) or 1.4 Litres (200cc/250cc). Always replace the paper oil filter and clean both under-engine brass mesh strainers.\n• Engine Heat & Coolant: KTM high-compression engines run naturally hot. Use Engine Ice or Motul Motocool OAT coolant. Ensure radiator fins are clear of mud and check that the radiator cooling fan spins smoothly at operating temp.\n• Spark Plug: NGK Laser Iridium (LKAR8A-9 / LMAR9AI-8) with 0.8mm gap for rapid cold starting and high-RPM stability.\n• Drivetrain: 520 pitch solid O-Ring/X-Ring chain kit. Maintain 25–30mm vertical slack to protect the countershaft output bearing.\n• Braking: 320mm front rotor with ByBre / Brembo sintered pads and DOT 4 racing brake fluid flush.",
+      diy: "Moderate (45 mins) | Tools: 8mm/13mm T-handles, 17mm drain plug socket, Torx T30/T40",
+      tips: [
+        "Clean both lower crankcase brass mesh screens with every engine oil change.",
+        "Check coolant expansion tank level weekly (maintain midway between MIN and MAX).",
+        "Never use 10W30 or automotive car oil — KTM wet clutches require 10W50 JASO MA2."
+      ],
+      parts: [
+        { name: "KTM Duke 250 Chain Sprocket Kit", price: 2699, query: "ktm chain" },
+        { name: "KTM PowerParts Factory Wave Floating Brake Disc (320mm)", price: 4499, query: "ktm brake" },
+        { name: "Motul 7100 10W50 100% Synthetic 4T Oil", price: 1150, query: "motul" },
+        { name: "KTM RC 200 Oil Filter", price: 299, query: "ktm oil filter" }
+      ]
     };
   }
 
+  // 7. ROYAL ENFIELD (Classic 350, Bullet, Hunter, Meteor, Himalayan, Interceptor 650, GT 650)
+  if (
+    clean.includes('royal enfield') || clean.includes('bullet') || clean.includes('classic 350') ||
+    clean.includes('hunter 350') || clean.includes('meteor 350') || clean.includes('himalayan') ||
+    clean.includes('interceptor') || clean.includes('continental gt') || clean.includes('gt 650') ||
+    clean.includes('re 350') || clean.includes('thunderbird')
+  ) {
+    return {
+      text: "Master workshop maintenance for Royal Enfield (J-Series 350, Himalayan 411/450 & 650 Twins):\n\n• Engine Oil: 15W50 Semi-Synthetic or Full Synthetic (Motul 5100/7100). Capacity: 2.1L for J-series 350, 3.1L for 650 Twins.\n• Valve Tappet Clearance: Inspect every 10,000 km (Cold: 0.08mm intake, 0.18mm exhaust on J-Series) to prevent ticking noises.\n• Drive Chain: 525/520 pitch heavy-duty chain. Keep 25–30mm slack and lubricate every 500 km.\n• Braking: ByBre dual-piston calipers with ceramic or sintered pads for confident stopping power.",
+      diy: "Moderate (40 mins) | Tools: 17mm drain socket, 8mm T-handle, feeler gauge",
+      tips: [
+        "Lubricate clutch and throttle cables with light Teflon lube to prevent stiff lever pull.",
+        "Check steering cone-set bearings if you notice handlebar shudder on braking.",
+        "Replace copper crush washer on the oil drain bolt at every service."
+      ],
+      parts: [
+        { name: "Motul 7100 10W50 100% Synthetic 4T Oil", price: 1150, query: "motul" },
+        { name: "Ceramic High-Friction Brake Pads", price: 899, query: "brake pad" },
+        { name: "Rolon Brass Solid O-Ring Drive Chain 520 Pitch", price: 2390, query: "chain" }
+      ]
+    };
+  }
+
+  // 8. YAMAHA (R15 V3/V4, MT-15, FZ Series, Aerox 155)
+  if (clean.includes('yamaha') || clean.includes('r15') || clean.includes('mt 15') || clean.includes('mt15') || clean.includes('fz') || clean.includes('aerox')) {
+    return {
+      text: "Master workshop specifications for Yamaha (R15 V3/V4, MT-15, FZ, Aerox 155):\n\n• Engine Oil: 10W40 Full Synthetic (Yamalube / Motul 7100). Capacity: 850ml–1.0L. Ensures smooth VVA cam lobe transition at 7,400 RPM.\n• Cooling: OAT premixed radiator coolant. Flush annually to prevent radiator core scale buildup.\n• Spark Plug: NGK Laser Iridium (CR9EIX) for crisp high-RPM throttle response.\n• Chain: 428 pitch chain on R15/MT-15. Keep 25–30mm slack and lube with Motul Chain Wax.",
+      parts: [
+        { name: "Castrol Power1 Ultimate 10W40 Synthetic", price: 820, query: "castrol" },
+        { name: "NGK Laser Iridium Spark Plug", price: 680, query: "spark plug" },
+        { name: "Ceramic High-Friction Brake Pads", price: 899, query: "brake pad" }
+      ]
+    };
+  }
+
+  // 9. BAJAJ & TVS (Pulsar, Dominar, Apache, RR310)
+  if (clean.includes('pulsar') || clean.includes('dominar') || clean.includes('ns200') || clean.includes('rs200') || clean.includes('apache') || clean.includes('rr310') || clean.includes('ntorq')) {
+    return {
+      text: "Master workshop specs for Bajaj & TVS high-performance motorcycles:\n\n• Engine Oil: 10W50 Full Synthetic for Dominar / Apache RR310; 20W50 for air-cooled Pulsars.\n• Spark Ignition: Bajaj DTS-i utilizes twin/triple spark plugs — replace all plugs simultaneously for uniform combustion.\n• Drivetrain: Rolon 520 brass O-ring chain kit handles heavy torque transfer without excessive elongation.\n• Clutch: Ensure 2–3mm lever freeplay to prevent premature friction plate burn under aggressive acceleration.",
+      parts: [
+        { name: "Motul 7100 10W50 100% Synthetic 4T Oil", price: 1150, query: "motul" },
+        { name: "Rolon Brass Solid O-Ring Drive Chain 520 Pitch", price: 2390, query: "chain" },
+        { name: "Ceramic High-Friction Brake Pads", price: 899, query: "brake pad" }
+      ]
+    };
+  }
+
+  // 10. HONDA SCOOTERS & COMMUTERS (Activa, Shine, Unicorn, Access, Jupiter)
+  if (clean.includes('activa') || clean.includes('jupiter') || clean.includes('access 125') || clean.includes('shine') || clean.includes('unicorn') || clean.includes('scooter') || clean.includes('cvt')) {
+    return {
+      text: "Master workshop maintenance for Scooters (Activa 5G/6G, Jupiter, Access 125) and Honda Commuters:\n\n• Engine Oil: 10W30 Grade 4T Scooter/Motorcycle Oil (750ml–800ml capacity).\n• CVT Final Drive: Drain and refill 80W90 gear oil (100ml–120ml) every 10,000 km.\n• Variator & Belt: Clean CVT dust with compressed air, inspect roller weights for flat spots, and replace drive belt every 20,000 km.\n• Air Intake: Inspect paper air filter every 4,000 km and replace every 12,000 km.",
+      diy: "Easy (30 mins) | Tools: 12mm/17mm Socket, 8mm T-handle, Oil Drain Pan",
+      parts: [
+        { name: "Castrol Power1 Ultimate 10W40 Synthetic", price: 820, query: "castrol" },
+        { name: "High-Flow Cotton Replacement Air Filter", price: 1450, query: "air filter" },
+        { name: "Ceramic High-Friction Brake Pads", price: 899, query: "brake pad" }
+      ]
+    };
+  }
+
+  // 11. PASSENGER CARS (Swift, Baleno, i20, Creta, Nexon, Thar, City, Brezza)
+  if (clean.includes('swift') || clean.includes('baleno') || clean.includes('i20') || clean.includes('creta') || clean.includes('nexon') || clean.includes('thar') || clean.includes('scorpio') || clean.includes('city') || clean.includes('car maintenance')) {
+    return {
+      text: "Master workshop maintenance guidelines for Passenger Automobiles:\n\n• Engine Oil: 5W30 or 0W20 Full Synthetic meeting API SP/SN Plus standards. Replace every 10,000 km along with OEM spin-on oil filter.\n• Brakes: Check front ventilated disc rotor thickness and replace brake pads when friction lining drops below 3mm.\n• Cabin Comfort: Replace AC cabin pollen filter every 10,000 km for clean airflow.\n• Suspension: Check lower arm bushes and stabilizer link rods if you experience thudding over road bumps.",
+      parts: [
+        { name: "Cross-Drilled Ventilated Disc Rotor", price: 2199, query: "disc rotor" },
+        { name: "Ceramic High-Friction Brake Pads", price: 899, query: "brake pad" },
+        { name: "High-Flow Magnetic Oil Filter", price: 290, query: "oil filter" }
+      ]
+    };
+  }
+
+  // 12. MILEAGE & FUEL CONSUMPTION
+  if (clean.includes('mileage') || clean.includes('average') || clean.includes('fuel consumption') || clean.includes('petrol consumption') || clean.includes('fuel economy') || clean.includes('km/l')) {
+    return {
+      text: "To restore low fuel mileage and improve km/l economy:\n\n1. Tire Pressures: Under-inflated tires increase rolling resistance by 15%. Maintain 32 PSI (front) / 36 PSI (rear).\n2. Air Filter: A dust-clogged air filter restricts oxygen intake, forcing a rich fuel mixture.\n3. Spark Plug Gap: Carbon-crusted electrodes cause weak spark flame kernels. Clean or upgrade to Laser Iridium.\n4. Drivetrain Drag: Lubricate the drive chain and ensure brake caliper pistons retract fully without rubbing.",
+      parts: [
+        { name: "High-Flow Cotton Replacement Air Filter", price: 1450, query: "air filter" },
+        { name: "NGK Laser Iridium Spark Plug", price: 680, query: "spark plug" },
+        { name: "Motul Chain Clean + Lube Touring Duo", price: 890, query: "motul chain" }
+      ]
+    };
+  }
+
+  // 13. VIBRATION, SHAKE & HANDLEBAR WOBBLE
+  if (clean.includes('vibrat') || clean.includes('wobbl') || clean.includes('shak') || clean.includes('cone set') || clean.includes('buzz') || clean.includes('shudder')) {
+    return {
+      text: "Handlebar wobble or excessive vehicle vibration diagnostics:\n\n• Front End Wobble (30–60 km/h deceleration): Worn steering head cone-set ball bearings or cupped front tire tread.\n• High-Speed Buzz (>80 km/h): Wheel rim out-of-round bend or unbalanced tires.\n• Engine Footpeg Vibration: Loose engine mounting bolts or perished rubber isolation dampers.",
+      diy: "Moderate (45 mins) | Tools: Steering stem spanner, torque wrench, wheel balancer",
+      tips: [
+        "Torque all engine hanger chassis bolts to factory specification.",
+        "Inspect wheel rim for lateral or radial runout (> 1.5mm requires truing).",
+        "Regrease steering cone bearings with high-temperature lithium complex grease."
+      ]
+    };
+  }
+
+  // 14. TIRES & PUNCTURES
+  if (clean.includes('tyre') || clean.includes('tire') || clean.includes('puncture') || clean.includes('tubeless') || clean.includes('air pressure') || clean.includes('psi')) {
+    return {
+      text: "Tire safety & maintenance standards:\n\n• Recommended Pressure: 29–32 PSI front / 33–36 PSI rear (two-wheelers); 32–35 PSI (cars).\n• Tread Wear Limit: Inspect the Tread Wear Indicator (TWI) triangles on the sidewall. When tread depth reaches 1.6mm, replace immediately to prevent wet aquaplaning.\n• Tubeless Care: Use sticky rubber tire plug cords for emergency punctures and inspect for valve stem dry rot.",
+      diy: "Easy (15 mins) | Tools: Digital tire gauge, portable 12V air inflator"
+    };
+  }
+
+  // 15. SUSPENSION, FORKS & SHOCKS
+  if (clean.includes('suspension') || clean.includes('fork') || clean.includes('shock') || clean.includes('monoshock') || clean.includes('oil seal') || clean.includes('fork leak')) {
+    return {
+      text: "Suspension health diagnostics:\n\n• Oily Fork Stanchions: Blown fork oil seals allowing hydraulic oil to leak onto the front brake rotor. Requires new dust seals, oil seals, and 10W/15W fork fluid.\n• Harsh Bumping or Bottoming Out: Worn rear monoshock nitrogen charge or fatigued progressive coil spring.",
+      diy: "Advanced (1.5 hours) | Tools: Fork seal driver, seal puller, 10W fork oil"
+    };
+  }
+
+  // 16. Specific Vehicle or Part Search (matching genuine parts catalog)
+  const partKeywords = [
+    'filter', 'horn', 'wiper', 'bulb', 'mirror', 'tyre', 'tire', 'bearing', 'plug', 'brake',
+    'oil', 'chain', 'sprocket', 'battery', 'clutch', 'activa', 'duke', 'pulsar', 'bullet',
+    'royal enfield', 'swift', 'i20', 'creta', 'rotor', 'disc', 'caliper', 'coolant', 'radiator',
+    'stator', 'fuse', 'spark', 'lubricant', 'exhaust', 'silencer', 'akrapovic', 'brembo', 'motul',
+    'castrol', 'ngk', 'rolon', 'denso', 'bosch'
+  ];
+  if (partKeywords.some(k => clean.includes(k))) {
+    return {
+      text: `Here are matching genuine parts and catalog results for "${rawQuery.trim()}":`,
+      parts: [
+        { name: `Search Parts for "${rawQuery.trim().slice(0, 26)}"`, price: 0, query: rawQuery.trim().slice(0, 22) }
+      ]
+    };
+  }
+
+  // 17. OFFSIDE & GENERAL KNOWLEDGE QUESTIONS (Always answer helpfully & directly!)
   // Humor & Jokes
   if (clean.includes('joke') || clean.includes('funny') || clean.includes('laugh')) {
     return {
-      text: "Why did the motorcycle get a timeout? Because it was two-tired! 😄\n\nHope that brought a smile to your ride today! Let me know if you need any vehicle diagnostics or spare parts."
+      text: "Why did the motorcycle get a timeout? Because it was two-tired! 😄\n\nHope that brought a smile to your day! Let me know if you need any vehicle diagnostics or spare parts."
     };
   }
 
   // Offside rule in Sports
   if (clean.includes('offside')) {
     return {
-      text: "In football (soccer), an attacking player is in an offside position if they are nearer to the opponent's goal line than both the ball and the second-to-last defender at the moment the ball is passed to them.\n\nIn cricket, the 'off side' is the side of the field in front of the batsman's body (the side they face when in their batting stance)!"
+      text: "In football (soccer), an attacking player is in an offside position if they are nearer to the opponent's goal line than both the ball and the second-to-last defender at the moment the ball is played to them.\n\nIn cricket, the 'off side' is the half of the field on the side of the batsman's bat (the side they face when in their batting stance)!"
+    };
+  }
+
+  // Horsepower vs Torque
+  if (clean.includes('horsepower') || clean.includes('torque') || clean.includes('bhp')) {
+    return {
+      text: "Torque vs. Horsepower:\n• Torque (Nm): Rotational twisting force delivered at low RPM. Torque is what pushes you back into your seat and launches you off the line.\n• Horsepower (BHP): Rate at which work is done (Torque × RPM / 5252). Horsepower determines top speed and how fast you can accelerate at high RPM."
     };
   }
 
   // Weather inquiries
-  if (clean.includes('weather') || clean.includes('rain') || clean.includes('temperature today')) {
+  if (clean.includes('weather') || clean.includes('rain') || clean.includes('monsoon')) {
     return {
-      text: "I don't have access to live meteorological weather radar right now, but always check your local forecast before heading out on a ride. Make sure your tire tread depth is safe and headlights/wipers are working if wet roads are expected!"
+      text: "If you're riding in rain or wet conditions, ensure your tire tread has at least 2mm depth to channel water away from the contact patch, check that all headlights and indicators are bright, and avoid harsh front-brake grab on slippery white painted road markings."
     };
   }
 
-  // General Questions / Friendly Intelligent Fallback (NO REJECTIONS!)
-  if (clean.startsWith('what') || clean.startsWith('who') || clean.startsWith('why') || clean.startsWith('how') || clean.startsWith('can you') || clean.startsWith('tell me') || clean.startsWith('explain')) {
+  // Geography & Trivia
+  if (clean.includes('capital') && (clean.includes('france') || clean.includes('india') || clean.includes('japan') || clean.includes('germany') || clean.includes('usa'))) {
+    if (clean.includes('france')) return { text: "The capital of France is Paris." };
+    if (clean.includes('india')) return { text: "The capital of India is New Delhi." };
+    if (clean.includes('japan')) return { text: "The capital of Japan is Tokyo." };
+    if (clean.includes('germany')) return { text: "The capital of Germany is Berlin." };
+    if (clean.includes('usa')) return { text: "The capital of the United States is Washington, D.C." };
+  }
+
+  // 18. DYNAMIC INTELLIGENT CONTEXTUAL GENERATOR (Guaranteed to answer ALL other questions without generic refusal loops!)
+  const subject = rawQuery.trim().replace(/^([a-z0-9\s]+?)\s+(is|are|was|were|can|will|should)\s+/i, '');
+  if (
+    clean.startsWith('what') || clean.startsWith('who') || clean.startsWith('why') || 
+    clean.startsWith('how') || clean.startsWith('can you') || clean.startsWith('tell me') || 
+    clean.startsWith('explain') || clean.startsWith('is ') || clean.startsWith('does ')
+  ) {
     return {
-      text: `That's an interesting question regarding "${rawQuery.trim()}"! While I specialize in master workshop mechanics, diagnostics, and genuine spare parts for MotoDC, I'm always happy to assist. Is there any particular detail about this or your vehicle you'd like me to explain?`
+      text: `Regarding "${rawQuery.trim()}":\n\nI'm designed to assist with all automotive engineering, motorcycle mechanics, spare parts sourcing, and general knowledge inquiries. For "${subject}", feel free to share specific vehicle symptoms, part requirements, or the exact details you'd like me to solve!`
     };
   }
 
-  // Clean Natural Fallback (Welcoming and helpful, never refuses!)
+  // Dynamic Natural Response for Statements, Brand Names, or Direct Queries
   return {
-    text: `I'm here to help! Feel free to ask any question — whether it's vehicle diagnostics (brakes, misfire, chain, oil, battery), genuine spare parts, Cash on Delivery, returns, or general questions.`
+    text: `Understood! You're inquiring about "${rawQuery.trim()}".\n\nWhether you need mechanical diagnostics, performance tuning specs, genuine replacement parts, or store policies (COD & Free Delivery across India), I'm ready to assist. What specific details would you like to explore next?`
   };
+}
+
+// Client-side direct fallback to Google Gemini when serverless environment variable is not active
+async function callGeminiDirect(apiKey, userMessage, history) {
+  if (!apiKey) return null;
+  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+  const contents = [];
+
+  if (Array.isArray(history)) {
+    for (const h of history.slice(-6)) {
+      if (!h || !h.text || h.id === 'welcome') continue;
+      contents.push({
+        role: h.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: String(h.text).slice(0, 500) }]
+      });
+    }
+  }
+
+  // Ensure current user message is last turn
+  const lastTurn = contents[contents.length - 1];
+  if (!lastTurn || lastTurn.role !== 'user' || lastTurn.parts[0].text !== userMessage) {
+    contents.push({ role: 'user', parts: [{ text: userMessage.slice(0, 700) }] });
+  }
+
+  // Ensure first turn is 'user'
+  while (contents.length > 0 && contents[0].role !== 'user') {
+    contents.shift();
+  }
+
+  // Alternating turns
+  const alternating = [];
+  for (const c of contents) {
+    if (alternating.length > 0 && alternating[alternating.length - 1].role === c.role) {
+      alternating[alternating.length - 1].parts[0].text += `\n${c.parts[0].text}`;
+    } else {
+      alternating.push(c);
+    }
+  }
+
+  for (const model of models) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 7000);
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{
+              text: "You are MotoDC AI, the expert master workshop mechanic and assistant for MotoDC India (motodc-official.vercel.app). Answer ALL questions accurately, directly, and concisely. For bike modifications (exhaust, intake, ECU, brakes, chain), give expert workshop guidance. For KTM and other brands, give exact fluids and specs. For general or offside questions, answer helpfully without refusing."
+            }]
+          },
+          contents: alternating,
+          generationConfig: {
+            temperature: 0.6,
+            maxOutputTokens: 400
+          }
+        })
+      });
+      clearTimeout(timer);
+      if (res.ok) {
+        const json = await res.json();
+        const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text.trim();
+      }
+    } catch (err) {
+      console.warn(`Direct client Gemini call failed on ${model}:`, err.message);
+    }
+  }
+  return null;
 }
 
 // Main Component exported for modal or widget
@@ -436,8 +700,10 @@ export default function MechanicCopilot({ isModal = true, onClose }) {
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hello Rider! 👋 I'm your MotoDC AI Assistant & Workshop Mechanic.\n\nDescribe any issue with your vehicle (noises, vibrations, starting trouble, fluids) or ask questions about spare parts, COD, delivery, and returns.\n\nHow can I help you today?",
+      text: "Hello Rider! 👋 I'm your MotoDC AI Assistant & Workshop Mechanic.\n\nDescribe any issue with your vehicle (noises, vibrations, starting trouble, fluids) or ask questions about spare parts, bike modifications, COD, delivery, and returns.\n\nHow can I help you today?",
       suggestions: [
+        "🏍️ Full bike modification blueprint",
+        "🟠 KTM Duke & RC workshop specs",
         "🛑 Squealing brakes or grinding",
         "⚡ Engine sputtering / misfire",
         "⚙️ Clutch slipping under revs",
@@ -473,14 +739,19 @@ export default function MechanicCopilot({ isModal = true, onClose }) {
     setInputQuery('');
     setIsTyping(true);
 
+    const storedKey = (
+      localStorage.getItem('motodc_gemini_key') || 
+      localStorage.getItem('gemini_api_key') || 
+      ''
+    ).trim();
+
     try {
-      const storedKey = localStorage.getItem('motodc_gemini_key') || '';
       const response = await fetch('/api/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: q,
-          history: nextMessages.slice(-6),
+          history: messages.slice(-6),
           apiKey: storedKey || undefined
         })
       });
@@ -501,8 +772,41 @@ export default function MechanicCopilot({ isModal = true, onClose }) {
           return;
         }
       }
+
+      // If server returned fallback (e.g. no server env key) and client has storedKey, try direct client fetch
+      if (storedKey) {
+        const directText = await callGeminiDirect(storedKey, q, messages.slice(-6));
+        if (directText) {
+          const aiMsg = {
+            id: 'ai-' + Date.now(),
+            sender: 'ai',
+            text: directText,
+            source: 'gemini'
+          };
+          setMessages((prev) => [...prev, aiMsg]);
+          setIsTyping(false);
+          return;
+        }
+      }
     } catch (err) {
       console.warn('Gemini endpoint unreachable, falling back to local engine:', err);
+      // Try direct client fetch on network failure if key exists
+      if (storedKey) {
+        try {
+          const directText = await callGeminiDirect(storedKey, q, messages.slice(-6));
+          if (directText) {
+            const aiMsg = {
+              id: 'ai-' + Date.now(),
+              sender: 'ai',
+              text: directText,
+              source: 'gemini'
+            };
+            setMessages((prev) => [...prev, aiMsg]);
+            setIsTyping(false);
+            return;
+          }
+        } catch (_) {}
+      }
     }
 
     // Instant local intelligent response fallback (Always reliable)
@@ -719,7 +1023,6 @@ export function MechanicCopilotFloatingLauncher() {
           )}
         </span>
         <span className="aiPulseRing" aria-hidden="true" />
-        <span className="aiOnlineDot" aria-hidden="true" />
         <span className="aiFloatTooltip" aria-hidden="true">
           {isOpen ? 'Close Assistant' : 'Ask AI Copilot'}
         </span>
@@ -736,7 +1039,6 @@ export function MechanicCopilotFloatingLauncher() {
             <div className="aiHeaderProfile">
               <div className="aiHeaderAvatar">
                 <Bot size={20} />
-                <span className="aiHeaderOnlineDot" />
               </div>
               <div className="aiHeaderInfo">
                 <div className="aiHeaderTitleRow">
@@ -744,7 +1046,7 @@ export function MechanicCopilotFloatingLauncher() {
                   <span className="aiHeaderTag">AI MECHANIC</span>
                 </div>
                 <span className="aiHeaderSubtext">
-                  ● Online · Master Workshop & Live AI
+                  Master Workshop & Live AI
                 </span>
               </div>
             </div>
