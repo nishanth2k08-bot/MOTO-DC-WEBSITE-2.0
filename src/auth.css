@@ -305,4 +305,44 @@
   }
 }
 
+/* Password visibility eye toggle button */
+.passwordInputWrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  position: relative !important;
+}
+.passwordInputWrap input {
+  flex: 1 !important;
+}
+.pwToggleBtn {
+  background: transparent !important;
+  border: none !important;
+  color: #858c98 !important;
+  padding: 6px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  border-radius: 6px !important;
+  outline: none !important;
+  flex: none !important;
+  transition: color 0.2s ease, transform 0.2s ease !important;
+  box-shadow: none !important;
+}
+.pwToggleBtn:hover {
+  color: #ff3157 !important;
+  transform: scale(1.12) !important;
+}
+.pwToggleBtn:focus-visible {
+  outline: 2px solid #ff3157 !important;
+}
+.light-theme .pwToggleBtn {
+  color: #68707d !important;
+}
+.light-theme .pwToggleBtn:hover {
+  color: #ff3157 !important;
+}
+
 
