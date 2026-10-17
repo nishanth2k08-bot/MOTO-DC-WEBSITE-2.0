@@ -751,14 +751,14 @@ export function MechanicCopilotFloatingLauncher() {
       >
         <span className="aiFloatIcon">
           {isOpen ? (
-            <X size={24} />
+            <X size={22} className="aiFloatCloseSvg" />
           ) : (
-            <>
-              <Bot size={26} className="aiBotSvg" />
-              <span className="aiWrenchBadge">
-                <Wrench size={11} />
+            <div className="aiIconComposition">
+              <Bot size={24} className="aiBotSvg" />
+              <span className="aiSparkleDot" aria-hidden="true">
+                <Sparkles size={11} />
               </span>
-            </>
+            </div>
           )}
         </span>
         <span className="aiPulseRing" aria-hidden="true" />
