@@ -144,263 +144,232 @@ export const SYMPTOMS_DATABASE = [
   }
 ];
 
-// Comprehensive Automotive & MotoDC Q&A Knowledge Engine
+// Clean, Precise & Intelligent AI Engine for MotoDC
 function answerUserQuestion(rawQuery) {
-  const q = rawQuery.toLowerCase().trim();
+  if (!rawQuery) return { text: "How can I help you today?" };
 
-  // 1. Order, Payment & Cash on Delivery (COD)
-  if (q.includes('cod') || q.includes('cash on delivery') || q.includes('pay on delivery') || q.includes('payment') || q.includes('upi') || q.includes('card')) {
+  // Normalize query: trim, lowercase, strip punctuation
+  const clean = rawQuery
+    .toLowerCase()
+    .trim()
+    .replace(/[?!.,;:_~@#$%^&*()\-+]/g, ' ')
+    .replace(/\s+/g, ' ');
+
+  const words = clean.split(' ').filter(Boolean);
+
+  // 1. GREETINGS & CASUAL TALK (Precise & friendly, no bulky essays)
+  const isGreeting = 
+    /^(hi+|hey+|hello+|heya+|yo+|howdy|sup|hola|namaste|hlo)\b/i.test(clean) ||
+    /^(good\s+(morning|afternoon|evening|day))/i.test(clean) ||
+    words.some(w => /^h+i+$/i.test(w) || /^h+e+y+$/i.test(w) || /^hello+$/i.test(w) || w === 'yo');
+
+  if (isGreeting && words.length <= 4) {
     return {
-      badge: 'Order & Payment',
-      title: 'Cash on Delivery (COD) & Payment Methods',
-      answer: 'Yes! MotoDC provides 100% Cash on Delivery (COD) across India with zero advance payment required. You only pay when your genuine parts arrive at your doorstep.\n\nWe also support fast online payments via UPI (Google Pay, PhonePe, Paytm), Debit/Credit Cards, and Net Banking.',
-      tips: [
-        'Select "Cash on Delivery" or "Pay Online" at checkout.',
-        'SMS & Email order confirmation is dispatched immediately upon placing your order.',
-        'Free Express Shipping is automatically applied on orders above ₹2,000.'
-      ],
-      parts: []
+      text: "Hello! 👋 I'm your MotoDC AI Assistant. How can I help you today? Ask me about bike or car spare parts, symptoms, order tracking, COD, or return policies."
     };
   }
 
-  // 2. Returns, Replacements & Refunds
-  if (q.includes('return') || q.includes('replace') || q.includes('refund') || q.includes('exchange') || q.includes('wrong') || q.includes('defect') || q.includes('damage')) {
+  // 2. COURTESIES & SMALL TALK
+  if (/^(thanks|thank\s*you|thx|ty|tq|appreciate\s*it)\b/i.test(clean)) {
     return {
-      badge: 'Customer Guarantee',
-      title: '7-Day Hassle-Free Returns & Replacements',
-      answer: 'All items on MotoDC come with our 7-Day Hassle-Free Return & Replacement Guarantee. If a part arrives damaged, defective, or does not fit your vehicle, we arrange a free courier pickup and issue a direct replacement or 100% refund.',
-      tips: [
-        'Go to "My Orders" in your MotoDC account or visit /returns.',
-        'Select the item and choose whether you want a replacement or a full refund.',
-        'Keep the product in original packaging with manufacturer labels intact.'
-      ],
-      parts: []
+      text: "You're very welcome! Let me know if you need help with anything else. Ride safe!"
     };
   }
 
-  // 3. Delivery Speed, Shipping Time & Courier
-  if (q.includes('delivery') || q.includes('shipping') || q.includes('how long') || q.includes('courier') || q.includes('track') || q.includes('days') || q.includes('dispatch')) {
+  if (/^(bye|goodbye|see\s*you|cya|take\s*care)\b/i.test(clean)) {
     return {
-      badge: 'Logistics',
-      title: 'Fast Dispatch & Express Delivery (3–5 Days)',
-      answer: 'Orders are dispatched within 24 hours from our automotive logistics hub. Express delivery takes 3 to 5 business days anywhere in India.\n\nOrders above ₹2,000 automatically qualify for 100% Free Express Shipping!',
-      tips: [
-        'A real-time SMS & Email tracking link is provided as soon as your package is dispatched.',
-        'All spare parts are packed in shock-proof, heavy-duty protective packaging.'
-      ],
-      parts: []
+      text: "Goodbye! Have a safe and great ride on the road."
     };
   }
 
-  // 4. Authenticity & Genuine OEM Quality
-  if (q.includes('genuine') || q.includes('original') || q.includes('fake') || q.includes('oem') || q.includes('quality') || q.includes('brand')) {
+  if (/^(ok|okay|k|got\s*it|cool|sure|alright|fine|done)\b/i.test(clean) && words.length <= 3) {
     return {
-      badge: 'Quality Assurance',
-      title: '100% Genuine OEM & Certified Parts',
-      answer: 'Every spare part listed on MotoDC is 100% genuine and sourced directly from certified OEM/OES manufacturers including Brembo, Bosch, Castrol, Motul, NGK, K&N, Rolon, and Philips.\n\nAll items come with manufacturer warranty and authentic tamper-evident security packaging.',
-      tips: [
-        'Check product specifications and brand markings on the product page.',
-        'Full brand warranty is supported with your MotoDC invoice.'
-      ],
-      parts: []
+      text: "Got it! Feel free to ask whenever you have questions."
     };
   }
 
-  // 5. Engine Oil & Lubrication
-  if (q.includes('oil') || q.includes('motul') || q.includes('castrol') || q.includes('10w40') || q.includes('10w50') || q.includes('20w50') || q.includes('15w50') || q.includes('synthetic') || q.includes('lubricant')) {
+  if (clean.includes('who are you') || clean.includes('what are you') || clean.includes('what can you do') || clean.includes('your name')) {
     return {
-      badge: 'Fluids & Lubrication',
-      title: 'Engine Oil Selection & Viscosity Guide',
-      answer: 'Selecting the correct engine oil grade protects cylinder walls and ensures smooth clutch engagement without slippage:\n\n• High-RPM Motorcycles (KTM, Yamaha R15, Pulsar, Apache): 100% Fully Synthetic 10W40 or 10W50 with JASO MA2 specification.\n• Cruisers & Long-Stroke Engines (Royal Enfield): 15W50 Semi-Synthetic or Synthetic.\n• Modern Automobiles (Cars): 5W30 or 0W20 Full Synthetic.',
+      text: "I'm MotoDC Copilot, your virtual automotive assistant. I can diagnose car and motorcycle issues, suggest genuine OEM replacement parts, and answer questions about orders, delivery, COD, and returns."
+    };
+  }
+
+  if (clean.includes('how are you') || clean.includes('how are u') || clean.includes('how r u')) {
+    return {
+      text: "I'm running smoothly and ready to assist! What vehicle issue or parts can I help you with today?"
+    };
+  }
+
+  // 3. STORE POLICIES (Precise & to the point)
+  // Cash on Delivery & Payment
+  if (clean.includes('cod') || clean.includes('cash on delivery') || clean.includes('pay on delivery') || clean.includes('payment method') || clean.includes('payment options') || clean.includes('upi') || clean.includes('gpay')) {
+    return {
+      text: "Yes! 100% Cash on Delivery (COD) is available across all serviceable pin codes in India with zero advance payment. You only pay when your parcel arrives.\n\nWe also accept online payments via UPI (GPay, PhonePe, Paytm), Debit/Credit Cards, and Net Banking."
+    };
+  }
+
+  // Delivery time & shipping cost
+  if (clean.includes('delivery') || clean.includes('shipping') || clean.includes('how long') || clean.includes('courier') || clean.includes('dispatch') || clean.includes('when will i get') || clean.includes('track order') || clean.includes('tracking')) {
+    return {
+      text: "• Dispatch: Orders are dispatched within 24 hours.\n• Delivery: 3 to 5 business days across India.\n• Free Shipping: Automatically applied on all orders above ₹2,000 (otherwise ₹99 flat rate).\n• Tracking: Real-time tracking link is sent via SMS & Email as soon as your order is shipped."
+    };
+  }
+
+  // Returns, Replacements & Refunds
+  if (clean.includes('return') || clean.includes('replace') || clean.includes('refund') || clean.includes('exchange') || clean.includes('wrong part') || clean.includes('damaged') || clean.includes('broken')) {
+    return {
+      text: "MotoDC offers a 7-Day Hassle-Free Return & Replacement Guarantee. If a part doesn't fit your vehicle or arrives defective, go to 'My Orders' and select Return/Replace. We arrange a free pickup and provide an instant replacement or full refund."
+    };
+  }
+
+  // Genuine / Original OEM Guarantee
+  if (clean.includes('genuine') || clean.includes('original') || clean.includes('fake') || clean.includes('oem') || clean.includes('authentic') || clean.includes('quality') || clean.includes('warranty')) {
+    return {
+      text: "All parts on MotoDC are 100% genuine OEM/OES components sourced directly from authorized brand distributors (Brembo, Bosch, Castrol, Motul, NGK, Philips, Rolon, etc.) and backed by manufacturer warranty."
+    };
+  }
+
+  // How to order
+  if (clean.includes('how to order') || clean.includes('how to buy') || clean.includes('place order')) {
+    return {
+      text: "To place an order:\n1. Search for your vehicle part using the search bar or catalog.\n2. Click 'Add to Cart' or 'Buy Now'.\n3. Proceed to Checkout, enter your address, and choose Cash on Delivery (COD) or Online Payment."
+    };
+  }
+
+  // 4. AUTOMOTIVE SYMPTOMS & DIAGNOSTICS (Precise Root Cause & Actionable Advice)
+  // Brakes
+  if (clean.includes('brake') || clean.includes('squeal') || clean.includes('grind') || clean.includes('rotor') || clean.includes('pad') || clean.includes('caliper') || clean.includes('stopping')) {
+    return {
+      text: "Brake squealing or grinding indicates your brake pads have worn past the 2mm wear indicator shim and the metal backing is rubbing against the rotor disc. A spongy lever means air or moisture is trapped in the hydraulic brake fluid.",
       tips: [
-        'Always replace your oil filter during an oil change to keep fresh oil clean.',
-        'Never put automotive car oil in a motorcycle with a wet clutch (causes severe clutch slip).',
-        'Standard change interval: Every 3,000 km (Semi-Synthetic) or 5,000–6,000 km (Full Synthetic).'
+        "Inspect brake pad thickness inside the caliper slot.",
+        "Clean rotor surfaces with brake parts cleaner to remove dust and glaze.",
+        "Replace worn pads with ceramic high-friction pads and bleed with DOT 4 fluid."
       ],
       parts: [
-        { name: 'Motul 7100 10W50 100% Synthetic 4T Oil', price: 1150, query: 'motul' },
-        { name: 'Castrol Power1 Ultimate 10W40 Synthetic', price: 820, query: 'castrol' },
-        { name: 'High-Flow Magnetic Oil Filter', price: 290, query: 'oil filter' }
+        { name: "Ceramic High-Friction Brake Pads", price: 899, query: "brake pad" },
+        { name: "Cross-Drilled Ventilated Disc Rotor", price: 2199, query: "disc rotor" },
+        { name: "Brembo DOT 4 Racing Brake Fluid 500ml", price: 449, query: "brake fluid" }
       ]
     };
   }
 
-  // 6. Brakes, Squeal, Rotor & Grinding
-  if (q.includes('brake') || q.includes('squeal') || q.includes('grind') || q.includes('stopping') || q.includes('rotor') || q.includes('pad') || q.includes('spongy') || q.includes('abs') || q.includes('caliper')) {
+  // Engine Sputter, Misfire, Spark Plugs
+  if (clean.includes('misfire') || clean.includes('sputter') || clean.includes('hesitat') || clean.includes('jerk') || clean.includes('spark plug') || clean.includes('plug') || clean.includes('ignition') || clean.includes('starting trouble')) {
     return {
-      badge: 'Braking System',
-      title: 'Brake Noise, Rotor Wear & Stopping Power',
-      answer: 'High-pitched brake screeching or metal grinding occurs when friction pads wear below 2mm, dragging the metal backing shim against the disc rotor. A soft or "spongy" brake lever indicates moisture or air trapped in the hydraulic brake fluid lines.',
+      text: "Engine hesitation or sputtering under throttle acceleration is usually caused by carbon-fouled spark plug electrodes, a clogged air intake filter, or a failing ignition coil.",
       tips: [
-        'Inspect pad thickness through the caliper inspection slot.',
-        'Clean rotor discs with specialized Brake Parts Cleaner to remove brake dust & oily road film.',
-        'Flush and bleed hydraulic lines with fresh DOT 4 racing brake fluid every 12 months.'
+        "Inspect spark plug tip: tan/light brown is normal; heavy black soot means fouling.",
+        "Check and replace dirty air filter element.",
+        "Upgrade to Fine-Wire Laser Iridium plugs for cleaner and stronger combustion."
       ],
       parts: [
-        { name: 'Ceramic High-Friction Brake Pads', price: 899, query: 'brake pad' },
-        { name: 'Cross-Drilled Ventilated Disc Rotor', price: 2199, query: 'disc rotor' },
-        { name: 'Brembo DOT 4 Racing Brake Fluid', price: 449, query: 'brake fluid' }
+        { name: "NGK Laser Iridium Spark Plug", price: 680, query: "spark plug" },
+        { name: "High-Flow Cotton Replacement Air Filter", price: 1450, query: "air filter" },
+        { name: "High-Output Ignition Coil", price: 1250, query: "ignition coil" }
       ]
     };
   }
 
-  // 7. Chain, Sprockets & Drive Rattling
-  if (q.includes('chain') || q.includes('sprocket') || q.includes('slack') || q.includes('lube') || q.includes('rattle') || q.includes('slap') || q.includes('swingarm')) {
+  // Engine Oil & Lubrication
+  if (clean.includes('oil') || clean.includes('motul') || clean.includes('castrol') || clean.includes('10w40') || clean.includes('10w50') || clean.includes('15w50') || clean.includes('20w50') || clean.includes('synthetic') || clean.includes('lubricant')) {
     return {
-      badge: 'Drivetrain',
-      title: 'Chain Slack, Sprocket Wear & Rattle Diagnostics',
-      answer: 'A loud rattling or slapping sound on deceleration means excessive chain slack (over 35mm) hitting the swingarm slider. Worn sprockets develop sharp, hooked teeth that cause the chain to skip links under hard acceleration.',
-      tips: [
-        'Maintain correct chain slack: typically 25mm to 30mm vertical free-play at midpoint.',
-        'Clean with kerosene or chain cleaner, and lube every 500 km using O-Ring safe wax.',
-        'Always replace chain and front/rear sprockets together as a matched kit.'
-      ],
+      text: "Recommended oil viscosities:\n• High-RPM Bikes (KTM, R15, Pulsar): 10W40 or 10W50 Full Synthetic (JASO MA2 rating).\n• Cruisers (Royal Enfield): 15W50 Semi-Synthetic.\n• Modern Automobiles (Cars): 5W30 or 0W20 Full Synthetic.\n\nAlways change your oil filter when draining engine oil. Never use car oil in a motorcycle wet clutch.",
       parts: [
-        { name: 'Rolon Brass Solid O-Ring Drive Chain', price: 2390, query: 'chain' },
-        { name: 'Hardened Steel Front & Rear Sprocket Set', price: 1680, query: 'sprocket' },
-        { name: 'Motul Chain Clean + Lube Touring Duo', price: 890, query: 'motul chain' }
+        { name: "Motul 7100 10W50 100% Synthetic 4T Oil", price: 1150, query: "motul" },
+        { name: "Castrol Power1 Ultimate 10W40 Synthetic", price: 820, query: "castrol" },
+        { name: "High-Flow Magnetic Oil Filter", price: 290, query: "oil filter" }
       ]
     };
   }
 
-  // 8. Engine Sputtering, Misfire & Spark Plugs
-  if (q.includes('misfire') || q.includes('spark') || q.includes('sputter') || q.includes('jerk') || q.includes('starting') || q.includes('rpm') || q.includes('plug') || q.includes('ignition') || q.includes('hesitation')) {
+  // Chain, Sprockets & Drivetrain
+  if (clean.includes('chain') || clean.includes('sprocket') || clean.includes('slack') || clean.includes('rattle') || clean.includes('slap') || clean.includes('lube')) {
     return {
-      badge: 'Ignition & Fuel',
-      title: 'Combustion Misfire & Spark Plug Diagnostics',
-      answer: 'Engine jerking or sputtering under throttle acceleration is typically caused by carbon-fouled spark plug electrodes, a clogged air filter restricting intake airflow, or a weakening ignition coil struggling under cylinder pressure.',
+      text: "A loud chain rattling or slapping noise means excessive chain slack (> 35mm) striking the swingarm. Worn sprockets develop hooked teeth that slip under acceleration.",
       tips: [
-        'Inspect spark plug tip: tan/light brown is optimal; black soot indicates carbon fouling.',
-        'Upgrade to Fine-Wire Laser Iridium spark plugs for a 30% hotter spark and cleaner ignition.',
-        'Replace air filter if paper element is dark grey or clogged.'
+        "Set chain slack to 25–30mm of vertical play at the midpoint.",
+        "Clean and lubricate every 500 km with O-Ring safe chain wax.",
+        "Always replace chain and front/rear sprockets as a matched set."
       ],
       parts: [
-        { name: 'NGK Laser Iridium Spark Plug', price: 680, query: 'spark plug' },
-        { name: 'High-Flow Cotton Replacement Air Filter', price: 1450, query: 'air filter' },
-        { name: 'High-Output Performance Ignition Coil', price: 1250, query: 'ignition coil' }
+        { name: "Rolon Brass Solid O-Ring Drive Chain 520 Pitch", price: 2390, query: "chain" },
+        { name: "Hardened Steel Front & Rear Sprocket Set", price: 1680, query: "sprocket" },
+        { name: "Motul Chain Clean + Lube Touring Duo", price: 890, query: "motul chain" }
       ]
     };
   }
 
-  // 9. Overheating & Cooling
-  if (q.includes('heat') || q.includes('overheat') || q.includes('coolant') || q.includes('radiator') || q.includes('temperature') || q.includes('fan') || q.includes('boil')) {
+  // Battery & Electrical
+  if (clean.includes('battery') || clean.includes('click') || clean.includes('crank') || clean.includes('headlight') || clean.includes('starter') || clean.includes('stator') || clean.includes('bulb')) {
     return {
-      badge: 'Thermal Management',
-      title: 'Engine Overheating & Radiator Diagnostics',
-      answer: 'If your temperature gauge is high or radiator fan stays on constantly, the cooling system is suffering from low coolant, airlocks in hoses, bent radiator cooling fins, or a failed 1.1/1.3 bar radiator pressure cap.',
+      text: "A rapid clicking sound with no engine crank indicates battery voltage drops below 10.5V under load. This is caused by sulfated battery plates, loose terminals, or a weak charging stator.",
       tips: [
-        'Never open radiator cap when the engine is warm (severe scalding danger).',
-        'Inspect expansion reservoir and top up with premixed ethylene glycol coolant.',
-        'Gently clean mud and road debris off radiator fins using low-pressure water.'
+        "Resting battery voltage should be 12.6V–12.8V. When running, stator should charge at 14.0V–14.4V.",
+        "Clean terminal corrosion with warm baking soda water and coat with terminal grease."
       ],
       parts: [
-        { name: 'Engine Ice High-Performance Coolant 1.89L', price: 1450, query: 'coolant' },
-        { name: 'High-Pressure 1.3 Bar Radiator Cap', price: 380, query: 'radiator' },
-        { name: 'Radiator Protective Aluminium Grille Guard', price: 950, query: 'radiator guard' }
+        { name: "High-CCA Sealed Maintenance-Free AGM Battery", price: 2450, query: "battery" },
+        { name: "Copper Wound Magneto Stator Coil", price: 1750, query: "stator" },
+        { name: "6500K Ultra-Bright LED Headlamp Bulb H4/H7", price: 990, query: "led bulb" }
       ]
     };
   }
 
-  // 10. Battery & Electrical
-  if (q.includes('battery') || q.includes('click') || q.includes('crank') || q.includes('light') || q.includes('headlight') || q.includes('starter') || q.includes('stator') || q.includes('electrical')) {
+  // Clutch Slipping
+  if (clean.includes('clutch') || clean.includes('slip') || clean.includes('gear') || clean.includes('shift')) {
     return {
-      badge: 'Electrical System',
-      title: '12V Cranking, Stator Charging & Battery Care',
-      answer: 'A rapid clicking noise when pressing the starter button means the starter relay is engaging, but battery voltage drops under motor load (< 10.5V). This is caused by sulfated battery plates, loose terminals, or a weak magneto charging stator coil.',
+      text: "When engine RPM revs up quickly but vehicle speed climbs sluggishly, your clutch friction plates are slipping due to heat glazing or worn friction lining.",
       tips: [
-        'Test battery voltage: healthy rest is 12.6V–12.8V; charging voltage at 3000 RPM should be 14.0V–14.4V.',
-        'Clean terminal corrosion with warm baking soda water and coat with petroleum jelly.',
-        'Replace aging lead-acid batteries with high-cranking Sealed AGM units.'
+        "Check clutch cable freeplay: ensure 2–3mm of free play before tension engages.",
+        "Soak new friction plates in fresh engine oil for 15 minutes before installing."
       ],
       parts: [
-        { name: 'High-CCA Sealed Maintenance-Free AGM Battery', price: 2450, query: 'battery' },
-        { name: 'Copper Wound High-Output Magneto Stator Coil', price: 1750, query: 'stator' },
-        { name: '6500K Ultra-Bright LED Headlamp Bulb H4/H7', price: 990, query: 'led bulb' }
+        { name: "Kevlar Reinforced Clutch Friction Plate Set", price: 1850, query: "clutch" },
+        { name: "High-Tension Heavy Duty Clutch Springs", price: 420, query: "clutch spring" }
       ]
     };
   }
 
-  // 11. Clutch & Transmission
-  if (q.includes('clutch') || q.includes('gear') || q.includes('shift') || q.includes('neutral') || q.includes('slip')) {
+  // Overheating & Coolant
+  if (clean.includes('heat') || clean.includes('overheat') || clean.includes('coolant') || clean.includes('radiator') || clean.includes('temperature') || clean.includes('fan')) {
     return {
-      badge: 'Transmission',
-      title: 'Clutch Engagement & Friction Plate Service',
-      answer: 'When the engine revs up quickly but vehicle speed climbs sluggishly, the clutch friction plates are slipping due to heat glazing or worn lining. Hard gear shifts usually mean clutch cable free-play is out of adjustment.',
+      text: "Engine overheating is caused by low coolant level, clogged radiator core fins, airlocks in hoses, or a faulty radiator pressure cap.",
       tips: [
-        'Check clutch lever freeplay: ensure 2mm to 3mm of free play before cable tension engages.',
-        'Always soak new clutch friction plates in fresh engine oil for 15 minutes before assembly.',
-        'Replace clutch springs together with plates to restore full clamping force.'
+        "Never open radiator cap while engine is warm (scalding danger).",
+        "Inspect expansion bottle and top up with premixed coolant."
       ],
       parts: [
-        { name: 'Kevlar Reinforced Clutch Friction Plate Set', price: 1850, query: 'clutch' },
-        { name: 'High-Tension Heavy Duty Clutch Springs', price: 420, query: 'clutch spring' },
-        { name: 'Motul 7100 10W50 100% Synthetic 4T Oil', price: 1150, query: 'motul' }
+        { name: "Engine Ice High-Performance Coolant 1.89L", price: 1450, query: "coolant" },
+        { name: "High-Pressure 1.3 Bar Radiator Cap", price: 380, query: "radiator" }
       ]
     };
   }
 
-  // 12. Exhaust Smoke Diagnostics
-  if (q.includes('smoke') || q.includes('exhaust') || q.includes('smell') || q.includes('burn')) {
+  // Exhaust Smoke
+  if (clean.includes('smoke') || clean.includes('exhaust')) {
     return {
-      badge: 'Exhaust Diagnostics',
-      title: 'Exhaust Smoke Color Analysis',
-      answer: 'Exhaust smoke color directly identifies internal engine conditions:\n\n• Blue Smoke: Engine oil burning in combustion chamber due to worn piston rings or valve stem oil seals.\n• Black Smoke: Rich fuel mixture / unburnt fuel due to clogged air filter or leaking fuel injectors.\n• White Smoke: Normal condensation on cold starts, or coolant leaking into combustion chamber (blown head gasket) if accompanied by sweet smell.',
-      tips: [
-        'Check oil dipstick level regularly if noticing bluish smoke.',
-        'Inspect and replace the air filter element to resolve rich fuel mixture black smoke.'
-      ],
+      text: "Exhaust smoke diagnostics:\n• Blue Smoke: Engine oil burning (worn piston rings or valve stem seals).\n• Black Smoke: Rich fuel mixture / unburnt fuel (clogged air filter or leaky injectors).\n• White Smoke: Normal cold morning condensation, or coolant leaking into combustion if sweet-smelling.",
       parts: [
-        { name: 'High-Flow Cotton Replacement Air Filter', price: 1450, query: 'air filter' },
-        { name: 'NGK Laser Iridium Spark Plug', price: 680, query: 'spark plug' }
+        { name: "High-Flow Cotton Replacement Air Filter", price: 1450, query: "air filter" }
       ]
     };
   }
 
-  // 13. Suspension & Steering
-  if (q.includes('suspension') || q.includes('fork') || q.includes('shock') || q.includes('wobble') || q.includes('vibration') || q.includes('handlebar')) {
+  // Specific Vehicle or Part Search (e.g. Duke 390, Activa, Swift, Horn, Disc)
+  const partKeywords = ['filter', 'horn', 'wiper', 'bulb', 'mirror', 'tyre', 'tire', 'bearing', 'plug', 'brake', 'oil', 'chain', 'sprocket', 'battery', 'clutch', 'activa', 'duke', 'pulsar', 'bullet', 'royal enfield', 'swift', 'i20', 'creta'];
+  if (partKeywords.some(k => clean.includes(k))) {
     return {
-      badge: 'Chassis & Suspension',
-      title: 'Front Fork, Shock Absorber & Steering Stability',
-      answer: 'Front-end wobble or harsh bottoming-out occurs when front fork oil seals weep oil onto the stanchions, leaving insufficient hydraulic dampening. Loose or notched steering cone bearings also cause wandering at highway speeds.',
-      tips: [
-        'Check fork stanchion chrome tubes for oil rings or dust seal cracking.',
-        'Service front forks with fresh high-viscosity 10W fork oil and OEM seals.'
-      ],
+      text: `Here are matching genuine parts and catalog results for "${rawQuery.trim()}":`,
       parts: [
-        { name: 'Heavy-Duty Fork Oil Seal & Dust Seal Set', price: 480, query: 'fork' },
-        { name: 'Motul Fork Oil Expert Medium 10W 1L', price: 650, query: 'fork oil' }
+        { name: `Search Parts for "${rawQuery.trim().slice(0, 24)}"`, price: 0, query: rawQuery.trim().slice(0, 20) }
       ]
     };
   }
 
-  // 14. Friendly Greeting
-  if (q === 'hi' || q === 'hello' || q === 'hey' || q === 'help' || q.startsWith('hi ') || q.startsWith('hello ')) {
-    return {
-      badge: 'MotoDC Assistant',
-      title: 'Welcome to MotoDC AI Copilot! 👋',
-      answer: 'Hello! I am your 24/7 MotoDC AI Workshop Assistant. I can help you with:\n\n• Diagnosing vehicle symptoms (noises, vibrations, starting issues)\n• Recommending genuine OEM spare parts and oils\n• Clarifying Cash on Delivery (COD), order dispatch, shipping & returns\n\nWhat can I assist you with today?',
-      tips: [
-        'Type any vehicle symptom (e.g. "brake noise" or "which oil for Duke 390").',
-        'Ask questions about delivery, COD, or return policies.',
-        'Click any suggested chip below for quick answers!'
-      ],
-      parts: []
-    };
-  }
-
-  // 15. Intelligent Fallback with Smart Search
+  // 5. NATURAL INTELLIGENT FALLBACK (NO FAKE DIAGNOSTICS!)
   return {
-    badge: 'Diagnostic Advice',
-    title: `Automotive Assessment: "${rawQuery}"`,
-    answer: `Here is the technical recommendation for "${rawQuery}":\n\nAlways inspect the simplest wear items first (air filter, spark plug, fluids, and fasteners) before taking apart complex mechanical assemblies. Ensure all replacement parts match your vehicle OEM fitment specifications.`,
-    tips: [
-      'Check for visible fluid leaks, abnormal vibrations, or scorched surfaces.',
-      'Refer to your vehicle manual for recommended maintenance intervals and torque values.',
-      'Search our catalog to find exact replacement parts backed by MotoDC 7-Day Guarantee.'
-    ],
-    parts: [
-      { name: `Search Parts for "${rawQuery.slice(0, 22)}"`, price: 0, query: rawQuery.slice(0, 20) }
-    ]
+    text: "Could you please specify your question, your vehicle model, or the issue you're facing? I can help with spare parts recommendations, diagnostics, COD, delivery, and returns."
   };
 }
 
@@ -416,7 +385,7 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hello Rider! 👋 I'm your **MotoDC AI Mechanic & Assistant**.\n\nDescribe any issue with your vehicle (noises, vibrations, hesitation, fluid leaks) or ask any questions about spare parts, fitment, orders, and delivery.\n\nHow can I help clear your doubts today?",
+      text: "Hello Rider! 👋 I'm your MotoDC AI Assistant.\n\nDescribe any issue with your vehicle (noises, vibrations, starting trouble) or ask questions about spare parts, COD, delivery, and returns.\n\nHow can I help you today?",
       suggestions: [
         "📦 COD & Free Delivery policy",
         "🔄 7-Day Returns & Guarantee",
@@ -477,7 +446,7 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
         sender: 'ai',
         badge: result.badge,
         title: result.title,
-        text: result.answer,
+        text: result.text || result.answer || '',
         tips: result.tips,
         parts: result.parts
       };
