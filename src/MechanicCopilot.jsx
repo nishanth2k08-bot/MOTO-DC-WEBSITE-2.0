@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { 
   Search, Wrench, ShieldAlert, CheckCircle2, Clock, ArrowRight, 
   ShoppingCart, Sparkles, AlertTriangle, Layers, Send, MessageSquare, 
-  Bot, User, RotateCcw, HelpCircle, Package, Truck, ShieldCheck, X
+  Bot, User, RotateCcw, HelpCircle, Package, Truck, ShieldCheck, X, Key
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -419,15 +419,17 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
     });
   }, [searchTerm, selectedCategory]);
 
+  const [isTyping, setIsTyping] = useState(false);
+
   useEffect(() => {
     if (activeTab === 'chat') {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, activeTab]);
+  }, [messages, isTyping, activeTab]);
 
-  const handleSendMessage = (textToSend) => {
+  const handleSendMessage = async (textToSend) => {
     const q = (textToSend || inputQuery).trim();
-    if (!q) return;
+    if (!q || isTyping) return;
 
     const userMsg = {
       id: 'user-' + Date.now(),
@@ -435,10 +437,43 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
       text: q
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const nextMessages = [...messages, userMsg];
+    setMessages(nextMessages);
     setInputQuery('');
+    setIsTyping(true);
 
-    // Instant intelligent response
+    try {
+      const storedKey = localStorage.getItem('motodc_gemini_key') || '';
+      const response = await fetch('/api/copilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: q,
+          history: nextMessages.slice(-6),
+          apiKey: storedKey || undefined
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.text && !data.fallback) {
+          const aiMsg = {
+            id: 'ai-' + Date.now(),
+            sender: 'ai',
+            text: data.text,
+            parts: data.parts,
+            source: 'gemini'
+          };
+          setMessages((prev) => [...prev, aiMsg]);
+          setIsTyping(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Gemini endpoint unreachable, falling back to local engine:', err);
+    }
+
+    // Instant local intelligent response fallback (Always reliable)
     setTimeout(() => {
       const result = answerUserQuestion(q);
       const aiMsg = {
@@ -448,9 +483,11 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
         title: result.title,
         text: result.text || result.answer || '',
         tips: result.tips,
-        parts: result.parts
+        parts: result.parts,
+        source: 'local'
       };
       setMessages((prev) => [...prev, aiMsg]);
+      setIsTyping(false);
     }, 280);
   };
 
@@ -506,6 +543,12 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
                 )}
 
                 <div className="chatBubble">
+                  {m.source === 'gemini' && (
+                    <span className="geminiPill">
+                      <Sparkles size={10} /> Gemini AI
+                    </span>
+                  )}
+
                   {m.badge && (
                     <div className="chatBubbleBadge">
                       <Sparkles size={12} /> {m.badge}
@@ -577,6 +620,21 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
                 </div>
               </div>
             ))}
+
+            {/* Live AI Typing Indicator */}
+            {isTyping && (
+              <div className="chatMessageRow ai">
+                <div className="chatAvatar aiAvatar">
+                  <Bot size={17} />
+                </div>
+                <div className="chatBubble chatBubbleTyping">
+                  <span className="typingDot" />
+                  <span className="typingDot" />
+                  <span className="typingDot" />
+                </div>
+              </div>
+            )}
+
             <div ref={chatEndRef} />
           </div>
 
@@ -594,16 +652,17 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
               onChange={(e) => setInputQuery(e.target.value)}
               placeholder="Ask anything about parts, symptoms, COD, delivery..."
               className="chatTextInput"
+              disabled={isTyping}
               autoFocus
             />
             <button
               type="submit"
               className="chatSendBtn"
-              disabled={!inputQuery.trim()}
+              disabled={!inputQuery.trim() || isTyping}
               aria-label="Send query to AI Assistant"
             >
               <Send size={15} />
-              <span>Ask</span>
+              <span>{isTyping ? 'Thinking...' : 'Ask'}</span>
             </button>
           </form>
         </div>
@@ -695,10 +754,33 @@ export default function MechanicCopilot({ isModal = true, onClose, activeTab: ex
 export function MechanicCopilotFloatingLauncher() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'library'
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [customKey, setCustomKey] = useState(() => localStorage.getItem('motodc_gemini_key') || '');
+  const [keyInput, setKeyInput] = useState('');
+
+  const handleSaveKey = () => {
+    const k = keyInput.trim();
+    if (!k) return;
+    localStorage.setItem('motodc_gemini_key', k);
+    setCustomKey(k);
+    setKeyInput('');
+    setShowKeyModal(false);
+    toast.success('Gemini AI Key saved! Live AI activated.');
+  };
+
+  const handleRemoveKey = () => {
+    localStorage.removeItem('motodc_gemini_key');
+    setCustomKey('');
+    setShowKeyModal(false);
+    toast.success('Custom key removed.');
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') {
+        if (showKeyModal) setShowKeyModal(false);
+        else setIsOpen(false);
+      }
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
@@ -706,7 +788,7 @@ export function MechanicCopilotFloatingLauncher() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, showKeyModal]);
 
   return (
     <>
@@ -756,12 +838,24 @@ export function MechanicCopilotFloatingLauncher() {
                   <span className="aiHeaderTag">AI HELP</span>
                 </div>
                 <span className="aiHeaderSubtext">
-                  ● Online · Solves all vehicle & parts doubts
+                  ● Online · Powered by Gemini & Workshop Intelligence
                 </span>
               </div>
             </div>
 
             <div className="aiHeaderActions">
+              <button
+                type="button"
+                className={`aiHeaderTabBtn ${showKeyModal || customKey ? 'active' : ''}`}
+                onClick={() => {
+                  setShowKeyModal((v) => !v);
+                  if (!showKeyModal && customKey) setKeyInput(customKey);
+                }}
+                title={customKey ? "Gemini Key Active" : "Connect Free Gemini API Key"}
+                aria-label="Connect Free Gemini API Key"
+              >
+                <Key size={14} />
+              </button>
               <button
                 type="button"
                 className={`aiHeaderTabBtn ${activeTab === 'chat' ? 'active' : ''}`}
@@ -791,6 +885,65 @@ export function MechanicCopilotFloatingLauncher() {
               </button>
             </div>
           </div>
+
+          {/* Gemini Key Settings Popover */}
+          {showKeyModal && (
+            <div className="geminiKeyPopover">
+              <div className="geminiKeyTitle">
+                <span>Free Google Gemini AI</span>
+                <button
+                  type="button"
+                  style={{ background: 'none', border: 'none', color: '#8b949e', cursor: 'pointer', padding: 2 }}
+                  onClick={() => setShowKeyModal(false)}
+                  aria-label="Close settings"
+                >
+                  <X size={15} />
+                </button>
+              </div>
+              <p className="geminiKeyDesc">
+                Get your free API key at{' '}
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#ff3157', textDecoration: 'underline' }}
+                >
+                  Google AI Studio
+                </a>{' '}
+                (no credit card needed). Paste below for live AI responses, or set <code>GEMINI_API_KEY</code> on Vercel.
+              </p>
+              <div className="geminiKeyInputRow">
+                <input
+                  type="password"
+                  placeholder="Paste Key (AIzaSy...)"
+                  value={keyInput}
+                  onChange={(e) => setKeyInput(e.target.value)}
+                  className="geminiKeyInput"
+                />
+                <button
+                  type="button"
+                  className="geminiKeySaveBtn"
+                  onClick={handleSaveKey}
+                >
+                  Save
+                </button>
+              </div>
+              {customKey && (
+                <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: 11, color: '#3fb950', display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <CheckCircle2 size={12} /> Live Key Active
+                  </span>
+                  <button
+                    type="button"
+                    style={{ background: 'none', border: 'none', color: '#f85149', fontSize: 11, cursor: 'pointer' }}
+                    onClick={handleRemoveKey}
+                  >
+                    Remove Key
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="aiChatWidgetBody">
             <MechanicCopilot

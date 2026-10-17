@@ -985,3 +985,141 @@ body.light-theme .dossierTitle {
     border-radius: 16px !important;
   }
 }
+
+/* ─── 7. GEMINI AI TYPING & BADGES ─── */
+.chatBubbleTyping {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 10px 14px !important;
+  min-height: 38px !important;
+}
+
+.typingDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #ff3157;
+  border-radius: 50%;
+  animation: typingBounce 1.3s infinite ease-in-out;
+}
+
+.typingDot:nth-child(1) {
+  animation-delay: 0s;
+}
+.typingDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typingDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  40% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+.geminiPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #58a6ff;
+  background: rgba(88, 166, 255, 0.12);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+  border-radius: 12px;
+  padding: 2px 7px;
+  margin-bottom: 6px;
+}
+
+body.light-theme .geminiPill {
+  color: #0969da;
+  background: rgba(9, 105, 218, 0.1);
+  border-color: rgba(9, 105, 218, 0.25);
+}
+
+.geminiKeyPopover {
+  position: absolute;
+  top: 55px;
+  right: 12px;
+  left: 12px;
+  background: #161b22;
+  border: 1px solid rgba(255, 49, 87, 0.35);
+  border-radius: 12px;
+  padding: 14px;
+  z-index: 100;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+
+body.light-theme .geminiKeyPopover {
+  background: #ffffff;
+  border-color: #d0d7de;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.geminiKeyTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+body.light-theme .geminiKeyTitle {
+  color: #1f2328;
+}
+
+.geminiKeyDesc {
+  font-size: 11.5px;
+  color: #8b949e;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.geminiKeyInputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.geminiKeyInput {
+  flex: 1;
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 7px 10px;
+  color: #fff;
+  font-size: 12px;
+  outline: none;
+}
+
+body.light-theme .geminiKeyInput {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #1f2328;
+}
+
+.geminiKeySaveBtn {
+  background: #ff3157;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.geminiKeySaveBtn:hover {
+  opacity: 0.9;
+}
+
