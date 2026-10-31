@@ -17,6 +17,7 @@ import {
   Phone,
   Radio,
   ExternalLink,
+  MessageSquare,
 } from 'lucide-react';
 import { getDeliveryPin } from './deliveryPinUtil';
 import { jsPDF } from 'jspdf';
@@ -1237,13 +1238,26 @@ export default function Orders() {
 
               {/* ACTION FOOTER */}
               <div className="inspectorActionFooter">
+                {/* 1-Click WhatsApp Support with pre-filled Order ID */}
+                <a
+                  href={`https://wa.me/918903993371?text=${encodeURIComponent(
+                    `Hi MotoDC Team, I need assistance with my Order #${activeOrder.orderId || activeOrder.id} (${activeOrder.items?.[0]?.name || 'Parts'})`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inspectorHelpBtn"
+                >
+                  <MessageSquare size={15} />
+                  <span>Need Help with this Order?</span>
+                </a>
+
+                {/* Buy Again / Re-order */}
                 <button
                   type="button"
-                  className="inspectorTrackGpsBtn"
-                  onClick={() => setShowRadarModal(true)}
+                  className="inspectorReorderBtn"
+                  onClick={() => nav('/products')}
                 >
-                  <Truck size={16} />
-                  <span>Track on Live GPS Map</span>
+                  <RotateCcw size={14} /> Buy Again
                 </button>
 
                 {canCancel && (
