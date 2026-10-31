@@ -17,12 +17,13 @@
   border: 1px solid #2a3242;
   border-radius: 16px;
   width: 100%;
-  max-width: 620px;
+  max-width: 640px;
   color: #f8fafc;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin: auto;
 }
 
 .shippingLabelTopBar {
@@ -131,25 +132,62 @@
   border-radius: 3px;
 }
 
-/* Barcode Area */
+/* Dual Barcode & QR Section */
 .labelBarcodeSection {
-  text-align: center;
-  padding: 10px 0 14px;
+  padding: 8px 0 12px;
   border-bottom: 2px dashed #333;
 }
 
-.labelBarcodeSection svg {
+.labelBarcodeDualWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+}
+
+.labelBarcodeBox {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+.labelBarcodeBox svg {
   max-width: 100%;
-  height: auto;
+  height: 56px;
   display: block;
   margin: 0 auto;
 }
 
 .labelBarcodeHint {
-  font-size: 11px;
-  font-weight: 600;
-  color: #222;
-  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #333;
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+}
+
+.labelQrBox {
+  flex-shrink: 0;
+  text-align: center;
+  border-left: 2px dashed #bbb;
+  padding-left: 14px;
+}
+
+.labelQrBox img {
+  width: 76px;
+  height: 76px;
+  display: block;
+  margin: 0 auto;
+}
+
+.labelQrBox small {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  color: #000;
 }
 
 /* Address & Info Grid */
