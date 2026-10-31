@@ -460,7 +460,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
+  gap: 12px;
+  padding: 8px 0;
   border-bottom: 1px solid #1a2233;
   font-size: 13px;
 }

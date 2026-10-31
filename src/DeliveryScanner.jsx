@@ -23,23 +23,6 @@ import './delivery-scanner.css';
 
 const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
 
-function playScanChime() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.12);
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.28);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.28);
-  } catch (_) {}
-}
-
 export default function DeliveryScanner() {
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState(null);
@@ -118,8 +101,7 @@ export default function DeliveryScanner() {
     const clean = String(rawCode).trim();
     if (!clean) return;
 
-    // Trigger audio chime and vibration
-    playScanChime();
+    // Silent haptic vibration feedback
     if (navigator.vibrate) {
       navigator.vibrate([80, 40, 100]);
     }
@@ -217,11 +199,10 @@ export default function DeliveryScanner() {
 
       await updateDoc(orderRef, updates);
 
-      // Play victory sound & vibrate
+      // Silent haptic vibration feedback
       if (navigator.vibrate) {
         navigator.vibrate([100, 50, 150, 50, 200]);
       }
-      playScanChime();
 
       // Increment tally
       const nextCount = todayCount + 1;
@@ -411,7 +392,24 @@ export default function DeliveryScanner() {
               <h4>Package Contents ({verifiedOrder.items?.length || 0} items):</h4>
               {(verifiedOrder.items || []).map((it, idx) => (
                 <div className="deliveryItemRow" key={idx}>
-                  <span>{it.name || 'Automotive Part'}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                    {it.image && (
+                      <img
+                        src={it.image}
+                        alt=""
+                        style={{
+                          width: '38px',
+                          height: '38px',
+                          objectFit: 'contain',
+                          background: '#0b1017',
+                          borderRadius: '6px',
+                          border: '1px solid #1e293b',
+                          flexShrink: 0
+                        }}
+                      />
+                    )}
+                    <span style={{ wordBreak: 'break-word' }}>{it.name || 'Automotive Part'}</span>
+                  </div>
                   <b>Qty {it.qty || 1}</b>
                 </div>
               ))}
