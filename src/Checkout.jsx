@@ -1,8 +1,9 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
 import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,ShieldCheck,Phone,Clock} from 'lucide-react';
 import {toast} from 'react-hot-toast';
+import SlideToOrder, { triggerHaptic } from './SlideToOrder';
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const getCart=()=>{try{return JSON.parse(localStorage.getItem('motodc-cart')||'[]')}catch{return[]}};
@@ -54,6 +55,7 @@ const parseInitialPhone=(raw)=>{
 
 export default function Checkout(){
   const nav=useNavigate(),[items]=useState(getCart()),[placed,setPlaced]=useState(null),[loading,setLoading]=useState(false),user=auth.currentUser;
+  const formRef=useRef(null);
   const initialContact=parseInitialPhone(user?.phoneNumber);
   const [countryCode,setCountryCode]=useState(initialContact.code);
   const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:initialContact.phone,address:'',city:'',state:'',pincode:''});
@@ -179,6 +181,7 @@ export default function Checkout(){
       });
       const result=await readApiResponse(response);
       clearCart();
+      triggerHaptic([100, 50, 150]);
       toast.success('Order placed successfully');
       nav('/orders',{
         replace:true,
@@ -288,6 +291,7 @@ export default function Checkout(){
           });
           const result=await readApiResponse(verify);
           clearCart();
+          triggerHaptic([100, 50, 150]);
           toast.success('Payment verified! Order confirmed.');
           nav('/orders',{
             replace:true,
@@ -301,6 +305,7 @@ export default function Checkout(){
         }catch(e){
           console.error('Payment verification error:',e);
           clearCart();
+          triggerHaptic([100, 50, 150]);
           toast.success('Payment received! Order confirmed.');
           nav('/orders',{
             replace:true,
@@ -326,7 +331,7 @@ export default function Checkout(){
   };
 
   const submit=async e=>{
-    e.preventDefault();
+    if(e && e.preventDefault) e.preventDefault();
     if(!validate())return;
     setLoading(true);
     try{
@@ -401,7 +406,7 @@ export default function Checkout(){
           <div className="checkoutStep"><div className="checkoutStepDot">3</div><span className="checkoutStepLabel">Review</span></div>
         </div>
         <div className="checkoutLayout">
-          <form className="checkoutForm" onSubmit={submit}>
+          <form ref={formRef} className="checkoutForm" onSubmit={submit}>
             <div className="checkoutBlock">
               <h2>Contact details</h2>
               <div className="formGrid">
@@ -466,9 +471,15 @@ export default function Checkout(){
                 </label>
               </div>
             </div>
-            <button className="heroBtn placeOrder" disabled={loading}>
-              {loading?'Processing...':payment==='online'?<>Pay Securely · {money(subtotal)} <ShieldCheck size={17}/></>:<>Place Order · {money(subtotal)}</>}
-            </button>
+            <SlideToOrder
+              onConfirm={submit}
+              loading={loading}
+              disabled={loading || !items.length}
+              payment={payment}
+              totalText={money(subtotal)}
+              formRef={formRef}
+              validate={validate}
+            />
           </form>
           <aside className="checkoutSummary">
             <h2>Order Summary</h2>
