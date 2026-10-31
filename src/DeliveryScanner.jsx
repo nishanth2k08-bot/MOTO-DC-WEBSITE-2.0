@@ -292,7 +292,7 @@ export default function DeliveryScanner() {
             <div className="scannerCardHeader">
               <h2>
                 <Camera size={18} color="#ff3157" />
-                Amazon-Style Doorstep Scanner
+                MotoDC Doorstep Scanner
               </h2>
               <div className="scannerControls">
                 <button

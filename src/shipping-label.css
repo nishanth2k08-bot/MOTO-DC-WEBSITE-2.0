@@ -291,51 +291,126 @@
   border-bottom: 1px dotted #ccc;
 }
 
-/* Security Notice */
-.labelSecurityNotice {
-  margin-top: 12px;
-  padding-top: 10px;
+/* Clean Logistics Footer */
+.labelFooter {
+  margin-top: 10px;
+  padding-top: 8px;
   border-top: 1.5px solid #000;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
   font-size: 10px;
-  font-weight: 600;
-  color: #111;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 0.3px;
 }
 
-.labelSecurityNotice b {
-  color: #000;
-  font-weight: 900;
-}
-
-/* Print Styles */
+/* Print Styles - Guaranteed 1-Page Output */
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
   }
-  .shippingLabelOverlay,
-  .shippingLabelOverlay * {
-    visibility: visible;
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
+
+  /* Completely remove the web app and anything else from layout calculation */
+  #root,
+  header,
+  footer,
+  nav,
+  body > *:not(.shippingLabelOverlay) {
+    display: none !important;
+  }
+
+  /* Unravel modal overlay so it flows as top-level document */
   .shippingLabelOverlay {
-    position: absolute;
-    inset: 0;
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
     background: transparent !important;
     padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
   }
+
   .shippingLabelModal {
-    border: none !important;
-    box-shadow: none !important;
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
     max-width: 100% !important;
+    height: auto !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     background: transparent !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
   }
+
   .shippingLabelTopBar {
     display: none !important;
   }
+
   .shippingLabelSheet {
-    margin: 0 !important;
-    border: 2px solid #000 !important;
+    position: relative !important;
     width: 100% !important;
+    max-width: 580px !important;
+    margin: 0 auto !important;
+    padding: 14px 18px !important;
+    border: 2px solid #000000 !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+
+  .labelBarcodeDualWrap {
+    background: #ffffff !important;
+  }
+
+  .labelBarcodeBox svg {
+    max-width: 100% !important;
+    height: 48px !important;
+  }
+
+  .labelQrBox img {
+    width: 68px !important;
+    height: 68px !important;
+  }
+
+  .labelAddressGrid {
+    padding: 10px 0 !important;
+  }
+
+  .labelPaymentBanner {
+    margin: 10px 0 !important;
+    padding: 8px 12px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .labelItemsTable {
+    margin: 8px 0 !important;
   }
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import JsBarcode from 'jsbarcode';
 import QRCode from 'qrcode';
-import { Printer, X, ShieldAlert, Package } from 'lucide-react';
-import { getDeliveryPin } from './deliveryPinUtil';
+import { Printer, X, Package } from 'lucide-react';
 import './shipping-label.css';
 
 const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
@@ -13,7 +13,6 @@ export default function ShippingLabelModal({ order, onClose }) {
 
   const barcodeValue = String(order?.orderId || order?.id || 'MDC-0000').trim();
   const isCod = String(order?.paymentMethod || '').toLowerCase() === 'cod';
-  const deliveryPin = getDeliveryPin(order);
 
   useEffect(() => {
     // 1. Generate QR Code Data URL (High speed 2D barcode)
@@ -65,7 +64,7 @@ export default function ShippingLabelModal({ order, onClose }) {
     window.print();
   };
 
-  return (
+  const modalContent = (
     <div className="shippingLabelOverlay" onClick={onClose}>
       <div className="shippingLabelModal" onClick={(e) => e.stopPropagation()}>
         {/* Top Control Bar */}
@@ -91,7 +90,7 @@ export default function ShippingLabelModal({ order, onClose }) {
               Moto<span>DC</span> Express
             </div>
             <div className="labelServiceBadge">
-              SURFACE PRIORITY // DOORSTEP
+              EXPRESS DOORSTEP DELIVERY
             </div>
           </div>
 
@@ -101,7 +100,7 @@ export default function ShippingLabelModal({ order, onClose }) {
               <div className="labelBarcodeBox">
                 <svg ref={barcodeRef} aria-label={`Barcode for ${barcodeValue}`} />
                 <div className="labelBarcodeHint">
-                  DOORSTEP SCAN VERIFIED // SCAN VIA MOTODC DELIVERY APP
+                  DOORSTEP SCAN VERIFIED • SCAN VIA MOTODC DELIVERY APP
                 </div>
               </div>
               {qrDataUrl && (
@@ -172,15 +171,17 @@ export default function ShippingLabelModal({ order, onClose }) {
             </tbody>
           </table>
 
-          {/* Security Notice for Delivery Agent */}
-          <div className="labelSecurityNotice">
-            <ShieldAlert size={28} color="#d97706" style={{ flexShrink: 0 }} />
-            <div>
-              <b>AMAZON-STYLE BARCODE VERIFICATION:</b> Delivery partner must scan this barcode at doorstep via the MotoDC Delivery Portal (<b>/delivery</b>) and enter customer's 4-digit handover PIN (<b>{deliveryPin}</b>) to confirm handover.
-            </div>
+          {/* Clean Logistics Footer */}
+          <div className="labelFooter">
+            <span>MotoDC Express Logistics • support@motodc.in</span>
+            <span>Doorstep Verification Required</span>
           </div>
         </div>
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalContent, document.body)
+    : modalContent;
 }
