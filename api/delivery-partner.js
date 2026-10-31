@@ -43,8 +43,59 @@ export default async function handler(req, res) {
     const a = getAdmin();
     const db = getFirestore(a.app(), 'asia-south1');
 
-    // 1. GET: Lookup order by barcode text / Order ID (High-Speed Indexed Strategy)
+    // 1. GET: Lookup order or list active run sheet deliveries
     if (req.method === 'GET') {
+      const action = String(req.query.action || '').trim().toLowerCase();
+      const codCol = db.collection('orders').doc('cod orders').collection('records');
+      const onlineCol = db.collection('orders').doc('online orders').collection('records');
+
+      // 1A. List Active Run Sheet Deliveries (Pending stops for today's shift)
+      if (action === 'active-deliveries') {
+        const [recentCod, recentOnline] = await Promise.all([
+          codCol.limit(30).get(),
+          onlineCol.limit(30).get(),
+        ]);
+        const pool = [
+          ...recentCod.docs.map(d => ({ ...d.data(), id: d.id, collectionType: 'cod orders' })),
+          ...recentOnline.docs.map(d => ({ ...d.data(), id: d.id, collectionType: 'online orders' })),
+        ];
+
+        // Filter for active orders (not yet delivered or cancelled)
+        const activeStops = pool
+          .filter(o => {
+            const st = String(o.orderStatus || 'placed').toLowerCase();
+            return !['delivered', 'cancelled', 'returned'].includes(st);
+          })
+          .map(o => ({
+            id: o.id,
+            orderId: o.orderId || o.id,
+            collectionType: o.collectionType,
+            paymentMethod: o.paymentMethod || (o.collectionType.includes('cod') ? 'cod' : 'online'),
+            orderStatus: o.orderStatus || 'placed',
+            total: Number(o.total || 0),
+            customer: {
+              name: o.customer?.name || 'Customer',
+              phone: o.customer?.phone || '',
+              email: o.customer?.email || '',
+            },
+            shipping: {
+              address: o.shipping?.address || 'Doorstep Address',
+              city: o.shipping?.city || 'Karaikal',
+              state: o.shipping?.state || '',
+              pincode: o.shipping?.pincode || '',
+            },
+            items: (o.items || []).map(it => ({
+              name: it.name || 'Automotive Part',
+              qty: it.qty || 1,
+              price: Number(it.price || 0),
+            })),
+            deliveryPin: o.deliveryPin || (o.customer?.phone ? String(o.customer.phone).replace(/\D/g, '').slice(-4) : '8492'),
+            createdAt: o.createdAt || null,
+          }));
+
+        return send(res, 200, { ok: true, stops: activeStops });
+      }
+
       const rawQ = String(req.query.q || '').trim();
       if (!rawQ) {
         return send(res, 400, { error: 'Missing search query (q)' });
@@ -56,8 +107,6 @@ export default async function handler(req, res) {
       const lowerQ = cleanQ.toLowerCase();
       const mdcPrefixed = /^mdc-/i.test(cleanQ) ? cleanQ : `MDC-${cleanQ}`;
       const searchKeys = Array.from(new Set([cleanQ, upperQ, lowerQ, mdcPrefixed, rawQ]));
-
-      const codCol = db.collection('orders').doc('cod orders').collection('records');
       const onlineCol = db.collection('orders').doc('online orders').collection('records');
 
       let foundDoc = null;
