@@ -213,7 +213,7 @@ export default async function handler(req, res) {
     // 2. POST: Complete Doorstep Handover & Mark Delivered
     if (req.method === 'POST') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-      const { docId, collectionType, paymentMethod, riderName, riderId } = body;
+      const { docId, collectionType, paymentMethod, paymentSettledVia, riderName, riderId } = body;
 
       if (!docId) {
         return send(res, 400, { error: 'Missing docId in request body' });
@@ -228,6 +228,8 @@ export default async function handler(req, res) {
       }
 
       const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
+      const isUpiDoorstep = paymentSettledVia === 'upi_doorstep';
+
       const updates = {
         orderStatus: 'delivered',
         deliveredAt: FieldValue.serverTimestamp(),
@@ -239,16 +241,22 @@ export default async function handler(req, res) {
         history: FieldValue.arrayUnion({
           status: 'delivered',
           timestamp: new Date().toISOString(),
-          note: `Doorstep verified by ${riderName || 'Rider'} (${riderId || 'MDC-R01'}) via MotoDC Partner App`,
+          note: isUpiDoorstep
+            ? `Doorstep verified via UPI QR Code by ${riderName || 'Rider'} (${riderId || 'MDC-R01'}) via MotoDC Partner App`
+            : `Doorstep verified by ${riderName || 'Rider'} (${riderId || 'MDC-R01'}) via MotoDC Partner App`,
         }),
       };
 
-      if (isCod) {
+      if (isUpiDoorstep) {
+        updates.paymentStatus = 'paid';
+        updates.paymentMethod = 'upi_doorstep';
+        updates.paidVia = 'Doorstep UPI QR Code';
+      } else if (isCod) {
         updates.paymentStatus = 'paid';
       }
 
       await orderRef.update(updates);
-      return send(res, 200, { ok: true, delivered: true, docId });
+      return send(res, 200, { ok: true, delivered: true, docId, paymentSettledVia: isUpiDoorstep ? 'upi_doorstep' : (isCod ? 'cod' : 'online') });
     }
 
     return send(res, 405, { error: 'Method not allowed' });
