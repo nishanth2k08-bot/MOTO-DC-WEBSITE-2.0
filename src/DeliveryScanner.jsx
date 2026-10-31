@@ -120,7 +120,27 @@ export default function DeliveryScanner() {
       // Pause camera while reviewing verified package
       await stopCamera();
 
-      // Query both collections
+      // 1. High-speed backend API (bypasses Firestore client-rule roadblocks)
+      try {
+        const res = await fetch(`/api/delivery-partner?q=${encodeURIComponent(queryId)}`);
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.order) {
+          toast.success(`Package verified: #${data.order.orderId || data.order.id}`);
+          setVerifiedOrder(data.order);
+          return;
+        }
+
+        if (res.status === 404) {
+          toast.error(data.error || `No order found matching "${queryId}". Check package barcode.`);
+          startCamera();
+          return;
+        }
+      } catch (apiErr) {
+        console.warn('API lookup failed, falling back to direct Firestore:', apiErr);
+      }
+
+      // 2. Query both collections as fallback
       const [codSnap, onlineSnap] = await Promise.all([
         getDocs(collection(db, 'orders', 'cod orders', 'records')),
         getDocs(collection(db, 'orders', 'online orders', 'records')),
@@ -147,7 +167,7 @@ export default function DeliveryScanner() {
       }
     } catch (err) {
       console.error('Lookup order error:', err);
-      toast.error('Could not verify barcode with server.');
+      toast.error(`Lookup failed: ${err.message || 'Check network'}`);
       startCamera();
     } finally {
       setLoadingOrder(false);
