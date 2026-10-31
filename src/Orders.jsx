@@ -1,7 +1,8 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {collection,onSnapshot,query,where} from 'firebase/firestore';
 import {auth,db} from './firebase';
-import {Package,ChevronDown,MapPin,Truck,CheckCircle,Clock,XCircle,RotateCcw,History,Download,Ban} from 'lucide-react';
+import {Package,ChevronDown,MapPin,Truck,CheckCircle,Clock,XCircle,RotateCcw,History,Download,Ban,ShieldCheck} from 'lucide-react';
+import {getDeliveryPin} from './deliveryPinUtil';
 import {jsPDF} from 'jspdf';
 import {useNavigate,useLocation} from 'react-router-dom';
 import {toast} from 'react-hot-toast';
@@ -158,6 +159,21 @@ function TrackingHeroMap({orders,activeOrderId,setActiveOrderId}){
           <div className="telemetryCardSub">Courier Unit #KA-04-MD · {meta.speed}</div>
         </div>
       </div>
+
+      {activeOrder && activeOrder.orderStatus !== 'delivered' && activeOrder.orderStatus !== 'cancelled' && (
+        <div className="telemetryDeliveryPinBanner">
+          <div className="telemetryPinIcon">
+            <ShieldCheck size={22} color="#22c55e" />
+          </div>
+          <div className="telemetryPinContent">
+            <div className="telemetryPinTitle">Doorstep Handover PIN</div>
+            <div className="telemetryPinCode">{getDeliveryPin(activeOrder)}</div>
+            <div className="telemetryPinSubtitle">
+              Share this 4-digit security code with your MotoDC delivery partner when they scan the barcode on your parcel.
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="ordersRoute" aria-label="Live shipment tracking route">
         <svg viewBox="0 0 1200 230" preserveAspectRatio="xMidYMid meet">
@@ -719,6 +735,16 @@ export default function Orders(){
                   <small>{formatDate(o.createdAt)}</small>
                   <strong>{o.items?.[0]?.name||'MOTO DC Order'}</strong>
                   <em>{o.items?.[0]?.variant||'Premium parts'} · {o.items?.length||1} item</em>
+                  {!cancelled && status !== 'delivered' && (
+                    <div className="customerOrderPinBadge">
+                      <ShieldCheck size={14} /> Handover PIN: <b>{getDeliveryPin(o)}</b>
+                    </div>
+                  )}
+                  {status === 'delivered' && (
+                    <div className="orderDeliveredVerifiedBadge">
+                      <CheckCircle size={13} /> Doorstep Barcode Verified
+                    </div>
+                  )}
                 </div>
                 <div className="orderAmount">
                   <strong>{money(o.total)}</strong>

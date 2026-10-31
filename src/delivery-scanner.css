@@ -1,0 +1,623 @@
+/* Delivery Scanner Portal (Mobile-First Amazon-Style Interface) */
+.deliveryPortal {
+  min-height: 100vh;
+  background: #080c14;
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding-bottom: 60px;
+}
+
+.deliveryPortalHeader {
+  background: #0f1623;
+  border-bottom: 1px solid #1e293b;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.deliveryPortalBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.deliveryPortalBrand b {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.deliveryPortalBrand b span {
+  color: #ff3157;
+}
+
+.deliveryPortalBadge {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.deliveryPortalBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: deliveryDotPulse 1.5s infinite;
+}
+
+@keyframes deliveryDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.deliveryNavLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.deliveryNavBtn {
+  background: #1a2233;
+  border: 1px solid #28354d;
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.deliveryNavBtn:hover {
+  background: #243048;
+  color: #fff;
+  border-color: #ff3157;
+}
+
+/* Scanner Main Container */
+.deliveryContainer {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+
+/* Today's Tally Bar */
+.deliveryTallyBar {
+  background: #101826;
+  border: 1px solid #1f2a3e;
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.deliveryTallyBar .tallyInfo {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.deliveryTallyBar .tallyInfo b {
+  color: #fff;
+  font-size: 15px;
+}
+
+.deliveryTallyBar .tallyCount {
+  background: #ff3157;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 0 14px rgba(255, 49, 87, 0.4);
+}
+
+/* Camera Scanner Viewport Card */
+.scannerCard {
+  background: #101725;
+  border: 1px solid #212c40;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  margin-bottom: 24px;
+}
+
+.scannerCardHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1e283b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scannerCardHeader h2 {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scannerControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scannerControlBtn {
+  background: #1a2335;
+  border: 1px solid #2d3b55;
+  color: #cbd5e1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.scannerControlBtn:hover {
+  background: #25334d;
+  color: #fff;
+}
+
+.scannerControlBtn.active {
+  background: #ff3157;
+  color: #fff;
+  border-color: #ff3157;
+}
+
+/* Camera Video Box */
+.cameraViewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#reader {
+  width: 100% !important;
+  border: none !important;
+}
+
+#reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+
+/* Custom Overlaid Target Reticle */
+.reticleOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reticleFrame {
+  width: 250px;
+  height: 150px;
+  border: 2px solid rgba(255, 49, 87, 0.6);
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.45);
+}
+
+.reticleCorner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #ff3157;
+  border-style: solid;
+}
+
+.reticleCorner.tl { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-radius: 4px 0 0 0; }
+.reticleCorner.tr { top: -2px; right: -2px; border-width: 4px 4px 0 0; border-radius: 0 4px 0 0; }
+.reticleCorner.bl { bottom: -2px; left: -2px; border-width: 0 0 4px 4px; border-radius: 0 0 0 4px; }
+.reticleCorner.br { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-radius: 0 0 4px 0; }
+
+.laserScanLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff3157, #ff6b87, #ff3157, transparent);
+  box-shadow: 0 0 10px #ff3157;
+  animation: laserSweep 2s ease-in-out infinite;
+}
+
+@keyframes laserSweep {
+  0%, 100% { top: 10%; opacity: 0.3; }
+  50% { top: 90%; opacity: 1; }
+}
+
+.reticleInstruction {
+  position: absolute;
+  bottom: 12px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+/* Manual ID Input Fallback */
+.manualInputWrap {
+  padding: 14px 18px;
+  background: #0d131e;
+  border-top: 1px solid #1a2233;
+}
+
+.manualInputWrap form {
+  display: flex;
+  gap: 8px;
+}
+
+.manualInputWrap input {
+  flex: 1;
+  background: #141c2b;
+  border: 1px solid #28354c;
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 13px;
+  font-family: monospace;
+}
+
+.manualInputWrap input:focus {
+  outline: none;
+  border-color: #ff3157;
+}
+
+.manualInputWrap button {
+  background: #ff3157;
+  border: none;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Verified Order Details Card */
+.orderVerifiedCard {
+  background: #101725;
+  border: 2px solid #22c55e;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 15px 45px rgba(34, 197, 94, 0.15);
+  margin-bottom: 24px;
+  animation: cardSlideUp 0.35s ease;
+}
+
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.orderVerifiedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #1e283b;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.orderVerifiedHeader h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orderVerifiedId {
+  font-size: 13px;
+  font-family: monospace;
+  color: #94a3b8;
+}
+
+/* Payment Status Banner */
+.deliveryPaymentNotice {
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deliveryPaymentNotice.prepaid {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+}
+
+.deliveryPaymentNotice.cod {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+}
+
+.deliveryPaymentNotice b {
+  font-size: 15px;
+  display: block;
+}
+
+.deliveryPaymentNotice small {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.deliveryAmountHighlight {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+/* Recipient & Address Details */
+.deliveryCustomerInfo {
+  background: #141c2c;
+  border: 1px solid #232e42;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.deliveryCustomerInfo h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deliveryCustomerName {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.deliveryAddressText {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.deliveryQuickActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.deliveryActionLink {
+  background: #1c273c;
+  border: 1px solid #2e3e5c;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.deliveryActionLink:hover {
+  background: #25334e;
+  border-color: #ff3157;
+}
+
+/* Items in Package */
+.deliveryItemsList {
+  margin-bottom: 18px;
+}
+
+.deliveryItemsList h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.deliveryItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #1a2233;
+  font-size: 13px;
+}
+
+/* Amazon-Style Handover PIN Verification Box */
+.handoverPinBox {
+  background: #0d121c;
+  border: 2px dashed #ff3157;
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.handoverPinBox h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.handoverPinBox p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.handoverPinInput {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.handoverPinInput input {
+  width: 160px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  padding: 8px;
+  background: #151c2a;
+  border: 2px solid #334155;
+  border-radius: 10px;
+  color: #fff;
+  font-family: monospace;
+}
+
+.handoverPinInput input:focus {
+  outline: none;
+  border-color: #ff3157;
+  box-shadow: 0 0 15px rgba(255, 49, 87, 0.4);
+}
+
+.codCollectedCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 18px;
+  font-size: 13px;
+  color: #f1f5f9;
+  cursor: pointer;
+}
+
+.codCollectedCheckbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: #22c55e;
+}
+
+/* Submit Delivery Button */
+.completeDeliveryBtn {
+  width: 100%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+  transition: all 0.25s ease;
+}
+
+.completeDeliveryBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.6);
+}
+
+.completeDeliveryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Success Celebration View */
+.deliverySuccessView {
+  background: #0f1726;
+  border: 2px solid #22c55e;
+  border-radius: 20px;
+  padding: 36px 24px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(34, 197, 94, 0.25);
+  animation: cardSlideUp 0.35s ease;
+}
+
+.deliverySuccessIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.15);
+  border: 3px solid #22c55e;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  color: #22c55e;
+}
+
+.deliverySuccessView h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  color: #fff;
+}
+
+.deliverySuccessView p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+.scanNextBtn {
+  background: #ff3157;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 6px 20px rgba(255, 49, 87, 0.35);
+}
+
+.scanNextBtn:hover {
+  background: #ff4a6e;
+  transform: translateY(-2px);
+}
