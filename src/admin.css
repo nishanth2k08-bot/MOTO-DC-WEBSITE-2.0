@@ -31,3 +31,510 @@
 .light-theme .adminProductSearchWrap{background:#f8f9fa;border-color:#dfe2e8}
 .light-theme .adminProductSearchInput{color:#171a21!important}
 .light-theme .adminProductSearchInput::placeholder{color:#9299a6}
+
+/* ===================================================
+   ADMIN DELIVERY PARTNERS & OTP STYLING
+   =================================================== */
+.adminDeliveryPartners {
+  margin-top: 24px;
+}
+.partnersHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.partnersHeaderRow h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.partnersHeaderRow p {
+  color: #94a3b8;
+  font-size: 13px;
+}
+.headerButtons {
+  display: flex;
+  gap: 10px;
+}
+.refreshBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.refreshBtn:hover {
+  background: #334155;
+}
+.addPartnerBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+}
+.addPartnerBtn:hover {
+  background: #f43f5e;
+}
+.adminCardSection {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+}
+.sectionHeaderWithBadge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.titleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.titleWithIcon h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+.statusPill {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.badgeAlert {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badgeSuccess {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.countPill {
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.emptyStateBox {
+  text-align: center;
+  padding: 36px 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+.emptyStateBox svg {
+  margin: 0 auto 10px;
+  display: block;
+}
+.requestsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.requestCard {
+  background: #141e33;
+  border: 1px solid #23314d;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.requestCard.cardHighlight {
+  border-color: #e11d48;
+  box-shadow: 0 0 15px rgba(225, 29, 72, 0.15);
+}
+.requestCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.riderBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.tagPending {
+  background: #dc2626;
+  color: #fff;
+}
+.tagActive {
+  background: #2563eb;
+  color: #fff;
+}
+.tagDone {
+  background: #16a34a;
+  color: #fff;
+}
+.riderDetailsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  background: #0b1120;
+  padding: 10px;
+  border-radius: 6px;
+}
+.riderDetailsRow small {
+  display: block;
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+.riderDetailsRow h4, .riderDetailsRow p {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-top: 2px;
+}
+.activeOtpBanner {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(14, 165, 233, 0.1));
+  border: 1px solid #38bdf8;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.activeOtpBanner strong {
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: #38bdf8;
+}
+.cardActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.reviewBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.reviewBtn:hover {
+  background: #1d4ed8;
+}
+.partnersTableWrap {
+  overflow-x: auto;
+}
+.partnersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.partnersTable th {
+  text-align: left;
+  padding: 10px 14px;
+  color: #64748b;
+  font-size: 11px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1e293b;
+}
+.partnersTable td {
+  padding: 12px 14px;
+  color: #cbd5e1;
+  border-bottom: 1px solid #1e293b;
+}
+.codePill {
+  background: #1e293b;
+  color: #38bdf8;
+  font-family: monospace;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.maskedPin {
+  font-family: monospace;
+  color: #94a3b8;
+  letter-spacing: 2px;
+  margin-right: 8px;
+}
+.peekPinBtn {
+  background: none;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+}
+.statusTag {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.statusTag.active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+.statusTag.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+.quickActionLink {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Modals */
+.adminModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+}
+.adminModalBox {
+  background: #0b1120;
+  border: 1px solid #23314d;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #1e293b;
+}
+.modalHeader h3 {
+  font-size: 17px;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.modalHeader small {
+  color: #64748b;
+  font-size: 12px;
+}
+.closeBtn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+}
+.modalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.verifyRiderCard {
+  background: #141e33;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+.infoLine {
+  display: flex;
+  justify-content: space-between;
+}
+.infoLine span {
+  color: #94a3b8;
+}
+.infoLine strong {
+  color: #fff;
+}
+.generatePrompt p {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.generateOtpMainBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.4);
+}
+.generateOtpMainBtn:hover {
+  background: #f43f5e;
+}
+.otpSuccessDisplay {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.otpNumberBox {
+  background: #070c18;
+  border: 2px dashed #e11d48;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.otpNumberBox small {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.bigDigits {
+  font-size: 38px;
+  font-weight: 900;
+  font-family: monospace;
+  color: #fff;
+  letter-spacing: 8px;
+  margin: 8px 0;
+  text-shadow: 0 0 15px rgba(225, 29, 72, 0.6);
+}
+.expiryNotice {
+  color: #f59e0b;
+}
+.dispatchOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dispatchOptionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+.whatsappBtn {
+  background: #25d366;
+  color: #000;
+}
+.whatsappBtn:hover {
+  background: #22c35e;
+}
+.smsBtn {
+  background: #2563eb;
+  color: #fff;
+}
+.smsBtn:hover {
+  background: #1d4ed8;
+}
+.copyBtn {
+  background: #1e293b;
+  color: #cbd5e1;
+  border: 1px solid #334155;
+}
+.copyBtn:hover {
+  background: #334155;
+}
+.modalFooter {
+  padding: 14px 20px;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.cancelModalBtn {
+  background: #1e293b;
+  color: #94a3b8;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.modalField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.modalField label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+.modalField input {
+  background: #141e33;
+  border: 1px solid #23314d;
+  color: #fff;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.modalField small {
+  color: #64748b;
+  font-size: 11px;
+}
+.savePartnerSubmitBtn {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}

@@ -3,7 +3,8 @@ import {collection,deleteDoc,doc,getDocs,addDoc,updateDoc,getDoc,setDoc,onSnapsh
 import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
 import {adminAuth,adminDb,adminStorage} from './firebase';
 import AdminOrders from './AdminOrders';
-import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search} from 'lucide-react';
+import AdminDeliveryPartners from './AdminDeliveryPartners';
+import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search,Truck} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {majorSpareProducts} from './major-spares';
 import {mergeProductsWithMajorSpares} from './productsMerge';
@@ -187,6 +188,12 @@ export default function Admin(){
               <p className="adminSubtitle">Review customer orders, update tracking status, and handle returns.</p>
             </>
           )}
+          {activeTab==='partners'&&(
+            <>
+              <h1>Delivery <span>partners.</span></h1>
+              <p className="adminSubtitle">Manage unique rider codes, credentials, and verify OTP password resets.</p>
+            </>
+          )}
         </div>
         <button className="adminsignout" onClick={()=>signOut(adminAuth)}><LogOut size={16}/> Sign out</button>
       </div>
@@ -218,6 +225,15 @@ export default function Admin(){
           onClick={()=>handleTabChange('orders')}
         >
           <ShoppingCart size={15}/> Customer's Orders
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab==='partners'}
+          className={activeTab==='partners'?'active':''}
+          onClick={()=>handleTabChange('partners')}
+        >
+          <Truck size={15}/> Delivery Partners & OTP
         </button>
       </div>
 
@@ -341,6 +357,7 @@ export default function Admin(){
       )}
 
       <AdminOrders activeTab={activeTab}/>
+      {activeTab==='partners'&&<AdminDeliveryPartners/>}
     </section>
   );
 }
