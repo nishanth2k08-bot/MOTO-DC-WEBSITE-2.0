@@ -209,6 +209,21 @@ export default function AdminDeliveryPartners() {
     toast.success(`${label} copied to clipboard!`);
   };
 
+  // Delete or Dismiss Reset Request
+  const handleDeleteReset = async (requestId) => {
+    try {
+      await fetch('/api/delivery-auth?action=admin-delete-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestId }),
+      });
+      toast.success('Reset request cleared');
+      fetchResets();
+    } catch (e) {
+      console.warn('Error deleting reset request:', e);
+    }
+  };
+
   const pendingRequests = requests.filter((r) => r.status === 'pending' || r.status === 'otp_generated');
 
   return (
@@ -248,14 +263,14 @@ export default function AdminDeliveryPartners() {
           </span>
         </div>
 
-        {requests.length === 0 ? (
+        {pendingRequests.length === 0 ? (
           <div className="emptyStateBox">
             <UserCheck size={36} color="#22c55e" />
             <p>No password reset requests pending. All rider credentials are in sync.</p>
           </div>
         ) : (
           <div className="requestsGrid">
-            {requests.map((req) => {
+            {pendingRequests.map((req) => {
               const isPending = req.status === 'pending';
               const isOtpSent = req.status === 'otp_generated';
 
@@ -266,9 +281,22 @@ export default function AdminDeliveryPartners() {
                       <Truck size={14} />
                       <strong>{req.username}</strong>
                     </div>
-                    <span className={`tag ${isPending ? 'tagPending' : isOtpSent ? 'tagActive' : 'tagDone'}`}>
-                      {isPending ? 'Pending OTP' : isOtpSent ? 'OTP Active' : 'Verified & Changed'}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className={`tag ${isPending ? 'tagPending' : isOtpSent ? 'tagActive' : 'tagDone'}`}>
+                        {isPending ? 'Pending OTP' : isOtpSent ? 'OTP Active' : 'Verified & Changed'}
+                      </span>
+                      <button
+                        type="button"
+                        className="dismissResetBtn"
+                        title="Dismiss and delete request"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteReset(req.id);
+                        }}
+                      >
+                        <X size={13} />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="riderDetailsRow">

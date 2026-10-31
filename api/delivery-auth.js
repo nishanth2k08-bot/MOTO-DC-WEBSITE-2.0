@@ -31,27 +31,6 @@ function send(res, status, body) {
   return res.status(status).json(body);
 }
 
-// Default initial roster if database is freshly initialized
-const SEED_PARTNERS = [
-  { username: 'MDC-R01', name: 'Ramesh Kumar', phone: '+919876543210', pin: '123456', active: true },
-  { username: 'MDC-R02', name: 'Suresh Patel', phone: '+919812345678', pin: '654321', active: true },
-  { username: 'MDC-R03', name: 'Priya Sharma', phone: '+919823456789', pin: '789012', active: true },
-];
-
-async function ensureSeedPartners(db) {
-  const partnersCol = db.collection('deliveryPartners');
-  const snap = await partnersCol.limit(1).get();
-  if (snap.empty) {
-    for (const p of SEED_PARTNERS) {
-      await partnersCol.doc(p.username).set({
-        ...p,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-    }
-  }
-}
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -65,9 +44,6 @@ export default async function handler(req, res) {
     const a = getAdmin();
     const db = getFirestore(a.app(), 'asia-south1');
     const action = String(req.query.action || '').trim().toLowerCase();
-
-    // Ensure seed partners exist
-    await ensureSeedPartners(db);
 
     const partnersCol = db.collection('deliveryPartners');
     const resetsCol = db.collection('deliveryPartnerResets');
@@ -181,9 +157,29 @@ export default async function handler(req, res) {
     // -------------------------------------------------------------
     if (action === 'admin-list-resets' && req.method === 'GET') {
       const snap = await resetsCol.limit(50).get();
-      const requests = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      // Only return active pending / OTP sent requests so completed ones disappear
+      const requests = [];
+      for (const d of snap.docs) {
+        const data = d.data();
+        if (data.status === 'completed' || data.status === 'verified') {
+          // Clean up completed requests from database automatically
+          await d.ref.delete().catch(() => {});
+        } else {
+          requests.push({ id: d.id, ...data });
+        }
+      }
       requests.sort((a, b) => (b.requestedAt || 0) - (a.requestedAt || 0));
       return send(res, 200, { ok: true, requests });
+    }
+
+    // -------------------------------------------------------------
+    // 3B. ADMIN DELETE RESET REQUEST (DISMISS)
+    // -------------------------------------------------------------
+    if (action === 'admin-delete-reset' && req.method === 'POST') {
+      const { requestId } = parseBody();
+      if (!requestId) return send(res, 400, { error: 'Missing requestId' });
+      await resetsCol.doc(String(requestId)).delete().catch(() => {});
+      return send(res, 200, { ok: true, deleted: requestId });
     }
 
     // -------------------------------------------------------------
@@ -334,12 +330,8 @@ export default async function handler(req, res) {
         { merge: true }
       );
 
-      // Invalidate the reset token
-      await resetsCol.doc(reqDoc.id).update({
-        resetToken: null,
-        status: 'completed',
-        completedAt: Date.now(),
-      });
+      // Delete the reset request once verified and changed
+      await resetsCol.doc(reqDoc.id).delete().catch(() => {});
 
       return send(res, 200, {
         ok: true,

@@ -632,3 +632,20 @@
   color: #22c55e;
   margin-top: 4px;
 }
+
+.dismissResetBtn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.dismissResetBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
