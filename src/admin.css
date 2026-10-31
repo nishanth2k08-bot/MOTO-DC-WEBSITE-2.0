@@ -538,3 +538,97 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+/* Rider Table Actions & Delete */
+.tableActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.deletePartnerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.deletePartnerBtn:hover {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+/* Auto-Generated Code Box */
+.autoCodeBox {
+  background: #090e1a;
+  border: 1px dashed #38bdf8;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.autoCodeLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+.autoCodeValueRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bigCodeBadge {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: monospace;
+  color: #38bdf8;
+  letter-spacing: 2px;
+}
+.rerollBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.rerollBtn:hover {
+  background: #334155;
+  color: #fff;
+}
+.autoCodeBox small {
+  color: #64748b;
+  font-size: 11px;
+}
+
+/* Method A Banner */
+.methodABanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #22c55e;
+  margin-top: 4px;
+}

@@ -15,6 +15,9 @@ import {
   User,
   X,
   ExternalLink,
+  Trash2,
+  Shuffle,
+  Smartphone,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -26,10 +29,13 @@ export default function AdminDeliveryPartners() {
   const [generatingOtp, setGeneratingOtp] = useState(false);
   const [generatedOtpData, setGeneratedOtpData] = useState(null);
 
+  // Helper to generate MDC- followed by random 4 digits (e.g. MDC-4829)
+  const generateRiderCode = () => `MDC-${Math.floor(1000 + Math.random() * 9000)}`;
+
   // New Partner Form
   const [showAddPartner, setShowAddPartner] = useState(false);
   const [newPartner, setNewPartner] = useState({
-    username: '',
+    username: generateRiderCode(),
     name: '',
     phone: '',
     pin: '',
@@ -100,14 +106,21 @@ export default function AdminDeliveryPartners() {
     }
   };
 
-  // Add New Partner
+  // Add New Partner (Admin only provides Name, Phone, and 6-digit PIN)
   const handleCreatePartner = async (e) => {
     e.preventDefault();
-    const cleanUser = newPartner.username.trim().toUpperCase();
+    const cleanUser = (newPartner.username || generateRiderCode()).trim().toUpperCase();
+    const cleanName = newPartner.name.trim();
+    const cleanPhone = newPartner.phone.trim();
     const cleanPin = newPartner.pin.trim();
 
-    if (!cleanUser || !/^[A-Z0-9_-]{3,16}$/.test(cleanUser)) {
-      toast.error('Username must be an alphanumeric code (e.g. MDC-R04)');
+    if (!cleanName) {
+      toast.error('Please enter the delivery partner name');
+      return;
+    }
+
+    if (!cleanPhone) {
+      toast.error('Please enter the contact / mobile number');
       return;
     }
 
@@ -123,8 +136,8 @@ export default function AdminDeliveryPartners() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: cleanUser,
-          name: newPartner.name.trim(),
-          phone: newPartner.phone.trim(),
+          name: cleanName,
+          phone: cleanPhone,
           pin: cleanPin,
           active: true,
         }),
@@ -135,9 +148,9 @@ export default function AdminDeliveryPartners() {
         throw new Error(data.error || 'Failed to create delivery partner');
       }
 
-      toast.success(`Delivery partner ${cleanUser} registered!`);
+      toast.success(`Registered driver ${cleanName} with code ${cleanUser}!`);
       setShowAddPartner(false);
-      setNewPartner({ username: '', name: '', phone: '', pin: '' });
+      setNewPartner({ username: generateRiderCode(), name: '', phone: '', pin: '' });
       fetchPartners();
     } catch (err) {
       toast.error(err.message);
@@ -146,7 +159,33 @@ export default function AdminDeliveryPartners() {
     }
   };
 
-  // 1-Click WhatsApp Link
+  // Delete Delivery Partner
+  const handleDeletePartner = async (partner) => {
+    const confirmMsg = `Are you sure you want to permanently delete delivery partner "${partner.name}" (${partner.username})?\n\nThey will no longer be able to log in to the delivery partner app.`;
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-delete-partner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: partner.username }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete partner');
+      }
+
+      toast.success(`Deleted partner ${partner.name} (${partner.username})`);
+      fetchPartners();
+      fetchResets();
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || 'Error deleting delivery partner');
+    }
+  };
+
+  // 1-Click WhatsApp Link (Method A)
   const getWhatsAppLink = (phone, otp) => {
     const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
     const text = encodeURIComponent(
@@ -155,7 +194,7 @@ export default function AdminDeliveryPartners() {
     return `https://wa.me/${cleanPhone}?text=${text}`;
   };
 
-  // 1-Click SMS Link
+  // 1-Click SMS Link (Method A)
   const getSmsLink = (phone, otp) => {
     const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
     const text = encodeURIComponent(
@@ -178,7 +217,7 @@ export default function AdminDeliveryPartners() {
       <div className="partnersHeaderRow">
         <div>
           <h2>Delivery Partners & Rider Access Control</h2>
-          <p>Manage unique alphanumeric rider codes, 6-digit PINs, and approve OTP password reset requests.</p>
+          <p>Manage unique alphanumeric rider codes (MDC-XXXX), 6-digit PINs, and approve OTP password reset requests.</p>
         </div>
         <div className="headerButtons">
           <button type="button" className="refreshBtn" onClick={reloadAll} disabled={loading}>
@@ -187,7 +226,10 @@ export default function AdminDeliveryPartners() {
           <button
             type="button"
             className="addPartnerBtn"
-            onClick={() => setShowAddPartner(true)}
+            onClick={() => {
+              setNewPartner({ username: generateRiderCode(), name: '', phone: '', pin: '' });
+              setShowAddPartner(true);
+            }}
           >
             <Plus size={15} /> Add Delivery Partner
           </button>
@@ -216,7 +258,6 @@ export default function AdminDeliveryPartners() {
             {requests.map((req) => {
               const isPending = req.status === 'pending';
               const isOtpSent = req.status === 'otp_generated';
-              const isVerified = req.status === 'verified' || req.status === 'completed';
 
               return (
                 <div key={req.id} className={`requestCard ${isPending ? 'cardHighlight' : ''}`}>
@@ -275,7 +316,7 @@ export default function AdminDeliveryPartners() {
                       }}
                     >
                       <ShieldAlert size={14} />
-                      {req.otp ? 'View / Resend 6-Digit OTP' : 'Review & Generate OTP'}
+                      {req.otp ? 'View / Resend 6-Digit OTP (Method A)' : 'Review & Generate OTP'}
                     </button>
                   </div>
                 </div>
@@ -333,29 +374,41 @@ export default function AdminDeliveryPartners() {
                     </span>
                   </td>
                   <td>
-                    <button
-                      type="button"
-                      className="quickActionLink"
-                      onClick={() => {
-                        const newPin = prompt(`Enter new 6-digit PIN for ${p.username}:`);
-                        if (newPin) {
-                          if (!/^\d{6}$/.test(newPin.trim())) {
-                            toast.error('PIN must be exactly 6 digits');
-                            return;
+                    <div className="tableActionGroup">
+                      <button
+                        type="button"
+                        className="quickActionLink"
+                        onClick={() => {
+                          const newPin = prompt(`Enter new 6-digit PIN for ${p.username}:`);
+                          if (newPin) {
+                            if (!/^\d{6}$/.test(newPin.trim())) {
+                              toast.error('PIN must be exactly 6 digits');
+                              return;
+                            }
+                            fetch('/api/delivery-auth?action=admin-save-partner', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ username: p.username, pin: newPin.trim() }),
+                            }).then(() => {
+                              toast.success(`PIN updated for ${p.username}!`);
+                              fetchPartners();
+                            });
                           }
-                          fetch('/api/delivery-auth?action=admin-save-partner', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ username: p.username, pin: newPin.trim() }),
-                          }).then(() => {
-                            toast.success(`PIN updated for ${p.username}!`);
-                            fetchPartners();
-                          });
-                        }
-                      }}
-                    >
-                      Change PIN
-                    </button>
+                        }}
+                      >
+                        Change PIN
+                      </button>
+
+                      {/* OPTION TO DELETE RIDER */}
+                      <button
+                        type="button"
+                        className="deletePartnerBtn"
+                        title={`Delete ${p.name} from roster`}
+                        onClick={() => handleDeletePartner(p)}
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -364,7 +417,7 @@ export default function AdminDeliveryPartners() {
         </div>
       </div>
 
-      {/* MODAL: REVIEW & GENERATE OTP */}
+      {/* MODAL: REVIEW & GENERATE OTP (METHOD A) */}
       {activeModalRequest && (
         <div className="adminModalOverlay" onClick={() => setActiveModalRequest(null)}>
           <div className="adminModalBox" onClick={(e) => e.stopPropagation()}>
@@ -399,7 +452,7 @@ export default function AdminDeliveryPartners() {
                 <div className="generatePrompt">
                   <p>
                     Clicking the button below will generate an automated, unique 6-digit OTP code valid for 15 minutes.
-                    The rider will enter this OTP in the app to proceed to the "Change Password" page.
+                    You can then dispatch it immediately via <strong>Method A (1-Click WhatsApp or Mobile SMS)</strong>.
                   </p>
                   <button
                     type="button"
@@ -419,34 +472,37 @@ export default function AdminDeliveryPartners() {
                     <small className="expiryNotice">Expires in 15 minutes • One-time use only</small>
                   </div>
 
-                  <h4>Ways to Dispatch OTP to Driver's Mobile:</h4>
+                  <div className="methodABanner">
+                    <Smartphone size={16} color="#22c55e" />
+                    <strong>METHOD A: 1-CLICK DISPATCH TO DRIVER'S MOBILE</strong>
+                  </div>
 
                   <div className="dispatchOptions">
-                    {/* Option A: 1-Click WhatsApp */}
+                    {/* Method A: 1-Click WhatsApp */}
                     <a
                       href={getWhatsAppLink(generatedOtpData.phone, generatedOtpData.otp)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="dispatchOptionBtn whatsappBtn"
                     >
-                      <MessageSquare size={16} /> Send via WhatsApp (1-Click)
+                      <MessageSquare size={16} /> Send via WhatsApp to {generatedOtpData.phone} (1-Click)
                     </a>
 
-                    {/* Option B: 1-Click Native SMS */}
+                    {/* Method A: 1-Click Native SMS */}
                     <a
                       href={getSmsLink(generatedOtpData.phone, generatedOtpData.otp)}
                       className="dispatchOptionBtn smsBtn"
                     >
-                      <Phone size={16} /> Send via Mobile SMS (1-Click)
+                      <Phone size={16} /> Send via Mobile SMS to {generatedOtpData.phone} (1-Click)
                     </a>
 
-                    {/* Option C: Copy text */}
+                    {/* Copy text fallback */}
                     <button
                       type="button"
                       className="dispatchOptionBtn copyBtn"
                       onClick={() => handleCopy(generatedOtpData.smsMessage, 'SMS Message')}
                     >
-                      <Copy size={16} /> Copy Message to Clipboard
+                      <Copy size={16} /> Copy Message & OTP to Clipboard
                     </button>
                   </div>
                 </div>
@@ -462,14 +518,14 @@ export default function AdminDeliveryPartners() {
         </div>
       )}
 
-      {/* MODAL: ADD NEW DELIVERY PARTNER */}
+      {/* MODAL: ADD NEW DELIVERY PARTNER (ADMIN GIVES NAME, CONTACT NUMBER & PIN ALONE) */}
       {showAddPartner && (
         <div className="adminModalOverlay" onClick={() => setShowAddPartner(false)}>
           <div className="adminModalBox" onClick={(e) => e.stopPropagation()}>
             <div className="modalHeader">
               <div>
                 <h3>Register New Delivery Partner</h3>
-                <small>Issue unique alphanumeric username and 6-digit security PIN</small>
+                <small>Auto-generated code: first 3 letters "MDC-" + random 4 digits</small>
               </div>
               <button type="button" className="closeBtn" onClick={() => setShowAddPartner(false)}>
                 <X size={18} />
@@ -478,31 +534,40 @@ export default function AdminDeliveryPartners() {
 
             <form onSubmit={handleCreatePartner}>
               <div className="modalBody">
-                <div className="modalField">
-                  <label>Unique Alphanumeric Code (Username) *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. MDC-R04 or MDC-EAST-1"
-                    value={newPartner.username}
-                    onChange={(e) => setNewPartner({ ...newPartner, username: e.target.value.toUpperCase() })}
-                    required
-                  />
-                  <small>The delivery person will use this exact code to log in.</small>
+                {/* AUTO-GENERATED MDC-XXXX CODE BADGE */}
+                <div className="autoCodeBox">
+                  <div className="autoCodeLabel">
+                    <Truck size={14} color="#38bdf8" />
+                    <span>Auto-Generated Alphanumeric Code:</span>
+                  </div>
+                  <div className="autoCodeValueRow">
+                    <span className="bigCodeBadge">{newPartner.username}</span>
+                    <button
+                      type="button"
+                      className="rerollBtn"
+                      title="Roll another random 4-digit number"
+                      onClick={() => setNewPartner({ ...newPartner, username: generateRiderCode() })}
+                    >
+                      <Shuffle size={13} /> Re-roll
+                    </button>
+                  </div>
+                  <small>The delivery person will use this unique code as their username.</small>
                 </div>
 
                 <div className="modalField">
-                  <label>Full Driver Name *</label>
+                  <label>1. Full Driver Name *</label>
                   <input
                     type="text"
-                    placeholder="e.g. Amit Verma"
+                    placeholder="e.g. Ramesh Kumar"
                     value={newPartner.name}
                     onChange={(e) => setNewPartner({ ...newPartner, name: e.target.value })}
+                    autoFocus
                     required
                   />
                 </div>
 
                 <div className="modalField">
-                  <label>Mobile Number (For OTP dispatch) *</label>
+                  <label>2. Contact / Mobile Number *</label>
                   <input
                     type="tel"
                     placeholder="+91 98765 43210"
@@ -510,16 +575,17 @@ export default function AdminDeliveryPartners() {
                     onChange={(e) => setNewPartner({ ...newPartner, phone: e.target.value })}
                     required
                   />
+                  <small>Used for OTP verification and WhatsApp/SMS delivery communication.</small>
                 </div>
 
                 <div className="modalField">
-                  <label>Initial 6-Digit Password PIN *</label>
+                  <label>3. 6-Digit Password PIN *</label>
                   <input
                     type="password"
                     maxLength={6}
                     placeholder="6 digits (e.g. 583921)"
                     value={newPartner.pin}
-                    onChange={(e) => setNewPartner({ ...newPartner, pin: e.target.value })}
+                    onChange={(e) => setNewPartner({ ...newPartner, pin: e.target.value.replace(/\D/g, '') })}
                     required
                   />
                   <small>Must be exactly 6 numerical digits.</small>

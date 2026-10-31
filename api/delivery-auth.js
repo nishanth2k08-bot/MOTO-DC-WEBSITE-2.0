@@ -361,10 +361,25 @@ export default async function handler(req, res) {
     // -------------------------------------------------------------
     if (action === 'admin-save-partner' && req.method === 'POST') {
       const { username, name, phone, pin, active } = parseBody();
-      const cleanUser = String(username || '').trim().toUpperCase();
+      let cleanUser = String(username || '').trim().toUpperCase();
 
-      if (!cleanUser || !/^[A-Z0-9_-]{3,16}$/.test(cleanUser)) {
-        return send(res, 400, { error: 'Username must be a unique alphanumeric code (3-16 chars, e.g. MDC-R04)' });
+      // If no code provided, auto-generate MDC- followed by a random 4-digit number
+      if (!cleanUser) {
+        for (let i = 0; i < 50; i++) {
+          const candidate = `MDC-${Math.floor(1000 + Math.random() * 9000)}`;
+          const checkDoc = await partnersCol.doc(candidate).get();
+          if (!checkDoc.exists) {
+            cleanUser = candidate;
+            break;
+          }
+        }
+        if (!cleanUser) {
+          cleanUser = `MDC-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+      }
+
+      if (!/^[A-Z0-9_-]{3,16}$/.test(cleanUser)) {
+        return send(res, 400, { error: 'Username must be an alphanumeric code (e.g. MDC-4829)' });
       }
 
       const cleanPin = String(pin || '').trim();
@@ -386,6 +401,28 @@ export default async function handler(req, res) {
 
       await partnersCol.doc(cleanUser).set(payload, { merge: true });
       return send(res, 200, { ok: true, partner: payload });
+    }
+
+    // -------------------------------------------------------------
+    // 9. ADMIN DELETE DELIVERY PARTNER
+    // -------------------------------------------------------------
+    if (action === 'admin-delete-partner' && req.method === 'POST') {
+      const { username } = parseBody();
+      const cleanUser = String(username || '').trim().toUpperCase();
+
+      if (!cleanUser) {
+        return send(res, 400, { error: 'Missing username to delete' });
+      }
+
+      // Delete from deliveryPartners
+      await partnersCol.doc(cleanUser).delete();
+
+      // Clean up any pending reset requests for this rider
+      const resetSnaps = await resetsCol.where('username', '==', cleanUser).get();
+      const batchDeletes = resetSnaps.docs.map((d) => d.ref.delete());
+      await Promise.all(batchDeletes);
+
+      return send(res, 200, { ok: true, deleted: cleanUser });
     }
 
     return send(res, 400, { error: `Unsupported action: "${action}"` });
