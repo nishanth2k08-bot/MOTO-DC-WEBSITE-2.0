@@ -261,19 +261,7 @@ export default function DeliveryScanner() {
       <header className="deliveryPortalHeader">
         <div className="deliveryPortalBrand">
           <Truck size={22} color="#ff3157" />
-          <b>Moto<span>DC</span> Logistics</b>
-          <div className="deliveryPortalBadge">
-            <span className="deliveryPortalBadgeDot" />
-            Scanner Active
-          </div>
-        </div>
-        <div className="deliveryNavLinks">
-          <a href="/admin" className="deliveryNavBtn">
-            Admin Panel
-          </a>
-          <a href="/" className="deliveryNavBtn">
-            Store
-          </a>
+          <b>Moto<span>DC</span> Partner Delivery</b>
         </div>
       </header>
 
