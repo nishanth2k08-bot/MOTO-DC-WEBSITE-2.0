@@ -27,7 +27,12 @@ import {
   Car,
   Sparkles,
   Bot,
-  Zap
+  Zap,
+  MapPin,
+  Layers,
+  Package,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -57,6 +62,136 @@ export default function AdminDeliveryPartners() {
     pin: '',
   });
   const [savingPartner, setSavingPartner] = useState(false);
+
+  // Solution A: Cluster Manifests & Route Corridor Dispatch State
+  const [corridors, setCorridors] = useState([]);
+  const [corridorSummary, setCorridorSummary] = useState({
+    totalActiveOrders: 0,
+    totalDispatchedOrders: 0,
+    totalPayout: 0,
+    stagedCorridorsCount: 0,
+    dispatchedCorridorsCount: 0,
+  });
+  const [corridorsLoading, setCorridorsLoading] = useState(false);
+  const [selectedRidersForCorridor, setSelectedRidersForCorridor] = useState({});
+  const [expandedCorridors, setExpandedCorridors] = useState({});
+  const [dispatchingCorridorId, setDispatchingCorridorId] = useState(null);
+  const [autoDispatching, setAutoDispatching] = useState(false);
+
+  const fetchCorridors = async () => {
+    setCorridorsLoading(true);
+    try {
+      const res = await fetch('/api/delivery-partner?action=cluster-manifests');
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.corridors)) {
+        setCorridors(data.corridors);
+        if (data.summary) setCorridorSummary(data.summary);
+      }
+    } catch (e) {
+      console.warn('Error fetching corridor manifests:', e);
+    } finally {
+      setCorridorsLoading(false);
+    }
+  };
+
+  const handleAssignCorridor = async (corridorId) => {
+    const selectedRiderId = selectedRidersForCorridor[corridorId];
+    if (!selectedRiderId) {
+      toast.error('Please select an active delivery partner from the dropdown.');
+      return;
+    }
+    const matchedPartner = partners.find(
+      (p) => String(p.username || p.id).toUpperCase() === String(selectedRiderId).toUpperCase()
+    );
+    const riderName = matchedPartner?.name || 'MotoDC Partner';
+    const riderPhone = matchedPartner?.phone || '';
+
+    setDispatchingCorridorId(corridorId);
+    try {
+      const res = await fetch('/api/delivery-partner?action=assign-corridor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          corridorId,
+          riderId: selectedRiderId,
+          riderName,
+          riderPhone,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        toast.success(
+          `Dispatched ${data.corridorName} to ${data.riderName} (${data.riderId})! ${data.assignedStops} stops assigned.`
+        );
+        fetchCorridors();
+      } else {
+        toast.error(data.error || 'Failed to dispatch corridor.');
+      }
+    } catch (e) {
+      toast.error(e.message || 'Error dispatching corridor.');
+    } finally {
+      setDispatchingCorridorId(null);
+    }
+  };
+
+  const handleUnassignCorridor = async (corridorId, corridorName) => {
+    if (!window.confirm(`Recall ${corridorName} back to Staging Pool? Orders will be unassigned from driver.`)) {
+      return;
+    }
+    setDispatchingCorridorId(corridorId);
+    try {
+      const res = await fetch('/api/delivery-partner?action=unassign-corridor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ corridorId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        toast.success(`Recalled ${data.corridorName} back to staging pool.`);
+        fetchCorridors();
+      } else {
+        toast.error(data.error || 'Failed to recall corridor.');
+      }
+    } catch (e) {
+      toast.error(e.message || 'Error recalling corridor.');
+    } finally {
+      setDispatchingCorridorId(null);
+    }
+  };
+
+  const handleAutoDispatchAll = async () => {
+    setAutoDispatching(true);
+    try {
+      const res = await fetch('/api/delivery-partner?action=auto-dispatch-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        if (data.dispatchedCount > 0) {
+          toast.success(
+            `⚡ Smart Auto-Dispatch Complete! Assigned ${data.dispatchedCount} corridor(s) to active riders.`
+          );
+        } else {
+          toast(data.message || 'All corridors are already dispatched.');
+        }
+        fetchCorridors();
+      } else {
+        toast.error(data.error || 'Auto-dispatch failed.');
+      }
+    } catch (e) {
+      toast.error(e.message || 'Error running auto-dispatch.');
+    } finally {
+      setAutoDispatching(false);
+    }
+  };
+
+  const toggleExpandCorridor = (corridorId) => {
+    setExpandedCorridors((prev) => ({
+      ...prev,
+      [corridorId]: !prev[corridorId],
+    }));
+  };
 
   const fetchResets = async () => {
     try {
@@ -96,7 +231,7 @@ export default function AdminDeliveryPartners() {
 
   const reloadAll = async () => {
     setLoading(true);
-    await Promise.all([fetchResets(), fetchPartners(), fetchKycList()]);
+    await Promise.all([fetchResets(), fetchPartners(), fetchKycList(), fetchCorridors()]);
     setLoading(false);
   };
 
@@ -105,7 +240,8 @@ export default function AdminDeliveryPartners() {
     const interval = setInterval(() => {
       fetchResets();
       fetchKycList();
-    }, 10000); // Poll reset requests & KYC every 10s
+      fetchCorridors();
+    }, 10000); // Poll reset requests, KYC, & corridor manifests every 10s
     return () => clearInterval(interval);
   }, []);
 
@@ -830,6 +966,230 @@ export default function AdminDeliveryPartners() {
             })}
           </div>
         )}
+      </div>
+
+      {/* =======================================================================
+          SECTION 2.5: HUB ROUTE DISPATCH & CLUSTER MANIFESTS (AMAZON LOGISTICS MODEL)
+          ======================================================================= */}
+      <div className="adminCardSection dispatchSection" style={{ marginTop: '24px' }}>
+        <div className="dispatchSectionHeader">
+          <div className="dispatchTitleWrap">
+            <div className="dispatchIconBadge">
+              <Layers size={22} color="#38bdf8" />
+            </div>
+            <div>
+              <div className="titleWithTag">
+                <h3>Hub Route Dispatch & Cluster Manifests</h3>
+                <span className="dispatchModelTag">Amazon Logistics Model</span>
+              </div>
+              <p className="dispatchSubtitle">
+                Prevents rider cherry-picking by batching Karaikal deliveries into 4 distinct geographic corridors.
+              </p>
+            </div>
+          </div>
+
+          <div className="dispatchHeaderActions">
+            <div className="dispatchSummaryStats">
+              <div className="statPill">
+                <Package size={13} />
+                <span><strong>{corridorSummary.totalActiveOrders}</strong> Active Parcels</span>
+              </div>
+              <div className="statPill">
+                <Truck size={13} />
+                <span><strong>{corridorSummary.dispatchedCorridorsCount} / 4</strong> Corridors Dispatched</span>
+              </div>
+              <div className="statPill payoutStatPill">
+                <span>Fleet Base Pay: <strong>₹{corridorSummary.totalPayout}</strong></span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="autoDispatchBtn"
+              onClick={handleAutoDispatchAll}
+              disabled={autoDispatching || corridorsLoading || corridorSummary.totalActiveOrders === 0}
+              title="Auto-pair active corridors with available drivers based on service mode"
+            >
+              <Zap size={15} className={autoDispatching ? 'pulsingIcon' : ''} />
+              {autoDispatching ? 'Auto-Dispatching Fleet...' : '⚡ 1-Click Smart Auto-Dispatch'}
+            </button>
+          </div>
+        </div>
+
+        {/* 4 Corridor Cards Grid */}
+        <div className="corridorCardsGrid">
+          {corridors.map((corr) => {
+            const isAssigned = Boolean(corr.assignedRiderId);
+            const isDispatched = corr.status === 'dispatched';
+            const isExpanded = Boolean(expandedCorridors[corr.id]);
+            const isBusy = dispatchingCorridorId === corr.id;
+
+            return (
+              <div
+                key={corr.id}
+                className={`corridorCard ${isDispatched ? 'corridorDispatched' : 'corridorStaged'}`}
+                style={{ '--corridor-accent': corr.color }}
+              >
+                {/* Top Badge & Status */}
+                <div className="corridorCardTop">
+                  <div className="corridorCodeBadge" style={{ background: corr.color }}>
+                    {corr.code}
+                  </div>
+                  <span
+                    className={`corridorStatusTag ${
+                      corr.totalStops === 0
+                        ? 'statusEmpty'
+                        : isDispatched
+                        ? 'statusDispatched'
+                        : 'statusStaged'
+                    }`}
+                  >
+                    <span className="statusDot"></span>
+                    {corr.totalStops === 0
+                      ? '0 Parcels (Idle)'
+                      : isDispatched
+                      ? 'Dispatched (Out for Delivery)'
+                      : 'Staged at Hub'}
+                  </span>
+                </div>
+
+                {/* Corridor Name & Coverage Areas */}
+                <h4 className="corridorCardName">{corr.name}</h4>
+                <div className="corridorAreasBox">
+                  <MapPin size={12} style={{ flexShrink: 0, marginTop: '2px', color: corr.color }} />
+                  <span>
+                    {corr.areas} (PIN: {corr.pincodes})
+                  </span>
+                </div>
+
+                {/* Metrics Row */}
+                <div className="corridorMetricsRow">
+                  <div className="metricCol">
+                    <small>Active Stops</small>
+                    <strong>{corr.totalStops} Parcels</strong>
+                  </div>
+                  <div className="metricCol payoutCol">
+                    <small>Guaranteed Pay</small>
+                    <strong style={{ color: corr.color }}>₹{corr.estimatedPayout}</strong>
+                  </div>
+                </div>
+
+                {/* Driver Assignment Section */}
+                <div className="corridorAssignmentBox">
+                  {isAssigned ? (
+                    <div className="assignedDriverInfo">
+                      <div className="assignedDriverRow">
+                        <div className="assignedDriverAvatar">
+                          <User size={14} />
+                        </div>
+                        <div className="assignedDriverDetails">
+                          <div className="driverNameWithCode">
+                            <strong>{corr.assignedRiderName}</strong>
+                            <span className="riderCodePill">{corr.assignedRiderId}</span>
+                          </div>
+                          {corr.assignedRiderPhone && (
+                            <small className="driverPhoneText">
+                              <Phone size={10} /> {corr.assignedRiderPhone}
+                            </small>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="unassignCorridorBtn"
+                        disabled={isBusy}
+                        onClick={() => handleUnassignCorridor(corr.id, corr.name)}
+                      >
+                        <X size={12} /> {isBusy ? 'Recalling...' : 'Recall to Hub'}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="unassignedActionWrap">
+                      <label htmlFor={`select-driver-${corr.id}`} className="assignSelectLabel">
+                        Assign Route to Driver:
+                      </label>
+                      <div className="assignControlsRow">
+                        <select
+                          id={`select-driver-${corr.id}`}
+                          className="driverSelectDropdown"
+                          value={selectedRidersForCorridor[corr.id] || ''}
+                          onChange={(e) =>
+                            setSelectedRidersForCorridor((prev) => ({
+                              ...prev,
+                              [corr.id]: e.target.value,
+                            }))
+                          }
+                          disabled={corr.totalStops === 0 || isBusy}
+                        >
+                          <option value="">-- Select Active Driver --</option>
+                          {partners
+                            .filter((p) => p.active !== false)
+                            .map((p) => (
+                              <option key={p.id || p.username} value={p.username || p.id}>
+                                {p.username || p.id} • {p.name} ({p.serviceMode || 'Standard'})
+                              </option>
+                            ))}
+                        </select>
+                        <button
+                          type="button"
+                          className="dispatchRouteBtn"
+                          disabled={corr.totalStops === 0 || !selectedRidersForCorridor[corr.id] || isBusy}
+                          onClick={() => handleAssignCorridor(corr.id)}
+                          style={{ background: corr.color }}
+                        >
+                          <Send size={13} /> {isBusy ? 'Dispatching...' : 'Dispatch'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Manifest Orders Drawer Toggle */}
+                {corr.totalStops > 0 && (
+                  <div className="corridorManifestToggleWrap">
+                    <button
+                      type="button"
+                      className="manifestToggleBtn"
+                      onClick={() => toggleExpandCorridor(corr.id)}
+                    >
+                      <span>View Manifest Stops ({corr.totalStops})</span>
+                      {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    </button>
+
+                    {isExpanded && (
+                      <div className="manifestStopsList">
+                        {corr.stops.map((stop, idx) => (
+                          <div key={stop.id || idx} className="manifestStopItem">
+                            <div className="stopIndex">{idx + 1}</div>
+                            <div className="stopDetails">
+                              <div className="stopCustomerRow">
+                                <strong>{stop.customer?.name || 'Customer'}</strong>
+                                <span
+                                  className={`stopPaymentBadge ${
+                                    stop.paymentMethod === 'cod' ? 'badgeCod' : 'badgeOnline'
+                                  }`}
+                                >
+                                  {stop.paymentMethod?.toUpperCase() || 'COD'}
+                                </span>
+                              </div>
+                              <p className="stopAddress">
+                                {stop.shipping?.address}, {stop.shipping?.city}
+                              </p>
+                              <small className="stopMeta">
+                                Order: #{stop.orderId} • {stop.items?.length || 1} item(s) • ₹{stop.total}
+                              </small>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* =======================================================================

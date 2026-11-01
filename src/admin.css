@@ -1320,3 +1320,579 @@
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
+
+
+/* ===================================================
+   SOLUTION A: HUB ROUTE DISPATCH & CLUSTER MANIFESTS
+   (AMAZON LOGISTICS ARTERIAL CORRIDOR ROUTING)
+   =================================================== */
+.dispatchSection {
+  background: #0b0f19 !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dispatchSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.dispatchTitleWrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.dispatchIconBadge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.titleWithTag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.titleWithTag h3 {
+  font-size: 19px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  font-family: 'Sora', sans-serif;
+  letter-spacing: -0.3px;
+}
+
+.dispatchModelTag {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(37, 99, 235, 0.2));
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 6px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.dispatchSubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+.dispatchHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.dispatchSummaryStats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.statPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #111827;
+  border: 1px solid #1f2937;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.statPill strong {
+  color: #fff;
+}
+
+.payoutStatPill {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.payoutStatPill strong {
+  color: #10b981;
+}
+
+.autoDispatchBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #000;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35);
+  transition: all 0.2s ease;
+}
+
+.autoDispatchBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.55);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.autoDispatchBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pulsingIcon {
+  animation: pulseRotate 1s infinite alternate;
+}
+
+@keyframes pulseRotate {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.25); }
+}
+
+/* 4 Corridor Cards Grid */
+.corridorCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.corridorCard {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.corridorCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--corridor-accent, #3b82f6);
+}
+
+.corridorCard:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+.corridorCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.corridorCodeBadge {
+  font-size: 11px;
+  font-weight: 900;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  font-family: monospace;
+}
+
+.corridorStatusTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.statusDispatched {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.statusDispatched .statusDot {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.statusStaged {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.statusStaged .statusDot {
+  background: #f59e0b;
+  animation: pulseDot 1.4s infinite;
+}
+
+.statusEmpty {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.statusEmpty .statusDot {
+  background: #64748b;
+}
+
+@keyframes pulseDot {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.corridorCardName {
+  font-size: 16px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0;
+  font-family: 'Sora', sans-serif;
+}
+
+.corridorAreasBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: #090e17;
+  border: 1px solid #1a2333;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.corridorMetricsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: #090e17;
+  border: 1px solid #1a2333;
+  border-radius: 9px;
+  padding: 10px 14px;
+}
+
+.metricCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metricCol small {
+  font-size: 10.5px;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.metricCol strong {
+  font-size: 15px;
+  color: #f1f5f9;
+  font-family: 'Sora', sans-serif;
+}
+
+.payoutCol {
+  text-align: right;
+}
+
+/* Driver Assignment Box */
+.corridorAssignmentBox {
+  background: #070c18;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.assignedDriverInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.assignedDriverRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assignedDriverAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #60a5fa;
+}
+
+.assignedDriverDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.driverNameWithCode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.driverNameWithCode strong {
+  font-size: 13px;
+  color: #fff;
+}
+
+.riderCodePill {
+  font-size: 10.5px;
+  font-weight: 800;
+  font-family: monospace;
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.driverPhoneText {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.unassignCorridorBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.unassignCorridorBtn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
+}
+
+.unassignedActionWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assignSelectLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.assignControlsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.driverSelectDropdown {
+  flex: 1;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 7px !important;
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+  outline: none !important;
+}
+
+.driverSelectDropdown:focus {
+  border-color: #38bdf8 !important;
+}
+
+.dispatchRouteBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dispatchRouteBtn:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+.dispatchRouteBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Manifest Orders Drawer Toggle */
+.corridorManifestToggleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #1e293b;
+  padding-top: 10px;
+}
+
+.manifestToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s;
+}
+
+.manifestToggleBtn:hover {
+  color: #fff;
+}
+
+.manifestStopsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.manifestStopItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #090e17;
+  border: 1px solid #1a2333;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.stopIndex {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stopDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.stopCustomerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.stopCustomerRow strong {
+  font-size: 12px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stopPaymentBadge {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.badgeCod {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.badgeOnline {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.stopAddress {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 2px 0 0;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stopMeta {
+  display: block;
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+}
