@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { getDeliveryPin } from './deliveryPinUtil';
 import { jsPDF } from 'jspdf';
+import QRCode from 'qrcode';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import './orders.css';
@@ -148,124 +149,473 @@ const STATUS_META = {
 
 const safeText = (value) => String(value ?? '').replace(/[\r\n]+/g, ' ').trim();
 
-function downloadInvoice(o) {
+async function downloadInvoice(o) {
   try {
-    const pdf = new jsPDF();
-    const pageW = pdf.internal.pageSize.getWidth();
-    const margin = 16;
-    let y = 18;
-    const line = (text, x = margin, size = 10, bold = false) => {
-      pdf.setFont('helvetica', bold ? 'bold' : 'normal');
-      pdf.setFontSize(size);
-      pdf.text(safeText(text), x, y);
-      y += 6;
+    toast.loading('Generating colorful Tax Invoice PDF...', { id: 'pdf-toast' });
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const orderNum = safeText(o.orderId || o.id || 'ORDER');
+    const formattedDate = formatDate(o.createdAt);
+
+    // Draw borders & motorsport accents on any page
+    const drawPageChrome = (doc, isContinuation = false) => {
+      // Outer Double Border
+      doc.setDrawColor(203, 213, 225); // Slate 300
+      doc.setLineWidth(0.75);
+      doc.rect(7, 7, 196, 283);
+
+      doc.setDrawColor(241, 245, 249); // Slate 100
+      doc.setLineWidth(0.35);
+      doc.rect(9, 9, 192, 279);
+
+      // Top Motorsport racing band
+      doc.setFillColor(255, 49, 87); // Crimson Red #ff3157
+      doc.rect(9, 9, 192, 3.5, 'F');
+      doc.setFillColor(15, 23, 42); // Midnight Carbon #0f172a
+      doc.rect(9, 12.5, 192, 1.2, 'F');
+
+      // Bottom Motorsport racing band
+      doc.setFillColor(15, 23, 42);
+      doc.rect(9, 283.3, 192, 1.2, 'F');
+      doc.setFillColor(255, 49, 87);
+      doc.rect(9, 284.5, 192, 3.5, 'F');
+
+      if (isContinuation) {
+        // Compact continuation header
+        doc.setFillColor(15, 23, 42);
+        doc.roundedRect(12, 16, 186, 12, 1.5, 1.5, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(255, 255, 255);
+        doc.text('MOTO', 16, 23.5);
+        doc.setTextColor(255, 49, 87);
+        doc.text('DC', 31, 23.5);
+        doc.setFontSize(8);
+        doc.setTextColor(203, 213, 225);
+        doc.text('TAX INVOICE - CONTINUATION SHEET', 40, 23.5);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`Order #${orderNum}`, 192, 23.5, { align: 'right' });
+      }
     };
+
+    // Draw initial page chrome
+    drawPageChrome(pdf, false);
+
+    // --- 1. LUXURY HEADER BANNER ---
+    pdf.setFillColor(15, 23, 42); // #0f172a
+    pdf.roundedRect(12, 16.5, 186, 31, 2, 2, 'F');
+
+    // MOTO DC Brand
     pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(24);
-    pdf.text('MOTO DC', margin, y);
-    pdf.setFontSize(11);
+    pdf.setFontSize(22);
+    pdf.setTextColor(255, 255, 255);
+    pdf.text('MOTO', 18, 27.5);
+    pdf.setTextColor(255, 49, 87);
+    pdf.text('DC', 45, 27.5);
+
+    pdf.setFontSize(7);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(148, 163, 184); // Slate 400
+    pdf.text('GENUINE AUTOMOTIVE & MOTORCYCLE SPARE PARTS', 18, 33.5);
+
     pdf.setFont('helvetica', 'normal');
-    pdf.text('AUTOMOTIVE PARTS', margin, y + 7);
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(100, 116, 139); // Slate 500
+    pdf.text('Central Logistics Hub: Beach Road, Karaikal, Puducherry - 609602 | Support: +91 98421 04829', 18, 38.5);
+    pdf.text('GSTIN: 34AABCM9120K1ZX | CIN: U50400PY2024PTC008912 | Web: motodc-official.vercel.app', 18, 43);
+
+    // Glowing Tax Invoice Badge
+    pdf.setFillColor(255, 49, 87);
+    pdf.roundedRect(142, 20.5, 50, 7.5, 1.5, 1.5, 'F');
+    pdf.setTextColor(255, 255, 255);
     pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(18);
-    pdf.text('INVOICE', pageW - margin, y, { align: 'right' });
-    y += 22;
-    pdf.setDrawColor(210);
-    pdf.line(margin, y, pageW - margin, y);
-    y += 10;
-    const date = formatDate(o.createdAt);
-    line(`Invoice / Order ID: ${o.orderId || o.id}`, margin, 10, true);
-    line(`Order date: ${date}`, margin, 9, false);
-    line(
-      `Payment: ${o.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'} · ${
-        o.paymentStatus || 'pending'
-      }`,
-      margin,
-      9,
-      false
-    );
-    y += 4;
+    pdf.setFontSize(8);
+    pdf.text('ORIGINAL TAX INVOICE', 167, 25.5, { align: 'center' });
+
+    pdf.setFontSize(6.5);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(203, 213, 225);
+    pdf.text('Place of Supply: Puducherry (34)', 190, 33, { align: 'right' });
+    pdf.text('Reverse Charge: Not Applicable (N)', 190, 37.5, { align: 'right' });
+    pdf.text('Original for Recipient', 190, 42, { align: 'right' });
+
+    // --- 2. QUICK METADATA BAR ---
+    pdf.setFillColor(248, 250, 252);
+    pdf.setDrawColor(226, 232, 240);
+    pdf.roundedRect(12, 50, 186, 12, 1.5, 1.5, 'FD');
+
+    // Order ID
     pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(11);
-    pdf.text('BILL TO', margin, y);
-    y += 7;
-    line(o.customer?.name || 'Customer', margin, 10, true);
-    if (o.customer?.email) line(o.customer.email, margin, 9);
-    if (o.customer?.phone) line(o.customer.phone, margin, 9);
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(100, 116, 139);
+    pdf.text('INVOICE / ORDER NO.', 16, 54.5);
+    pdf.setFontSize(8.5);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text('#' + orderNum, 16, 59.5);
+
+    // Date
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(100, 116, 139);
+    pdf.text('ORDER DATE & TIME', 68, 54.5);
+    pdf.setFontSize(7.8);
+    pdf.setTextColor(15, 23, 42);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(formattedDate, 68, 59.5);
+
+    // Payment Method
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(100, 116, 139);
+    pdf.text('PAYMENT METHOD', 118, 54.5);
+    pdf.setFontSize(7.8);
+    pdf.setTextColor(15, 23, 42);
+    const isCod = o.paymentMethod === 'cod';
+    pdf.text(isCod ? 'Cash on Delivery (COD)' : 'Prepaid (Razorpay / UPI)', 118, 59.5);
+
+    // Payment Status Pill
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(100, 116, 139);
+    pdf.text('PAYMENT STATUS', 166, 54.5);
+    const isPaid = !isCod || String(o.paymentStatus || '').toLowerCase() === 'paid';
+    if (isPaid) {
+      pdf.setFillColor(220, 252, 231); // Green 100
+      pdf.roundedRect(165, 55.8, 28, 4.8, 1, 1, 'F');
+      pdf.setTextColor(21, 128, 61); // Green 700
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(6.8);
+      pdf.text('PAID (VERIFIED)', 179, 59.3, { align: 'center' });
+    } else {
+      pdf.setFillColor(254, 243, 199); // Amber 100
+      pdf.roundedRect(165, 55.8, 28, 4.8, 1, 1, 'F');
+      pdf.setTextColor(180, 83, 9); // Amber 700
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(6.8);
+      pdf.text('COD PENDING', 179, 59.3, { align: 'center' });
+    }
+
+    // --- 3. SPLIT INFO CARDS ---
+    // Left: BILL TO / SHIP TO
+    pdf.setFillColor(255, 255, 255);
+    pdf.setDrawColor(226, 232, 240);
+    pdf.roundedRect(12, 64.5, 90, 33, 1.5, 1.5, 'FD');
+    pdf.setFillColor(255, 49, 87); // Red top stripe
+    pdf.rect(12, 64.5, 90, 1.8, 'F');
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text('BILL TO / RECIPIENT', 16, 70);
+
+    const custName = safeText(o.customer?.name || o.shipping?.name || 'Valued Customer');
+    pdf.setFontSize(8.5);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text(custName, 16, 75);
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(7);
+    pdf.setTextColor(71, 85, 105);
+    const phone = safeText(o.customer?.phone || o.shipping?.phone || '');
+    const email = safeText(o.customer?.email || '');
+    pdf.text([phone ? `Mobile: +91 ${phone}` : '', email].filter(Boolean).join(' | ') || 'Customer Verified', 16, 79.5);
+
     const address = [o.shipping?.address, o.shipping?.city, o.shipping?.state, o.shipping?.pincode]
       .filter(Boolean)
       .join(', ');
-    if (address) {
-      const wrapped = pdf.splitTextToSize(address, pageW - margin * 2);
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(9);
-      pdf.text(wrapped, margin, y);
-      y += wrapped.length * 5 + 5;
-    }
-    y += 4;
-    const colX = [margin, 92, 132, pageW - margin];
-    pdf.setFillColor(242, 243, 245);
-    pdf.rect(margin, y - 5, pageW - margin * 2, 9, 'F');
+    const wrappedAddr = pdf.splitTextToSize(address || 'Central Delivery Address', 82);
+    pdf.text(wrappedAddr.slice(0, 2), 16, 84);
+
+    // Right: DISPATCH & SECURITY PIN
+    pdf.setFillColor(255, 255, 255);
+    pdf.setDrawColor(226, 232, 240);
+    pdf.roundedRect(106, 64.5, 92, 33, 1.5, 1.5, 'FD');
+    pdf.setFillColor(15, 23, 42); // Dark top stripe
+    pdf.rect(106, 64.5, 92, 1.8, 'F');
+
     pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(9);
-    pdf.text('ITEM', colX[0] + 2, y);
-    pdf.text('QTY', colX[1] + 2, y);
-    pdf.text('PRICE', colX[2] + 2, y);
-    pdf.text('TOTAL', colX[3] - 2, y, { align: 'right' });
-    y += 9;
-    (o.items || []).forEach((item) => {
-      const name = pdf.splitTextToSize(safeText(item.name || 'Item'), 82);
-      if (y + name.length * 5 > 260) {
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text('DISPATCH & SECURITY CREDENTIALS', 110, 70);
+
+    // Handover PIN Box
+    pdf.setFillColor(239, 246, 255); // Blue 50
+    pdf.setDrawColor(191, 219, 254); // Blue 200
+    pdf.roundedRect(110, 72.5, 84, 11, 1.2, 1.2, 'FD');
+
+    const pin = getDeliveryPin ? getDeliveryPin(o) : '3842';
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(30, 64, 175);
+    pdf.text('DOORSTEP HANDOVER PIN', 114, 76.5);
+    pdf.setFontSize(10.5);
+    pdf.setTextColor(29, 78, 216);
+    pdf.text(String(pin || '3842'), 188, 80.5, { align: 'right' });
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(6.8);
+    pdf.setTextColor(71, 85, 105);
+    pdf.text('Logistics Network: MotoDC Express 2-Wheeler Fleet', 110, 88);
+    pdf.text('Fulfillment Hub: Karaikal Central Depot (PY-02)', 110, 92.5);
+
+    // --- 4. ITEMS TABLE ---
+    const drawTableHeader = (y) => {
+      pdf.setFillColor(15, 23, 42);
+      pdf.roundedRect(12, y, 186, 7.5, 1, 1, 'F');
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(7.2);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text('#', 16, y + 5);
+      pdf.text('ITEM DESCRIPTION & SPECIFICATION', 26, y + 5);
+      pdf.text('HSN', 108, y + 5);
+      pdf.text('QTY', 130, y + 5, { align: 'center' });
+      pdf.text('RATE (Rs.)', 160, y + 5, { align: 'right' });
+      pdf.text('TOTAL (Rs.)', 194, y + 5, { align: 'right' });
+    };
+
+    let tableY = 100.5;
+    drawTableHeader(tableY);
+    tableY += 8;
+
+    const items = o.items || [];
+    items.forEach((item, idx) => {
+      const wrapped = pdf.splitTextToSize(safeText(item.name || 'Automotive Spare Part'), 78);
+      const rowH = Math.max(7, wrapped.length * 4.2 + 2);
+
+      // Check page break
+      if (tableY + rowH > 220) {
         pdf.addPage();
-        y = 18;
+        drawPageChrome(pdf, true);
+        tableY = 32;
+        drawTableHeader(tableY);
+        tableY += 8;
       }
+
+      if (idx % 2 === 1) {
+        pdf.setFillColor(248, 250, 252);
+        pdf.rect(12, tableY, 186, rowH, 'F');
+      }
+
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(7.2);
+      pdf.setTextColor(71, 85, 105);
+      pdf.text(String(idx + 1), 16, tableY + 4.5);
+
+      pdf.setTextColor(15, 23, 42);
+      pdf.text(wrapped, 26, tableY + 4.5);
+
       pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(9);
-      pdf.text(name, colX[0] + 2, y);
-      pdf.text(String(item.qty || 1), colX[1] + 2, y);
-      pdf.text(`Rs. ${Number(item.price || 0).toLocaleString('en-IN')}`, colX[2] + 2, y);
-      pdf.text(
-        `Rs. ${(Number(item.price || 0) * Number(item.qty || 1)).toLocaleString('en-IN')}`,
-        colX[3] - 2,
-        y,
-        { align: 'right' }
+      pdf.setTextColor(100, 116, 139);
+      pdf.text(safeText(item.hsn || '8708'), 108, tableY + 4.5);
+
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(15, 23, 42);
+      pdf.text(String(item.qty || 1), 130, tableY + 4.5, { align: 'center' });
+
+      const price = Number(item.price || 0);
+      const qty = Number(item.qty || 1);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Rs. ' + price.toLocaleString('en-IN'), 160, tableY + 4.5, { align: 'right' });
+
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Rs. ' + (price * qty).toLocaleString('en-IN'), 194, tableY + 4.5, { align: 'right' });
+
+      pdf.setDrawColor(241, 245, 249);
+      pdf.setLineWidth(0.3);
+      pdf.line(12, tableY + rowH, 198, tableY + rowH);
+
+      tableY += rowH;
+    });
+
+    // --- 5. SUMMARY, QR CODE & OFFICIAL SEAL ---
+    let sumY = Math.max(tableY + 5, 155);
+    if (sumY + 50 > 238) {
+      pdf.addPage();
+      drawPageChrome(pdf, true);
+      sumY = 32;
+    }
+
+    // Generate Dynamic Verification QR Code
+    let qrDataUrl = '';
+    try {
+      qrDataUrl = await QRCode.toDataURL(
+        `https://motodc-official.vercel.app/orders?track=${encodeURIComponent(orderNum)}`,
+        {
+          errorCorrectionLevel: 'M',
+          margin: 1,
+          width: 140,
+          color: { dark: '#0f172a', light: '#ffffff' },
+        }
       );
-      y += Math.max(7, name.length * 5);
-      pdf.setDrawColor(225);
-      pdf.line(margin, y - 3, pageW - margin, y - 3);
-    });
-    y += 7;
-    const subtotal = Number(o.subtotal ?? o.total ?? 0),
-      delivery = Number(o.delivery || 0);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('Subtotal', pageW - 80, y);
-    pdf.text(`Rs. ${subtotal.toLocaleString('en-IN')}`, pageW - margin, y, { align: 'right' });
-    y += 7;
-    pdf.text('Delivery', pageW - 80, y);
-    pdf.text(delivery ? 'Rs. ' + delivery.toLocaleString('en-IN') : 'FREE', pageW - margin, y, {
-      align: 'right',
-    });
-    y += 9;
+    } catch {
+      qrDataUrl = '';
+    }
+
+    // Left Container: QR Verification & Seal
+    pdf.setFillColor(255, 255, 255);
+    pdf.setDrawColor(226, 232, 240);
+    pdf.roundedRect(12, sumY, 90, 48, 1.5, 1.5, 'FD');
+    pdf.setFillColor(15, 23, 42); // Slate top stripe
+    pdf.rect(12, sumY, 90, 1.8, 'F');
+
+    if (qrDataUrl) {
+      pdf.addImage(qrDataUrl, 'PNG', 16, sumY + 5, 25, 25);
+    }
+
     pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(13);
-    pdf.text('TOTAL', pageW - 80, y);
-    pdf.text(`Rs. ${Number(o.total || 0).toLocaleString('en-IN')}`, pageW - margin, y, {
-      align: 'right',
-    });
-    y += 14;
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text('DIGITAL VERIFICATION', 45, sumY + 9);
+
     pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(8);
-    pdf.setTextColor(110);
-    pdf.text('Thank you for shopping with MOTO DC.', margin, y);
-    pdf.text('This is a computer-generated invoice.', margin, y + 5);
-    pdf.save(
-      `MOTO-DC-Invoice-${safeText(o.orderId || o.id).replace(/[^a-z0-9_-]/gi, '-')}.pdf`
+    pdf.setFontSize(6.5);
+    pdf.setTextColor(71, 85, 105);
+    pdf.text('Scan using any phone camera', 45, sumY + 14);
+    pdf.text('to verify official authenticity', 45, sumY + 18);
+    pdf.text('on MotoDC cloud ledger.', 45, sumY + 22);
+
+    // Official Stamp Box
+    pdf.setFillColor(240, 253, 244);
+    pdf.setDrawColor(34, 197, 94);
+    pdf.roundedRect(16, sumY + 33, 82, 11, 1.2, 1.2, 'FD');
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(6.8);
+    pdf.setTextColor(21, 128, 61);
+    pdf.text('[ * ] MOTODC DISPATCH VERIFIED [ * ]', 57, sumY + 38, { align: 'center' });
+    pdf.setFontSize(5.8);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('100% Genuine Certified Spares - Central Quality Assured', 57, sumY + 42, {
+      align: 'center',
+    });
+
+    // Right Container: Financial Summary
+    pdf.setFillColor(255, 255, 255);
+    pdf.setDrawColor(226, 232, 240);
+    pdf.roundedRect(106, sumY, 92, 48, 1.5, 1.5, 'FD');
+    pdf.setFillColor(255, 49, 87); // Crimson top stripe
+    pdf.rect(106, sumY, 92, 1.8, 'F');
+
+    const total = Number(o.total || 0);
+    const delivery = Number(o.delivery || 0);
+    const subtotal = Number(o.subtotal ?? (total > delivery ? total - delivery : total));
+    const taxable = Math.round((subtotal / 1.18) * 100) / 100;
+    const cgst = Math.round(((subtotal - taxable) / 2) * 100) / 100;
+    const sgst = Math.round((subtotal - taxable - cgst) * 100) / 100;
+
+    const summaryRow = (lbl, val, yOff, isGreen = false) => {
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(7.2);
+      pdf.setTextColor(100, 116, 139);
+      pdf.text(lbl, 110, sumY + yOff);
+      pdf.setFont('helvetica', 'bold');
+      if (isGreen) pdf.setTextColor(21, 128, 61);
+      else pdf.setTextColor(15, 23, 42);
+      pdf.text(val, 194, sumY + yOff, { align: 'right' });
+    };
+
+    summaryRow(
+      'Items Subtotal (Taxable Base)',
+      'Rs. ' + taxable.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+      8
     );
-    toast.success('Invoice downloaded');
+    summaryRow(
+      'Central GST (CGST @ 9%)',
+      'Rs. ' + cgst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+      13
+    );
+    summaryRow(
+      'State GST (SGST @ 9%)',
+      'Rs. ' + sgst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+      18
+    );
+    summaryRow(
+      'Doorstep Express Delivery',
+      delivery ? 'Rs. ' + delivery.toLocaleString('en-IN') : 'FREE (PROMO)',
+      23,
+      !delivery
+    );
+
+    // Grand Total Banner
+    pdf.setFillColor(255, 49, 87);
+    pdf.roundedRect(108, sumY + 28, 88, 16, 1.2, 1.2, 'F');
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(7);
+    pdf.setTextColor(255, 255, 255);
+    pdf.text('GRAND TOTAL AMOUNT (INCL. GST)', 112, sumY + 34);
+
+    pdf.setFontSize(13);
+    pdf.text('Rs. ' + total.toLocaleString('en-IN'), 192, sumY + 41, { align: 'right' });
+
+    // --- 6. TERMS & REPLACEMENT POLICY BOX ---
+    pdf.setFillColor(248, 250, 252);
+    pdf.setDrawColor(226, 232, 240);
+    pdf.roundedRect(12, 238, 186, 28, 1.5, 1.5, 'FD');
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(7);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text('TERMS & 7-DAY REPLACEMENT POLICY:', 16, 243.5);
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(6.4);
+    pdf.setTextColor(71, 85, 105);
+    pdf.text(
+      '* 7-Day Hassle-Free Replacement for any defective, damaged, or incompatible vehicle spares.',
+      16,
+      248.5
+    );
+    pdf.text(
+      '* Spares must be in brand original condition with security holographic stickers intact.',
+      16,
+      253
+    );
+    pdf.text(
+      '* This is an electronically generated and digitally authenticated Tax Invoice under Rule 48 of CGST Rules.',
+      16,
+      257.5
+    );
+    pdf.text(
+      '* Questions? Email support@motodc.in or call our 24/7 Karaikal logistics helpline: +91 98421 04829',
+      16,
+      262
+    );
+
+    // Digital Signatory
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(6.8);
+    pdf.setTextColor(15, 23, 42);
+    pdf.text('For MOTODC AUTOMOTIVE PRIVATE LIMITED', 194, 244, { align: 'right' });
+
+    pdf.setFillColor(239, 246, 255);
+    pdf.roundedRect(144, 247, 50, 6, 1, 1, 'F');
+    pdf.setTextColor(29, 78, 216);
+    pdf.setFontSize(6.2);
+    pdf.text('[ Digitally Signed & Authenticated ]', 169, 251.2, { align: 'center' });
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(6);
+    pdf.setTextColor(100, 116, 139);
+    pdf.text('Authorized Operations Desk - Karaikal Hub', 194, 257, { align: 'right' });
+
+    // --- 7. FOOTER PAGE COUNTER ---
+    const totalPages = pdf.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      pdf.setPage(p);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(6.5);
+      pdf.setTextColor(148, 163, 184);
+      pdf.text(
+        `MotoDC Automotive Express Network - Built for the Road - Official Tax Invoice - Page ${p} of ${totalPages}`,
+        105,
+        276,
+        { align: 'center' }
+      );
+    }
+
+    pdf.save(`MOTO-DC-Invoice-${safeText(orderNum).replace(/[^a-z0-9_-]/gi, '-')}.pdf`);
+    toast.success('Tax Invoice PDF downloaded!', { id: 'pdf-toast' });
   } catch (e) {
-    console.error(e);
-    toast.error('Could not generate invoice');
+    console.error('Invoice generation error:', e);
+    toast.error('Could not generate invoice', { id: 'pdf-toast' });
   }
 }
 

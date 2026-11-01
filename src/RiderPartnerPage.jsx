@@ -160,7 +160,7 @@ export default function RiderPartnerPage() {
 
   // Trigger real download for approved riders (used on mobile phones)
   const triggerApkDownload = () => {
-    toast.success('Starting MotoDC Partner APK download...', { duration: 4000 });
+    toast.success('Starting MotoDC Partner APK download...', { id: 'apk-download-toast', duration: 4000 });
     const link = document.createElement('a');
     link.href = APK_DOWNLOAD_URL;
     link.setAttribute('download', 'MotoDC-Partner.apk');
@@ -314,7 +314,7 @@ export default function RiderPartnerPage() {
         setVerifiedPartnerData(data);
         localStorage.setItem('motodc_partner_verified', 'true');
         localStorage.setItem('motodc_partner_data', JSON.stringify(data));
-        toast.success(`KYC Approved! Welcome, ${data.name || 'Partner'}!`);
+        toast.success(`KYC Approved! Welcome, ${data.name || 'Partner'}!`, { id: 'kyc-approved-toast', duration: 4000 });
 
         // Laptop / Desktop: Automatically show QR code modal so rider can scan with mobile phone
         // Phone: Never show QR code modal; user stays on screen and downloads APK directly
