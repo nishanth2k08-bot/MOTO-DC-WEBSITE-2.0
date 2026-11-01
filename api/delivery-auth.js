@@ -149,14 +149,14 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
     }
   }
 
-  const models = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite'];
+  const models = ['gemini-3.8-flash', 'gemini-3.5-flash-lite'];
   const allErrors = [];
 
   for (const model of models) {
     try {
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 12000);
+      const timeout = setTimeout(() => controller.abort(), 20000);
 
       const res = await fetch(endpoint, {
         method: 'POST',
