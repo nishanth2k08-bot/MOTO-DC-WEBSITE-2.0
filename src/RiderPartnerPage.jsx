@@ -239,6 +239,41 @@ export default function RiderPartnerPage() {
     }
   };
 
+  // Auto-fill demo candidate details and sample proofs for frictionless workflow testing
+  const handleAutoFillDemo = async () => {
+    try {
+      toast.loading('Loading demo details and proofs...', { id: 'demo-fill' });
+      const [dlRes, rcRes] = await Promise.all([
+        fetch('/sample-dl-vignesh.png').then(r => r.blob()),
+        fetch('/sample-rc-vignesh.png').then(r => r.blob()),
+      ]);
+
+      const toBase64 = (blob) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      const [dlBase64, rcBase64] = await Promise.all([toBase64(dlRes), toBase64(rcRes)]);
+
+      setFormData({
+        name: 'Vignesh Pandian',
+        phone: '9840881234',
+        email: 'vignesh.moto@gmail.com',
+        vehicleType: 'Motorcycle',
+        vehicleNumber: 'PY-02-DN-8491',
+        licenseNumber: 'PY02 20230067182',
+        dlPhoto: dlBase64,
+        rcPhoto: rcBase64,
+      });
+
+      toast.success('Demo details & proofs filled! Ready to submit.', { id: 'demo-fill' });
+    } catch (err) {
+      toast.error('Could not load demo files', { id: 'demo-fill' });
+    }
+  };
+
   // Reset saved rider session from browser localStorage
   const handleResetVerifiedSession = () => {
     localStorage.removeItem('motodc_partner_verified');
@@ -940,6 +975,20 @@ export default function RiderPartnerPage() {
                           <strong>Verification Required Before Installation</strong>
                           <p>Upload clear photos of your Driving License and Vehicle RC. Our admin team will verify and approve your account.</p>
                         </div>
+                      </div>
+
+                      <div className="kycDemoBar">
+                        <div className="kycDemoBarText">
+                          <Zap size={14} color="#f59e0b" />
+                          <span>Testing the workflow?</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="kycDemoAutoBtn"
+                          onClick={handleAutoFillDemo}
+                        >
+                          ⚡ Auto-Fill Demo Details & Proofs
+                        </button>
                       </div>
 
                       <div className="kycFormGrid">
