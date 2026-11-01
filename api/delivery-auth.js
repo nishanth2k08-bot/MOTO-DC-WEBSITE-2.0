@@ -149,8 +149,8 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
     }
   }
 
-  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest'];
-  let lastError = null;
+  const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+  const allErrors = [];
 
   for (const model of models) {
     try {
@@ -194,11 +194,11 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
       } else {
         const errText = await res.text();
         console.warn(`Gemini model ${model} returned (${res.status}):`, errText);
-        lastError = `${res.status}: ${errText}`;
+        allErrors.push(`${model} [${res.status}]: ${errText.slice(0, 200)}`);
       }
     } catch (e) {
       console.warn(`Gemini model ${model} error:`, e.message);
-      lastError = e.message;
+      allErrors.push(`${model} [ERR]: ${e.message}`);
     }
   }
 
@@ -207,7 +207,7 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
     verdict: 'NEEDS_MANUAL_REVIEW',
     score: 50,
     summary: 'AI inspection encountered a service error. Please review manually.',
-    error: lastError,
+    error: allErrors.join(' || '),
   };
 }
 
