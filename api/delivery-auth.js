@@ -491,11 +491,11 @@ export default async function handler(req, res) {
       try {
         const authKey = process.env.MSG91_AUTHKEY;
         const domain = process.env.MSG91_EMAIL_DOMAIN;
-        const templateId = process.env.MSG91_TEMPLATE_KYC_RECEIVED;
+        const templateId = process.env.MSG91_TEMPLATE_KYC_RECEIVED || 'motodc_rider_kyc_received';
         const fromEmail = String(process.env.MSG91_FROM_EMAIL || `no-reply@${domain || 'motodc.in'}`).trim();
 
         if (authKey && domain && templateId) {
-          await fetch('https://control.msg91.com/api/v5/email/send', {
+          const emailRes = await fetch('https://control.msg91.com/api/v5/email/send', {
             method: 'POST',
             headers: {
               accept: 'application/json',
@@ -529,6 +529,8 @@ export default async function handler(req, res) {
               validate_before_send: true,
             }),
           });
+          const emailData = await emailRes.json().catch(() => ({}));
+          console.log('MSG91 KYC email dispatch result:', emailRes.status, emailData);
         }
       } catch (emailErr) {
         console.warn('KYC confirmation email warning:', emailErr);
