@@ -70,6 +70,17 @@ export default function RiderPartnerPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock background scroll when KYC form modal or QR modal is active
+  useEffect(() => {
+    if (showKycGateModal || showQrModal) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [showKycGateModal, showQrModal]);
+
   // Generate QR Code pointing to full APK download URL
   useEffect(() => {
     try {
@@ -997,20 +1008,6 @@ export default function RiderPartnerPage() {
                           <strong>Verification Required Before Installation</strong>
                           <p>Upload clear photos of your Driving License and Vehicle RC. Our admin team will verify and approve your account.</p>
                         </div>
-                      </div>
-
-                      <div className="kycDemoBar">
-                        <div className="kycDemoBarText">
-                          <Zap size={14} color="#f59e0b" />
-                          <span>Testing the workflow?</span>
-                        </div>
-                        <button
-                          type="button"
-                          className="kycDemoAutoBtn"
-                          onClick={handleAutoFillDemo}
-                        >
-                          ⚡ Auto-Fill Demo Details & Proofs
-                        </button>
                       </div>
 
                       <div className="kycFormGrid">

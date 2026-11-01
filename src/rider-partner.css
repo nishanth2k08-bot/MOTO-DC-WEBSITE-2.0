@@ -1289,6 +1289,7 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
+  overscroll-behavior: contain;
 }
 
 .kycGateModalContent {
@@ -1385,6 +1386,7 @@
   padding: 22px 24px;
   overflow-y: auto;
   flex: 1;
+  overscroll-behavior: contain;
 }
 
 /* Form Styles */
