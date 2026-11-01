@@ -401,24 +401,37 @@
   line-height: 1.5;
   margin-bottom: 14px;
 }
+.generateOtpSubmitBtn,
 .generateOtpMainBtn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #e11d48, #be123c);
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.4);
+  background: #ff3157 !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 13px 20px !important;
+  border-radius: 9px !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 18px rgba(255, 49, 87, 0.45) !important;
+  transition: all 0.2s ease !important;
 }
+.generateOtpSubmitBtn:hover,
 .generateOtpMainBtn:hover {
-  background: #f43f5e;
+  background: #e02447 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 22px rgba(255, 49, 87, 0.55) !important;
+}
+.generateOtpSubmitBtn:disabled,
+.generateOtpMainBtn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
 }
 .otpSuccessDisplay {
   display: flex;

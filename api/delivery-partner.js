@@ -107,7 +107,6 @@ export default async function handler(req, res) {
       const lowerQ = cleanQ.toLowerCase();
       const mdcPrefixed = /^mdc-/i.test(cleanQ) ? cleanQ : `MDC-${cleanQ}`;
       const searchKeys = Array.from(new Set([cleanQ, upperQ, lowerQ, mdcPrefixed, rawQ]));
-      const onlineCol = db.collection('orders').doc('online orders').collection('records');
 
       let foundDoc = null;
       let collectionType = 'cod orders';

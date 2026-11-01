@@ -992,7 +992,7 @@ export default function AdminDeliveryPartners() {
                     disabled={generatingOtp}
                     onClick={() => handleGenerateOtp(activeModalRequest.id)}
                   >
-                    {generatingOtp ? 'Generating...' : 'Generate 6-Digit OTP'}
+                    <KeyRound size={16} /> {generatingOtp ? 'Generating 6-Digit OTP...' : 'Generate 6-Digit OTP'}
                   </button>
                 </div>
               ) : (
