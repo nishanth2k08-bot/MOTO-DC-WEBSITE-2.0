@@ -113,7 +113,6 @@ export default function AdminOrders({ activeTab = 'dashboard' }){
        {(searchQuery||statusFilter!=='all'||paymentFilter!=='all')&&<button type="button" className="adminResetBtn" onClick={()=>{setSearchQuery('');setStatusFilter('all');setPaymentFilter('all')}}>Reset</button>}
       </div>
       <div className="adminSearchCount">
-       <span className="algoliaBadge" title="Fast typo-tolerant search powered by Algolia"><Zap size={11}/> Algolia Active</span>
        Showing <b>{filteredOrders.length}</b> of {activeOrders.length} active orders
       </div>
      </div>

@@ -980,7 +980,6 @@ export default function AdminDeliveryPartners() {
             <div>
               <div className="titleWithTag">
                 <h3>Hub Route Dispatch & Cluster Manifests</h3>
-                <span className="dispatchModelTag">Amazon Logistics Model</span>
               </div>
               <p className="dispatchSubtitle">
                 Prevents rider cherry-picking by batching Karaikal deliveries into 4 distinct geographic corridors.
