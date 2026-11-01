@@ -533,7 +533,7 @@ export default async function handler(req, res) {
     // 8. ADMIN CREATE OR UPDATE DELIVERY PARTNER
     // -------------------------------------------------------------
     if (action === 'admin-save-partner' && req.method === 'POST') {
-      const { username, name, phone, pin, active } = parseBody();
+      const { username, name, phone, pin, active, serviceMode } = parseBody();
       let cleanUser = String(username || '').trim().toUpperCase();
 
       // If no code provided, auto-generate MDC- followed by a random 4-digit number
@@ -567,6 +567,10 @@ export default async function handler(req, res) {
         active: active !== false,
         updatedAt: Date.now(),
       };
+
+      if (serviceMode) {
+        payload.serviceMode = String(serviceMode).trim();
+      }
 
       if (cleanPin) {
         payload.pin = cleanPin;
@@ -602,7 +606,7 @@ export default async function handler(req, res) {
     // 10. RIDER SUBMIT KYC DOCUMENTS & REGISTRATION
     // -------------------------------------------------------------
     if (action === 'submit-kyc' && req.method === 'POST') {
-      const { name, phone, email, vehicleType, vehicleNumber, licenseNumber, dlPhoto, rcPhoto } = parseBody();
+      const { name, phone, email, serviceMode, vehicleType, vehicleNumber, licenseNumber, dlPhoto, rcPhoto } = parseBody();
 
       const cleanName = String(name || '').trim();
       const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
@@ -655,6 +659,7 @@ export default async function handler(req, res) {
         name: cleanName,
         phone: cleanPhone,
         email: cleanEmail,
+        serviceMode: String(serviceMode || 'Standard').trim(),
         vehicleType: String(vehicleType || 'Motorcycle').trim(),
         vehicleNumber: String(vehicleNumber || '').trim().toUpperCase(),
         licenseNumber: String(licenseNumber || '').trim().toUpperCase(),
@@ -868,6 +873,7 @@ export default async function handler(req, res) {
         phone: kData.phone,
         email: kData.email || '',
         pin: cleanPin,
+        serviceMode: kData.serviceMode || 'Standard',
         vehicleNumber: kData.vehicleNumber || '',
         vehicleType: kData.vehicleType || 'Motorcycle',
         licenseNumber: kData.licenseNumber || '',

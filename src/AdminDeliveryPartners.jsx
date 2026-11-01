@@ -53,6 +53,7 @@ export default function AdminDeliveryPartners() {
     username: generateRiderCode(),
     name: '',
     phone: '',
+    serviceMode: 'Standard',
     pin: '',
   });
   const [savingPartner, setSavingPartner] = useState(false);
@@ -302,6 +303,7 @@ export default function AdminDeliveryPartners() {
           username: cleanUser,
           name: cleanName,
           phone: cleanPhone,
+          serviceMode: newPartner.serviceMode || 'Standard',
           pin: cleanPin,
           active: true,
         }),
@@ -314,7 +316,7 @@ export default function AdminDeliveryPartners() {
 
       toast.success(`Registered driver ${cleanName} with code ${cleanUser}!`);
       setShowAddPartner(false);
-      setNewPartner({ username: generateRiderCode(), name: '', phone: '', pin: '' });
+      setNewPartner({ username: generateRiderCode(), name: '', phone: '', serviceMode: 'Standard', pin: '' });
       fetchPartners();
     } catch (err) {
       toast.error(err.message);
@@ -407,7 +409,7 @@ export default function AdminDeliveryPartners() {
             type="button"
             className="addPartnerBtn"
             onClick={() => {
-              setNewPartner({ username: generateRiderCode(), name: '', phone: '', pin: '' });
+              setNewPartner({ username: generateRiderCode(), name: '', phone: '', serviceMode: 'Standard', pin: '' });
               setShowAddPartner(true);
             }}
           >
@@ -526,6 +528,14 @@ export default function AdminDeliveryPartners() {
                       <div>
                         <small>Driving License No.</small>
                         <p><strong>{app.licenseNumber || 'Provided in Photo'}</strong></p>
+                      </div>
+                      <div>
+                        <small>Mode of Service</small>
+                        <p>
+                          <span className={`serviceModeBadge ${String(app.serviceMode || 'Standard').toLowerCase().replace(/\s+/g, '-')}`}>
+                            {app.serviceMode || 'Standard'}
+                          </span>
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -841,6 +851,7 @@ export default function AdminDeliveryPartners() {
                 <th>Partner Code (Username)</th>
                 <th>Driver Name</th>
                 <th>Phone Number</th>
+                <th>Mode of Service</th>
                 <th>6-Digit PIN</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -856,6 +867,11 @@ export default function AdminDeliveryPartners() {
                     <strong>{p.name}</strong>
                   </td>
                   <td>{p.phone || '—'}</td>
+                  <td>
+                    <span className={`serviceModeBadge ${String(p.serviceMode || 'Standard').toLowerCase().replace(/\s+/g, '-')}`}>
+                      {p.serviceMode || 'Standard'}
+                    </span>
+                  </td>
                   <td>
                     <span className="maskedPin">••••••</span>
                     <button
@@ -910,7 +926,7 @@ export default function AdminDeliveryPartners() {
               ))}
               {partners.length === 0 && (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: '30px', color: '#64748b' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '30px', color: '#64748b' }}>
                     No delivery partners registered yet. Approve a KYC application or click "+ Add Delivery Partner" above.
                   </td>
                 </tr>
@@ -1116,6 +1132,18 @@ export default function AdminDeliveryPartners() {
                     required
                   />
                   <small>Must be exactly 6 numerical digits.</small>
+                </div>
+
+                <div className="modalField">
+                  <label>4. Mode of Service *</label>
+                  <select
+                    value={newPartner.serviceMode || 'Standard'}
+                    onChange={(e) => setNewPartner({ ...newPartner, serviceMode: e.target.value })}
+                  >
+                    <option value="Part-Time">Part-Time (~8 drops/day · 2–4 hrs)</option>
+                    <option value="Standard">Standard (~18 drops/day · Full-Day)</option>
+                    <option value="Power Rider">Power Rider (~30 drops/day · High-Volume)</option>
+                  </select>
                 </div>
               </div>
 

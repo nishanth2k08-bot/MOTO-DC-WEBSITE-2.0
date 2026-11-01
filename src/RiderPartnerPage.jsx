@@ -98,6 +98,7 @@ export default function RiderPartnerPage() {
     name: '',
     phone: '',
     email: '',
+    serviceMode: 'Standard',
     vehicleType: 'Motorcycle',
     vehicleNumber: '',
     licenseNumber: '',
@@ -261,6 +262,7 @@ export default function RiderPartnerPage() {
         name: 'Vignesh Pandian',
         phone: '9840881234',
         email: 'vignesh.moto@gmail.com',
+        serviceMode: 'Standard',
         vehicleType: 'Motorcycle',
         vehicleNumber: 'PY-02-DN-8491',
         licenseNumber: 'PY02 20230067182',
@@ -1055,6 +1057,18 @@ export default function RiderPartnerPage() {
                             <option value="Motorcycle">Motorcycle / Bike (with Gear)</option>
                             <option value="Scooter">Scooter / Scooty (Gearless)</option>
                             <option value="Electric">Electric Two-Wheeler (EV)</option>
+                          </select>
+                        </label>
+
+                        <label className="kycField">
+                          <span>Planned Mode of Service *</span>
+                          <select 
+                            value={formData.serviceMode || 'Standard'}
+                            onChange={(e) => setFormData({ ...formData, serviceMode: e.target.value })}
+                          >
+                            <option value="Part-Time">Part-Time (~8 drops/day · 2–4 hrs)</option>
+                            <option value="Standard">Standard (~18 drops/day · Full-Day)</option>
+                            <option value="Power Rider">Power Rider (~30 drops/day · High-Volume)</option>
                           </select>
                         </label>
 
