@@ -5,7 +5,8 @@ import {
   HelpCircle, ShieldCheck, Award, Bike, Calendar, 
   DollarSign, AlertCircle, ExternalLink, FileText, 
   ChevronDown, ChevronUp, MessageCircle, Check, 
-  Upload, Eye, Clock, X, AlertTriangle, Shield, ShieldAlert
+  Upload, Eye, Clock, X, AlertTriangle, Shield, ShieldAlert,
+  Zap
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './rider-partner.css';
@@ -185,6 +186,11 @@ export default function RiderPartnerPage() {
       return;
     }
 
+    if (/^\d+$/.test(q) && q.length !== 10) {
+      toast.error('Mobile number must be exactly 10 digits');
+      return;
+    }
+
     setCheckingStatus(true);
     setStatusResult(null);
     try {
@@ -252,9 +258,13 @@ export default function RiderPartnerPage() {
       <header className="partnerNavbar">
         <div className="partnerNavContainer">
           <div className="partnerBrand">
-            <div className="partnerLogoBadge">
-              <span className="logoMain">Moto<span className="logoRed">DC</span></span>
-            </div>
+            <a href="/" className="partnerBrandLogoWrap" title="MotoDC Home">
+              <img 
+                src="/motodc-new-logo.webp?v=4" 
+                alt="MotoDC Delivery Fleet" 
+                className="partnerHeaderLogoImg" 
+              />
+            </a>
           </div>
 
           {/* TOP RIGHT "INSTALL APP" BUTTON (Clean high-contrast text, version tag removed) */}
@@ -291,8 +301,10 @@ export default function RiderPartnerPage() {
 
         <div className="partnerHeroContainer">
           <div className="partnerHeroBadge">
-            <Bike size={16} />
-            <span>EXPRESS AUTOMOTIVE DELIVERY NETWORK</span>
+            <span className="livePulsingDot" aria-hidden="true" />
+            <Zap size={14} className="badgeZapIcon" />
+            <span className="badgeGradientText">EXPRESS AUTOMOTIVE DELIVERY NETWORK</span>
+            <span className="badgeNetworkTag">24/7 ACTIVE</span>
           </div>
 
           <h1 className="partnerHeroTitle">
@@ -994,9 +1006,18 @@ export default function RiderPartnerPage() {
                     <form onSubmit={handleCheckStatus} className="statusSearchForm">
                       <input 
                         type="text" 
-                        placeholder="Mobile number or Email address..." 
+                        placeholder="10-digit mobile number, email, or KYC ID..." 
                         value={statusQuery}
-                        onChange={(e) => setStatusQuery(e.target.value)}
+                        maxLength={40}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          // If numeric (mobile number), strictly cap at 10 digits
+                          if (/^\d+$/.test(val)) {
+                            if (val.length <= 10) setStatusQuery(val);
+                          } else {
+                            if (val.length <= 40) setStatusQuery(val);
+                          }
+                        }}
                         required
                       />
                       <button type="submit" disabled={checkingStatus}>

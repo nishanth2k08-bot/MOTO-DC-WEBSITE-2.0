@@ -76,6 +76,33 @@
   gap: 12px;
 }
 
+.partnerBrandLogoWrap {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.partnerBrandLogoWrap:hover {
+  opacity: 0.95;
+  transform: scale(1.02);
+}
+
+.partnerHeaderLogoImg {
+  height: 48px;
+  width: auto;
+  max-width: 195px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .partnerHeaderLogoImg {
+    height: 38px;
+    max-width: 155px;
+  }
+}
+
 .partnerLogoBadge {
   display: flex;
   align-items: center;
@@ -191,20 +218,76 @@
 .partnerHeroBadge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 49, 87, 0.1);
-  border: 1px solid rgba(255, 49, 87, 0.25);
-  color: #ff758f;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(255, 49, 87, 0.16) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(255, 49, 87, 0.45);
+  box-shadow: 0 0 25px rgba(255, 49, 87, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  padding: 8px 18px;
+  border-radius: 30px;
   margin-bottom: 24px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.partnerHeroBadge span {
-  color: #ff758f !important;
+.partnerHeroBadge:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 49, 87, 0.75);
+  box-shadow: 0 0 35px rgba(255, 49, 87, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Pulsing Live Green Radar Dot */
+.livePulsingDot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e;
+  position: relative;
+  flex-shrink: 0;
+  animation: liveDotPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 6px #22c55e;
+  }
+  50% {
+    transform: scale(1.35);
+    box-shadow: 0 0 14px #4ade80, 0 0 22px rgba(74, 222, 128, 0.6);
+  }
+}
+
+.badgeZapIcon {
+  color: #fbbf24;
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
+  flex-shrink: 0;
+}
+
+/* Creative Gradient High-Tech Lettering */
+.badgeGradientText {
+  background: linear-gradient(90deg, #ffffff 0%, #ff8da2 55%, #ff3157 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* Futuristic Tag on Right */
+.badgeNetworkTag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #f87171 !important;
+  background: rgba(255, 49, 87, 0.18);
+  border: 1px solid rgba(255, 49, 87, 0.35);
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: 2px;
 }
 
 .partnerHeroTitle {
