@@ -24,7 +24,10 @@ import {
   AlertTriangle,
   FileCheck,
   AlertCircle,
-  Car
+  Car,
+  Sparkles,
+  Bot,
+  Zap
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -33,8 +36,9 @@ export default function AdminDeliveryPartners() {
   const [partners, setPartners] = useState([]);
   const [kycList, setKycList] = useState([]);
   const [kycFilter, setKycFilter] = useState('pending'); // 'pending' | 'approved' | 'rejected' | 'all'
-  const [viewingProofModal, setViewingProofModal] = useState(null); // { title, url }
+  const [viewingProofModal, setViewingProofModal] = useState(null); // { title, url, extracted }
   const [processingKycId, setProcessingKycId] = useState(null);
+  const [runningAiCheckId, setRunningAiCheckId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeModalRequest, setActiveModalRequest] = useState(null);
   const [generatingOtp, setGeneratingOtp] = useState(false);
@@ -190,6 +194,35 @@ export default function AdminDeliveryPartners() {
       fetchKycList();
     } catch (e) {
       toast.error('Error deleting application');
+    }
+  };
+
+  // Handle Admin Run Gemini AI Pre-Check (Phase 2)
+  const handleRunAiCheck = async (appId) => {
+    setRunningAiCheckId(appId);
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-run-ai-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicationId: appId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to run AI check');
+
+      const verdict = data.aiCheck?.verdict;
+      const score = data.aiCheck?.score;
+      if (verdict === 'RECOMMENDED_APPROVE') {
+        toast.success(`Gemini AI: Recommended to Approve (${score}/100)`);
+      } else if (verdict === 'SUSPICIOUS_OR_BLURRY') {
+        toast.error(`Gemini AI Warning: Blurry or Mismatched (${score}/100)`);
+      } else {
+        toast(`Gemini AI: Needs Manual Review (${score}/100)`, { icon: '🔍' });
+      }
+      fetchKycList();
+    } catch (err) {
+      toast.error(err.message || 'Error running AI check');
+    } finally {
+      setRunningAiCheckId(null);
     }
   };
 
@@ -504,7 +537,11 @@ export default function AdminDeliveryPartners() {
                       {app.dlPhoto ? (
                         <div 
                           className="proofImgWrap"
-                          onClick={() => setViewingProofModal({ title: `${app.name} - Driving License`, url: app.dlPhoto })}
+                          onClick={() => setViewingProofModal({ 
+                            title: `${app.name} - Driving License`, 
+                            url: app.dlPhoto,
+                            extracted: app.aiCheck?.dl ? `DL Extracted Name: ${app.aiCheck.dl.extractedName || 'N/A'} • DL Number: ${app.aiCheck.dl.extractedNumber || 'N/A'}` : null
+                          })}
                         >
                           <img src={app.dlPhoto} alt="Driving License" />
                           <span className="viewProofOverlay"><Eye size={14} /> View Large</span>
@@ -519,7 +556,11 @@ export default function AdminDeliveryPartners() {
                       {app.rcPhoto ? (
                         <div 
                           className="proofImgWrap"
-                          onClick={() => setViewingProofModal({ title: `${app.name} - Vehicle RC`, url: app.rcPhoto })}
+                          onClick={() => setViewingProofModal({ 
+                            title: `${app.name} - Vehicle RC`, 
+                            url: app.rcPhoto,
+                            extracted: app.aiCheck?.rc ? `RC Extracted Number: ${app.aiCheck.rc.extractedNumber || 'N/A'} • Owner: ${app.aiCheck.rc.extractedOwner || 'N/A'}` : null
+                          })}
                         >
                           <img src={app.rcPhoto} alt="Vehicle RC" />
                           <span className="viewProofOverlay"><Eye size={14} /> View Large</span>
@@ -529,6 +570,73 @@ export default function AdminDeliveryPartners() {
                       )}
                     </div>
                   </div>
+
+                  {/* Phase 2: Gemini 1.5 Flash Vision AI Pre-Check */}
+                  {app.aiCheck && app.aiCheck.status === 'completed' ? (
+                    <div className={`kycAiBanner ${
+                      app.aiCheck.verdict === 'RECOMMENDED_APPROVE'
+                        ? 'aiRecommended'
+                        : app.aiCheck.verdict === 'SUSPICIOUS_OR_BLURRY'
+                        ? 'aiSuspicious'
+                        : 'aiReview'
+                    }`}>
+                      <div className="kycAiHeader">
+                        <div className="kycAiScoreBadge">
+                          <Bot size={15} />
+                          <span>Gemini AI: <strong>{app.aiCheck.score}/100</strong></span>
+                        </div>
+                        <span className="kycAiVerdictTag">
+                          {app.aiCheck.verdict === 'RECOMMENDED_APPROVE' && '✓ Recommended to Approve'}
+                          {app.aiCheck.verdict === 'NEEDS_MANUAL_REVIEW' && '⚠️ Needs Manual Review'}
+                          {app.aiCheck.verdict === 'SUSPICIOUS_OR_BLURRY' && '🚨 Blurry / Mismatch'}
+                        </span>
+                      </div>
+
+                      <p className="kycAiSummaryText">{app.aiCheck.summary}</p>
+
+                      <div className="kycAiTagsRow">
+                        {app.aiCheck.dl && (
+                          <span className={`kycAiMiniTag ${app.aiCheck.dl.nameMatch ? 'tagPass' : 'tagWarn'}`}>
+                            DL: {app.aiCheck.dl.extractedName || 'Detected'}
+                            {app.aiCheck.dl.nameMatch ? ' ✓' : ''}
+                          </span>
+                        )}
+                        {app.aiCheck.rc && (
+                          <span className={`kycAiMiniTag ${app.aiCheck.rc.numberMatch ? 'tagPass' : 'tagNeutral'}`}>
+                            RC: {app.aiCheck.rc.extractedNumber || 'Detected'}
+                            {app.aiCheck.rc.numberMatch ? ' ✓' : ''}
+                          </span>
+                        )}
+                        <span className="kycAiMiniTag tagNeutral">Photo: {app.aiCheck.quality || 'checked'}</span>
+
+                        <button
+                          type="button"
+                          className="kycReCheckAiBtn"
+                          title="Re-run Gemini AI Analysis"
+                          disabled={runningAiCheckId === app.id}
+                          onClick={() => handleRunAiCheck(app.id)}
+                        >
+                          <RefreshCw size={11} className={runningAiCheckId === app.id ? 'spin' : ''} />
+                          {runningAiCheckId === app.id ? 'Scanning...' : 'Re-scan AI'}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="kycAiNotRunBanner">
+                      <div className="kycAiPromptText">
+                        <Sparkles size={14} color="#60a5fa" />
+                        <span>AI Pre-Check: {app.aiCheck?.summary || 'Not yet analyzed'}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="runAiBtn"
+                        disabled={runningAiCheckId === app.id}
+                        onClick={() => handleRunAiCheck(app.id)}
+                      >
+                        <Zap size={13} /> {runningAiCheckId === app.id ? 'Scanning with Gemini AI...' : 'Scan Proofs with Gemini AI'}
+                      </button>
+                    </div>
+                  )}
 
                   {isRejected && app.rejectionReason && (
                     <div className="kycRejectionNotice">
@@ -815,7 +923,12 @@ export default function AdminDeliveryPartners() {
         <div className="modalOverlay" onClick={() => setViewingProofModal(null)}>
           <div className="proofViewerModal" onClick={(e) => e.stopPropagation()}>
             <div className="proofViewerHeader">
-              <h4>{viewingProofModal.title}</h4>
+              <div>
+                <h4>{viewingProofModal.title}</h4>
+                {viewingProofModal.extracted && (
+                  <p className="modalExtractedInfo">🤖 {viewingProofModal.extracted}</p>
+                )}
+              </div>
               <button type="button" className="modalCloseBtn" onClick={() => setViewingProofModal(null)}>
                 <X size={20} />
               </button>

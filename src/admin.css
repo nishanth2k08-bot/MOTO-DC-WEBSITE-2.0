@@ -882,6 +882,185 @@
   margin-bottom: 12px;
 }
 
+/* Phase 2: Gemini 1.5 Flash Vision AI Pre-Check Styling */
+.kycAiBanner {
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.kycAiBanner.aiRecommended {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.kycAiBanner.aiReview {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.kycAiBanner.aiSuspicious {
+  background: rgba(239, 68, 68, 0.09);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.kycAiHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kycAiScoreBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.kycAiScoreBadge svg {
+  color: #60a5fa;
+}
+
+.kycAiScoreBadge strong {
+  color: #38bdf8;
+}
+
+.kycAiVerdictTag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.aiRecommended .kycAiVerdictTag {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.aiReview .kycAiVerdictTag {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.aiSuspicious .kycAiVerdictTag {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.kycAiSummaryText {
+  color: #cbd5e1;
+  font-size: 11.5px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.kycAiTagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.kycAiMiniTag {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.kycAiMiniTag.tagPass {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.kycAiMiniTag.tagWarn {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.kycAiMiniTag.tagNeutral {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.kycReCheckAiBtn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.kycReCheckAiBtn:hover:not(:disabled) {
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+}
+
+.kycAiNotRunBanner {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed #334155;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kycAiPromptText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.runAiBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.runAiBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.modalExtractedInfo {
+  font-size: 12px;
+  color: #38bdf8;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
 /* Card Actions */
 .kycCardActions {
   display: flex;

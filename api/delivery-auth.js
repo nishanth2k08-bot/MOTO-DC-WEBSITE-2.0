@@ -31,6 +31,176 @@ function send(res, status, body) {
   return res.status(status).json(body);
 }
 
+function extractBase64(dataUrl) {
+  if (!dataUrl || typeof dataUrl !== 'string') return null;
+  const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) return null;
+  return {
+    mimeType: match[1],
+    data: match[2],
+  };
+}
+
+async function verifyKycWithGemini({ name, licenseNumber, vehicleNumber, vehicleType, dlPhoto, rcPhoto }) {
+  const rawKey =
+    process.env.GEMINI_API_KEY ||
+    process.env.VITE_GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    process.env.GEMINI_KEY ||
+    process.env.VITE_GOOGLE_API_KEY;
+
+  const apiKey = rawKey ? String(rawKey).trim().replace(/^["']|["']$/g, '') : '';
+  if (!apiKey) {
+    return {
+      status: 'skipped',
+      verdict: 'NEEDS_MANUAL_REVIEW',
+      score: 50,
+      summary: 'Gemini API key not configured on server. Manual review required.',
+      quality: 'uninspected',
+    };
+  }
+
+  const dlParsed = extractBase64(dlPhoto);
+  const rcParsed = extractBase64(rcPhoto);
+
+  if (!dlParsed && !rcParsed) {
+    return {
+      status: 'skipped',
+      verdict: 'NEEDS_MANUAL_REVIEW',
+      score: 50,
+      summary: 'No document image proofs were uploaded for AI analysis.',
+      quality: 'none',
+    };
+  }
+
+  const promptText = `You are the official automated KYC verification AI for MotoDC Delivery Partner Fleet in India.
+Analyze the uploaded document image(s) and cross-reference them against the rider's entered form details:
+- Applicant Name: "${name}"
+- Entered DL Number: "${licenseNumber || 'Not provided'}"
+- Entered Vehicle Registration Number: "${vehicleNumber || 'Not provided'}"
+- Vehicle Type: "${vehicleType || 'Motorcycle'}"
+
+Instructions:
+1. Examine the image(s). Note: Image 1 is typically the Driving License (DL); Image 2 is typically the Vehicle RC.
+2. Extract visible text:
+   - DL: Extracted Name, Extracted DL Number, Vehicle Classes, Expiry date.
+   - RC: Extracted Registration Number, Owner Name, Vehicle Class/Model.
+3. Compare:
+   - Does the DL name match applicant name? (Allow minor typos, initials vs full name like "R. Kumar" vs "Ravi Kumar").
+   - Does the DL number match entered DL number? (Ignore spaces and hyphens).
+   - Does the RC registration number match entered vehicle number? (Ignore spaces and hyphens).
+4. Evaluate document visual quality: "clear", "blurry", "cut_off", or "tampered".
+5. Compute a confidence score from 0 to 100:
+   - 80-100: Documents look authentic and clearly match the applicant details.
+   - 50-79: Partial match, minor discrepancy, or one document missing.
+   - 0-49: Illegible, blurry, fake/wrong document uploaded, or severe mismatch.
+6. Provide a verdict:
+   - "RECOMMENDED_APPROVE" (score >= 80)
+   - "NEEDS_MANUAL_REVIEW" (score 50-79)
+   - "SUSPICIOUS_OR_BLURRY" (score < 50)
+
+Respond ONLY with a valid JSON object matching this schema (no markdown, no backticks, no comments):
+{
+  "score": 95,
+  "verdict": "RECOMMENDED_APPROVE",
+  "summary": "DL and RC are clearly readable. Name and numbers match applicant details.",
+  "quality": "clear",
+  "dl": {
+    "isDrivingLicense": true,
+    "extractedName": "...",
+    "extractedNumber": "...",
+    "nameMatch": true,
+    "numberMatch": true
+  },
+  "rc": {
+    "isVehicleRc": true,
+    "extractedNumber": "...",
+    "extractedOwner": "...",
+    "numberMatch": true
+  },
+  "flags": []
+}`;
+
+  const parts = [{ text: promptText }];
+  if (dlParsed) {
+    parts.push({
+      inline_data: {
+        mime_type: dlParsed.mimeType,
+        data: dlParsed.data,
+      },
+    });
+  }
+  if (rcParsed) {
+    parts.push({
+      inline_data: {
+        mime_type: rcParsed.mimeType,
+        data: rcParsed.data,
+      },
+    });
+  }
+
+  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash'];
+  let lastError = null;
+
+  for (const model of models) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: {
+            temperature: 0.1,
+            maxOutputTokens: 600,
+            responseMimeType: 'application/json',
+          },
+        }),
+      });
+
+      clearTimeout(timeout);
+
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const cleaned = rawText.replace(/^```(json)?\n?/i, '').replace(/\n?```$/i, '').trim();
+        const parsedJson = JSON.parse(cleaned);
+        return {
+          status: 'completed',
+          model,
+          analyzedAt: Date.now(),
+          score: typeof parsedJson.score === 'number' ? parsedJson.score : 75,
+          verdict: parsedJson.verdict || 'NEEDS_MANUAL_REVIEW',
+          summary: parsedJson.summary || 'AI inspection completed.',
+          quality: parsedJson.quality || 'clear',
+          dl: parsedJson.dl || null,
+          rc: parsedJson.rc || null,
+          flags: Array.isArray(parsedJson.flags) ? parsedJson.flags : [],
+        };
+      } else {
+        const errText = await res.text();
+        console.warn(`Gemini model ${model} returned (${res.status}):`, errText);
+        lastError = `${res.status}: ${errText}`;
+      }
+    } catch (e) {
+      console.warn(`Gemini model ${model} error:`, e.message);
+      lastError = e.message;
+    }
+  }
+
+  return {
+    status: 'failed',
+    verdict: 'NEEDS_MANUAL_REVIEW',
+    score: 50,
+    summary: 'AI inspection encountered a service error. Please review manually.',
+    error: lastError,
+  };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -487,6 +657,23 @@ export default async function handler(req, res) {
 
       await kycCol.doc(appId).set(kycRecord);
 
+      // Phase 2: Run Gemini 1.5 Flash Vision AI pre-check on documents
+      try {
+        const aiCheck = await verifyKycWithGemini({
+          name: cleanName,
+          licenseNumber,
+          vehicleNumber,
+          vehicleType,
+          dlPhoto,
+          rcPhoto,
+        });
+        if (aiCheck) {
+          await kycCol.doc(appId).update({ aiCheck, updatedAt: Date.now() });
+        }
+      } catch (aiErr) {
+        console.warn('AI KYC pre-check error:', aiErr);
+      }
+
       // Trigger MSG91 Email to applicant if configured
       try {
         const authKey = process.env.MSG91_AUTHKEY;
@@ -731,6 +918,42 @@ export default async function handler(req, res) {
 
       await kycCol.doc(applicationId).delete();
       return send(res, 200, { ok: true, deleted: applicationId });
+    }
+
+    // -------------------------------------------------------------
+    // 16. ADMIN RUN/RE-RUN GEMINI AI PRE-CHECK (PHASE 2)
+    // -------------------------------------------------------------
+    if (action === 'admin-run-ai-check' && req.method === 'POST') {
+      const { applicationId } = parseBody();
+      if (!applicationId) {
+        return send(res, 400, { error: 'Missing applicationId' });
+      }
+
+      const docSnap = await kycCol.doc(applicationId).get();
+      if (!docSnap.exists) {
+        return send(res, 404, { error: 'KYC application not found' });
+      }
+
+      const appData = docSnap.data();
+      const aiCheck = await verifyKycWithGemini({
+        name: appData.name,
+        licenseNumber: appData.licenseNumber,
+        vehicleNumber: appData.vehicleNumber,
+        vehicleType: appData.vehicleType,
+        dlPhoto: appData.dlPhoto,
+        rcPhoto: appData.rcPhoto,
+      });
+
+      await kycCol.doc(applicationId).update({
+        aiCheck,
+        updatedAt: Date.now(),
+      });
+
+      return send(res, 200, {
+        ok: true,
+        applicationId,
+        aiCheck,
+      });
     }
 
     return send(res, 400, { error: `Unsupported action: "${action}"` });
