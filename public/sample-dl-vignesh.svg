@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380">
+  <rect width="600" height="380" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="4"/>
+  <rect x="0" y="0" width="600" height="70" rx="16" fill="#047857"/>
+  <text x="300" y="32" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">UNION OF INDIA - DRIVING LICENCE</text>
+  <text x="300" y="55" font-family="Arial, sans-serif" font-size="13" fill="#a7f3d0" text-anchor="middle">GOVERNMENT OF PUDUCHERRY / KARAIKAL RTO</text>
+  
+  <rect x="30" y="95" width="120" height="150" rx="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+  <circle cx="90" cy="150" r="30" fill="#94a3b8"/>
+  <path d="M50 220 Q90 180 130 220" fill="#94a3b8"/>
+  <text x="90" y="270" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#475569" text-anchor="middle">RIDER PHOTO</text>
+
+  <text x="180" y="115" font-family="Arial, sans-serif" font-size="13" fill="#64748b">DL NO:</text>
+  <text x="260" y="115" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#0f172a">PY02 20230067182</text>
+
+  <text x="180" y="155" font-family="Arial, sans-serif" font-size="13" fill="#64748b">NAME:</text>
+  <text x="260" y="155" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#0f172a">VIGNESH PANDIAN</text>
+
+  <text x="180" y="190" font-family="Arial, sans-serif" font-size="13" fill="#64748b">DOB:</text>
+  <text x="260" y="190" font-family="Arial, sans-serif" font-size="14" fill="#0f172a">22-09-1999</text>
+
+  <text x="180" y="225" font-family="Arial, sans-serif" font-size="13" fill="#64748b">CLASS:</text>
+  <text x="260" y="225" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#15803d">MCWG (Motorcycle with Gear)</text>
+
+  <text x="180" y="260" font-family="Arial, sans-serif" font-size="13" fill="#64748b">VALID TILL:</text>
+  <text x="260" y="260" font-family="Arial, sans-serif" font-size="14" fill="#0f172a">21-09-2043</text>
+
+  <rect x="30" y="310" width="540" height="45" rx="8" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="45" y="337" font-family="Arial, sans-serif" font-size="12" fill="#475569">ISSUING AUTHORITY: KARAIKAL REGIONAL TRANSPORT OFFICE (PY-02)</text>
+</svg>
