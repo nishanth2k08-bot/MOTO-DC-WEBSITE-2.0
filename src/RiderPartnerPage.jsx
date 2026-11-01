@@ -6,7 +6,7 @@ import {
   DollarSign, AlertCircle, ExternalLink, FileText, 
   ChevronDown, ChevronUp, MessageCircle, Check, 
   Upload, Eye, Clock, X, AlertTriangle, Shield, ShieldAlert,
-  Zap
+  Zap, ArrowUp
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './rider-partner.css';
@@ -43,6 +43,18 @@ export default function RiderPartnerPage() {
       return null;
     }
   });
+
+  // Scroll to Top visibility state
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // KYC Form State
   const [formData, setFormData] = useState({
@@ -1154,6 +1166,19 @@ export default function RiderPartnerPage() {
           </div>
         </div>
       </footer>
+
+      {/* Scroll Up Button - exact same as MotoDC website BackToTop */}
+      {showScrollTop && (
+        <button
+          type="button"
+          className="backToTopBtn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Back to top"
+          title="Back to top"
+        >
+          <ArrowUp size={20} />
+        </button>
+      )}
     </div>
   );
 }

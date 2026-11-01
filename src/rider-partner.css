@@ -1794,3 +1794,20 @@
   color: #64748b;
   display: block;
 }
+
+/* --------------------------------------------------------------------------
+   Scroll Up Button (Back to Top)
+   -------------------------------------------------------------------------- */
+.riderPartnerRoot .backToTopBtn {
+  z-index: 999;
+}
+
+@media (max-width: 820px) {
+  .riderPartnerRoot .backToTopBtn {
+    bottom: 84px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
