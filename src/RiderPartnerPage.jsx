@@ -239,6 +239,16 @@ export default function RiderPartnerPage() {
     }
   };
 
+  // Reset saved rider session from browser localStorage
+  const handleResetVerifiedSession = () => {
+    localStorage.removeItem('motodc_partner_verified');
+    localStorage.removeItem('motodc_partner_data');
+    setIsVerifiedRider(false);
+    setVerifiedPartnerData(null);
+    setStatusResult(null);
+    toast.success('Rider session cleared. You can now register or verify another rider.');
+  };
+
   // Check KYC status by phone or email
   const handleCheckStatus = async (e) => {
     e?.preventDefault();
@@ -424,6 +434,14 @@ export default function RiderPartnerPage() {
               <span>
                 Verified Delivery Partner: <strong>{verifiedPartnerData?.name || 'Driver'}</strong> ({verifiedPartnerData?.partnerCode || 'Approved'}). App download is unlocked!
               </span>
+              <button
+                type="button"
+                className="switchRiderBtn"
+                onClick={handleResetVerifiedSession}
+                title="Clear saved rider from this browser to register or check another rider"
+              >
+                Switch / New Rider
+              </button>
             </div>
           )}
 
