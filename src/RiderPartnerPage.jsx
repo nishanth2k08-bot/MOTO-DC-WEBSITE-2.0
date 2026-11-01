@@ -9,6 +9,7 @@ import {
   Zap, ArrowUp
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import QRCode from 'qrcode';
 import './rider-partner.css';
 
 export default function RiderPartnerPage() {
@@ -47,6 +48,19 @@ export default function RiderPartnerPage() {
   // Scroll to Top visibility state
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  // Desktop / Laptop QR Code Download Modal
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
+
+  // Device detection: identify smartphones vs laptops/desktops/tablets
+  const isPhoneDevice = () => {
+    if (typeof window === 'undefined') return false;
+    const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
+    const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk)/i.test(ua);
+    if (isTablet) return false;
+    return /mobi|android.*mobile|iphone|ipod|blackberry|opera mini|iemobile|wpdesktop/i.test(ua);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
@@ -54,6 +68,29 @@ export default function RiderPartnerPage() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Generate QR Code pointing to full APK download URL
+  useEffect(() => {
+    try {
+      const origin = typeof window !== 'undefined' && window.location.origin
+        ? window.location.origin
+        : 'https://motodc-official.vercel.app';
+      const fullApkUrl = `${origin}${APK_DOWNLOAD_URL}`;
+
+      QRCode.toDataURL(fullApkUrl, {
+        width: 320,
+        margin: 2,
+        color: {
+          dark: '#05070c',
+          light: '#ffffff',
+        },
+      })
+        .then((url) => setQrCodeDataUrl(url))
+        .catch((err) => console.warn('QR Code generation error:', err));
+    } catch (e) {
+      console.warn('QR Code error:', e);
+    }
   }, []);
 
   // KYC Form State
@@ -121,7 +158,7 @@ export default function RiderPartnerPage() {
     }
   };
 
-  // Trigger real download for approved riders
+  // Trigger real download for approved riders (used on mobile phones)
   const triggerApkDownload = () => {
     toast.success('Starting MotoDC Partner APK download...', { duration: 4000 });
     const link = document.createElement('a');
@@ -132,10 +169,23 @@ export default function RiderPartnerPage() {
     document.body.removeChild(link);
   };
 
+  // Device-aware app download handler:
+  // - On phones: directly downloads the APK
+  // - On laptops / desktops: displays QR code popup modal so they can scan with phone
+  const handleDownloadApp = () => {
+    if (isPhoneDevice()) {
+      setShowKycGateModal(false);
+      triggerApkDownload();
+    } else {
+      setShowKycGateModal(false);
+      setShowQrModal(true);
+    }
+  };
+
   // Mandatory KYC Gate Handler
   const handleInstallClick = () => {
     if (isVerifiedRider) {
-      triggerApkDownload();
+      handleDownloadApp();
       return;
     }
 
@@ -220,6 +270,13 @@ export default function RiderPartnerPage() {
         localStorage.setItem('motodc_partner_verified', 'true');
         localStorage.setItem('motodc_partner_data', JSON.stringify(data));
         toast.success(`KYC Approved! Welcome, ${data.name || 'Partner'}!`);
+
+        // Laptop / Desktop: Automatically show QR code modal so rider can scan with mobile phone
+        // Phone: Never show QR code modal; user stays on screen and downloads APK directly
+        if (!isPhoneDevice()) {
+          setShowKycGateModal(false);
+          setShowQrModal(true);
+        }
       }
     } catch (err) {
       toast.error(err.message || 'Error checking verification status');
@@ -291,7 +348,7 @@ export default function RiderPartnerPage() {
               <button 
                 type="button" 
                 className="installTopBtn verifiedBtn" 
-                onClick={triggerApkDownload}
+                onClick={handleDownloadApp}
                 aria-label="Download MotoDC Partner APK"
               >
                 <Download size={18} className="installBtnIcon" />
@@ -337,7 +394,7 @@ export default function RiderPartnerPage() {
 
           <div className="partnerHeroCtaGroup">
             {isVerifiedRider ? (
-              <button type="button" className="heroCtaPrimary" onClick={triggerApkDownload}>
+              <button type="button" className="heroCtaPrimary" onClick={handleDownloadApp}>
                 <Download size={20} />
                 <span className="heroCtaText">Download Partner App (APK)</span>
               </button>
@@ -1062,10 +1119,7 @@ export default function RiderPartnerPage() {
                             <button 
                               type="button" 
                               className="unlockedDownloadBtn" 
-                              onClick={() => {
-                                setShowKycGateModal(false);
-                                triggerApkDownload();
-                              }}
+                              onClick={handleDownloadApp}
                             >
                               <Download size={18} /> Download MotoDC Partner APK
                             </button>
@@ -1123,6 +1177,102 @@ export default function RiderPartnerPage() {
                   )}
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =======================================================================
+          QR CODE DOWNLOAD MODAL FOR LAPTOPS / DESKTOPS
+          (Only triggered on laptops/desktops, never on mobile phones)
+          ======================================================================= */}
+      {showQrModal && (
+        <div className="modalOverlay" onClick={() => setShowQrModal(false)}>
+          <div className="modalContent qrDownloadModalContent" onClick={(e) => e.stopPropagation()}>
+            <div className="modalHeader">
+              <div className="modalTitleWrap">
+                <QrCode size={24} className="highlightRed" />
+                <div>
+                  <h3>Scan to Download Partner App</h3>
+                  <p className="modalSub">Install directly on your Android smartphone</p>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                className="modalCloseBtn" 
+                onClick={() => setShowQrModal(false)}
+                aria-label="Close QR modal"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modalBody qrModalBody">
+              <div className="qrNoticeBox">
+                <Smartphone size={18} className="qrNoticeIcon" />
+                <span>
+                  Delivery runs require an Android smartphone for barcode scanning and live GPS routing. Please scan this QR code with your mobile camera to download the app.
+                </span>
+              </div>
+
+              {verifiedPartnerData && (
+                <div className="qrVerifiedRiderBadge">
+                  <CheckCircle2 size={16} color="#10b981" />
+                  <span>
+                    Verified Partner: <strong>{verifiedPartnerData.name || 'Rider'}</strong>
+                    {verifiedPartnerData.partnerCode || verifiedPartnerData.riderCode 
+                      ? ` • Code: ${verifiedPartnerData.partnerCode || verifiedPartnerData.riderCode}` 
+                      : ''}
+                  </span>
+                </div>
+              )}
+
+              <div className="qrCodeFrameWrap">
+                <div className="qrCodeFrame">
+                  {qrCodeDataUrl ? (
+                    <img 
+                      src={qrCodeDataUrl} 
+                      alt="Scan QR code with your phone to download MotoDC Partner App APK" 
+                      className="qrCodeImg" 
+                    />
+                  ) : (
+                    <div className="qrCodePlaceholder">Generating QR Code...</div>
+                  )}
+                  <div className="qrFrameCorner qrCornerTL" />
+                  <div className="qrFrameCorner qrCornerTR" />
+                  <div className="qrFrameCorner qrCornerBL" />
+                  <div className="qrFrameCorner qrCornerBR" />
+                </div>
+                <div className="qrVersionTag">
+                  <Download size={13} />
+                  <span>Latest Release • MotoDC-Partner.apk (v1.0)</span>
+                </div>
+              </div>
+
+              <div className="qrInstructionSteps">
+                <div className="qrStepItem">
+                  <span className="qrStepNum">1</span>
+                  <span>Open the <strong>Camera</strong> or <strong>QR Scanner / Google Lens</strong> on your Android phone</span>
+                </div>
+                <div className="qrStepItem">
+                  <span className="qrStepNum">2</span>
+                  <span>Point your phone camera at this QR code on your screen</span>
+                </div>
+                <div className="qrStepItem">
+                  <span className="qrStepNum">3</span>
+                  <span>Tap the detected link to download & install the latest MotoDC Partner APK</span>
+                </div>
+              </div>
+
+              <div className="qrModalFooter">
+                <button 
+                  type="button" 
+                  className="modalDoneBtn"
+                  onClick={() => setShowQrModal(false)}
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </div>
