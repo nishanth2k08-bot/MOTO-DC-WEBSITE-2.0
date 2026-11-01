@@ -636,9 +636,30 @@ export default function RiderPartnerPage() {
                   aria-label="Daily drops slider"
                 />
                 <div className="sliderTicks">
-                  <span>Part-Time (8 drops)</span>
-                  <span>Standard (18 drops)</span>
-                  <span>Power Rider (30 drops)</span>
+                  <button 
+                    type="button" 
+                    className={`sliderTickBtn ${dailyDrops === 8 ? 'active' : ''}`}
+                    onClick={() => setDailyDrops(8)}
+                    title="Quick select: 8 drops per day"
+                  >
+                    Part-Time (8 drops)
+                  </button>
+                  <button 
+                    type="button" 
+                    className={`sliderTickBtn ${dailyDrops === 18 ? 'active' : ''}`}
+                    onClick={() => setDailyDrops(18)}
+                    title="Quick select: 18 drops per day"
+                  >
+                    Standard (18 drops)
+                  </button>
+                  <button 
+                    type="button" 
+                    className={`sliderTickBtn ${dailyDrops === 30 ? 'active' : ''}`}
+                    onClick={() => setDailyDrops(30)}
+                    title="Quick select: 30 drops per day"
+                  >
+                    Power Rider (30 drops)
+                  </button>
                 </div>
               </div>
 
@@ -836,7 +857,6 @@ export default function RiderPartnerPage() {
         <div className="sectionContainer">
           <div className="contactCard">
             <div className="contactDetails">
-              <span className="contactTag">LOCAL KARAIKAL OPERATIONS</span>
               <h2>Visit Our Fleet Depot</h2>
               <p className="contactAddress">
                 <MapPin size={18} className="contactIcon" />

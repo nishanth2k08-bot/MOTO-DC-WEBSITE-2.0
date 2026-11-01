@@ -752,8 +752,32 @@
   color: var(--rp-text-muted);
 }
 
-.sliderTicks span {
+.sliderTicks span,
+.sliderTickBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
   color: var(--rp-text-muted) !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.sliderTickBtn:hover {
+  color: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.sliderTickBtn.active {
+  color: #ff3157 !important;
+  background: rgba(255, 49, 87, 0.12);
+  border-color: rgba(255, 49, 87, 0.35);
+  font-weight: 700;
 }
 
 .earningsDisplayGrid {
