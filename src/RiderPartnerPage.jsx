@@ -258,13 +258,19 @@ export default function RiderPartnerPage() {
       <header className="partnerNavbar">
         <div className="partnerNavContainer">
           <div className="partnerBrand">
-            <a href="/" className="partnerBrandLogoWrap" title="MotoDC Home">
+            <div 
+              className="partnerBrandLogoWrap" 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              title="MotoDC Delivery Partner Fleet"
+              role="button"
+              tabIndex={0}
+            >
               <img 
                 src="/motodc-new-logo.webp?v=4" 
                 alt="MotoDC Delivery Fleet" 
                 className="partnerHeaderLogoImg" 
               />
-            </a>
+            </div>
           </div>
 
           {/* TOP RIGHT "INSTALL APP" BUTTON (Clean high-contrast text, version tag removed) */}
@@ -745,8 +751,10 @@ export default function RiderPartnerPage() {
                 className="contactDownloadBtn" 
                 onClick={handleInstallClick}
               >
-                <ShieldCheck size={20} />
-                <span>{isVerifiedRider ? 'Download Partner App APK' : 'Verify KYC & Install App'}</span>
+                <ShieldCheck size={20} className="contactDownloadIcon" />
+                <span className="contactDownloadBtnText">
+                  {isVerifiedRider ? 'Download Partner App APK' : 'Verify KYC & Install App'}
+                </span>
               </button>
             </div>
           </div>

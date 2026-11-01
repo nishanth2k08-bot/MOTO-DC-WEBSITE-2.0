@@ -33,6 +33,12 @@
 
 /* Enforce pure white text on all buttons (Overcoming global span rules in index.css) */
 .riderPartnerRoot button,
+.riderPartnerRoot button *,
+.riderPartnerRoot button span,
+.riderPartnerRoot .contactDownloadBtn,
+.riderPartnerRoot .contactDownloadBtn *,
+.riderPartnerRoot .contactDownloadBtn span,
+.riderPartnerRoot .contactDownloadBtnText,
 .riderPartnerRoot .installTopBtn,
 .riderPartnerRoot .installTopBtn *,
 .riderPartnerRoot .heroCtaPrimary,
@@ -1139,7 +1145,7 @@
   justify-content: center;
   gap: 10px;
   background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
-  color: #fff !important;
+  color: #ffffff !important;
   border: none;
   padding: 15px 20px;
   border-radius: 12px;
@@ -1148,6 +1154,16 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 6px 20px rgba(255, 49, 87, 0.35);
+}
+
+.contactDownloadBtn *,
+.contactDownloadBtn span,
+.contactDownloadBtnText,
+.contactDownloadIcon {
+  color: #ffffff !important;
+  fill: none;
+  stroke: #ffffff !important;
+  font-weight: 800 !important;
 }
 
 .contactDownloadBtn:hover {
