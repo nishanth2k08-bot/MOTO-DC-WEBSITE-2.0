@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380">
+  <rect width="600" height="380" rx="16" fill="#fdfbf7" stroke="#e2d9cc" stroke-width="4"/>
+  <rect x="0" y="0" width="600" height="70" rx="16" fill="#7c2d12"/>
+  <text x="300" y="32" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">INDIAN UNION VEHICLE REGISTRATION CERTIFICATE</text>
+  <text x="300" y="55" font-family="Arial, sans-serif" font-size="13" fill="#fdba74" text-anchor="middle">MINISTRY OF ROAD TRANSPORT AND HIGHWAYS</text>
+
+  <text x="50" y="115" font-family="Arial, sans-serif" font-size="13" fill="#78716c">REGN NO:</text>
+  <text x="180" y="115" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#b91c1c">PY 02 CB 4912</text>
+
+  <text x="50" y="155" font-family="Arial, sans-serif" font-size="13" fill="#78716c">OWNER NAME:</text>
+  <text x="180" y="155" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1c1917">KARTHIK SUBRAMANIAN</text>
+
+  <text x="50" y="195" font-family="Arial, sans-serif" font-size="13" fill="#78716c">VEHICLE MODEL:</text>
+  <text x="180" y="195" font-family="Arial, sans-serif" font-size="15" fill="#1c1917">HERO SPLENDOR PLUS BS6 (100CC)</text>
+
+  <text x="50" y="235" font-family="Arial, sans-serif" font-size="13" fill="#78716c">CLASS / TYPE:</text>
+  <text x="180" y="235" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#15803d">TWO WHEELER (M-CYCLE/SCOOTER)</text>
+
+  <text x="50" y="275" font-family="Arial, sans-serif" font-size="13" fill="#78716c">INSURANCE TILL:</text>
+  <text x="180" y="275" font-family="Arial, sans-serif" font-size="14" fill="#1c1917">18-09-2027 (ACTIVE)</text>
+
+  <text x="50" y="315" font-family="Arial, sans-serif" font-size="13" fill="#78716c">REGISTERING AUTH:</text>
+  <text x="180" y="315" font-family="Arial, sans-serif" font-size="13" fill="#44403c">RTO KARAIKAL, PUDUCHERRY - 609602</text>
+</svg>
