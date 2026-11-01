@@ -123,23 +123,33 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
 
   const parts = [{ text: promptText }];
   if (dlParsed) {
-    parts.push({
-      inline_data: {
-        mime_type: dlParsed.mimeType,
-        data: dlParsed.data,
-      },
-    });
+    if (dlParsed.mimeType === 'image/svg+xml' || dlParsed.mimeType.includes('svg')) {
+      const svgText = Buffer.from(dlParsed.data, 'base64').toString('utf8');
+      parts.push({ text: `[Driving License Document Content (SVG/Text)]:\n${svgText}` });
+    } else {
+      parts.push({
+        inlineData: {
+          mimeType: dlParsed.mimeType,
+          data: dlParsed.data,
+        },
+      });
+    }
   }
   if (rcParsed) {
-    parts.push({
-      inline_data: {
-        mime_type: rcParsed.mimeType,
-        data: rcParsed.data,
-      },
-    });
+    if (rcParsed.mimeType === 'image/svg+xml' || rcParsed.mimeType.includes('svg')) {
+      const svgText = Buffer.from(rcParsed.data, 'base64').toString('utf8');
+      parts.push({ text: `[Vehicle RC Document Content (SVG/Text)]:\n${svgText}` });
+    } else {
+      parts.push({
+        inlineData: {
+          mimeType: rcParsed.mimeType,
+          data: rcParsed.data,
+        },
+      });
+    }
   }
 
-  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash'];
+  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest'];
   let lastError = null;
 
   for (const model of models) {
@@ -153,7 +163,7 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
         body: JSON.stringify({
-          contents: [{ parts }],
+          contents: [{ role: 'user', parts }],
           generationConfig: {
             temperature: 0.1,
             maxOutputTokens: 600,

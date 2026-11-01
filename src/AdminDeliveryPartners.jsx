@@ -609,19 +609,21 @@ export default function AdminDeliveryPartners() {
                         )}
                         <span className="kycAiMiniTag tagNeutral">Photo: {app.aiCheck.quality || 'checked'}</span>
 
-                        <button
-                          type="button"
-                          className="kycReCheckAiBtn"
-                          title="Re-run Gemini AI Analysis"
-                          disabled={runningAiCheckId === app.id}
-                          onClick={() => handleRunAiCheck(app.id)}
-                        >
-                          <RefreshCw size={11} className={runningAiCheckId === app.id ? 'spin' : ''} />
-                          {runningAiCheckId === app.id ? 'Scanning...' : 'Re-scan AI'}
-                        </button>
+                        {!isApproved && (
+                          <button
+                            type="button"
+                            className="kycReCheckAiBtn"
+                            title="Re-run Gemini AI Analysis"
+                            disabled={runningAiCheckId === app.id}
+                            onClick={() => handleRunAiCheck(app.id)}
+                          >
+                            <RefreshCw size={11} className={runningAiCheckId === app.id ? 'spin' : ''} />
+                            {runningAiCheckId === app.id ? 'Scanning...' : 'Re-scan AI'}
+                          </button>
+                        )}
                       </div>
                     </div>
-                  ) : (
+                  ) : !isApproved ? (
                     <div className="kycAiNotRunBanner">
                       <div className="kycAiPromptText">
                         <Sparkles size={14} color="#60a5fa" />
@@ -636,7 +638,7 @@ export default function AdminDeliveryPartners() {
                         <Zap size={13} /> {runningAiCheckId === app.id ? 'Scanning with Gemini AI...' : 'Scan Proofs with Gemini AI'}
                       </button>
                     </div>
-                  )}
+                  ) : null}
 
                   {isRejected && app.rejectionReason && (
                     <div className="kycRejectionNotice">
