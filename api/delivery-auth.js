@@ -149,7 +149,7 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
     }
   }
 
-  const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+  const models = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite'];
   const allErrors = [];
 
   for (const model of models) {
@@ -939,17 +939,6 @@ export default async function handler(req, res) {
         return send(res, 400, { error: 'Missing applicationId' });
       }
 
-      const rawKey =
-        process.env.GEMINI_API_KEY ||
-        process.env.VITE_GEMINI_API_KEY ||
-        process.env.GOOGLE_API_KEY ||
-        process.env.GEMINI_KEY ||
-        process.env.VITE_GOOGLE_API_KEY ||
-        '';
-
-      const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(rawKey.trim())}`).then(r => r.json()).catch(e => ({ error: e.message }));
-      const availableModels = Array.isArray(listRes?.models) ? listRes.models.map(m => m.name) : listRes;
-
       const docSnap = await kycCol.doc(applicationId).get();
       if (!docSnap.exists) {
         return send(res, 404, { error: 'KYC application not found' });
@@ -974,7 +963,6 @@ export default async function handler(req, res) {
         ok: true,
         applicationId,
         aiCheck,
-        availableModels,
       });
     }
 
