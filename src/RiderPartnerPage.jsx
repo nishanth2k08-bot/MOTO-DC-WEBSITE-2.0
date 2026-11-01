@@ -5,7 +5,7 @@ import {
   HelpCircle, ShieldCheck, Award, Bike, Calendar, 
   DollarSign, AlertCircle, ExternalLink, FileText, 
   ChevronDown, ChevronUp, MessageCircle, Check, 
-  Upload, Eye, Clock, X, AlertTriangle, Shield
+  Upload, Eye, Clock, X, AlertTriangle, Shield, ShieldAlert
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './rider-partner.css';
