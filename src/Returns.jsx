@@ -12,6 +12,38 @@ const sortNewest=xs=>xs.sort((a,b)=>{const av=a.createdAt?.toMillis?a.createdAt.
 const groupFor=payment=>String(payment||'cod').toLowerCase()==='online'?'online request':'cod request';
 const typeCollection=(payment,type)=>type==='replacement'?`${payment} replacement`:`${payment} return`;
 
+const isOrderPast7Days = (o) => {
+  let baseTime = null;
+  if (o.deliveredAt) {
+    if (o.deliveredAt.toDate) baseTime = o.deliveredAt.toDate().getTime();
+    else if (o.deliveredAt.seconds) baseTime = o.deliveredAt.seconds * 1000;
+    else if (typeof o.deliveredAt === 'number') baseTime = o.deliveredAt;
+    else {
+      const parsed = new Date(o.deliveredAt).getTime();
+      if (!isNaN(parsed)) baseTime = parsed;
+    }
+  }
+  if (!baseTime && Array.isArray(o.history)) {
+    const del = o.history.find((h) => String(h.status || '').toLowerCase() === 'delivered');
+    if (del?.timestamp) {
+      const parsed = new Date(del.timestamp).getTime();
+      if (!isNaN(parsed)) baseTime = parsed;
+    }
+  }
+  if (!baseTime && o.createdAt) {
+    if (o.createdAt.toDate) baseTime = o.createdAt.toDate().getTime();
+    else if (o.createdAt.seconds) baseTime = o.createdAt.seconds * 1000;
+    else if (typeof o.createdAt === 'number') baseTime = o.createdAt;
+    else {
+      const parsed = new Date(o.createdAt).getTime();
+      if (!isNaN(parsed)) baseTime = parsed;
+    }
+  }
+  if (!baseTime) return false;
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+  return Date.now() - baseTime > SEVEN_DAYS_MS;
+};
+
 export default function Returns(){
  const [orders,setOrders]=useState([]),[requests,setRequests]=useState([]),[loading,setLoading]=useState(true),[busy,setBusy]=useState('');
  useEffect(()=>{
@@ -52,8 +84,16 @@ export default function Returns(){
    load();
    return()=>{active=false};
  },[]);
- const request=async(o,type)=>{
+  const request=async(o,type)=>{
    if(busy)return;
+   if(isOrderPast7Days(o)){
+     if(type==='replacement'){
+       toast.error('Your time period for replacement is closed', { duration: 4500, icon: '⏳' });
+     }else{
+       toast.error('Your time period for return is closed', { duration: 4500, icon: '⏳' });
+     }
+     return;
+   }
    const u=auth.currentUser;
    if(!u){toast.error('Please sign in again');return}
    const existing=requests.find(r=>r.orderId===o.id&&['requested','approved','processing'].includes(r.status));

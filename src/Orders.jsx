@@ -147,6 +147,39 @@ const STATUS_META = {
   },
 };
 
+const isOrderPast7Days = (o) => {
+  if (!o) return false;
+  let baseTime = null;
+  if (o.deliveredAt) {
+    if (o.deliveredAt.toDate) baseTime = o.deliveredAt.toDate().getTime();
+    else if (o.deliveredAt.seconds) baseTime = o.deliveredAt.seconds * 1000;
+    else if (typeof o.deliveredAt === 'number') baseTime = o.deliveredAt;
+    else {
+      const parsed = new Date(o.deliveredAt).getTime();
+      if (!isNaN(parsed)) baseTime = parsed;
+    }
+  }
+  if (!baseTime && Array.isArray(o.history)) {
+    const del = o.history.find((h) => String(h.status || '').toLowerCase() === 'delivered');
+    if (del?.timestamp) {
+      const parsed = new Date(del.timestamp).getTime();
+      if (!isNaN(parsed)) baseTime = parsed;
+    }
+  }
+  if (!baseTime && o.createdAt) {
+    if (o.createdAt.toDate) baseTime = o.createdAt.toDate().getTime();
+    else if (o.createdAt.seconds) baseTime = o.createdAt.seconds * 1000;
+    else if (typeof o.createdAt === 'number') baseTime = o.createdAt;
+    else {
+      const parsed = new Date(o.createdAt).getTime();
+      if (!isNaN(parsed)) baseTime = parsed;
+    }
+  }
+  if (!baseTime) return false;
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+  return Date.now() - baseTime > SEVEN_DAYS_MS;
+};
+
 const safeText = (value) => String(value ?? '').replace(/[\r\n]+/g, ' ').trim();
 
 async function downloadInvoice(o) {
@@ -1624,7 +1657,13 @@ export default function Orders() {
                   <button
                     type="button"
                     className="inspectorReturnBtn"
-                    onClick={() => nav('/returns')}
+                    onClick={() => {
+                      if (isOrderPast7Days(activeOrder)) {
+                        toast.error('Your time period for return is closed', { duration: 4500, icon: '⏳' });
+                        return;
+                      }
+                      nav('/returns');
+                    }}
                   >
                     <RotateCcw size={15} /> Return / Replace
                   </button>

@@ -50,6 +50,37 @@ export default async function handler(req,res){
       const hasActive=active.docs.some(d=>['requested','approved','processing'].includes(d.data().status));
       if(hasActive)return send(res,409,{error:'An active request already exists for this order'});
 
+      // Enforce 7-Day Return/Replacement Policy
+      try {
+        const orderSnap = await db.collection('orders').doc(orderCategory === 'online' ? 'online orders' : 'cod orders')
+          .collection('records').doc(orderId).get();
+        if (orderSnap.exists) {
+          const oData = orderSnap.data();
+          let baseTime = null;
+          if (oData.deliveredAt) {
+            if (oData.deliveredAt.toMillis) baseTime = oData.deliveredAt.toMillis();
+            else if (oData.deliveredAt.toDate) baseTime = oData.deliveredAt.toDate().getTime();
+            else if (oData.deliveredAt.seconds) baseTime = oData.deliveredAt.seconds * 1000;
+            else if (typeof oData.deliveredAt === 'number') baseTime = oData.deliveredAt;
+          }
+          if (!baseTime && oData.createdAt) {
+            if (oData.createdAt.toMillis) baseTime = oData.createdAt.toMillis();
+            else if (oData.createdAt.toDate) baseTime = oData.createdAt.toDate().getTime();
+            else if (oData.createdAt.seconds) baseTime = oData.createdAt.seconds * 1000;
+            else if (typeof oData.createdAt === 'number') baseTime = oData.createdAt;
+          }
+          if (baseTime && (Date.now() - baseTime) > (7 * 24 * 60 * 60 * 1000)) {
+            return send(res, 400, {
+              error: type === 'replacement'
+                ? 'Your time period for replacement is closed'
+                : 'Your time period for return is closed'
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Could not verify 7-day period against order record:', err);
+      }
+
       const ref=db.collection('request').doc(group).collection(requestCollection).doc();
       await ref.set({
         userId:decoded.uid,orderId,displayOrderId:String(body.displayOrderId||orderId),
