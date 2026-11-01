@@ -31,14 +31,31 @@
   padding-bottom: 70px; /* Space for mobile sticky install bar */
 }
 
+/* Enforce pure white text on all buttons (Overcoming global span rules in index.css) */
+.riderPartnerRoot button,
+.riderPartnerRoot .installTopBtn,
+.riderPartnerRoot .installTopBtn *,
+.riderPartnerRoot .heroCtaPrimary,
+.riderPartnerRoot .heroCtaPrimary *,
+.riderPartnerRoot .stickyInstallBtn,
+.riderPartnerRoot .stickyInstallBtn *,
+.riderPartnerRoot .stepActionBtn,
+.riderPartnerRoot .stepActionBtn *,
+.riderPartnerRoot .kycSubmitBtn,
+.riderPartnerRoot .kycSubmitBtn *,
+.riderPartnerRoot .unlockedDownloadBtn,
+.riderPartnerRoot .unlockedDownloadBtn * {
+  color: #ffffff !important;
+}
+
 /* --------------------------------------------------------------------------
-   Top Isolated Navbar
+   Top Isolated Navbar (Clean MotoDC Branding)
    -------------------------------------------------------------------------- */
 .partnerNavbar {
   position: sticky;
   top: 0;
   z-index: 999;
-  background: rgba(7, 10, 16, 0.88);
+  background: rgba(7, 10, 16, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--rp-border);
@@ -47,7 +64,7 @@
 .partnerNavContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 14px 20px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -56,70 +73,26 @@
 .partnerBrand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .partnerLogoBadge {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
 .partnerLogoBadge .logoMain {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: #fff;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  color: #ffffff !important;
 }
 
 .partnerLogoBadge .logoRed {
-  color: var(--rp-red);
+  color: var(--rp-red) !important;
 }
 
-.partnerLogoBadge .partnerTag {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--rp-red);
-  background: rgba(255, 49, 87, 0.12);
-  border: 1px solid rgba(255, 49, 87, 0.3);
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-
-.partnerHubBadge {
-  display: none;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  color: var(--rp-text-muted);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid var(--rp-border);
-}
-
-@media (min-width: 768px) {
-  .partnerHubBadge {
-    display: flex;
-  }
-}
-
-.pulseDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--rp-green);
-  box-shadow: 0 0 10px var(--rp-green);
-  animation: pulseGreen 2s infinite ease-in-out;
-}
-
-@keyframes pulseGreen {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-
-/* TOP RIGHT "INSTALL APP" BUTTON */
+/* TOP RIGHT "INSTALL APP" BUTTON (Clean high contrast, no version tag) */
 .partnerTopActions {
   display: flex;
   align-items: center;
@@ -131,9 +104,9 @@
   align-items: center;
   gap: 8px;
   background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 9px 18px;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 10px 20px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 700;
@@ -152,8 +125,14 @@
   transform: translateY(1px);
 }
 
+.installTopBtn.verifiedBtn {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 4px 18px rgba(34, 197, 94, 0.35);
+}
+
 .installBtnIcon {
   animation: bounceDown 2s infinite ease-in-out;
+  color: #ffffff !important;
 }
 
 @keyframes bounceDown {
@@ -161,13 +140,10 @@
   50% { transform: translateY(2px); }
 }
 
-.installBtnVersion {
-  font-size: 11px;
-  opacity: 0.88;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 500;
+.installBtnText {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -227,6 +203,10 @@
   margin-bottom: 24px;
 }
 
+.partnerHeroBadge span {
+  color: #ff758f !important;
+}
+
 .partnerHeroTitle {
   font-size: 36px;
   line-height: 1.2;
@@ -243,7 +223,7 @@
 }
 
 .highlightRed {
-  color: var(--rp-red);
+  color: var(--rp-red) !important;
   text-shadow: 0 0 25px rgba(255, 49, 87, 0.4);
 }
 
@@ -267,7 +247,7 @@
   gap: 14px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 @media (min-width: 540px) {
@@ -276,6 +256,7 @@
   }
 }
 
+/* HIGH-CONTRAST SOLID WHITE BUTTON TEXT */
 .heroCtaPrimary {
   display: inline-flex;
   align-items: center;
@@ -284,9 +265,9 @@
   width: 100%;
   max-width: 320px;
   background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
-  color: #fff;
+  color: #ffffff !important;
   border: none;
-  padding: 14px 24px;
+  padding: 15px 24px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 700;
@@ -301,6 +282,12 @@
   box-shadow: 0 12px 36px rgba(255, 49, 87, 0.55);
 }
 
+.heroCtaText {
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 15px;
+}
+
 .heroCtaSecondary {
   display: inline-flex;
   align-items: center;
@@ -308,21 +295,44 @@
   gap: 8px;
   width: 100%;
   max-width: 320px;
-  background: rgba(34, 197, 94, 0.12);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  padding: 14px 22px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 15px 22px;
   border-radius: 10px;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .heroCtaSecondary:hover {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: rgba(34, 197, 94, 0.6);
-  color: #86efac;
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.6);
+  transform: translateY(-1px);
+}
+
+.heroCtaSecondaryText {
+  color: #38bdf8 !important;
+  font-weight: 600;
+}
+
+.verifiedRiderNoticeBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.verifiedRiderNoticeBanner span {
+  color: #4ade80 !important;
 }
 
 /* Perks Strip */
@@ -503,7 +513,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--rp-cyan);
+  color: var(--rp-cyan) !important;
   background: rgba(56, 189, 248, 0.1);
   border: 1px solid rgba(56, 189, 248, 0.25);
   padding: 3px 8px;
@@ -575,6 +585,10 @@
   align-self: flex-start;
 }
 
+.payoutDayPill span {
+  color: #4ade80 !important;
+}
+
 .earningsInteractive {
   display: grid;
   grid-template-columns: 1fr;
@@ -598,12 +612,12 @@
 
 .sliderLabels span {
   font-size: 14px;
-  color: #fff;
+  color: #fff !important;
 }
 
 .sliderLabels strong {
   font-size: 18px;
-  color: var(--rp-red);
+  color: var(--rp-red) !important;
 }
 
 .calcRate {
@@ -627,6 +641,10 @@
   justify-content: space-between;
   font-size: 11px;
   color: var(--rp-text-muted);
+}
+
+.sliderTicks span {
+  color: var(--rp-text-muted) !important;
 }
 
 .earningsDisplayGrid {
@@ -672,7 +690,7 @@
 
 .earningBox span {
   font-size: 11px;
-  color: var(--rp-text-muted);
+  color: var(--rp-text-muted) !important;
 }
 
 .earningsFooterNote {
@@ -685,6 +703,10 @@
   background: rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
   border-radius: 8px;
+}
+
+.earningsFooterNote span {
+  color: #94a3b8 !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -756,7 +778,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #cbd5e1;
+  color: #cbd5e1 !important;
 }
 
 .reqDocs span svg {
@@ -821,7 +843,7 @@
   align-items: center;
   gap: 8px;
   background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
-  color: #fff;
+  color: #fff !important;
   border: none;
   padding: 10px 18px;
   border-radius: 8px;
@@ -838,14 +860,14 @@
 }
 
 .stepActionBtnSecondary {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.4);
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.4);
 }
 
 .stepActionBtnSecondary:hover {
-  background: rgba(34, 197, 94, 0.25);
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.25);
+  background: rgba(56, 189, 248, 0.25);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25);
 }
 
 .hubLocationBadge {
@@ -858,6 +880,10 @@
   padding: 8px 14px;
   border-radius: 8px;
   border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.hubLocationBadge span {
+  color: var(--rp-cyan) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -897,6 +923,10 @@
   font-size: 16px;
   font-weight: 600;
   color: #fff;
+}
+
+.faqQuestion span {
+  color: #fff !important;
 }
 
 .faqQuestion svg {
@@ -968,6 +998,10 @@
   line-height: 1.5;
 }
 
+.contactAddress span, .contactPhone span, .contactHours span {
+  color: #cbd5e1 !important;
+}
+
 .contactIcon {
   color: var(--rp-red);
   margin-top: 2px;
@@ -1008,6 +1042,7 @@
   display: block;
   font-size: 15px;
   font-weight: 700;
+  color: #fff;
 }
 
 .contactWhatsappBtn small {
@@ -1021,7 +1056,7 @@
   justify-content: center;
   gap: 10px;
   background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
-  color: #fff;
+  color: #fff !important;
   border: none;
   padding: 15px 20px;
   border-radius: 12px;
@@ -1047,7 +1082,7 @@
   left: 0;
   right: 0;
   z-index: 998;
-  background: rgba(14, 19, 32, 0.94);
+  background: rgba(14, 19, 32, 0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--rp-border);
@@ -1068,13 +1103,13 @@
   margin: 0 auto;
 }
 
-.stickyBarInfo strong {
+.stickyBarTitle {
   display: block;
   font-size: 14px;
   color: #fff;
 }
 
-.stickyBarInfo small {
+.stickyBarSub {
   font-size: 11px;
   color: var(--rp-text-muted);
 }
@@ -1084,17 +1119,22 @@
   align-items: center;
   gap: 8px;
   background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
-  color: #fff;
+  color: #fff !important;
   border: none;
-  padding: 9px 16px;
+  padding: 10px 18px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
 }
 
+.stickyInstallText {
+  color: #fff !important;
+  font-weight: 700;
+}
+
 /* --------------------------------------------------------------------------
-   Modal / Installation Guidance Overlay
+   KYC Gate Modal Popup
    -------------------------------------------------------------------------- */
 .modalOverlay {
   position: fixed;
@@ -1105,167 +1145,486 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
 }
 
-.modalContent {
+.kycGateModalContent {
   background: #0f1524;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
-  max-width: 520px;
+  max-width: 580px;
   width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
   overflow: hidden;
-  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
 .modalHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding: 20px 24px;
   border-bottom: 1px solid var(--rp-border);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .modalTitleWrap {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 }
 
 .modalTitleWrap h3 {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
+  margin: 0 0 3px;
+}
+
+.modalSub {
+  font-size: 12px;
+  color: var(--rp-text-muted);
   margin: 0;
 }
 
 .modalCloseBtn {
   background: transparent;
   border: none;
-  color: var(--rp-text-muted);
+  color: var(--rp-text-muted) !important;
   font-size: 26px;
   cursor: pointer;
   line-height: 1;
 }
 
 .modalCloseBtn:hover {
-  color: #fff;
+  color: #fff !important;
 }
 
-.modalBody {
-  padding: 24px;
-}
-
-.modalIntro {
-  font-size: 14px;
-  color: #cbd5e1;
-  margin: 0 0 20px;
-  background: rgba(255, 49, 87, 0.08);
-  border: 1px solid rgba(255, 49, 87, 0.2);
-  padding: 12px 14px;
-  border-radius: 8px;
-}
-
-.installStepsList {
+/* KYC Tabs */
+.kycModalTabs {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  border-bottom: 1px solid var(--rp-border);
+  background: #090e18;
 }
 
-.installStepItem {
-  display: flex;
-  gap: 14px;
-}
-
-.installStepNum {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--rp-red);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
+.kycModalTab {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-
-.installStepItem strong {
-  display: block;
-  font-size: 14px;
-  color: #fff;
-  margin-bottom: 2px;
-}
-
-.installStepItem p {
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 13px 16px;
   font-size: 13px;
-  color: var(--rp-text-muted);
-  margin: 0;
-  line-height: 1.4;
+  font-weight: 600;
+  color: var(--rp-text-muted) !important;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
 }
 
-.modalFallback {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--rp-border);
-  border-radius: 10px;
-  padding: 14px;
-  text-align: center;
+.kycModalTab.active {
+  color: #fff !important;
+  border-bottom-color: var(--rp-red);
+  background: rgba(255, 49, 87, 0.08);
 }
 
-.modalFallback p {
-  font-size: 12px;
-  color: var(--rp-text-muted);
-  margin: 0 0 10px;
+.modalBody {
+  padding: 22px 24px;
+  overflow-y: auto;
+  flex: 1;
 }
 
-.modalFallbackLinks {
+/* Form Styles */
+.kycFormNotice {
   display: flex;
-  gap: 10px;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 12px;
+  color: #fde68a;
+  line-height: 1.45;
 }
 
-.modalLinkBtn {
+.kycFormNotice strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 2px;
+  color: #fbbf24;
+}
+
+.kycFormNotice p {
+  margin: 0;
+}
+
+.warnIcon {
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.kycFormGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+@media (min-width: 500px) {
+  .kycFormGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.kycField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.kycField span {
   font-size: 12px;
   font-weight: 600;
+  color: #cbd5e1 !important;
+}
+
+.kycField input,
+.kycField select {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 12px;
   color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.kycField input:focus,
+.kycField select:focus {
+  border-color: var(--rp-red);
+}
+
+/* Uploads Row */
+.kycUploadsRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+@media (min-width: 500px) {
+  .kycUploadsRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.kycUploadBox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.kycUploadBox span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1 !important;
+}
+
+.uploadProofBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.uploadProofBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--rp-red);
+}
+
+.uploadProofBtn span {
+  font-size: 12px;
+  color: var(--rp-text-muted) !important;
+}
+
+.proofThumbnailWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proofThumb {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--rp-border-active);
+}
+
+.changeProofBtn {
   background: #1e293b;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 6px 14px;
-  border-radius: 6px;
-  text-decoration: none;
+  color: #cbd5e1 !important;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.modalLinkBtn:hover {
-  background: #334155;
-}
-
-.modalLinkBtn.secondary {
-  color: var(--rp-cyan);
-}
-
-.modalFooter {
-  padding: 16px 24px;
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid var(--rp-border);
+.kycFormFooter {
   text-align: right;
+}
+
+.kycSubmitBtn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff3157 0%, #e11d48 100%);
+  color: #fff !important;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255, 49, 87, 0.35);
+}
+
+.kycSubmitBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff476b 0%, #f43f5e 100%);
+}
+
+.kycSubmitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Success State */
+.kycSuccessState {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.kycSuccessIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.kycSuccessState h4 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.kycRefPill {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--rp-border);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--rp-cyan);
+  margin-bottom: 14px;
+}
+
+.kycSuccessMsg {
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  max-width: 440px;
+  margin: 0 auto 20px;
+}
+
+.emailConfirmNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #93c5fd;
+  text-align: left;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.emailConfirmNote span {
+  color: #93c5fd !important;
+}
+
+.kycSuccessActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .modalDoneBtn {
   background: var(--rp-red);
-  color: #fff;
+  color: #fff !important;
   border: none;
-  padding: 10px 22px;
+  padding: 12px 20px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 700;
+  cursor: pointer;
+}
+
+/* Status Search Body */
+.statusSearchWrap p {
+  font-size: 13px;
+  color: var(--rp-text-muted);
+  margin-bottom: 12px;
+}
+
+.statusSearchForm {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.statusSearchForm input {
+  flex: 1;
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.statusSearchForm input:focus {
+  border-color: var(--rp-red);
+}
+
+.statusSearchForm button {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff !important;
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.statusBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.statusBanner h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.statusBanner p {
+  font-size: 13px;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.statusBanner small {
+  font-size: 12px;
+  display: block;
+}
+
+.approvedBanner {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.approvedBanner h4 { color: #22c55e; }
+.approvedBanner p { color: #dcfce7; }
+
+.unlockedDownloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff !important;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+}
+
+.pendingBanner {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+
+.pendingBanner h4 { color: #f59e0b; }
+.pendingBanner p { color: #fef3c7; }
+.pendingBanner small { color: #fde68a; }
+
+.rejectedBanner {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.rejectedBanner h4 { color: #ef4444; }
+.rejectedBanner p { color: #fee2e2; }
+
+.notFoundBanner {
+  background: rgba(100, 116, 139, 0.15);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  color: #cbd5e1;
+}
+
+.resubmitBtn {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff !important;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -1293,26 +1652,14 @@
 }
 
 .footerBrand .footerLogo {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 900;
   color: #fff;
+  letter-spacing: -0.5px;
 }
 
 .footerBrand .logoRed {
   color: var(--rp-red);
-}
-
-.footerBrand .footerTag {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--rp-red);
-  background: rgba(255, 49, 87, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-left: 8px;
-  vertical-align: middle;
 }
 
 .footerBrand p {

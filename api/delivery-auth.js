@@ -47,6 +47,7 @@ export default async function handler(req, res) {
 
     const partnersCol = db.collection('deliveryPartners');
     const resetsCol = db.collection('deliveryPartnerResets');
+    const kycCol = db.collection('deliveryPartnerKYC');
 
     const parseBody = () => (typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {}));
 
@@ -415,6 +416,309 @@ export default async function handler(req, res) {
       await Promise.all(batchDeletes);
 
       return send(res, 200, { ok: true, deleted: cleanUser });
+    }
+
+    // -------------------------------------------------------------
+    // 10. RIDER SUBMIT KYC DOCUMENTS & REGISTRATION
+    // -------------------------------------------------------------
+    if (action === 'submit-kyc' && req.method === 'POST') {
+      const { name, phone, email, vehicleType, vehicleNumber, licenseNumber, dlPhoto, rcPhoto } = parseBody();
+
+      const cleanName = String(name || '').trim();
+      const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
+      const cleanEmail = String(email || '').trim().toLowerCase();
+
+      if (!cleanName) {
+        return send(res, 400, { error: 'Please enter your full name as on government ID' });
+      }
+
+      if (!cleanPhone || cleanPhone.length < 10) {
+        return send(res, 400, { error: 'Please enter a valid 10-digit mobile number' });
+      }
+
+      if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        return send(res, 400, { error: 'Please enter a valid email address for notifications' });
+      }
+
+      if (!dlPhoto && !licenseNumber) {
+        return send(res, 400, { error: 'Driving license number or proof photo is required' });
+      }
+
+      // Check if already registered or applied with this phone/email
+      const existingPhoneSnap = await kycCol.where('phone', '==', cleanPhone).get();
+      if (!existingPhoneSnap.empty) {
+        const prev = existingPhoneSnap.docs[0].data();
+        if (prev.status === 'approved') {
+          return send(res, 200, {
+            ok: true,
+            status: 'approved',
+            partnerCode: prev.partnerCode || 'Approved',
+            message: 'Your KYC has already been approved! You can install the partner app now.',
+          });
+        }
+        if (prev.status === 'pending') {
+          return send(res, 200, {
+            ok: true,
+            status: 'pending',
+            applicationId: existingPhoneSnap.docs[0].id,
+            message: 'Your KYC application is already under review by Fleet Admin.',
+          });
+        }
+      }
+
+      // Generate unique Application ID (e.g. KYC-7294)
+      const appId = `KYC-${Math.floor(1000 + Math.random() * 9000)}`;
+      const now = Date.now();
+
+      const kycRecord = {
+        applicationId: appId,
+        name: cleanName,
+        phone: cleanPhone,
+        email: cleanEmail,
+        vehicleType: String(vehicleType || 'Motorcycle').trim(),
+        vehicleNumber: String(vehicleNumber || '').trim().toUpperCase(),
+        licenseNumber: String(licenseNumber || '').trim().toUpperCase(),
+        dlPhoto: dlPhoto || null,
+        rcPhoto: rcPhoto || null,
+        status: 'pending', // 'pending' | 'approved' | 'rejected'
+        submittedAt: now,
+        updatedAt: now,
+      };
+
+      await kycCol.doc(appId).set(kycRecord);
+
+      // Trigger MSG91 Email to applicant if configured
+      try {
+        const authKey = process.env.MSG91_AUTHKEY;
+        const domain = process.env.MSG91_EMAIL_DOMAIN;
+        const templateId = process.env.MSG91_TEMPLATE_KYC_RECEIVED;
+        const fromEmail = String(process.env.MSG91_FROM_EMAIL || `no-reply@${domain || 'motodc.in'}`).trim();
+
+        if (authKey && domain && templateId) {
+          await fetch('https://control.msg91.com/api/v5/email/send', {
+            method: 'POST',
+            headers: {
+              accept: 'application/json',
+              authkey: authKey,
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              recipients: [
+                {
+                  to: [{ name: cleanName, email: cleanEmail }],
+                  variables: {
+                    rider_name: cleanName,
+                    application_id: appId,
+                    status_url: 'https://motodc-official.vercel.app/partner',
+                  },
+                },
+              ],
+              from: { name: process.env.MSG91_FROM_NAME || 'MOTO DC FLEET', email: fromEmail },
+              domain,
+              template_id: templateId,
+              validate_before_send: true,
+            }),
+          });
+        }
+      } catch (emailErr) {
+        console.warn('KYC confirmation email warning:', emailErr);
+      }
+
+      return send(res, 200, {
+        ok: true,
+        status: 'pending',
+        applicationId: appId,
+        message: 'Your KYC documents have been received and you can download the partner app after verification. Thank you for joining as a MotoDC delivery partner!',
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 11. RIDER CHECK KYC STATUS: By Mobile or Email
+    // -------------------------------------------------------------
+    if (action === 'check-kyc-status' && (req.method === 'POST' || req.method === 'GET')) {
+      const queryVal = String(req.query.q || parseBody().query || '').trim();
+      if (!queryVal) {
+        return send(res, 400, { error: 'Please provide mobile number or email to check KYC status' });
+      }
+
+      const cleanPhone = queryVal.replace(/[^0-9]/g, '');
+      const cleanEmail = queryVal.toLowerCase();
+
+      // 1. Check in deliveryPartners roster first
+      let partnerDoc = null;
+      if (cleanPhone && cleanPhone.length >= 10) {
+        const snap = await partnersCol.where('phone', '==', cleanPhone).get();
+        if (!snap.empty) partnerDoc = snap.docs[0];
+      }
+      if (!partnerDoc && queryVal.toUpperCase().startsWith('MDC-')) {
+        const snap = await partnersCol.doc(queryVal.toUpperCase()).get();
+        if (snap.exists) partnerDoc = snap;
+      }
+
+      if (partnerDoc && partnerDoc.exists) {
+        const pData = partnerDoc.data();
+        if (pData.active !== false) {
+          return send(res, 200, {
+            ok: true,
+            status: 'approved',
+            name: pData.name,
+            phone: pData.phone,
+            partnerCode: pData.username || partnerDoc.id,
+            verified: true,
+            canInstall: true,
+          });
+        }
+      }
+
+      // 2. Check in deliveryPartnerKYC applications
+      let kycDoc = null;
+      if (cleanPhone && cleanPhone.length >= 10) {
+        const snap = await kycCol.where('phone', '==', cleanPhone).get();
+        if (!snap.empty) kycDoc = snap.docs[0];
+      }
+      if (!kycDoc && cleanEmail.includes('@')) {
+        const snap = await kycCol.where('email', '==', cleanEmail).get();
+        if (!snap.empty) kycDoc = snap.docs[0];
+      }
+      if (!kycDoc && queryVal.toUpperCase().startsWith('KYC-')) {
+        const snap = await kycCol.doc(queryVal.toUpperCase()).get();
+        if (snap.exists) kycDoc = snap;
+      }
+
+      if (kycDoc && kycDoc.exists) {
+        const kData = kycDoc.data();
+        return send(res, 200, {
+          ok: true,
+          status: kData.status, // 'approved' | 'pending' | 'rejected'
+          name: kData.name,
+          applicationId: kycDoc.id,
+          partnerCode: kData.partnerCode || null,
+          rejectionReason: kData.rejectionReason || null,
+          verified: kData.status === 'approved',
+          canInstall: kData.status === 'approved',
+        });
+      }
+
+      return send(res, 200, {
+        ok: true,
+        status: 'not_found',
+        canInstall: false,
+        message: 'No KYC registration found. Please submit your documents to join.',
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 12. ADMIN LIST ALL KYC APPLICATIONS
+    // -------------------------------------------------------------
+    if (action === 'admin-list-kyc' && req.method === 'GET') {
+      const snap = await kycCol.get();
+      const applications = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      // Sort newest first
+      applications.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+      return send(res, 200, { ok: true, applications });
+    }
+
+    // -------------------------------------------------------------
+    // 13. ADMIN APPROVE KYC & ONBOARD RIDER
+    // -------------------------------------------------------------
+    if (action === 'admin-approve-kyc' && req.method === 'POST') {
+      const { applicationId, customPin, customUsername } = parseBody();
+      if (!applicationId) {
+        return send(res, 400, { error: 'Missing applicationId' });
+      }
+
+      const kycDoc = await kycCol.doc(applicationId).get();
+      if (!kycDoc.exists) {
+        return send(res, 404, { error: 'KYC application not found' });
+      }
+
+      const kData = kycDoc.data();
+      let cleanUser = String(customUsername || '').trim().toUpperCase();
+
+      if (!cleanUser) {
+        // Auto-generate MDC-XXXX
+        for (let i = 0; i < 50; i++) {
+          const candidate = `MDC-${Math.floor(1000 + Math.random() * 9000)}`;
+          const checkDoc = await partnersCol.doc(candidate).get();
+          if (!checkDoc.exists) {
+            cleanUser = candidate;
+            break;
+          }
+        }
+        if (!cleanUser) {
+          cleanUser = `MDC-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+      }
+
+      const cleanPin = String(customPin || '123456').trim();
+
+      // 1. Create in deliveryPartners
+      await partnersCol.doc(cleanUser).set({
+        username: cleanUser,
+        name: kData.name,
+        phone: kData.phone,
+        email: kData.email || '',
+        pin: cleanPin,
+        vehicleNumber: kData.vehicleNumber || '',
+        vehicleType: kData.vehicleType || 'Motorcycle',
+        licenseNumber: kData.licenseNumber || '',
+        active: true,
+        kycVerified: true,
+        kycApplicationId: applicationId,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      // 2. Mark KYC application approved
+      await kycCol.doc(applicationId).update({
+        status: 'approved',
+        partnerCode: cleanUser,
+        approvedAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      return send(res, 200, {
+        ok: true,
+        approved: true,
+        partnerCode: cleanUser,
+        riderName: kData.name,
+        phone: kData.phone,
+        pin: cleanPin,
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 14. ADMIN REJECT KYC APPLICATION
+    // -------------------------------------------------------------
+    if (action === 'admin-reject-kyc' && req.method === 'POST') {
+      const { applicationId, reason } = parseBody();
+      if (!applicationId) {
+        return send(res, 400, { error: 'Missing applicationId' });
+      }
+
+      const cleanReason = String(reason || 'Documents could not be verified').trim();
+
+      await kycCol.doc(applicationId).update({
+        status: 'rejected',
+        rejectionReason: cleanReason,
+        rejectedAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      return send(res, 200, { ok: true, rejected: true, applicationId, reason: cleanReason });
+    }
+
+    // -------------------------------------------------------------
+    // 15. ADMIN DELETE KYC APPLICATION
+    // -------------------------------------------------------------
+    if (action === 'admin-delete-kyc' && req.method === 'POST') {
+      const { applicationId } = parseBody();
+      if (!applicationId) {
+        return send(res, 400, { error: 'Missing applicationId' });
+      }
+
+      await kycCol.doc(applicationId).delete();
+      return send(res, 200, { ok: true, deleted: applicationId });
     }
 
     return send(res, 400, { error: `Unsupported action: "${action}"` });

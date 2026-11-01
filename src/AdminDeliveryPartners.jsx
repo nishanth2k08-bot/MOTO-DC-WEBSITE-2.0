@@ -18,12 +18,23 @@ import {
   Trash2,
   Shuffle,
   Smartphone,
+  FileText,
+  Check,
+  Eye,
+  AlertTriangle,
+  FileCheck,
+  AlertCircle,
+  Car
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export default function AdminDeliveryPartners() {
   const [requests, setRequests] = useState([]);
   const [partners, setPartners] = useState([]);
+  const [kycList, setKycList] = useState([]);
+  const [kycFilter, setKycFilter] = useState('pending'); // 'pending' | 'approved' | 'rejected' | 'all'
+  const [viewingProofModal, setViewingProofModal] = useState(null); // { title, url }
+  const [processingKycId, setProcessingKycId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeModalRequest, setActiveModalRequest] = useState(null);
   const [generatingOtp, setGeneratingOtp] = useState(false);
@@ -66,9 +77,21 @@ export default function AdminDeliveryPartners() {
     }
   };
 
+  const fetchKycList = async () => {
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-list-kyc');
+      const data = await res.json();
+      if (res.ok && data.applications) {
+        setKycList(data.applications);
+      }
+    } catch (e) {
+      console.warn('Error fetching KYC applications:', e);
+    }
+  };
+
   const reloadAll = async () => {
     setLoading(true);
-    await Promise.all([fetchResets(), fetchPartners()]);
+    await Promise.all([fetchResets(), fetchPartners(), fetchKycList()]);
     setLoading(false);
   };
 
@@ -76,9 +99,117 @@ export default function AdminDeliveryPartners() {
     reloadAll();
     const interval = setInterval(() => {
       fetchResets();
-    }, 10000); // Poll reset requests every 10s
+      fetchKycList();
+    }, 10000); // Poll reset requests & KYC every 10s
     return () => clearInterval(interval);
   }, []);
+
+  // Handle Admin Approve KYC
+  const handleApproveKyc = async (app) => {
+    const suggestedCode = generateRiderCode();
+    const userCode = prompt(
+      `Approve delivery partner "${app.name}"?\n\nEnter Partner Code to assign:`,
+      suggestedCode
+    );
+    if (userCode === null) return;
+    const cleanCode = (userCode.trim() || suggestedCode).toUpperCase();
+
+    const pinPrompt = prompt(
+      `Set initial 6-digit PIN for ${cleanCode} (${app.name}):`,
+      '123456'
+    );
+    if (pinPrompt === null) return;
+    if (!/^\d{6}$/.test(pinPrompt.trim())) {
+      toast.error('PIN must be exactly 6 digits');
+      return;
+    }
+
+    setProcessingKycId(app.id);
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-approve-kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          applicationId: app.id,
+          customUsername: cleanCode,
+          customPin: pinPrompt.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Approval failed');
+
+      toast.success(`Rider ${app.name} approved! Assigned Code: ${cleanCode}`);
+      await Promise.all([fetchKycList(), fetchPartners()]);
+    } catch (err) {
+      toast.error(err.message || 'Error approving KYC');
+    } finally {
+      setProcessingKycId(null);
+    }
+  };
+
+  // Handle Admin Decline / Reject KYC
+  const handleRejectKyc = async (app) => {
+    const reason = prompt(
+      `Reason for declining "${app.name}" KYC:\n(e.g., Blurry driving license photo, Expired vehicle insurance)`,
+      'Driving license proof is unclear. Please re-upload a clear photo.'
+    );
+    if (reason === null) return;
+
+    setProcessingKycId(app.id);
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-reject-kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          applicationId: app.id,
+          reason: reason.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Rejection failed');
+
+      toast.success(`KYC application for ${app.name} declined`);
+      fetchKycList();
+    } catch (err) {
+      toast.error(err.message || 'Error declining KYC');
+    } finally {
+      setProcessingKycId(null);
+    }
+  };
+
+  // Handle Admin Delete KYC
+  const handleDeleteKyc = async (appId) => {
+    if (!window.confirm('Are you sure you want to permanently delete this KYC application?')) return;
+    try {
+      await fetch('/api/delivery-auth?action=admin-delete-kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicationId: appId }),
+      });
+      toast.success('KYC application deleted');
+      fetchKycList();
+    } catch (e) {
+      toast.error('Error deleting application');
+    }
+  };
+
+  // 1-Click WhatsApp Onboarding Welcome Link
+  const getApprovalWhatsAppLink = (phone, name, code, pin) => {
+    const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
+    const text = encodeURIComponent(
+      `Hello ${name}! 🎉\n\nCongratulations, your MotoDC Delivery Partner KYC has been APPROVED!\n\nYour Partner Code: ${code}\nInitial 6-digit PIN: ${pin || '123456'}\n\nYou can now download the partner app at:\nhttps://motodc-official.vercel.app/partner\n\nWelcome to MotoDC Fleet!`
+    );
+    return `https://wa.me/${cleanPhone}?text=${text}`;
+  };
+
+  // 1-Click WhatsApp Rejection Feedback Link
+  const getRejectionWhatsAppLink = (phone, name, reason) => {
+    const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
+    const text = encodeURIComponent(
+      `Hello ${name},\n\nYour MotoDC Delivery Partner KYC application requires attention:\nReason: ${reason}\n\nPlease visit https://motodc-official.vercel.app/partner to re-upload clear proofs.`
+    );
+    return `https://wa.me/${cleanPhone}?text=${text}`;
+  };
 
   // Handle Admin OTP Generation
   const handleGenerateOtp = async (requestId) => {
@@ -106,7 +237,7 @@ export default function AdminDeliveryPartners() {
     }
   };
 
-  // Add New Partner (Admin only provides Name, Phone, and 6-digit PIN)
+  // Add New Partner
   const handleCreatePartner = async (e) => {
     e.preventDefault();
     const cleanUser = (newPartner.username || generateRiderCode()).trim().toUpperCase();
@@ -194,15 +325,6 @@ export default function AdminDeliveryPartners() {
     return `https://wa.me/${cleanPhone}?text=${text}`;
   };
 
-  // 1-Click SMS Link (Method A)
-  const getSmsLink = (phone, otp) => {
-    const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
-    const text = encodeURIComponent(
-      `MotoDC Delivery Partner OTP: ${otp}. Valid for 15 minutes. Use this one-time code to change your 6-digit PIN.`
-    );
-    return `sms:${cleanPhone}?body=${text}`;
-  };
-
   // Copy text to clipboard
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text);
@@ -225,6 +347,16 @@ export default function AdminDeliveryPartners() {
   };
 
   const pendingRequests = requests.filter((r) => r.status === 'pending' || r.status === 'otp_generated');
+  const pendingKyc = kycList.filter((k) => k.status === 'pending');
+  const approvedKyc = kycList.filter((k) => k.status === 'approved');
+  const rejectedKyc = kycList.filter((k) => k.status === 'rejected');
+
+  const filteredKycList = kycList.filter((k) => {
+    if (kycFilter === 'pending') return k.status === 'pending';
+    if (kycFilter === 'approved') return k.status === 'approved';
+    if (kycFilter === 'rejected') return k.status === 'rejected';
+    return true; // 'all'
+  });
 
   return (
     <div className="adminDeliveryPartners">
@@ -232,7 +364,7 @@ export default function AdminDeliveryPartners() {
       <div className="partnersHeaderRow">
         <div>
           <h2>Delivery Partners & Rider Access Control</h2>
-          <p>Manage unique alphanumeric rider codes (MDC-XXXX), 6-digit PINs, and approve OTP password reset requests.</p>
+          <p>Verify rider KYC proofs, approve onboarding applications, and manage MDC-XXXX login PINs.</p>
         </div>
         <div className="headerButtons">
           <button type="button" className="refreshBtn" onClick={reloadAll} disabled={loading}>
@@ -251,8 +383,235 @@ export default function AdminDeliveryPartners() {
         </div>
       </div>
 
-      {/* SECTION 1: PASSWORD & PIN RESET REQUESTS */}
-      <div className="adminCardSection">
+      {/* =======================================================================
+          SECTION 1: NEW RIDER KYC ONBOARDING & PROOF VERIFICATION
+          ======================================================================= */}
+      <div className="adminCardSection kycSectionWrap">
+        <div className="sectionHeaderWithBadge">
+          <div className="titleWithIcon">
+            <FileText size={20} color="#38bdf8" />
+            <div>
+              <h3>New Rider KYC Verification Requests</h3>
+              <p className="sectionSubDesc">Inspect Driving License and RC proofs to accept or decline delivery partner applicants.</p>
+            </div>
+          </div>
+          <span className={`statusPill ${pendingKyc.length > 0 ? 'badgeAlert' : 'badgeSuccess'}`}>
+            {pendingKyc.length} Pending Review
+          </span>
+        </div>
+
+        {/* KYC Filter Tabs */}
+        <div className="kycFilterBar">
+          <button 
+            type="button" 
+            className={`kycFilterBtn ${kycFilter === 'pending' ? 'active' : ''}`}
+            onClick={() => setKycFilter('pending')}
+          >
+            Pending Review ({pendingKyc.length})
+          </button>
+          <button 
+            type="button" 
+            className={`kycFilterBtn ${kycFilter === 'approved' ? 'active' : ''}`}
+            onClick={() => setKycFilter('approved')}
+          >
+            Approved ({approvedKyc.length})
+          </button>
+          <button 
+            type="button" 
+            className={`kycFilterBtn ${kycFilter === 'rejected' ? 'active' : ''}`}
+            onClick={() => setKycFilter('rejected')}
+          >
+            Declined ({rejectedKyc.length})
+          </button>
+          <button 
+            type="button" 
+            className={`kycFilterBtn ${kycFilter === 'all' ? 'active' : ''}`}
+            onClick={() => setKycFilter('all')}
+          >
+            All Submissions ({kycList.length})
+          </button>
+        </div>
+
+        {filteredKycList.length === 0 ? (
+          <div className="emptyStateBox">
+            <CheckCircle2 size={36} color="#22c55e" />
+            <p>
+              {kycFilter === 'pending'
+                ? 'No pending KYC applications. All rider proofs are verified.'
+                : `No applications found in "${kycFilter}" status.`}
+            </p>
+          </div>
+        ) : (
+          <div className="kycCardsGrid">
+            {filteredKycList.map((app) => {
+              const isPending = app.status === 'pending';
+              const isApproved = app.status === 'approved';
+              const isRejected = app.status === 'rejected';
+
+              return (
+                <div key={app.id} className={`kycCard ${isPending ? 'cardHighlight' : ''}`}>
+                  <div className="kycCardTop">
+                    <div className="kycRefTag">
+                      <strong>{app.id}</strong>
+                      <small>{app.submittedAt ? new Date(app.submittedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Recent'}</small>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className={`tag ${isPending ? 'tagPending' : isApproved ? 'tagDone' : 'tagAlert'}`}>
+                        {isPending ? 'Pending Review' : isApproved ? `Approved (${app.partnerCode || 'Active'})` : 'Declined'}
+                      </span>
+                      <button
+                        type="button"
+                        className="dismissResetBtn"
+                        title="Delete application"
+                        onClick={() => handleDeleteKyc(app.id)}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="kycApplicantInfo">
+                    <div className="kycNameRow">
+                      <User size={16} className="highlightIcon" />
+                      <h4>{app.name}</h4>
+                    </div>
+
+                    <div className="kycDetailsGrid">
+                      <div>
+                        <small>Mobile Phone</small>
+                        <p>{app.phone || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <small>Email Address</small>
+                        <p className="emailText">{app.email || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <small>Vehicle Type & No.</small>
+                        <p>{app.vehicleType || 'Bike'} • <strong>{app.vehicleNumber || 'N/A'}</strong></p>
+                      </div>
+                      <div>
+                        <small>Driving License No.</small>
+                        <p><strong>{app.licenseNumber || 'Provided in Photo'}</strong></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Document Proof Previews */}
+                  <div className="kycProofsContainer">
+                    <div className="proofBox">
+                      <small>Driving License Proof</small>
+                      {app.dlPhoto ? (
+                        <div 
+                          className="proofImgWrap"
+                          onClick={() => setViewingProofModal({ title: `${app.name} - Driving License`, url: app.dlPhoto })}
+                        >
+                          <img src={app.dlPhoto} alt="Driving License" />
+                          <span className="viewProofOverlay"><Eye size={14} /> View Large</span>
+                        </div>
+                      ) : (
+                        <div className="noProofUploaded">No DL Image</div>
+                      )}
+                    </div>
+
+                    <div className="proofBox">
+                      <small>Vehicle RC Proof</small>
+                      {app.rcPhoto ? (
+                        <div 
+                          className="proofImgWrap"
+                          onClick={() => setViewingProofModal({ title: `${app.name} - Vehicle RC`, url: app.rcPhoto })}
+                        >
+                          <img src={app.rcPhoto} alt="Vehicle RC" />
+                          <span className="viewProofOverlay"><Eye size={14} /> View Large</span>
+                        </div>
+                      ) : (
+                        <div className="noProofUploaded">No RC Image</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {isRejected && app.rejectionReason && (
+                    <div className="kycRejectionNotice">
+                      <AlertTriangle size={14} />
+                      <span>Reason: {app.rejectionReason}</span>
+                    </div>
+                  )}
+
+                  {/* Card Action Buttons */}
+                  <div className="kycCardActions">
+                    {isPending ? (
+                      <>
+                        <button
+                          type="button"
+                          className="kycApproveBtn"
+                          disabled={processingKycId === app.id}
+                          onClick={() => handleApproveKyc(app)}
+                        >
+                          <Check size={14} /> {processingKycId === app.id ? 'Approving...' : 'Approve & Onboard'}
+                        </button>
+                        <button
+                          type="button"
+                          className="kycDeclineBtn"
+                          disabled={processingKycId === app.id}
+                          onClick={() => handleRejectKyc(app)}
+                        >
+                          <X size={14} /> Decline
+                        </button>
+                        <a
+                          href={`https://wa.me/${String(app.phone).replace(/\D/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="kycWhatsappBtn"
+                          title="Chat on WhatsApp"
+                        >
+                          <MessageSquare size={14} />
+                        </a>
+                      </>
+                    ) : isApproved ? (
+                      <div className="approvedCardActions">
+                        <span className="assignedCodeBadge">
+                          <CheckCircle2 size={14} /> Partner Code: <strong>{app.partnerCode}</strong>
+                        </span>
+                        <a
+                          href={getApprovalWhatsAppLink(app.phone, app.name, app.partnerCode, '123456')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="sendWelcomeWhatsappBtn"
+                        >
+                          <MessageSquare size={13} /> Send Welcome WhatsApp
+                        </a>
+                      </div>
+                    ) : (
+                      <div className="rejectedCardActions">
+                        <button
+                          type="button"
+                          className="reApproveBtn"
+                          onClick={() => handleApproveKyc(app)}
+                        >
+                          Re-Review & Approve
+                        </button>
+                        <a
+                          href={getRejectionWhatsAppLink(app.phone, app.name, app.rejectionReason || 'Proofs invalid')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="kycWhatsappBtn"
+                        >
+                          <MessageSquare size={13} /> WhatsApp
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* =======================================================================
+          SECTION 2: PASSWORD & PIN RESET REQUESTS
+          ======================================================================= */}
+      <div className="adminCardSection" style={{ marginTop: '24px' }}>
         <div className="sectionHeaderWithBadge">
           <div className="titleWithIcon">
             <KeyRound size={20} color="#ff3157" />
@@ -323,7 +682,6 @@ export default function AdminDeliveryPartners() {
                   )}
 
                   <div className="cardActions">
-                    {/* BUTTON 1: REVIEW & GENERATE OTP */}
                     <button
                       type="button"
                       className="reviewBtn"
@@ -354,7 +712,9 @@ export default function AdminDeliveryPartners() {
         )}
       </div>
 
-      {/* SECTION 2: DELIVERY PARTNERS ROSTER */}
+      {/* =======================================================================
+          SECTION 3: DELIVERY PARTNERS ROSTER
+          ======================================================================= */}
       <div className="adminCardSection" style={{ marginTop: '24px' }}>
         <div className="sectionHeaderWithBadge">
           <div className="titleWithIcon">
@@ -418,175 +778,199 @@ export default function AdminDeliveryPartners() {
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ username: p.username, pin: newPin.trim() }),
                             }).then(() => {
-                              toast.success(`PIN updated for ${p.username}!`);
+                              toast.success(`PIN updated for ${p.username}`);
                               fetchPartners();
                             });
                           }
                         }}
                       >
-                        Change PIN
+                        Reset PIN
                       </button>
-
-                      {/* OPTION TO DELETE RIDER */}
                       <button
                         type="button"
-                        className="deletePartnerBtn"
-                        title={`Delete ${p.name} from roster`}
+                        className="quickDeleteBtn"
+                        title="Delete partner"
                         onClick={() => handleDeletePartner(p)}
                       >
-                        <Trash2 size={14} /> Delete
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </td>
                 </tr>
               ))}
+              {partners.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '30px', color: '#64748b' }}>
+                    No delivery partners registered yet. Approve a KYC application or click "+ Add Delivery Partner" above.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* MODAL: REVIEW & GENERATE OTP (METHOD A) */}
-      {activeModalRequest && (
-        <div className="adminModalOverlay" onClick={() => setActiveModalRequest(null)}>
-          <div className="adminModalBox" onClick={(e) => e.stopPropagation()}>
-            <div className="modalHeader">
-              <div>
-                <h3>Review & Generate One-Time OTP</h3>
-                <small>Verification for Driver #{activeModalRequest.username}</small>
-              </div>
-              <button type="button" className="closeBtn" onClick={() => setActiveModalRequest(null)}>
-                <X size={18} />
+      {/* FULL-SIZE PROOF INSPECTION MODAL */}
+      {viewingProofModal && (
+        <div className="modalOverlay" onClick={() => setViewingProofModal(null)}>
+          <div className="proofViewerModal" onClick={(e) => e.stopPropagation()}>
+            <div className="proofViewerHeader">
+              <h4>{viewingProofModal.title}</h4>
+              <button type="button" className="modalCloseBtn" onClick={() => setViewingProofModal(null)}>
+                <X size={20} />
               </button>
             </div>
-
-            <div className="modalBody">
-              <div className="verifyRiderCard">
-                <div className="infoLine">
-                  <span>Rider Alphanumeric Code:</span>
-                  <strong>{activeModalRequest.username}</strong>
-                </div>
-                <div className="infoLine">
-                  <span>Driver Full Name:</span>
-                  <strong>{activeModalRequest.riderName}</strong>
-                </div>
-                <div className="infoLine">
-                  <span>Registered Mobile Number:</span>
-                  <strong>{activeModalRequest.phone || 'N/A'}</strong>
-                </div>
-              </div>
-
-              {/* BUTTON 2: AUTOMATED 6-DIGIT OTP GENERATOR */}
-              {!generatedOtpData ? (
-                <div className="generatePrompt">
-                  <p>
-                    Clicking the button below will generate an automated, unique 6-digit OTP code valid for 15 minutes.
-                    You can then dispatch it immediately via <strong>Method A (1-Click WhatsApp or Mobile SMS)</strong>.
-                  </p>
-                  <button
-                    type="button"
-                    className="generateOtpMainBtn"
-                    onClick={() => handleGenerateOtp(activeModalRequest.id)}
-                    disabled={generatingOtp}
-                  >
-                    <KeyRound size={16} />
-                    {generatingOtp ? 'Generating Secure OTP...' : 'Generate 6-Digit OTP for Rider'}
-                  </button>
-                </div>
-              ) : (
-                <div className="otpSuccessDisplay">
-                  <div className="otpNumberBox">
-                    <small>ONE-TIME 6-DIGIT SECURITY OTP</small>
-                    <div className="bigDigits">{generatedOtpData.otp}</div>
-                    <small className="expiryNotice">Expires in 15 minutes • One-time use only</small>
-                  </div>
-
-                  <div className="methodABanner">
-                    <Smartphone size={16} color="#22c55e" />
-                    <strong>METHOD A: 1-CLICK DISPATCH TO DRIVER'S MOBILE</strong>
-                  </div>
-
-                  <div className="dispatchOptions">
-                    {/* Method A: 1-Click WhatsApp */}
-                    <a
-                      href={getWhatsAppLink(generatedOtpData.phone, generatedOtpData.otp)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="dispatchOptionBtn whatsappBtn"
-                    >
-                      <MessageSquare size={16} /> Send via WhatsApp to {generatedOtpData.phone} (1-Click)
-                    </a>
-
-                    {/* Method A: 1-Click Native SMS */}
-                    <a
-                      href={getSmsLink(generatedOtpData.phone, generatedOtpData.otp)}
-                      className="dispatchOptionBtn smsBtn"
-                    >
-                      <Phone size={16} /> Send via Mobile SMS to {generatedOtpData.phone} (1-Click)
-                    </a>
-
-                    {/* Copy text fallback */}
-                    <button
-                      type="button"
-                      className="dispatchOptionBtn copyBtn"
-                      onClick={() => handleCopy(generatedOtpData.smsMessage, 'SMS Message')}
-                    >
-                      <Copy size={16} /> Copy Message & OTP to Clipboard
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="modalFooter">
-              <button type="button" className="cancelModalBtn" onClick={() => setActiveModalRequest(null)}>
-                Close
-              </button>
+            <div className="proofViewerBody">
+              <img src={viewingProofModal.url} alt="KYC Proof Document" className="fullProofImg" />
             </div>
           </div>
         </div>
       )}
 
-      {/* MODAL: ADD NEW DELIVERY PARTNER (ADMIN GIVES NAME, CONTACT NUMBER & PIN ALONE) */}
-      {showAddPartner && (
-        <div className="adminModalOverlay" onClick={() => setShowAddPartner(false)}>
-          <div className="adminModalBox" onClick={(e) => e.stopPropagation()}>
+      {/* MODAL: OTP GENERATION & DISPATCH */}
+      {activeModalRequest && (
+        <div className="modalOverlay" onClick={() => setActiveModalRequest(null)}>
+          <div className="modalCard" onClick={(e) => e.stopPropagation()}>
             <div className="modalHeader">
-              <div>
-                <h3>Register New Delivery Partner</h3>
-                <small>Auto-generated code: first 3 letters "MDC-" + random 4 digits</small>
+              <div className="modalTitle">
+                <KeyRound size={22} color="#ff3157" />
+                <div>
+                  <h3>Review & Generate 6-Digit Security OTP</h3>
+                  <p>Issue one-time PIN reset credentials to verified driver</p>
+                </div>
               </div>
-              <button type="button" className="closeBtn" onClick={() => setShowAddPartner(false)}>
+              <button
+                type="button"
+                className="modalCloseBtn"
+                onClick={() => setActiveModalRequest(null)}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="modalBody">
+              <div className="reviewDriverBox">
+                <div>
+                  <small>Partner Code (Username)</small>
+                  <strong>{activeModalRequest.username}</strong>
+                </div>
+                <div>
+                  <small>Driver Name</small>
+                  <strong>{activeModalRequest.riderName || 'Rider'}</strong>
+                </div>
+                <div>
+                  <small>Registered Mobile</small>
+                  <strong>{activeModalRequest.phone || 'N/A'}</strong>
+                </div>
+              </div>
+
+              {!generatedOtpData ? (
+                <div className="generatePrompt">
+                  <p>
+                    Click below to generate a cryptographically random 6-digit OTP. The OTP is valid for 15 minutes and
+                    can only be used once.
+                  </p>
+                  <button
+                    type="button"
+                    className="generateOtpSubmitBtn"
+                    disabled={generatingOtp}
+                    onClick={() => handleGenerateOtp(activeModalRequest.id)}
+                  >
+                    {generatingOtp ? 'Generating...' : 'Generate 6-Digit OTP'}
+                  </button>
+                </div>
+              ) : (
+                <div className="otpResultStage">
+                  <div className="bigOtpDisplay">
+                    <span>Generated Security OTP</span>
+                    <h1>{generatedOtpData.otp}</h1>
+                    <small>Valid for 15 minutes • One-time use only</small>
+                  </div>
+
+                  <div className="methodABanner">
+                    <CheckCircle2 size={16} />
+                    <span>Method A Active: Transmit directly to driver via 1-click WhatsApp</span>
+                  </div>
+
+                  <div className="dispatchActionGroup">
+                    <a
+                      href={getWhatsAppLink(generatedOtpData.phone, generatedOtpData.otp)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="dispatchBtn whatsappActionBtn"
+                    >
+                      <MessageSquare size={16} />
+                      <span>Send via WhatsApp</span>
+                      <ExternalLink size={13} />
+                    </a>
+
+                    <button
+                      type="button"
+                      className="dispatchBtn copyActionBtn"
+                      onClick={() => handleCopy(generatedOtpData.otp, 'OTP code')}
+                    >
+                      <Copy size={16} />
+                      <span>Copy OTP Code</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: ADD DELIVERY PARTNER MANUALLY */}
+      {showAddPartner && (
+        <div className="modalOverlay" onClick={() => setShowAddPartner(false)}>
+          <div className="modalCard" onClick={(e) => e.stopPropagation()}>
+            <div className="modalHeader">
+              <div className="modalTitle">
+                <Truck size={22} color="#ff3157" />
+                <div>
+                  <h3>Add Authorized Delivery Partner</h3>
+                  <p>Register a new driver with an alphanumeric code and 6-digit PIN</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="modalCloseBtn"
+                onClick={() => setShowAddPartner(false)}
+                aria-label="Close"
+              >
                 <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleCreatePartner}>
               <div className="modalBody">
-                {/* AUTO-GENERATED MDC-XXXX CODE BADGE */}
-                <div className="autoCodeBox">
-                  <div className="autoCodeLabel">
-                    <Truck size={14} color="#38bdf8" />
-                    <span>Auto-Generated Alphanumeric Code:</span>
-                  </div>
-                  <div className="autoCodeValueRow">
-                    <span className="bigCodeBadge">{newPartner.username}</span>
+                <div className="modalField">
+                  <label>Partner Code (Alphanumeric Username) *</label>
+                  <div className="inputWithShuffle">
+                    <input
+                      type="text"
+                      value={newPartner.username}
+                      onChange={(e) => setNewPartner({ ...newPartner, username: e.target.value.toUpperCase() })}
+                      required
+                    />
                     <button
                       type="button"
-                      className="rerollBtn"
-                      title="Roll another random 4-digit number"
+                      className="shuffleBtn"
+                      title="Generate new random code"
                       onClick={() => setNewPartner({ ...newPartner, username: generateRiderCode() })}
                     >
-                      <Shuffle size={13} /> Re-roll
+                      <Shuffle size={14} /> Random
                     </button>
                   </div>
-                  <small>The delivery person will use this unique code as their username.</small>
+                  <small>Example: MDC-4829. The driver will use this code to log into the delivery app.</small>
                 </div>
 
                 <div className="modalField">
-                  <label>1. Full Driver Name *</label>
+                  <label>1. Delivery Partner Name *</label>
                   <input
                     type="text"
-                    placeholder="e.g. Ramesh Kumar"
+                    placeholder="e.g. R. Anbarasan"
                     value={newPartner.name}
                     onChange={(e) => setNewPartner({ ...newPartner, name: e.target.value })}
                     autoFocus
@@ -603,7 +987,7 @@ export default function AdminDeliveryPartners() {
                     onChange={(e) => setNewPartner({ ...newPartner, phone: e.target.value })}
                     required
                   />
-                  <small>Used for OTP verification and WhatsApp/SMS delivery communication.</small>
+                  <small>Used for OTP verification and WhatsApp delivery communication.</small>
                 </div>
 
                 <div className="modalField">

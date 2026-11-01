@@ -1,29 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Download, Smartphone, MapPin, CheckCircle2, Navigation, 
   QrCode, WifiOff, Boxes, Wallet, ArrowRight, Phone, 
   HelpCircle, ShieldCheck, Award, Bike, Calendar, 
   DollarSign, AlertCircle, ExternalLink, FileText, 
-  ChevronDown, ChevronUp, MessageCircle 
+  ChevronDown, ChevronUp, MessageCircle, Check, 
+  Upload, Eye, Clock, X, AlertTriangle, Shield
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './rider-partner.css';
 
 export default function RiderPartnerPage() {
   const [openFaq, setOpenFaq] = useState(null);
-  const [downloadModal, setDownloadModal] = useState(false);
   const [dailyDrops, setDailyDrops] = useState(18);
 
-  const APK_DOWNLOAD_URL = '/MotoDC-Partner.apk';
-  const GITHUB_FALLBACK_URL = 'https://github.com/nishanth2k08-bot/MOTODC-APP/releases/latest/download/MotoDC-Partner.apk';
-  const WHATSAPP_ONBOARDING_URL = 'https://wa.me/918903993371?text=Hello%20MotoDC,%20I%20want%20to%20join%20as%20a%20Delivery%20Partner.%20Please%20guide%20me%20with%20onboarding.';
+  // KYC Modal States
+  const [showKycGateModal, setShowKycGateModal] = useState(false);
+  const [kycTab, setKycTab] = useState('submit'); // 'submit' | 'status'
+  const [submittingKyc, setSubmittingKyc] = useState(false);
+  const [kycSubmittedData, setKycSubmittedData] = useState(null);
 
-  const handleInstallClick = (e) => {
-    // Show download guidance
+  // Checking status state
+  const [statusQuery, setStatusQuery] = useState('');
+  const [checkingStatus, setCheckingStatus] = useState(false);
+  const [statusResult, setStatusResult] = useState(null);
+
+  // Verified state from localStorage
+  const [isVerifiedRider, setIsVerifiedRider] = useState(() => {
+    try {
+      return localStorage.getItem('motodc_partner_verified') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [verifiedPartnerData, setVerifiedPartnerData] = useState(() => {
+    try {
+      const saved = localStorage.getItem('motodc_partner_data');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // KYC Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    vehicleType: 'Motorcycle',
+    vehicleNumber: '',
+    licenseNumber: '',
+    dlPhoto: '',
+    rcPhoto: '',
+  });
+
+  const dlInputRef = useRef(null);
+  const rcInputRef = useRef(null);
+
+  const APK_DOWNLOAD_URL = '/MotoDC-Partner.apk';
+  const WHATSAPP_ONBOARDING_URL = 'https://wa.me/918903993371?text=Hello%20MotoDC,%20I%20have%20submitted%20my%20KYC%20documents%20for%20delivery%20partner%20onboarding.';
+
+  // Helper to compress uploaded image using Canvas
+  const processImageFile = (file, callback) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file (PNG/JPG)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        const scale = img.width > MAX_WIDTH ? MAX_WIDTH / img.width : 1;
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        callback(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDlUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImageFile(file, (dataUrl) => {
+        setFormData((prev) => ({ ...prev, dlPhoto: dataUrl }));
+        toast.success('Driving License photo attached');
+      });
+    }
+  };
+
+  const handleRcUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImageFile(file, (dataUrl) => {
+        setFormData((prev) => ({ ...prev, rcPhoto: dataUrl }));
+        toast.success('Vehicle RC photo attached');
+      });
+    }
+  };
+
+  // Trigger real download for approved riders
+  const triggerApkDownload = () => {
     toast.success('Starting MotoDC Partner APK download...', { duration: 4000 });
-    setDownloadModal(true);
-    
-    // Create invisible anchor to trigger direct browser download
     const link = document.createElement('a');
     link.href = APK_DOWNLOAD_URL;
     link.setAttribute('download', 'MotoDC-Partner.apk');
@@ -32,19 +119,114 @@ export default function RiderPartnerPage() {
     document.body.removeChild(link);
   };
 
+  // Mandatory KYC Gate Handler
+  const handleInstallClick = () => {
+    if (isVerifiedRider) {
+      triggerApkDownload();
+      return;
+    }
+
+    // Show KYC Gate modal
+    setShowKycGateModal(true);
+  };
+
+  // Submit KYC form
+  const handleSubmitKyc = async (e) => {
+    e.preventDefault();
+    const cleanName = formData.name.trim();
+    const cleanPhone = formData.phone.replace(/[^0-9]/g, '');
+    const cleanEmail = formData.email.trim();
+
+    if (!cleanName) {
+      toast.error('Please enter your full name');
+      return;
+    }
+    if (!cleanPhone || cleanPhone.length < 10) {
+      toast.error('Please enter a valid 10-digit mobile number');
+      return;
+    }
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    if (!formData.licenseNumber && !formData.dlPhoto) {
+      toast.error('Please provide your Driving License number or photo proof');
+      return;
+    }
+
+    setSubmittingKyc(true);
+    try {
+      const res = await fetch('/api/delivery-auth?action=submit-kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to submit KYC documents');
+      }
+
+      setKycSubmittedData(data);
+      toast.success('KYC documents submitted successfully!');
+    } catch (err) {
+      toast.error(err.message || 'Submission failed. Please try again.');
+    } finally {
+      setSubmittingKyc(false);
+    }
+  };
+
+  // Check KYC status by phone or email
+  const handleCheckStatus = async (e) => {
+    e?.preventDefault();
+    const q = statusQuery.trim();
+    if (!q) {
+      toast.error('Please enter your registered mobile number or email');
+      return;
+    }
+
+    setCheckingStatus(true);
+    setStatusResult(null);
+    try {
+      const res = await fetch(`/api/delivery-auth?action=check-kyc-status&q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Status check failed');
+      }
+
+      setStatusResult(data);
+
+      if (data.canInstall && data.status === 'approved') {
+        setIsVerifiedRider(true);
+        setVerifiedPartnerData(data);
+        localStorage.setItem('motodc_partner_verified', 'true');
+        localStorage.setItem('motodc_partner_data', JSON.stringify(data));
+        toast.success(`KYC Approved! Welcome, ${data.name || 'Partner'}!`);
+      }
+    } catch (err) {
+      toast.error(err.message || 'Error checking verification status');
+    } finally {
+      setCheckingStatus(false);
+    }
+  };
+
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
   };
 
   // Earnings estimates
   const baseEarnings = dailyDrops * 45;
-  const weeklyEarnings = baseEarnings * 6; // 6 day week
+  const weeklyEarnings = baseEarnings * 6;
   const monthlyEarnings = weeklyEarnings * 4;
 
   const faqs = [
     {
-      q: "How do I install the MotoDC Partner APK on my Android phone?",
-      a: "Tap the 'Install App' button on the top right. Once the APK finishes downloading, tap on the notification or open your phone's 'Downloads' folder. If prompted with 'File might be harmful' or 'Blocked from unknown source', tap 'Download anyway' and enable 'Allow from this source' in your Android Settings. Then tap 'Install'."
+      q: "Why do I need KYC verification before installing the partner app?",
+      a: "To ensure safety and security for vehicle spare part deliveries, all MotoDC delivery partners undergo a quick verification of their Driving License and Vehicle RC. Once verified by our fleet team, you can immediately download and log in to the Partner App."
+    },
+    {
+      q: "How long does KYC verification take?",
+      a: "Our Karaikal Fleet Operations team reviews submitted documents within 2 to 4 hours during working hours (8:00 AM to 8:30 PM). You will receive an email confirmation and can also check status anytime on this page."
     },
     {
       q: "How and when do I get paid for my deliveries?",
@@ -61,41 +243,43 @@ export default function RiderPartnerPage() {
     {
       q: "What happens if I lose mobile internet signal in a garage basement?",
       a: "No problem at all! The app includes Offline-First Handover Sync. You can verify the customer PIN and complete drops offline. When your phone reconnects to 4G/5G, all handovers sync automatically to the central server."
-    },
-    {
-      q: "What documents do I need to start delivering?",
-      a: "You only need 4 things: 1) A valid two-wheeler Driving License, 2) Bike Registration Certificate (RC) & Insurance, 3) Android smartphone (Android 7.0+), and 4) Bank passbook / UPI details for weekly payouts."
     }
   ];
 
   return (
     <div className="riderPartnerRoot">
-      {/* Top Isolated Navigation Bar */}
+      {/* Top Isolated Navigation Bar - Clean MotoDC branding without badges */}
       <header className="partnerNavbar">
         <div className="partnerNavContainer">
           <div className="partnerBrand">
             <div className="partnerLogoBadge">
               <span className="logoMain">Moto<span className="logoRed">DC</span></span>
-              <span className="partnerTag">PARTNER FLEET</span>
-            </div>
-            <div className="partnerHubBadge">
-              <span className="pulseDot" />
-              <span>Karaikal Logistics Hub</span>
             </div>
           </div>
 
-          {/* TOP RIGHT "INSTALL APP" BUTTON - MANDATORY USER SPEC */}
+          {/* TOP RIGHT "INSTALL APP" BUTTON (Clean high-contrast text, version tag removed) */}
           <div className="partnerTopActions">
-            <button 
-              type="button" 
-              className="installTopBtn" 
-              onClick={handleInstallClick}
-              aria-label="Install MotoDC Partner App"
-            >
-              <Download size={18} className="installBtnIcon" />
-              <span className="installBtnText">Install App</span>
-              <span className="installBtnVersion">v1.0.9 APK</span>
-            </button>
+            {isVerifiedRider ? (
+              <button 
+                type="button" 
+                className="installTopBtn verifiedBtn" 
+                onClick={triggerApkDownload}
+                aria-label="Download MotoDC Partner APK"
+              >
+                <Download size={18} className="installBtnIcon" />
+                <span className="installBtnText">Download APK</span>
+              </button>
+            ) : (
+              <button 
+                type="button" 
+                className="installTopBtn" 
+                onClick={handleInstallClick}
+                aria-label="Install MotoDC Partner App"
+              >
+                <Download size={18} className="installBtnIcon" />
+                <span className="installBtnText">Install App</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -122,21 +306,39 @@ export default function RiderPartnerPage() {
           </p>
 
           <div className="partnerHeroCtaGroup">
-            <button type="button" className="heroCtaPrimary" onClick={handleInstallClick}>
-              <Download size={20} />
-              <span>Install Partner App (Android)</span>
-            </button>
-            <a 
-              href={WHATSAPP_ONBOARDING_URL} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="heroCtaSecondary"
+            {isVerifiedRider ? (
+              <button type="button" className="heroCtaPrimary" onClick={triggerApkDownload}>
+                <Download size={20} />
+                <span className="heroCtaText">Download Partner App (APK)</span>
+              </button>
+            ) : (
+              <button type="button" className="heroCtaPrimary" onClick={handleInstallClick}>
+                <Download size={20} />
+                <span className="heroCtaText">Install Partner App (Android)</span>
+              </button>
+            )}
+
+            <button 
+              type="button" 
+              className="heroCtaSecondary" 
+              onClick={() => {
+                setKycTab('submit');
+                setShowKycGateModal(true);
+              }}
             >
-              <MessageCircle size={20} />
-              <span>Fast Track on WhatsApp</span>
-              <ExternalLink size={15} />
-            </a>
+              <ShieldCheck size={20} />
+              <span className="heroCtaSecondaryText">Apply for KYC Verification</span>
+            </button>
           </div>
+
+          {isVerifiedRider && (
+            <div className="verifiedRiderNoticeBanner">
+              <CheckCircle2 size={18} />
+              <span>
+                Verified Delivery Partner: <strong>{verifiedPartnerData?.name || 'Driver'}</strong> ({verifiedPartnerData?.partnerCode || 'Approved'}). App download is unlocked!
+              </span>
+            </div>
+          )}
 
           {/* Quick Perks Strip */}
           <div className="partnerPerksStrip">
@@ -337,7 +539,7 @@ export default function RiderPartnerPage() {
             <p className="sectionEyebrow">WHAT YOU NEED TO JOIN</p>
             <h2 className="sectionTitle">Simple Eligibility Checklist</h2>
             <p className="sectionSubtitle">
-              Get onboarded and start delivering within 24 hours if you have these 4 basic items.
+              Get onboarded and start delivering within 24 hours once your KYC is approved.
             </p>
           </div>
 
@@ -400,50 +602,56 @@ export default function RiderPartnerPage() {
             <p className="sectionEyebrow">EASY ONBOARDING</p>
             <h2 className="sectionTitle">How to Become a MotoDC Rider</h2>
             <p className="sectionSubtitle">
-              No complicated interviews. Follow 3 straightforward steps to start receiving runs today.
+              Follow 3 straightforward steps to start receiving delivery runs today.
             </p>
           </div>
 
           <div className="stepsGrid">
             <div className="stepCard">
               <div className="stepBadge">STEP 01</div>
-              <h3>Download & Install App</h3>
+              <h3>Submit KYC Verification</h3>
               <p>
-                Click <strong>"Install App"</strong> in the top right to download our official Android APK 
-                file directly to your mobile phone.
+                Fill in your contact details and upload clear photos of your Driving License and Vehicle RC.
               </p>
-              <button type="button" className="stepActionBtn" onClick={handleInstallClick}>
-                <Download size={16} /> Download APK
+              <button 
+                type="button" 
+                className="stepActionBtn" 
+                onClick={() => {
+                  setKycTab('submit');
+                  setShowKycGateModal(true);
+                }}
+              >
+                <ShieldCheck size={16} /> Submit Documents
               </button>
             </div>
 
             <div className="stepCard">
               <div className="stepBadge">STEP 02</div>
-              <h3>WhatsApp Your Documents</h3>
+              <h3>Admin Review & Approval</h3>
               <p>
-                Snap a clear photo of your Driving License, Bike RC, and Bank Passbook and send it 
-                to our Karaikal Fleet Onboarding Manager.
+                Our Karaikal Fleet Operations team verifies your proofs and generates your unique Rider Code (MDC-XXXX).
               </p>
-              <a 
-                href={WHATSAPP_ONBOARDING_URL} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <button 
+                type="button" 
                 className="stepActionBtn stepActionBtnSecondary"
+                onClick={() => {
+                  setKycTab('status');
+                  setShowKycGateModal(true);
+                }}
               >
-                <MessageCircle size={16} /> Send via WhatsApp
-              </a>
+                <Clock size={16} /> Check Status
+              </button>
             </div>
 
             <div className="stepCard">
               <div className="stepBadge">STEP 03</div>
-              <h3>Collect Bag & Start Delivering</h3>
+              <h3>Download App & Start Earning</h3>
               <p>
-                Visit our Karaikal Logistics Hub to collect your official waterproof delivery bag, receive your 
-                login OTP, and take your first parcel run!
+                Once approved, download the MotoDC Partner APK, collect your delivery kit at Karaikal Hub, and hit the road!
               </p>
               <div className="hubLocationBadge">
                 <MapPin size={15} />
-                <span>Karaikal Hub, Puducherry</span>
+                <span>Karaikal Central Depot</span>
               </div>
             </div>
           </div>
@@ -457,7 +665,7 @@ export default function RiderPartnerPage() {
             <p className="sectionEyebrow">QUESTIONS & ANSWERS</p>
             <h2 className="sectionTitle">Frequently Asked Questions</h2>
             <p className="sectionSubtitle">
-              Everything you need to know about working with MotoDC Fleet.
+              Everything you need to know about KYC, shifts, and app installation.
             </p>
           </div>
 
@@ -520,82 +728,360 @@ export default function RiderPartnerPage() {
                   <small>Get instant answers on WhatsApp</small>
                 </div>
               </a>
-              <button type="button" className="contactDownloadBtn" onClick={handleInstallClick}>
-                <Download size={20} />
-                <span>Download Partner App APK</span>
+              <button 
+                type="button" 
+                className="contactDownloadBtn" 
+                onClick={handleInstallClick}
+              >
+                <ShieldCheck size={20} />
+                <span>{isVerifiedRider ? 'Download Partner App APK' : 'Verify KYC & Install App'}</span>
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* APK Installation Guide Modal */}
-      {downloadModal && (
-        <div className="modalOverlay" onClick={() => setDownloadModal(false)}>
-          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+      {/* =======================================================================
+          MANDATORY USER SPEC: KYC VERIFICATION GATE POPUP MODAL
+          ======================================================================= */}
+      {showKycGateModal && (
+        <div className="modalOverlay" onClick={() => setShowKycGateModal(false)}>
+          <div className="modalContent kycGateModalContent" onClick={(e) => e.stopPropagation()}>
             <div className="modalHeader">
               <div className="modalTitleWrap">
-                <Smartphone size={24} className="highlightRed" />
-                <h3>Installing MotoDC Partner APK</h3>
+                <ShieldAlert size={24} className="highlightRed" />
+                <div>
+                  <h3>KYC registration is not completed</h3>
+                  <p className="modalSub">App installation requires verified delivery partner status</p>
+                </div>
               </div>
               <button 
                 type="button" 
                 className="modalCloseBtn" 
-                onClick={() => setDownloadModal(false)}
-                aria-label="Close installation guide"
+                onClick={() => setShowKycGateModal(false)}
+                aria-label="Close KYC modal"
               >
                 ×
               </button>
             </div>
 
-            <div className="modalBody">
-              <p className="modalIntro">
-                Your browser should automatically start downloading <strong>MotoDC-Partner.apk</strong> (4.99 MB).
-              </p>
-
-              <div className="installStepsList">
-                <div className="installStepItem">
-                  <span className="installStepNum">1</span>
-                  <div>
-                    <strong>Tap "Download anyway"</strong>
-                    <p>Android displays a standard prompt for APK files downloaded outside Google Play. Tap "Download anyway".</p>
-                  </div>
-                </div>
-
-                <div className="installStepItem">
-                  <span className="installStepNum">2</span>
-                  <div>
-                    <strong>Open the Downloaded File</strong>
-                    <p>When the download finishes, tap the notification or open Chrome's Downloads menu and tap <strong>MotoDC-Partner.apk</strong>.</p>
-                  </div>
-                </div>
-
-                <div className="installStepItem">
-                  <span className="installStepNum">3</span>
-                  <div>
-                    <strong>Enable "Allow from this source"</strong>
-                    <p>If your phone asks for permission, toggle "Allow from this source" in Settings, then tap <strong>Install</strong>.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="modalFallback">
-                <p>Didn't download automatically?</p>
-                <div className="modalFallbackLinks">
-                  <a href={APK_DOWNLOAD_URL} download="MotoDC-Partner.apk" className="modalLinkBtn">
-                    Direct Server Download
-                  </a>
-                  <a href={GITHUB_FALLBACK_URL} target="_blank" rel="noopener noreferrer" className="modalLinkBtn secondary">
-                    GitHub Release Mirror
-                  </a>
-                </div>
-              </div>
+            {/* Modal Tabs */}
+            <div className="kycModalTabs">
+              <button 
+                type="button" 
+                className={`kycModalTab ${kycTab === 'submit' ? 'active' : ''}`}
+                onClick={() => setKycTab('submit')}
+              >
+                <FileText size={16} /> 1. Submit KYC Proofs
+              </button>
+              <button 
+                type="button" 
+                className={`kycModalTab ${kycTab === 'status' ? 'active' : ''}`}
+                onClick={() => setKycTab('status')}
+              >
+                <Clock size={16} /> 2. Check Verification Status
+              </button>
             </div>
 
-            <div className="modalFooter">
-              <button type="button" className="modalDoneBtn" onClick={() => setDownloadModal(false)}>
-                Got It, Thank You!
-              </button>
+            <div className="modalBody">
+              {/* TAB 1: SUBMIT KYC DOCUMENTS */}
+              {kycTab === 'submit' && (
+                <>
+                  {kycSubmittedData ? (
+                    <div className="kycSuccessState">
+                      <div className="kycSuccessIcon"><Check size={32} /></div>
+                      <h4>Documents Received Successfully!</h4>
+                      <div className="kycRefPill">
+                        Application Ref: <strong>{kycSubmittedData.applicationId}</strong>
+                      </div>
+                      <p className="kycSuccessMsg">
+                        {kycSubmittedData.message || 'Your KYC documents have been received and you can download the partner app after verification. Thank you for joining as a MotoDC delivery partner!'}
+                      </p>
+
+                      <div className="emailConfirmNote">
+                        <AlertCircle size={16} />
+                        <span>A confirmation notice has been dispatched to your email address. Our Karaikal fleet admin will review your proofs shortly.</span>
+                      </div>
+
+                      <div className="kycSuccessActions">
+                        <button 
+                          type="button" 
+                          className="modalDoneBtn"
+                          onClick={() => {
+                            setKycTab('status');
+                            setStatusQuery(formData.phone || formData.email);
+                          }}
+                        >
+                          Check Application Status
+                        </button>
+                        <a 
+                          href={WHATSAPP_ONBOARDING_URL} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="heroCtaSecondary"
+                          style={{ padding: '10px 18px', fontSize: '14px' }}
+                        >
+                          <MessageCircle size={16} /> WhatsApp Fleet Manager
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmitKyc} className="kycForm">
+                      <div className="kycFormNotice">
+                        <AlertTriangle size={18} className="warnIcon" />
+                        <div>
+                          <strong>Verification Required Before Installation</strong>
+                          <p>Upload clear photos of your Driving License and Vehicle RC. Our admin team will verify and approve your account.</p>
+                        </div>
+                      </div>
+
+                      <div className="kycFormGrid">
+                        <label className="kycField">
+                          <span>Full Name (as on Driving License) *</span>
+                          <input 
+                            type="text" 
+                            required 
+                            placeholder="e.g. S. Karthik" 
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          />
+                        </label>
+
+                        <label className="kycField">
+                          <span>Mobile Number (for App OTP) *</span>
+                          <input 
+                            type="tel" 
+                            required 
+                            maxLength={10}
+                            placeholder="10-digit mobile number" 
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          />
+                        </label>
+
+                        <label className="kycField">
+                          <span>Email Address (for Status Updates) *</span>
+                          <input 
+                            type="email" 
+                            required 
+                            placeholder="e.g. karthik@gmail.com" 
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          />
+                        </label>
+
+                        <label className="kycField">
+                          <span>Vehicle Type</span>
+                          <select 
+                            value={formData.vehicleType}
+                            onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
+                          >
+                            <option value="Motorcycle">Motorcycle / Bike (with Gear)</option>
+                            <option value="Scooter">Scooter / Scooty (Gearless)</option>
+                            <option value="Electric">Electric Two-Wheeler (EV)</option>
+                          </select>
+                        </label>
+
+                        <label className="kycField">
+                          <span>Vehicle Registration Plate No. *</span>
+                          <input 
+                            type="text" 
+                            required 
+                            placeholder="e.g. PY-02-AB-1234" 
+                            value={formData.vehicleNumber}
+                            onChange={(e) => setFormData({ ...formData, vehicleNumber: e.target.value.toUpperCase() })}
+                          />
+                        </label>
+
+                        <label className="kycField">
+                          <span>Driving License Number *</span>
+                          <input 
+                            type="text" 
+                            required 
+                            placeholder="e.g. PY02 20180012345" 
+                            value={formData.licenseNumber}
+                            onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value.toUpperCase() })}
+                          />
+                        </label>
+                      </div>
+
+                      {/* Document Uploads */}
+                      <div className="kycUploadsRow">
+                        <div className="kycUploadBox">
+                          <span>Driving License Proof *</span>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            ref={dlInputRef} 
+                            style={{ display: 'none' }}
+                            onChange={handleDlUpload}
+                          />
+                          {formData.dlPhoto ? (
+                            <div className="proofThumbnailWrap">
+                              <img src={formData.dlPhoto} alt="Driving License Preview" className="proofThumb" />
+                              <button 
+                                type="button" 
+                                className="changeProofBtn" 
+                                onClick={() => dlInputRef.current?.click()}
+                              >
+                                Change Photo
+                              </button>
+                            </div>
+                          ) : (
+                            <button 
+                              type="button" 
+                              className="uploadProofBtn" 
+                              onClick={() => dlInputRef.current?.click()}
+                            >
+                              <Upload size={18} />
+                              <span>Attach Driving License Photo</span>
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="kycUploadBox">
+                          <span>Vehicle RC Book / Smart Card Proof *</span>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            ref={rcInputRef} 
+                            style={{ display: 'none' }}
+                            onChange={handleRcUpload}
+                          />
+                          {formData.rcPhoto ? (
+                            <div className="proofThumbnailWrap">
+                              <img src={formData.rcPhoto} alt="RC Preview" className="proofThumb" />
+                              <button 
+                                type="button" 
+                                className="changeProofBtn" 
+                                onClick={() => rcInputRef.current?.click()}
+                              >
+                                Change Photo
+                              </button>
+                            </div>
+                          ) : (
+                            <button 
+                              type="button" 
+                              className="uploadProofBtn" 
+                              onClick={() => rcInputRef.current?.click()}
+                            >
+                              <Upload size={18} />
+                              <span>Attach Vehicle RC Photo</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="kycFormFooter">
+                        <button 
+                          type="submit" 
+                          className="kycSubmitBtn"
+                          disabled={submittingKyc}
+                        >
+                          {submittingKyc ? 'Submitting Proofs...' : 'Submit Documents for Verification'}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </>
+              )}
+
+              {/* TAB 2: CHECK KYC STATUS */}
+              {kycTab === 'status' && (
+                <div className="kycStatusTabBody">
+                  <div className="statusSearchWrap">
+                    <p>Enter your 10-digit mobile number, email, or application ID to check if your KYC has been verified:</p>
+                    <form onSubmit={handleCheckStatus} className="statusSearchForm">
+                      <input 
+                        type="text" 
+                        placeholder="Mobile number or Email address..." 
+                        value={statusQuery}
+                        onChange={(e) => setStatusQuery(e.target.value)}
+                        required
+                      />
+                      <button type="submit" disabled={checkingStatus}>
+                        {checkingStatus ? 'Checking...' : 'Check Status'}
+                      </button>
+                    </form>
+                  </div>
+
+                  {statusResult && (
+                    <div className="statusResultCard">
+                      {statusResult.status === 'approved' && (
+                        <div className="statusBanner approvedBanner">
+                          <CheckCircle2 size={28} />
+                          <div>
+                            <h4>KYC Registration Approved! 🎉</h4>
+                            <p>
+                              Welcome to MotoDC Fleet, <strong>{statusResult.name}</strong>! Your account is active.
+                              {statusResult.partnerCode && (
+                                <> Assigned Rider Code: <strong>{statusResult.partnerCode}</strong></>
+                              )}
+                            </p>
+                            <button 
+                              type="button" 
+                              className="unlockedDownloadBtn" 
+                              onClick={() => {
+                                setShowKycGateModal(false);
+                                triggerApkDownload();
+                              }}
+                            >
+                              <Download size={18} /> Download MotoDC Partner APK
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {statusResult.status === 'pending' && (
+                        <div className="statusBanner pendingBanner">
+                          <Clock size={28} />
+                          <div>
+                            <h4>Verification Under Review</h4>
+                            <p>
+                              Hello <strong>{statusResult.name || 'Applicant'}</strong>, your KYC documents are currently being checked by our Karaikal Fleet Admin.
+                            </p>
+                            <small>You will be able to download the partner app as soon as your proofs are approved.</small>
+                          </div>
+                        </div>
+                      )}
+
+                      {statusResult.status === 'rejected' && (
+                        <div className="statusBanner rejectedBanner">
+                          <AlertTriangle size={28} />
+                          <div>
+                            <h4>KYC Documents Declined</h4>
+                            <p>Reason: {statusResult.rejectionReason || 'Proofs were unclear or expired.'}</p>
+                            <button 
+                              type="button" 
+                              className="resubmitBtn"
+                              onClick={() => setKycTab('submit')}
+                            >
+                              Re-Upload Clear Documents
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {statusResult.status === 'not_found' && (
+                        <div className="statusBanner notFoundBanner">
+                          <AlertCircle size={28} />
+                          <div>
+                            <h4>No Application Found</h4>
+                            <p>We could not find any KYC application registered with this mobile number or email.</p>
+                            <button 
+                              type="button" 
+                              className="resubmitBtn"
+                              onClick={() => setKycTab('submit')}
+                            >
+                              Submit KYC Application Now
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -605,12 +1091,16 @@ export default function RiderPartnerPage() {
       <aside className="mobileStickyInstallBar" aria-label="Quick App Download">
         <div className="stickyBarInner">
           <div className="stickyBarInfo">
-            <strong>MotoDC Partner App</strong>
-            <small>v1.0.9 • 4.99 MB • Android</small>
+            <strong className="stickyBarTitle">MotoDC Partner App</strong>
+            <small className="stickyBarSub">Android • Karaikal Fleet</small>
           </div>
-          <button type="button" className="stickyInstallBtn" onClick={handleInstallClick}>
+          <button 
+            type="button" 
+            className="stickyInstallBtn" 
+            onClick={handleInstallClick}
+          >
             <Download size={18} />
-            <span>Install App</span>
+            <span className="stickyInstallText">{isVerifiedRider ? 'Download APK' : 'Install App'}</span>
           </button>
         </div>
       </aside>
@@ -620,7 +1110,6 @@ export default function RiderPartnerPage() {
         <div className="partnerFooterContainer">
           <div className="footerBrand">
             <span className="footerLogo">Moto<span className="logoRed">DC</span></span>
-            <span className="footerTag">DELIVERY PARTNER NETWORK</span>
             <p>Empowering local motorcycle delivery partners with fast payouts and cutting-edge logistics technology.</p>
           </div>
 
