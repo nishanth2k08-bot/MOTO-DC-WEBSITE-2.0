@@ -3,26 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MotoDC KYC Sample Test Documents</title>
+  <title>Download MotoDC KYC Sample Test Documents</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #090d16;
+      background: #080c14;
       color: #f8fafc;
       margin: 0;
-      padding: 40px 20px;
+      padding: 30px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      box-sizing: border-box;
     }
     .header {
       text-align: center;
-      max-width: 600px;
-      margin-bottom: 30px;
+      max-width: 680px;
+      margin-bottom: 24px;
     }
     .header h1 {
-      font-size: 26px;
+      font-size: 24px;
       margin-bottom: 8px;
       color: #ffffff;
     }
@@ -30,66 +31,114 @@
       color: #94a3b8;
       font-size: 14px;
       line-height: 1.5;
+      margin: 0 0 16px;
+    }
+    .tipBanner {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13.5px;
+      color: #fef08a;
+      line-height: 1.5;
+      text-align: left;
+      margin-bottom: 24px;
+      max-width: 720px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .cardGrid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 24px;
       width: 100%;
-      max-width: 800px;
-      margin-bottom: 30px;
+      max-width: 760px;
+      margin-bottom: 24px;
     }
     .docCard {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+    .docHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .docCard h3 {
       margin: 0;
       font-size: 16px;
       color: #f1f5f9;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
-    .docCard img {
+    .badge {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .imgWrap {
       width: 100%;
       border-radius: 10px;
+      overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: #ffffff;
     }
+    .imgWrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .btnGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
     .dlBtn {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       background: #ff3157;
       color: #ffffff;
-      text-decoration: none;
+      border: none;
       font-weight: 700;
       font-size: 14px;
-      padding: 12px 18px;
-      border-radius: 8px;
+      padding: 13px 18px;
+      border-radius: 9px;
       transition: all 0.2s ease;
       cursor: pointer;
       text-align: center;
+      width: 100%;
+      box-sizing: border-box;
     }
     .dlBtn:hover {
       background: #e02447;
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(255, 49, 87, 0.35);
     }
+    .dlBtn:active {
+      transform: translateY(0);
+    }
+    .openDirectLink {
+      font-size: 12px;
+      color: #60a5fa;
+      text-align: center;
+      text-decoration: underline;
+      cursor: pointer;
+    }
     .infoBox {
       background: rgba(30, 58, 138, 0.25);
       border: 1px solid rgba(59, 130, 246, 0.4);
-      padding: 16px 20px;
-      border-radius: 12px;
-      max-width: 800px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      max-width: 760px;
       width: 100%;
       box-sizing: border-box;
       font-size: 13.5px;
@@ -99,39 +148,110 @@
     .infoBox strong {
       color: #ffffff;
     }
+    .infoGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .infoItem {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12.5px;
+    }
+    .statusMsg {
+      font-size: 12px;
+      color: #10b981;
+      text-align: center;
+      min-height: 18px;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>MotoDC KYC Test Documents</h1>
-    <p>Click the download buttons below to save the sample Driving License and Vehicle RC PNG images to your device for testing the KYC verification workflow.</p>
+    <h1>MotoDC KYC Test Proofs</h1>
+    <p>Direct download portal for test applicant <strong>Vignesh Pandian</strong></p>
+  </div>
+
+  <div class="tipBanner">
+    💡 <strong>Pro Tip:</strong> On the <a href="/partner" style="color: #ffffff; font-weight: bold; text-decoration: underline;">/partner</a> registration form, you can also just click <strong>"⚡ Auto-Fill Demo Details & Proofs"</strong> — it will instantly attach these documents into the form for you without needing to download anything!
   </div>
 
   <div class="cardGrid">
+    <!-- Driving License -->
     <div class="docCard">
-      <h3>Driving License Proof <span>PNG Image</span></h3>
-      <img src="/sample-dl-vignesh.png" alt="Driving License Sample for Vignesh Pandian">
-      <a href="/sample-dl-vignesh.png" download="sample-dl-vignesh.png" class="dlBtn">
-        ⬇️ Download Driving License (PNG)
-      </a>
+      <div class="docHeader">
+        <h3>1. Driving License Proof</h3>
+        <span class="badge">PNG • 35 KB</span>
+      </div>
+      <div class="imgWrap">
+        <img id="dlImg" src="/sample-dl-vignesh.png" alt="Driving License Sample">
+      </div>
+      <div class="btnGroup">
+        <button type="button" class="dlBtn" onclick="triggerDownload('/sample-dl-vignesh.png', 'sample-dl-vignesh.png', 'dlStatus')">
+          ⬇️ Download Driving License (PNG)
+        </button>
+        <div id="dlStatus" class="statusMsg"></div>
+      </div>
     </div>
 
+    <!-- Vehicle RC -->
     <div class="docCard">
-      <h3>Vehicle RC Proof <span>PNG Image</span></h3>
-      <img src="/sample-rc-vignesh.png" alt="Vehicle RC Sample for Vignesh Pandian">
-      <a href="/sample-rc-vignesh.png" download="sample-rc-vignesh.png" class="dlBtn">
-        ⬇️ Download Vehicle RC (PNG)
-      </a>
+      <div class="docHeader">
+        <h3>2. Vehicle RC Proof</h3>
+        <span class="badge">PNG • 38 KB</span>
+      </div>
+      <div class="imgWrap">
+        <img id="rcImg" src="/sample-rc-vignesh.png" alt="Vehicle RC Sample">
+      </div>
+      <div class="btnGroup">
+        <button type="button" class="dlBtn" onclick="triggerDownload('/sample-rc-vignesh.png', 'sample-rc-vignesh.png', 'rcStatus')">
+          ⬇️ Download Vehicle RC (PNG)
+        </button>
+        <div id="rcStatus" class="statusMsg"></div>
+      </div>
     </div>
   </div>
 
   <div class="infoBox">
-    <strong>Matching Test Details to Enter in Form:</strong><br>
-    • Name: <strong>Vignesh Pandian</strong><br>
-    • Phone: <strong>9840881234</strong><br>
-    • Email: <strong>vignesh.moto@gmail.com</strong><br>
-    • Vehicle: <strong>Motorcycle</strong> (Reg: <strong>PY-02-DN-8491</strong>)<br>
-    • DL No: <strong>PY02 20230067182</strong>
+    <strong>Matching Form Details for Vignesh Pandian:</strong>
+    <div class="infoGrid">
+      <div class="infoItem">Name: <strong>Vignesh Pandian</strong></div>
+      <div class="infoItem">Mobile: <strong>9840881234</strong></div>
+      <div class="infoItem">Email: <strong>vignesh.moto@gmail.com</strong></div>
+      <div class="infoItem">Vehicle: <strong>Motorcycle</strong></div>
+      <div class="infoItem">Reg No: <strong>PY-02-DN-8491</strong></div>
+      <div class="infoItem">DL No: <strong>PY02 20230067182</strong></div>
+    </div>
   </div>
+
+  <script>
+    async function triggerDownload(url, filename, statusId) {
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) statusEl.textContent = 'Starting download...';
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Fetch failed');
+        const blob = await res.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000);
+        if (statusEl) statusEl.textContent = '✓ Downloaded successfully to your device!';
+      } catch (err) {
+        // Fallback: window.open or direct navigate
+        window.location.href = url;
+        if (statusEl) statusEl.textContent = '✓ File opened for download.';
+      }
+    }
+  </script>
 </body>
 </html>

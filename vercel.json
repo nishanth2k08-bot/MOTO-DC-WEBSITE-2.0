@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/sample-(.*)",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment"
+        }
+      ]
+    },
+    {
       "source": "/images/(.*)",
       "headers": [
         {
