@@ -127,6 +127,19 @@ export function detectDeliveryZone(shipping = {}) {
   return 'central_town';
 }
 
+/**
+ * Computes deterministic 4-digit handover PIN matching customer Orders screen
+ */
+export function computeOrderDeliveryPin(order) {
+  if (order?.deliveryPin) return String(order.deliveryPin).padStart(4, '0');
+  const seed = String(order?.orderId || order?.id || order?.createdAt?.seconds || '7482');
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return String(1000 + (hash % 9000));
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -214,9 +227,7 @@ export default async function handler(req, res) {
               qty: it.qty || 1,
               price: Number(it.price || 0),
             })),
-            deliveryPin:
-              o.deliveryPin ||
-              (o.customer?.phone ? String(o.customer.phone).replace(/\D/g, '').slice(-4) : '8492'),
+            deliveryPin: computeOrderDeliveryPin(o),
             assignedCorridor: zone,
             assignedRiderId: o.assignedRiderId || assignedData.assignedRiderId || null,
             assignedRiderName: o.assignedRiderName || assignedData.assignedRiderName || null,
@@ -386,9 +397,7 @@ export default async function handler(req, res) {
               qty: it.qty || 1,
               price: Number(it.price || 0),
             })),
-            deliveryPin:
-              o.deliveryPin ||
-              (o.customer?.phone ? String(o.customer.phone).replace(/\D/g, '').slice(-4) : '8492'),
+            deliveryPin: computeOrderDeliveryPin(o),
             assignedCorridor: zone,
             createdAt: o.createdAt || null,
           };
@@ -533,6 +542,7 @@ export default async function handler(req, res) {
           })),
           assignedCorridor: orderCorridor,
           corridorName: corridorMeta.name,
+          deliveryPin: computeOrderDeliveryPin(foundDoc),
           createdAt: foundDoc.createdAt || null,
         },
       });

@@ -60,9 +60,9 @@ export default async function handler(req,res){
           });
         }
       });
-      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
+      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });
-    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
+    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
     waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_COD_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('COD order email error:',emailError);}})());
