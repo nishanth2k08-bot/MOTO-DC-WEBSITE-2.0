@@ -1380,9 +1380,6 @@ export default function AdminDeliveryPartners() {
                       {p.adminShiftOverride && (
                         <span style={{ fontSize: '10px', color: '#38bdf8' }}>🔓 Override Active</span>
                       )}
-                      {p.oneTimePassGranted && !p.oneTimePassConsumed && (
-                        <span style={{ fontSize: '10px', color: '#a855f7', fontWeight: 700 }}>🔑 1-Time Pass Ready</span>
-                      )}
                     </div>
                   </td>
                   <td>
@@ -1424,18 +1421,6 @@ export default function AdminDeliveryPartners() {
                         }}
                       >
                         Reset PIN
-                      </button>
-                      <button
-                        type="button"
-                        className="quickActionLink"
-                        style={{
-                          color: p.oneTimePassGranted && !p.oneTimePassConsumed ? '#ef4444' : '#a855f7',
-                          borderColor: p.oneTimePassGranted && !p.oneTimePassConsumed ? 'rgba(239, 68, 68, 0.4)' : 'rgba(168, 85, 247, 0.4)'
-                        }}
-                        title={p.oneTimePassGranted && !p.oneTimePassConsumed ? 'Revoke emergency 1-time login pass' : 'Grant emergency 1-time login pass'}
-                        onClick={() => handleToggleOneTimePass(p)}
-                      >
-                        {p.oneTimePassGranted && !p.oneTimePassConsumed ? 'Revoke Pass' : '1-Time Pass'}
                       </button>
                       {(p.lateStrikes > 0 || p.bonusCutoff || p.adminShiftOverride) && (
                         <button

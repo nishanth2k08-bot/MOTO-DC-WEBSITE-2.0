@@ -286,9 +286,8 @@ function evaluateRiderCheckin(serviceMode, pData) {
     return { allowed: true, isLate: false, reason: 'Admin Override Active', istTimeString, currentMinutes };
   }
 
-  // 1-Time Emergency Login Pass Check
-  // Grants immediate 1-time testing pass for MDC-8586 if not yet consumed
-  const isOneTimePermitted = (pData?.oneTimePassGranted && !pData?.oneTimePassConsumed) || (pData?.username === 'MDC-8586' && !pData?.oneTimePassConsumed);
+  // 1-Time Emergency Login Pass Check (Only if explicitly approved by Hub Manager)
+  const isOneTimePermitted = Boolean(pData?.oneTimePassGranted && !pData?.oneTimePassConsumed);
   if (isOneTimePermitted) {
     return {
       allowed: true,
