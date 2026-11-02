@@ -881,7 +881,16 @@ export default async function handler(req, res) {
             liveLocation: locationPayload,
           })
         );
-        await Promise.all(orderUpdates);
+
+        const partnerUpdate = partnersCol.doc(cleanRiderId).set(
+          {
+            lastLocation: locationPayload,
+            lastSeenAt: locationPayload.updatedAt,
+          },
+          { merge: true }
+        );
+
+        await Promise.all([...orderUpdates, partnerUpdate]);
 
         return send(res, 200, {
           ok: true,

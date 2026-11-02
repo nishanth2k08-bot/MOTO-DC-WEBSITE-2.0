@@ -1145,6 +1145,38 @@ export default function AdminDeliveryPartners() {
                               <Phone size={10} /> {corr.assignedRiderPhone}
                             </small>
                           )}
+                          {(() => {
+                            const matchedRider = partners.find(
+                              (p) => String(p.username || p.id).toUpperCase() === String(corr.assignedRiderId).toUpperCase()
+                            );
+                            if (matchedRider?.lastLocation?.lat) {
+                              return (
+                                <a
+                                  href={`https://www.google.com/maps?q=${matchedRider.lastLocation.lat},${matchedRider.lastLocation.lng}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    color: '#22c55e',
+                                    textDecoration: 'none',
+                                    background: 'rgba(34, 197, 94, 0.12)',
+                                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                                    padding: '2px 6px',
+                                    borderRadius: '5px',
+                                    marginTop: '4px'
+                                  }}
+                                  title="Live road coordinates from driver phone"
+                                >
+                                  <MapPin size={11} color="#22c55e" /> Live GPS Pin
+                                </a>
+                              );
+                            }
+                            return null;
+                          })()}
                         </div>
                       </div>
 
@@ -1356,6 +1388,37 @@ export default function AdminDeliveryPartners() {
                   </td>
                   <td>
                     <strong>{p.name}</strong>
+                    {p.lastLocation?.lat ? (
+                      <div style={{ marginTop: '4px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <a
+                          href={`https://www.google.com/maps?q=${p.lastLocation.lat},${p.lastLocation.lng}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '3px',
+                            color: '#22c55e',
+                            textDecoration: 'none',
+                            fontWeight: 600,
+                            background: 'rgba(34, 197, 94, 0.12)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            border: '1px solid rgba(34, 197, 94, 0.25)'
+                          }}
+                          title={`Accuracy: ${Math.round(p.lastLocation.accuracy || 0)}m • Speed: ${Math.round(p.lastLocation.speed || 0)} km/h`}
+                        >
+                          <MapPin size={11} color="#22c55e" /> Live GPS
+                        </a>
+                        <span style={{ color: '#94a3b8', fontSize: '10px' }}>
+                          {new Date(p.lastLocation.updatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    ) : (
+                      <div style={{ marginTop: '3px', fontSize: '10px', color: '#64748b' }}>
+                        ⚪ GPS Inactive (Off-route)
+                      </div>
+                    )}
                   </td>
                   <td>{p.phone || '—'}</td>
                   <td>
