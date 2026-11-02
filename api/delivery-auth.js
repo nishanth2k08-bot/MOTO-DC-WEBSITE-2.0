@@ -451,13 +451,13 @@ export default async function handler(req, res) {
                     domain,
                     template_id: templateId,
                     validate_before_send: true,
-                  }).catch((err) => console.warn('MSG91 bonus cancel dispatch error:', err));
+                  }),
+                }).catch((err) => console.warn('MSG91 bonus cancel dispatch error:', err));
 
-                  await partnerDoc.ref.update({
-                    bonusCutoffEmailSent: true,
-                    bonusCutoffEmailSentAt: new Date().toISOString(),
-                  });
-                }
+                await partnerDoc.ref.update({
+                  bonusCutoffEmailSent: true,
+                  bonusCutoffEmailSentAt: new Date().toISOString(),
+                });
               }
             } catch (emailErr) {
               console.warn('Bonus cancellation email error:', emailErr);
