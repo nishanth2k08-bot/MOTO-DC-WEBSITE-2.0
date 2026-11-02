@@ -38,6 +38,8 @@ export default async function handler(req,res){
     const payment=await paymentResponse.json().catch(()=>({}));
     if(!paymentResponse.ok||payment.order_id!==razorpay_order_id||Number(payment.amount)!==Math.round(Number(intent.amount)*100)||payment.currency!=='INR'||payment.status!=='captured')return send(res,400,{error:'Payment could not be verified'});
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
+    function computePin(id){let hash=0;const s=String(id||'7482');for(let i=0;i<s.length;i++)hash=(hash*31+s.charCodeAt(i))>>>0;return String(1000+(hash%9000));}
+    const deliveryPin=computePin(orderId);
     const orderCategoryRef=db.collection('orders').doc('online orders');
     const orderRef=orderCategoryRef.collection('records').doc();
     let total=0;

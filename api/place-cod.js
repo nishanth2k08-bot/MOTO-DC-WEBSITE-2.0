@@ -27,6 +27,8 @@ export default async function handler(req,res){
     const paymentCategoryRef=db.collection('paymentIntents').doc('cod payment intents');
     const orderRef=categoryRef.collection('records').doc();
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
+    function computePin(id){let hash=0;const s=String(id||'7482');for(let i=0;i<s.length;i++)hash=(hash*31+s.charCodeAt(i))>>>0;return String(1000+(hash%9000));}
+    const deliveryPin=computePin(orderId);
     let total=0;
     const safeItems=[];
     await db.runTransaction(async tx=>{
