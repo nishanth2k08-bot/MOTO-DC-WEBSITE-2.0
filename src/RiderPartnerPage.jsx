@@ -1343,7 +1343,7 @@ export default function RiderPartnerPage() {
                 </div>
                 <div className="qrVersionTag">
                   <Download size={13} />
-                  <span>Latest Release • MotoDC-Partner.apk (v1.0)</span>
+                  <span>Latest Release • MotoDC-Partner.apk (v1.0.9 - Latest)</span>
                 </div>
               </div>
 
