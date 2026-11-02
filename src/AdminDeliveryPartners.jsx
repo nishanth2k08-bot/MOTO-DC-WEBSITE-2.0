@@ -1448,6 +1448,20 @@ export default function AdminDeliveryPartners() {
                           Clear Strikes
                         </button>
                       )}
+                      {(p.lateStrikes >= 3 || p.bonusCutoff) && p.phone && (
+                        <a
+                          href={`https://wa.me/${String(p.phone).replace(/\D/g, '')}?text=${encodeURIComponent(
+                            `Hello ${p.name || 'Partner'} (${p.username}),\n\n⚠️ ATTENDANCE PENALTY: Your account has accumulated 3 Attendance Strikes due to late shift check-ins. In accordance with MotoDC fleet policy, your monthly punctuality bonus (₹2,500) has been cancelled for this month.\n\nYour ₹45/drop earnings remain unaffected. Contact Karaikal Hub Manager for clearance.`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="quickActionLink"
+                          style={{ color: '#f59e0b', textDecoration: 'none' }}
+                          title="Send WhatsApp notice about bonus cancellation"
+                        >
+                          WhatsApp Notice
+                        </a>
+                      )}
                       <button
                         type="button"
                         className="quickDeleteBtn"

@@ -410,7 +410,7 @@ export default async function handler(req, res) {
             try {
               const authKey = process.env.MSG91_AUTHKEY;
               const domain = process.env.MSG91_EMAIL_DOMAIN;
-              const templateId = process.env.MSG91_TEMPLATE_BONUS_CANCEL || 'motodc_rider_bonus_cancelled';
+              const templateId = process.env.MSG91_TEMPLATE_BONUS_CANCEL || 'motodc_rider_bonus_cancelled_2';
               const fromEmail = String(process.env.MSG91_FROM_EMAIL || `no-reply@${domain || 'motodc.in'}`).trim();
               const currentMonth = new Date().toLocaleString('en-IN', { month: 'long', year: 'numeric' });
               const riderName = pData.name || 'MotoDC Partner';
