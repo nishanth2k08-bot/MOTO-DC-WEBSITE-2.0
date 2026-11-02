@@ -1676,20 +1676,36 @@ export default function AdminDeliveryPartners() {
               <div className="modalBody">
                 <div className="modalField">
                   <label>Partner Code (Alphanumeric Username) *</label>
-                  <div className="inputWithShuffle">
+                  <div className="inputWithShuffle" style={{ display: 'flex', gap: '8px', alignItems: 'stretch' }}>
                     <input
                       type="text"
                       value={newPartner.username}
                       onChange={(e) => setNewPartner({ ...newPartner, username: e.target.value.toUpperCase() })}
                       required
+                      style={{ flex: 1 }}
                     />
                     <button
                       type="button"
                       className="shuffleBtn"
                       title="Generate new random code"
                       onClick={() => setNewPartner({ ...newPartner, username: generateRiderCode() })}
+                      style={{
+                        background: 'linear-gradient(135deg, #e11d48, #be123c)',
+                        color: '#ffffff',
+                        border: '1px solid #e11d48',
+                        padding: '8px 14px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 2px 10px rgba(225, 29, 72, 0.35)',
+                        whiteSpace: 'nowrap',
+                      }}
                     >
-                      <Shuffle size={14} /> Random
+                      <Shuffle size={14} color="#ffffff" /> Random
                     </button>
                   </div>
                   <small>Example: MDC-4829. The driver will use this code to log into the delivery app.</small>
@@ -1737,19 +1753,59 @@ export default function AdminDeliveryPartners() {
                   <select
                     value={newPartner.serviceMode || 'Standard'}
                     onChange={(e) => setNewPartner({ ...newPartner, serviceMode: e.target.value })}
+                    style={{
+                      background: '#141e33',
+                      border: '1px solid #e11d48',
+                      color: '#ffffff',
+                      padding: '9px 12px',
+                      borderRadius: '6px',
+                      fontSize: '13px',
+                      outline: 'none',
+                      cursor: 'pointer',
+                      width: '100%',
+                    }}
                   >
-                    <option value="Part-Time">Part-Time (~8 drops/day · 2–4 hrs)</option>
-                    <option value="Standard">Standard (~18 drops/day · Full-Day)</option>
-                    <option value="Power Rider">Power Rider (~30 drops/day · High-Volume)</option>
+                    <option value="Part-Time" style={{ background: '#0f172a', color: '#ffffff' }}>Part-Time (~8 drops/day · 2–4 hrs)</option>
+                    <option value="Standard" style={{ background: '#0f172a', color: '#ffffff' }}>Standard (~18 drops/day · Full-Day)</option>
+                    <option value="Power Rider" style={{ background: '#0f172a', color: '#ffffff' }}>Power Rider (~30 drops/day · High-Volume)</option>
                   </select>
                 </div>
               </div>
 
               <div className="modalFooter">
-                <button type="button" className="cancelModalBtn" onClick={() => setShowAddPartner(false)}>
+                <button
+                  type="button"
+                  className="cancelModalBtn"
+                  onClick={() => setShowAddPartner(false)}
+                  style={{
+                    background: '#1e293b',
+                    border: '1px solid #334155',
+                    color: '#cbd5e1',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="savePartnerSubmitBtn" disabled={savingPartner}>
+                <button
+                  type="submit"
+                  className="savePartnerSubmitBtn"
+                  disabled={savingPartner}
+                  style={{
+                    background: 'linear-gradient(135deg, #e11d48, #be123c)',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '8px 18px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(225, 29, 72, 0.3)',
+                  }}
+                >
                   {savingPartner ? 'Registering...' : 'Register Partner'}
                 </button>
               </div>
