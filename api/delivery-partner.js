@@ -851,7 +851,47 @@ export default async function handler(req, res) {
       }
 
       // -----------------------------------------------------------------------
-      // 2D. COMPLETE DOORSTEP HANDOVER & MARK DELIVERED
+      // 2D. UPDATE RIDER LIVE GPS LOCATION (Active Delivery Run Only)
+      // -----------------------------------------------------------------------
+      if (action === 'update-rider-location') {
+        const { riderId, riderName, lat, lng, speed, heading, accuracy } = body;
+        if (!riderId || lat == null || lng == null) {
+          return send(res, 400, { error: 'riderId, lat, and lng are required' });
+        }
+
+        const cleanRiderId = String(riderId).trim().toUpperCase();
+        const locationPayload = {
+          lat: Number(lat),
+          lng: Number(lng),
+          speed: Number(speed || 0),
+          heading: Number(heading || 0),
+          accuracy: Number(accuracy || 0),
+          riderId: cleanRiderId,
+          riderName: String(riderName || 'MotoDC Partner').trim(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        const [codSnap, onlineSnap] = await Promise.all([
+          codCol.where('assignedRiderId', '==', cleanRiderId).where('orderStatus', '==', 'out_for_delivery').get(),
+          onlineCol.where('assignedRiderId', '==', cleanRiderId).where('orderStatus', '==', 'out_for_delivery').get(),
+        ]);
+
+        const orderUpdates = [...codSnap.docs, ...onlineSnap.docs].map((d) =>
+          d.ref.update({
+            liveLocation: locationPayload,
+          })
+        );
+        await Promise.all(orderUpdates);
+
+        return send(res, 200, {
+          ok: true,
+          updatedOrdersCount: orderUpdates.length,
+          location: locationPayload,
+        });
+      }
+
+      // -----------------------------------------------------------------------
+      // 2E. COMPLETE DOORSTEP HANDOVER & MARK DELIVERED
       // -----------------------------------------------------------------------
       const { docId, collectionType, paymentMethod, paymentSettledVia, riderName, riderId } = body;
 
