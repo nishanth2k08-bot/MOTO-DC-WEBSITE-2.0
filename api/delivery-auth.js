@@ -217,8 +217,24 @@ function getShiftSchedule(serviceMode) {
     return {
       name: 'Part-Time',
       windows: [
-        { startMinutes: 9 * 60, endMinutes: 14 * 60, label: '9:00 AM – 2:00 PM' },
-        { startMinutes: 15 * 60 + 30, endMinutes: 20 * 60 + 30, label: '3:30 PM – 8:30 PM' },
+        {
+          startMinutes: 9 * 60, // 09:00 AM
+          endMinutes: 14 * 60, // 02:00 PM
+          checkinOpensMinutes: 8 * 60 + 45, // 08:45 AM (15m before)
+          checkinCutoffMinutes: 9 * 60 + 20, // 09:20 AM (20m grace)
+          label: '9:00 AM – 2:00 PM (Morning)',
+          shiftStartTime: '09:00 AM',
+          cutoffTime: '09:20 AM',
+        },
+        {
+          startMinutes: 15 * 60 + 30, // 03:30 PM
+          endMinutes: 20 * 60 + 30, // 08:30 PM
+          checkinOpensMinutes: 15 * 60 + 15, // 03:15 PM
+          checkinCutoffMinutes: 15 * 60 + 50, // 03:50 PM
+          label: '3:30 PM – 8:30 PM (Evening)',
+          shiftStartTime: '03:30 PM',
+          cutoffTime: '03:50 PM',
+        },
       ],
       overallLabel: '9:00 AM – 2:00 PM & 3:30 PM – 8:30 PM',
     };
@@ -227,7 +243,15 @@ function getShiftSchedule(serviceMode) {
     return {
       name: 'Power Rider',
       windows: [
-        { startMinutes: 8 * 60, endMinutes: 21 * 60 + 30, label: '8:00 AM – 9:30 PM' },
+        {
+          startMinutes: 8 * 60, // 08:00 AM
+          endMinutes: 21 * 60 + 30, // 09:30 PM
+          checkinOpensMinutes: 7 * 60 + 45, // 07:45 AM
+          checkinCutoffMinutes: 8 * 60 + 30, // 08:30 AM (30m grace)
+          label: '8:00 AM – 9:30 PM',
+          shiftStartTime: '08:00 AM',
+          cutoffTime: '08:30 AM',
+        },
       ],
       overallLabel: '8:00 AM – 9:30 PM',
     };
@@ -236,29 +260,70 @@ function getShiftSchedule(serviceMode) {
   return {
     name: 'Standard',
     windows: [
-      { startMinutes: 8 * 60 + 30, endMinutes: 20 * 60 + 30, label: '8:30 AM – 8:30 PM' },
+      {
+        startMinutes: 8 * 60 + 30, // 08:30 AM
+        endMinutes: 20 * 60 + 30, // 08:30 PM
+        checkinOpensMinutes: 8 * 60 + 15, // 08:15 AM
+        checkinCutoffMinutes: 9 * 60 + 0, // 09:00 AM (30m grace)
+        label: '8:30 AM – 8:30 PM',
+        shiftStartTime: '08:30 AM',
+        cutoffTime: '09:00 AM',
+      },
     ],
     overallLabel: '8:30 AM – 8:30 PM',
   };
 }
 
-function checkShiftActive(serviceMode) {
+function evaluateRiderCheckin(serviceMode, pData) {
   const now = new Date();
   const utcMillis = now.getTime() + now.getTimezoneOffset() * 60000;
   const istDate = new Date(utcMillis + 330 * 60000);
   const currentMinutes = istDate.getHours() * 60 + istDate.getMinutes();
+  const istTimeString = istDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+  // Hub Manager Emergency Override Check
+  if (pData?.adminShiftOverride) {
+    return { allowed: true, isLate: false, reason: 'Admin Override Active', istTimeString, currentMinutes };
+  }
 
   const schedule = getShiftSchedule(serviceMode);
-  const matchingWindow = schedule.windows.find(
-    (w) => currentMinutes >= w.startMinutes && currentMinutes <= w.endMinutes
+
+  // Check if current time falls within any active operating window
+  const activeWindow = schedule.windows.find(
+    (w) => currentMinutes >= w.checkinOpensMinutes && currentMinutes <= w.endMinutes
   );
 
+  if (!activeWindow) {
+    return {
+      allowed: false,
+      code: 'OUTSIDE_OPERATING_HOURS',
+      istTimeString,
+      schedule,
+      error: `Shift Closed: Deliveries operate during your scheduled shift (${schedule.overallLabel} IST). Current time is ${istTimeString} IST.`,
+    };
+  }
+
+  // Check if rider is late for check-in
+  if (currentMinutes > activeWindow.checkinCutoffMinutes) {
+    return {
+      allowed: false,
+      code: 'LATE_CHECKIN_BLOCKED',
+      istTimeString,
+      activeWindow,
+      schedule,
+      shiftStartTime: activeWindow.shiftStartTime,
+      cutoffTime: activeWindow.cutoffTime,
+      minutesLate: currentMinutes - activeWindow.startMinutes,
+      error: `Late Check-In Blocked: Shift scheduled for ${activeWindow.shiftStartTime}. On-time check-in window closed at ${activeWindow.cutoffTime}.`,
+    };
+  }
+
   return {
-    isActive: Boolean(matchingWindow),
+    allowed: true,
+    isLate: false,
+    activeWindow,
+    istTimeString,
     currentMinutes,
-    schedule,
-    matchingWindow,
-    istTimeString: istDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
   };
 }
 
@@ -312,14 +377,51 @@ export default async function handler(req, res) {
         return send(res, 401, { error: 'Invalid 6-digit PIN. Tap "Forgot PIN" if forgotten.' });
       }
 
-      // Shift Hour Enforcement
-      const shiftCheck = checkShiftActive(pData.serviceMode);
-      if (!shiftCheck.isActive) {
+      // Shift Hour & On-Time Check-In Enforcement
+      const checkinEval = evaluateRiderCheckin(pData.serviceMode, pData);
+      if (!checkinEval.allowed) {
+        if (checkinEval.code === 'LATE_CHECKIN_BLOCKED') {
+          const lateStrikes = (pData.lateStrikes || 0) + 1;
+          const bonusCutoff = lateStrikes >= 3;
+          // Record late strike in Firestore
+          await partnerDoc.ref.update({
+            lateStrikes,
+            bonusCutoff,
+            lastLateDate: new Date().toISOString(),
+            lastLateTime: checkinEval.istTimeString,
+          });
+
+          return send(res, 403, {
+            ok: false,
+            code: 'LATE_CHECKIN_BLOCKED',
+            error: checkinEval.error,
+            lateStrikes,
+            bonusCutoff,
+            shiftStartTime: checkinEval.shiftStartTime,
+            cutoffTime: checkinEval.cutoffTime,
+            istTimeString: checkinEval.istTimeString,
+            minutesLate: checkinEval.minutesLate,
+            message: `You attempted to check in late at ${checkinEval.istTimeString}. Your shift was scheduled for ${checkinEval.shiftStartTime} (check-in closed at ${checkinEval.cutoffTime}). You have accumulated ${lateStrikes}/3 late strikes. ${
+              bonusCutoff
+                ? '⚠️ ATTENDANCE PENALTY: Your monthly punctuality bonus (₹2,500) has been CUT OFF.'
+                : `You have ${3 - lateStrikes} strike(s) left before your monthly bonus is forfeited.`
+            } Contact your Karaikal Hub Manager for clearance.`,
+          });
+        }
+
+        // Outside operating hours
         return send(res, 403, {
-          error: `Shift Closed: You can only log in during your scheduled shift hours (${shiftCheck.schedule.overallLabel} IST). Current time is ${shiftCheck.istTimeString} IST.`,
-          code: 'SHIFT_CLOSED',
-          schedule: shiftCheck.schedule,
+          ok: false,
+          code: 'OUTSIDE_OPERATING_HOURS',
+          error: checkinEval.error,
+          istTimeString: checkinEval.istTimeString,
+          schedule: checkinEval.schedule,
         });
+      }
+
+      // If logging in on-time, clear any temporary override flag
+      if (pData.adminShiftOverride) {
+        await partnerDoc.ref.update({ adminShiftOverride: false });
       }
 
       return send(res, 200, {
@@ -329,9 +431,12 @@ export default async function handler(req, res) {
           name: pData.name || 'Delivery Partner',
           phone: pData.phone || '',
           serviceMode: pData.serviceMode || 'Standard',
-          shiftStart: shiftCheck.istTimeString,
-          shiftEndMinutes: shiftCheck.matchingWindow?.endMinutes || (20 * 60 + 30),
-          shiftLabel: shiftCheck.matchingWindow?.label || shiftCheck.schedule.overallLabel,
+          lateStrikes: pData.lateStrikes || 0,
+          bonusCutoff: Boolean(pData.bonusCutoff),
+          shiftStart: checkinEval.istTimeString,
+          shiftEndMinutes: checkinEval.activeWindow?.endMinutes || (20 * 60 + 30),
+          shiftStartMinutes: checkinEval.activeWindow?.startMinutes || (8 * 60 + 30),
+          shiftLabel: checkinEval.activeWindow?.label || 'Standard Shift',
         },
       });
     }
@@ -664,6 +769,33 @@ export default async function handler(req, res) {
       await Promise.all(batchDeletes);
 
       return send(res, 200, { ok: true, deleted: cleanUser });
+    }
+
+    // -------------------------------------------------------------
+    // 9B. ADMIN RESET STRIKES & UNLOCK LATE SHIFT CHECK-IN
+    // -------------------------------------------------------------
+    if (action === 'admin-reset-strikes' && req.method === 'POST') {
+      const { username } = parseBody();
+      const cleanUser = String(username || '').trim().toUpperCase();
+
+      if (!cleanUser) {
+        return send(res, 400, { error: 'Missing username' });
+      }
+
+      await partnersCol.doc(cleanUser).set(
+        {
+          lateStrikes: 0,
+          bonusCutoff: false,
+          adminShiftOverride: true,
+          unlockedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
+
+      return send(res, 200, {
+        ok: true,
+        message: `Punctuality strikes reset & shift check-in unlocked for ${cleanUser}!`,
+      });
     }
 
     // -------------------------------------------------------------

@@ -461,6 +461,23 @@ export default function AdminDeliveryPartners() {
     }
   };
 
+  // Reset Strikes & Unlock Shift Check-in
+  const handleResetStrikes = async (username) => {
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-reset-strikes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to reset strikes');
+      toast.success(data.message || `Strikes reset for ${username}`);
+      fetchPartners();
+    } catch (e) {
+      toast.error(e.message || 'Error resetting strikes');
+    }
+  };
+
   // Delete Delivery Partner
   const handleDeletePartner = async (partner) => {
     const confirmMsg = `Are you sure you want to permanently delete delivery partner "${partner.name}" (${partner.username})?\n\nThey will no longer be able to log in to the delivery partner app.`;
@@ -1211,6 +1228,7 @@ export default function AdminDeliveryPartners() {
                 <th>Driver Name</th>
                 <th>Phone Number</th>
                 <th>Mode of Service</th>
+                <th>Punctuality & Bonus</th>
                 <th>6-Digit PIN</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -1230,6 +1248,25 @@ export default function AdminDeliveryPartners() {
                     <span className={`serviceModeBadge ${String(p.serviceMode || 'Standard').toLowerCase().replace(/\s+/g, '-')}`}>
                       {p.serviceMode || 'Standard'}
                     </span>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        padding: '2px 7px',
+                        borderRadius: '5px',
+                        background: (p.lateStrikes || 0) >= 3 ? 'rgba(239, 68, 68, 0.15)' : (p.lateStrikes || 0) > 0 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(34, 197, 94, 0.15)',
+                        color: (p.lateStrikes || 0) >= 3 ? '#ef4444' : (p.lateStrikes || 0) > 0 ? '#f59e0b' : '#22c55e',
+                        border: (p.lateStrikes || 0) >= 3 ? '1px solid #ef4444' : 'none',
+                        width: 'fit-content'
+                      }}>
+                        {(p.lateStrikes || 0) >= 3 ? '3/3 Strikes (Bonus Cut Off ⚠️)' : `${p.lateStrikes || 0}/3 Strikes (Bonus Active)`}
+                      </span>
+                      {p.adminShiftOverride && (
+                        <span style={{ fontSize: '10px', color: '#38bdf8' }}>🔓 Override Active</span>
+                      )}
+                    </div>
                   </td>
                   <td>
                     <span className="maskedPin">••••••</span>
@@ -1271,6 +1308,17 @@ export default function AdminDeliveryPartners() {
                       >
                         Reset PIN
                       </button>
+                      {(p.lateStrikes > 0 || p.bonusCutoff || p.adminShiftOverride) && (
+                        <button
+                          type="button"
+                          className="quickActionLink"
+                          style={{ color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.4)' }}
+                          title="Clear late strikes and unlock shift check-in"
+                          onClick={() => handleResetStrikes(p.username)}
+                        >
+                          Clear Strikes
+                        </button>
+                      )}
                       <button
                         type="button"
                         className="quickDeleteBtn"
