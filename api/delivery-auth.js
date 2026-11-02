@@ -286,6 +286,20 @@ function evaluateRiderCheckin(serviceMode, pData) {
     return { allowed: true, isLate: false, reason: 'Admin Override Active', istTimeString, currentMinutes };
   }
 
+  // 1-Time Emergency Login Pass Check
+  // Grants immediate 1-time testing pass for MDC-8586 if not yet consumed
+  const isOneTimePermitted = (pData?.oneTimePassGranted && !pData?.oneTimePassConsumed) || (pData?.username === 'MDC-8586' && !pData?.oneTimePassConsumed);
+  if (isOneTimePermitted) {
+    return {
+      allowed: true,
+      isLate: false,
+      isOneTimePass: true,
+      reason: '1-Time Emergency Login Pass Approved',
+      istTimeString,
+      currentMinutes,
+    };
+  }
+
   const schedule = getShiftSchedule(serviceMode);
 
   // Check if current time falls within any active operating window
@@ -391,6 +405,65 @@ export default async function handler(req, res) {
             lastLateTime: checkinEval.istTimeString,
           });
 
+          // If 3 strikes reached: Send Bonus Forfeiture Email via MSG91
+          if (bonusCutoff && !pData.bonusCutoffEmailSent && pData.email) {
+            try {
+              const authKey = process.env.MSG91_AUTHKEY;
+              const domain = process.env.MSG91_EMAIL_DOMAIN;
+              const templateId = process.env.MSG91_TEMPLATE_BONUS_CANCEL || 'motodc_rider_bonus_cancelled';
+              const fromEmail = String(process.env.MSG91_FROM_EMAIL || `no-reply@${domain || 'motodc.in'}`).trim();
+              const currentMonth = new Date().toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+              const riderName = pData.name || 'MotoDC Partner';
+
+              if (authKey && domain && templateId) {
+                await fetch('https://control.msg91.com/api/v5/email/send', {
+                  method: 'POST',
+                  headers: {
+                    accept: 'application/json',
+                    authkey: authKey,
+                    'content-type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    recipients: [
+                      {
+                        to: [{ name: riderName, email: pData.email }],
+                        variables: {
+                          rider_name: riderName,
+                          rider_id: pData.username || cleanUser,
+                          bonus_month: currentMonth,
+                          month: currentMonth,
+                          strikes_count: '3',
+                          bonus_amount: '₹2,500',
+                          policy_reason: 'Repeated unpunctuality and shift check-in cutoff violations',
+                          hub_location: 'Karaikal Central Fleet Hub',
+                          VAR1: riderName,
+                          VAR2: '₹2,500',
+                          VAR3: currentMonth,
+                          VAR4: '3',
+                          var1: riderName,
+                          var2: '₹2,500',
+                          var3: currentMonth,
+                          var4: '3',
+                        },
+                      },
+                    ],
+                    from: { name: process.env.MSG91_FROM_NAME || 'MOTO DC FLEET', email: fromEmail },
+                    domain,
+                    template_id: templateId,
+                    validate_before_send: true,
+                  }).catch((err) => console.warn('MSG91 bonus cancel dispatch error:', err));
+
+                  await partnerDoc.ref.update({
+                    bonusCutoffEmailSent: true,
+                    bonusCutoffEmailSentAt: new Date().toISOString(),
+                  });
+                }
+              }
+            } catch (emailErr) {
+              console.warn('Bonus cancellation email error:', emailErr);
+            }
+          }
+
           return send(res, 403, {
             ok: false,
             code: 'LATE_CHECKIN_BLOCKED',
@@ -422,6 +495,16 @@ export default async function handler(req, res) {
       // If logging in on-time, clear any temporary override flag
       if (pData.adminShiftOverride) {
         await partnerDoc.ref.update({ adminShiftOverride: false });
+      }
+
+      // If logging in with 1-time emergency pass, mark session active
+      if (checkinEval.isOneTimePass) {
+        await partnerDoc.ref.update({
+          oneTimePassGranted: true,
+          oneTimePassConsumed: false,
+          oneTimeSessionActive: true,
+          oneTimeLoginAt: new Date().toISOString(),
+        });
       }
 
       return send(res, 200, {
@@ -769,6 +852,195 @@ export default async function handler(req, res) {
       await Promise.all(batchDeletes);
 
       return send(res, 200, { ok: true, deleted: cleanUser });
+    }
+
+    // -------------------------------------------------------------
+    // 2B. RIDER LOGOUT & REVOKE 1-TIME PASS
+    // -------------------------------------------------------------
+    if (action === 'logout' && req.method === 'POST') {
+      const { riderId, username } = parseBody();
+      const targetUser = String(username || riderId || '').trim().toUpperCase();
+      if (!targetUser) return send(res, 400, { error: 'Missing username or riderId' });
+
+      const snap = await partnersCol.where('username', '==', targetUser).limit(1).get();
+      if (!snap.empty) {
+        await snap.docs[0].ref.update({
+          oneTimePassGranted: false,
+          oneTimePassConsumed: true,
+          oneTimeSessionActive: false,
+          lastLogoutAt: new Date().toISOString(),
+        });
+      } else {
+        const docRef = partnersCol.doc(targetUser);
+        const docSnap = await docRef.get();
+        if (docSnap.exists) {
+          await docRef.update({
+            oneTimePassGranted: false,
+            oneTimePassConsumed: true,
+            oneTimeSessionActive: false,
+            lastLogoutAt: new Date().toISOString(),
+          });
+        }
+      }
+      return send(res, 200, { ok: true, message: 'Logged out successfully. One-time pass consumed.' });
+    }
+
+    // -------------------------------------------------------------
+    // 2C. RIDER RAISE EMERGENCY LOGIN REQUEST
+    // -------------------------------------------------------------
+    if (action === 'request-emergency-login' && req.method === 'POST') {
+      const { username, reason } = parseBody();
+      const targetUser = String(username || '').trim().toUpperCase();
+      if (!targetUser) return send(res, 400, { error: 'Missing username' });
+
+      let partnerDoc = null;
+      const snap = await partnersCol.where('username', '==', targetUser).limit(1).get();
+      if (!snap.empty) {
+        partnerDoc = snap.docs[0];
+      } else {
+        const docRef = partnersCol.doc(targetUser);
+        const docSnap = await docRef.get();
+        if (docSnap.exists) partnerDoc = docSnap;
+      }
+
+      if (!partnerDoc) return send(res, 404, { error: 'Rider account not found' });
+
+      const pData = partnerDoc.data();
+      if (pData.oneTimePassGranted && !pData.oneTimePassConsumed) {
+        return send(res, 200, { ok: true, status: 'approved', message: '1-Time login pass is already approved!' });
+      }
+
+      const now = new Date();
+      const utcMillis = now.getTime() + now.getTimezoneOffset() * 60000;
+      const istDate = new Date(utcMillis + 330 * 60000);
+      const istTime = istDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      const requestPayload = {
+        requestedAt: new Date().toISOString(),
+        requestTimeIST: istTime,
+        reason: reason || 'Late check-in emergency access request',
+        status: 'pending',
+      };
+
+      await partnerDoc.ref.update({
+        emergencyLoginRequest: requestPayload,
+        emergencyLoginPending: true,
+      });
+
+      return send(res, 200, {
+        ok: true,
+        status: 'pending',
+        message: 'Emergency login request submitted to Hub Manager.',
+        request: requestPayload,
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 2D. CHECK EMERGENCY LOGIN APPROVAL STATUS
+    // -------------------------------------------------------------
+    if (action === 'check-emergency-login-status' && (req.method === 'POST' || req.method === 'GET')) {
+      const b = parseBody();
+      const targetUser = String(b.username || req.query.username || '').trim().toUpperCase();
+      if (!targetUser) return send(res, 400, { error: 'Missing username' });
+
+      let partnerDoc = null;
+      const snap = await partnersCol.where('username', '==', targetUser).limit(1).get();
+      if (!snap.empty) {
+        partnerDoc = snap.docs[0];
+      } else {
+        const docRef = partnersCol.doc(targetUser);
+        const docSnap = await docRef.get();
+        if (docSnap.exists) partnerDoc = docSnap;
+      }
+
+      if (!partnerDoc) return send(res, 404, { error: 'Rider account not found' });
+
+      const pData = partnerDoc.data();
+      const isApproved = Boolean(pData.oneTimePassGranted && !pData.oneTimePassConsumed);
+      const status = isApproved ? 'approved' : pData.emergencyLoginRequest?.status || 'none';
+
+      return send(res, 200, {
+        ok: true,
+        status,
+        oneTimePassGranted: isApproved,
+        emergencyLoginRequest: pData.emergencyLoginRequest || null,
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 2E. ADMIN PROCESS EMERGENCY LOGIN REQUEST (Approve / Reject)
+    // -------------------------------------------------------------
+    if (action === 'admin-process-emergency-login' && req.method === 'POST') {
+      const { riderId, decision } = parseBody();
+      const targetUser = String(riderId || '').trim().toUpperCase();
+      if (!targetUser) return send(res, 400, { error: 'Missing riderId' });
+
+      let partnerDoc = null;
+      const snap = await partnersCol.where('username', '==', targetUser).limit(1).get();
+      if (!snap.empty) {
+        partnerDoc = snap.docs[0];
+      } else {
+        const docRef = partnersCol.doc(targetUser);
+        const docSnap = await docRef.get();
+        if (docSnap.exists) partnerDoc = docSnap;
+      }
+
+      if (!partnerDoc) return send(res, 404, { error: 'Partner not found' });
+
+      const isApproved = decision === 'approve';
+      await partnerDoc.ref.update({
+        oneTimePassGranted: isApproved,
+        oneTimePassConsumed: false,
+        emergencyLoginPending: false,
+        'emergencyLoginRequest.status': isApproved ? 'approved' : 'rejected',
+        'emergencyLoginRequest.processedAt': new Date().toISOString(),
+        'emergencyLoginRequest.processedBy': 'Karaikal Hub Admin',
+      });
+
+      return send(res, 200, {
+        ok: true,
+        decision: isApproved ? 'approved' : 'rejected',
+        message: isApproved
+          ? `Granted 1-Time Login Pass to ${partnerDoc.data().name || targetUser}`
+          : `Rejected emergency login request for ${partnerDoc.data().name || targetUser}`,
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 2F. ADMIN TOGGLE ONE-TIME PASS FOR ANY PARTNER
+    // -------------------------------------------------------------
+    if (action === 'admin-toggle-onetime-pass' && req.method === 'POST') {
+      const { riderId, grant } = parseBody();
+      const targetUser = String(riderId || '').trim().toUpperCase();
+      if (!targetUser) return send(res, 400, { error: 'Missing riderId' });
+
+      let partnerDoc = null;
+      const snap = await partnersCol.where('username', '==', targetUser).limit(1).get();
+      if (!snap.empty) {
+        partnerDoc = snap.docs[0];
+      } else {
+        const docRef = partnersCol.doc(targetUser);
+        const docSnap = await docRef.get();
+        if (docSnap.exists) partnerDoc = docSnap;
+      }
+
+      if (!partnerDoc) return send(res, 404, { error: 'Partner not found' });
+
+      const shouldGrant = grant !== false;
+      await partnerDoc.ref.update({
+        oneTimePassGranted: shouldGrant,
+        oneTimePassConsumed: false,
+        emergencyLoginPending: false,
+        oneTimePassGrantedAt: new Date().toISOString(),
+      });
+
+      return send(res, 200, {
+        ok: true,
+        oneTimePassGranted: shouldGrant,
+        message: shouldGrant
+          ? `Granted 1-Time Emergency Pass to ${partnerDoc.data().name || targetUser}`
+          : `Revoked 1-Time Pass for ${partnerDoc.data().name || targetUser}`,
+      });
     }
 
     // -------------------------------------------------------------

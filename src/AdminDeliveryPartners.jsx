@@ -241,6 +241,7 @@ export default function AdminDeliveryPartners() {
       fetchResets();
       fetchKycList();
       fetchCorridors();
+      fetchPartners();
     }, 10000); // Poll reset requests, KYC, & corridor manifests every 10s
     return () => clearInterval(interval);
   }, []);
@@ -475,6 +476,42 @@ export default function AdminDeliveryPartners() {
       fetchPartners();
     } catch (e) {
       toast.error(e.message || 'Error resetting strikes');
+    }
+  };
+
+  // Process Rider Emergency Login Request (Approve / Reject)
+  const handleProcessEmergencyLogin = async (partner, decision) => {
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-process-emergency-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ riderId: partner.username || partner.id, decision }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to process request');
+      toast.success(data.message || `Request ${decision}d!`);
+      fetchPartners();
+    } catch (e) {
+      toast.error(e.message || 'Error processing request');
+    }
+  };
+
+  // Grant or Revoke 1-Time Emergency Pass manually
+  const handleToggleOneTimePass = async (partner) => {
+    const isGranted = Boolean(partner.oneTimePassGranted && !partner.oneTimePassConsumed);
+    const grant = !isGranted;
+    try {
+      const res = await fetch('/api/delivery-auth?action=admin-toggle-onetime-pass', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ riderId: partner.username || partner.id, grant }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update 1-time pass');
+      toast.success(data.message || (grant ? '1-Time Pass Granted' : '1-Time Pass Revoked'));
+      fetchPartners();
+    } catch (e) {
+      toast.error(e.message || 'Error updating pass');
     }
   };
 
@@ -1220,6 +1257,83 @@ export default function AdminDeliveryPartners() {
           <span className="countPill">{partners.length} Registered Drivers</span>
         </div>
 
+        {/* 🚨 Emergency Login Requests Banner */}
+        {partners.filter(p => p.emergencyLoginPending || p.emergencyLoginRequest?.status === 'pending').length > 0 && (
+          <div className="emergencyRequestsBanner" style={{
+            background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.9))',
+            border: '1.5px solid rgba(239, 68, 68, 0.4)',
+            borderRadius: '12px',
+            padding: '16px',
+            marginBottom: '20px',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '20px' }}>🚨</span>
+                <strong style={{ fontSize: '14px', color: '#f87171' }}>
+                  Pending Emergency Login Requests ({partners.filter(p => p.emergencyLoginPending || p.emergencyLoginRequest?.status === 'pending').length})
+                </strong>
+              </div>
+              <small style={{ color: '#94a3b8' }}>Riders attempting late check-in requesting 1-time clearance</small>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {partners.filter(p => p.emergencyLoginPending || p.emergencyLoginRequest?.status === 'pending').map(p => (
+                <div key={p.username || p.id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  background: 'rgba(30, 41, 59, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '8px',
+                  padding: '10px 14px'
+                }}>
+                  <div>
+                    <strong style={{ color: '#fff', fontSize: '13px' }}>{p.name}</strong>{' '}
+                    <span className="codePill" style={{ marginLeft: '6px' }}>{p.username}</span>
+                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                      Requested at: <span style={{ color: '#f59e0b' }}>{p.emergencyLoginRequest?.requestTimeIST || 'Just now'}</span> • Reason: {p.emergencyLoginRequest?.reason || 'Late shift access'}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      style={{
+                        padding: '6px 14px',
+                        background: '#22c55e',
+                        border: 'none',
+                        borderRadius: '6px',
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => handleProcessEmergencyLogin(p, 'approve')}
+                    >
+                      ✓ Approve (1-Time Pass)
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        padding: '6px 14px',
+                        background: 'rgba(239, 68, 68, 0.2)',
+                        border: '1px solid #ef4444',
+                        borderRadius: '6px',
+                        color: '#f87171',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => handleProcessEmergencyLogin(p, 'reject')}
+                    >
+                      ✕ Reject
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="partnersTableWrap">
           <table className="partnersTable">
             <thead>
@@ -1266,6 +1380,9 @@ export default function AdminDeliveryPartners() {
                       {p.adminShiftOverride && (
                         <span style={{ fontSize: '10px', color: '#38bdf8' }}>🔓 Override Active</span>
                       )}
+                      {p.oneTimePassGranted && !p.oneTimePassConsumed && (
+                        <span style={{ fontSize: '10px', color: '#a855f7', fontWeight: 700 }}>🔑 1-Time Pass Ready</span>
+                      )}
                     </div>
                   </td>
                   <td>
@@ -1307,6 +1424,18 @@ export default function AdminDeliveryPartners() {
                         }}
                       >
                         Reset PIN
+                      </button>
+                      <button
+                        type="button"
+                        className="quickActionLink"
+                        style={{
+                          color: p.oneTimePassGranted && !p.oneTimePassConsumed ? '#ef4444' : '#a855f7',
+                          borderColor: p.oneTimePassGranted && !p.oneTimePassConsumed ? 'rgba(239, 68, 68, 0.4)' : 'rgba(168, 85, 247, 0.4)'
+                        }}
+                        title={p.oneTimePassGranted && !p.oneTimePassConsumed ? 'Revoke emergency 1-time login pass' : 'Grant emergency 1-time login pass'}
+                        onClick={() => handleToggleOneTimePass(p)}
+                      >
+                        {p.oneTimePassGranted && !p.oneTimePassConsumed ? 'Revoke Pass' : '1-Time Pass'}
                       </button>
                       {(p.lateStrikes > 0 || p.bonusCutoff || p.adminShiftOverride) && (
                         <button
