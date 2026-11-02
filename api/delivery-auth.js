@@ -211,6 +211,57 @@ Respond ONLY with a valid JSON object matching this schema (no markdown, no back
   };
 }
 
+function getShiftSchedule(serviceMode) {
+  const mode = String(serviceMode || 'Standard').toLowerCase();
+  if (mode.includes('part')) {
+    return {
+      name: 'Part-Time',
+      windows: [
+        { startMinutes: 9 * 60, endMinutes: 14 * 60, label: '9:00 AM – 2:00 PM' },
+        { startMinutes: 15 * 60 + 30, endMinutes: 20 * 60 + 30, label: '3:30 PM – 8:30 PM' },
+      ],
+      overallLabel: '9:00 AM – 2:00 PM & 3:30 PM – 8:30 PM',
+    };
+  }
+  if (mode.includes('power')) {
+    return {
+      name: 'Power Rider',
+      windows: [
+        { startMinutes: 8 * 60, endMinutes: 21 * 60 + 30, label: '8:00 AM – 9:30 PM' },
+      ],
+      overallLabel: '8:00 AM – 9:30 PM',
+    };
+  }
+  // Standard
+  return {
+    name: 'Standard',
+    windows: [
+      { startMinutes: 8 * 60 + 30, endMinutes: 20 * 60 + 30, label: '8:30 AM – 8:30 PM' },
+    ],
+    overallLabel: '8:30 AM – 8:30 PM',
+  };
+}
+
+function checkShiftActive(serviceMode) {
+  const now = new Date();
+  const utcMillis = now.getTime() + now.getTimezoneOffset() * 60000;
+  const istDate = new Date(utcMillis + 330 * 60000);
+  const currentMinutes = istDate.getHours() * 60 + istDate.getMinutes();
+
+  const schedule = getShiftSchedule(serviceMode);
+  const matchingWindow = schedule.windows.find(
+    (w) => currentMinutes >= w.startMinutes && currentMinutes <= w.endMinutes
+  );
+
+  return {
+    isActive: Boolean(matchingWindow),
+    currentMinutes,
+    schedule,
+    matchingWindow,
+    istTimeString: istDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
+  };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -261,13 +312,26 @@ export default async function handler(req, res) {
         return send(res, 401, { error: 'Invalid 6-digit PIN. Tap "Forgot PIN" if forgotten.' });
       }
 
+      // Shift Hour Enforcement
+      const shiftCheck = checkShiftActive(pData.serviceMode);
+      if (!shiftCheck.isActive) {
+        return send(res, 403, {
+          error: `Shift Closed: You can only log in during your scheduled shift hours (${shiftCheck.schedule.overallLabel} IST). Current time is ${shiftCheck.istTimeString} IST.`,
+          code: 'SHIFT_CLOSED',
+          schedule: shiftCheck.schedule,
+        });
+      }
+
       return send(res, 200, {
         ok: true,
         rider: {
           username: pData.username || cleanUser,
           name: pData.name || 'Delivery Partner',
           phone: pData.phone || '',
-          shiftStart: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+          serviceMode: pData.serviceMode || 'Standard',
+          shiftStart: shiftCheck.istTimeString,
+          shiftEndMinutes: shiftCheck.matchingWindow?.endMinutes || (20 * 60 + 30),
+          shiftLabel: shiftCheck.matchingWindow?.label || shiftCheck.schedule.overallLabel,
         },
       });
     }

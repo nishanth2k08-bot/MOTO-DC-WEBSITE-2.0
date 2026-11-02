@@ -1740,10 +1740,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .driverSelectDropdown {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
   background: #0f172a !important;
   color: #f1f5f9 !important;
   border: 1px solid #334155 !important;
@@ -1751,6 +1754,9 @@
   padding: 7px 10px !important;
   font-size: 12px !important;
   outline: none !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .driverSelectDropdown:focus {
@@ -1758,13 +1764,16 @@
 }
 
 .dispatchRouteBtn {
+  flex-shrink: 0;
+  min-width: 90px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   color: #fff;
   border: none;
   border-radius: 7px;
-  padding: 7px 13px;
+  padding: 7px 14px;
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;

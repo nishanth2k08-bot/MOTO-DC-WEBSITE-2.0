@@ -1010,7 +1010,7 @@ export default function AdminDeliveryPartners() {
               title="Auto-pair active corridors with available drivers based on service mode"
             >
               <Zap size={15} className={autoDispatching ? 'pulsingIcon' : ''} />
-              {autoDispatching ? 'Auto-Dispatching Fleet...' : '⚡ 1-Click Smart Auto-Dispatch'}
+              {autoDispatching ? 'Auto-Dispatching Fleet...' : 'Auto-Dispatch'}
             </button>
           </div>
         </div>
