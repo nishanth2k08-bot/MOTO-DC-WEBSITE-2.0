@@ -1,0 +1,12 @@
+{
+  "version": "1.0.1",
+  "buildNumber": 2,
+  "appName": "MotoDC Hub Station",
+  "packageId": "com.motodc.hub",
+  "apkFileName": "MotoDC-Hub.apk",
+  "apkUrl": "/MotoDC-Hub.apk?v=1.0.1",
+  "updatedAt": "2026-11-03T20:15:00.000Z",
+  "fileSize": "5.5 MB",
+  "minAndroidVersion": "Android 8.0 (Oreo) or later",
+  "releaseNotes": "Standalone Karaikal Warehouse Fulfillment App with dual barcode scanner support (Hardware USB/Bluetooth Wedge + Camera 60FPS Laser Reticle), real-time Firestore synchronization, corridor rack staging, and 8:30 PM shift security."
+}

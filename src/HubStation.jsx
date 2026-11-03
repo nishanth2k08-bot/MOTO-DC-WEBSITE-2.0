@@ -1,892 +1,551 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { collection, onSnapshot, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
-import { db } from './firebase';
-import ShippingLabelModal from './ShippingLabelModal';
-import BarcodeScannerModal from './BarcodeScannerModal';
-import InstallPrompt from './InstallPrompt';
-import { detectDeliveryZone, CORRIDOR_METADATA } from './corridorUtil';
 import {
-  Package,
-  Printer,
-  CheckCircle2,
-  ShieldCheck,
-  MapPin,
-  Truck,
-  Search,
-  RefreshCw,
-  Barcode,
-  CheckSquare,
-  Square,
-  Lock,
-  Key,
-  Clock,
-  ArrowRight,
-  LogOut,
-  Info,
-  Camera,
-  Zap,
   Smartphone,
-  Copy,
+  Download,
   QrCode,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  Barcode,
+  Truck,
+  ShieldCheck,
+  Copy,
+  ExternalLink,
+  Layers,
+  Sparkles,
+  Zap,
+  Radio,
+  FileText,
+  Key,
   X
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './hub-station.css';
 
-const DEFAULT_STATION_PIN = '1234';
-
-// Hub Shift Schedule: 7:00 AM to 8:30 PM IST (Daily)
-// Auto-lock / logout after shift completion (>= 8:30 PM / 20:30)
-const isShiftCompleted = () => {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const currentMinutes = hours * 60 + minutes;
-  const shiftEndMinutes = 20 * 60 + 30; // 8:30 PM = 1230 minutes
-  const morningShiftStartMinutes = 7 * 60; // 7:00 AM = 420 minutes
-
-  // Shift is completed if current time is 8:30 PM or later, or before 7:00 AM
-  return currentMinutes >= shiftEndMinutes || currentMinutes < morningShiftStartMinutes;
+// Default fallback version configuration
+const DEFAULT_VERSION_CONFIG = {
+  version: '1.0.1',
+  buildNumber: 2,
+  appName: 'MotoDC Hub Station',
+  packageId: 'com.motodc.hub',
+  apkFileName: 'MotoDC-Hub.apk',
+  apkUrl: '/MotoDC-Hub.apk?v=1.0.1',
+  updatedAt: new Date().toISOString(),
+  fileSize: '5.5 MB',
+  minAndroidVersion: 'Android 8.0 (Oreo) or later',
+  releaseNotes: 'Karaikal Warehouse Fulfillment App with dual barcode scanner support (Hardware USB/Bluetooth Wedge + Camera 60FPS Laser Reticle), real-time Firestore synchronization, corridor rack staging, and 8:30 PM shift security.'
 };
 
 export default function HubStation() {
-  const [afterHoursOverride, setAfterHoursOverride] = useState(false);
-  const [stationAuth, setStationAuth] = useState(() => {
-    try {
-      // If shift has completed for today, automatically logout and clear session
-      if (isShiftCompleted()) {
-        localStorage.removeItem('motodc_hub_auth');
-        return false;
-      }
-      return localStorage.getItem('motodc_hub_auth') === 'granted';
-    } catch {
-      return false;
-    }
-  });
-  const [pinInput, setPinInput] = useState('');
-  const [pinError, setPinError] = useState('');
+  const [versionInfo, setVersionInfo] = useState(DEFAULT_VERSION_CONFIG);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Auto-logout when shift completes at 8:30 PM
+  // Real-time clock update (every second)
   useEffect(() => {
-    const checkShiftTimer = () => {
-      if (isShiftCompleted() && stationAuth && !afterHoursOverride) {
-        setStationAuth(false);
-        try {
-          localStorage.removeItem('motodc_hub_auth');
-        } catch (_) {}
-        toast('Operational shift completed (8:30 PM). Station terminal automatically locked.', {
-          icon: '🌙',
-          duration: 6000,
-        });
-      }
-    };
-
-    checkShiftTimer();
-    const interval = setInterval(checkShiftTimer, 5000);
-    return () => clearInterval(interval);
-  }, [stationAuth, afterHoursOverride]);
-
-  // Orders State
-  const [codOrders, setCodOrders] = useState([]);
-  const [onlineOrders, setOnlineOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Filters & Search
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'packed' | 'all'
-  const [selectedCorridor, setSelectedCorridor] = useState('all');
-
-  // Modal & Checklist State
-  const [labelOrder, setLabelOrder] = useState(null);
-  const [scannerOpen, setScannerOpen] = useState(false);
-  const [lastScannedBarcode, setLastScannedBarcode] = useState('');
-  const [checkedItems, setCheckedItems] = useState({}); // { [orderId_itemIdx]: boolean }
-  const [updatingId, setUpdatingId] = useState(null);
-
-  // Phone QR Code Generator (for desktop/laptop staff to open directly on phone)
-  const [hubQrCodeUrl, setHubQrCodeUrl] = useState('');
-  const [showPhoneQrModal, setShowPhoneQrModal] = useState(false);
-
-  useEffect(() => {
-    const hubUrl = typeof window !== 'undefined'
-      ? `${window.location.origin}/hub`
-      : 'https://motodc.in/hub';
-
-    QRCode.toDataURL(hubUrl, {
-      width: 240,
-      margin: 2,
-      color: {
-        dark: '#000000',
-        light: '#ffffff',
-      },
-    })
-      .then((url) => setHubQrCodeUrl(url))
-      .catch((err) => console.warn('QR generation error:', err));
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
-  // Sound chime for new incoming packing order & barcode scans
-  const audioContextRef = useRef(null);
-
-  const playChime = () => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!audioContextRef.current) audioContextRef.current = new AudioCtx();
-      const ctx = audioContextRef.current;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.35);
-    } catch (_) {}
-  };
-
-  const playScannerBeep = () => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!audioContextRef.current) audioContextRef.current = new AudioCtx();
-      const ctx = audioContextRef.current;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(1760, ctx.currentTime);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.12);
-    } catch (_) {}
-  };
-
-  // Station PIN Authentication
-  const handlePinSubmit = (e) => {
-    e.preventDefault();
-    if (pinInput.trim() === DEFAULT_STATION_PIN) {
-      const shiftEnded = isShiftCompleted();
-      if (shiftEnded) {
-        setAfterHoursOverride(true);
-        toast('Overtime / After-Hours Access Unlocked (Shift ended at 8:30 PM)', { icon: '⚠️', duration: 5000 });
-      } else {
-        toast.success('Station Unlocked • Karaikal Hub Packing Portal Active');
-      }
-      setStationAuth(true);
-      setPinError('');
+  // Fetch the latest version manifest dynamically whenever the page loads
+  // Ensures the QR code and download links ALWAYS show the newest version
+  useEffect(() => {
+    let isMounted = true;
+    const fetchLatestVersion = async () => {
       try {
-        localStorage.setItem('motodc_hub_auth', 'granted');
-      } catch (_) {}
-    } else {
-      setPinError('Incorrect Station PIN');
-      toast.error('Invalid Station PIN');
-    }
-  };
-
-  const handleStationLock = () => {
-    setStationAuth(false);
-    setAfterHoursOverride(false);
-    try {
-      localStorage.removeItem('motodc_hub_auth');
-    } catch (_) {}
-    toast('Station locked', { icon: '🔒' });
-  };
-
-  // Real-Time Sync with Firestore Orders
-  useEffect(() => {
-    if (!stationAuth) return;
-    setLoading(true);
-
-    const codCol = collection(db, 'orders', 'cod orders', 'records');
-    const onlineCol = collection(db, 'orders', 'online orders', 'records');
-
-    let initialLoad = true;
-
-    const unsubCod = onSnapshot(codCol, (snap) => {
-      const docs = snap.docs.map((d) => ({ ...d.data(), id: d.id, collectionType: 'cod orders', paymentMethod: 'cod' }));
-      if (!initialLoad && docs.length > codOrders.length) {
-        playChime();
-        toast('New order received for packing!', { icon: '📦' });
-      }
-      setCodOrders(docs);
-      setLoading(false);
-    }, (err) => {
-      console.warn('Cod sync error in Hub:', err);
-      setLoading(false);
-    });
-
-    const unsubOnline = onSnapshot(onlineCol, (snap) => {
-      const docs = snap.docs.map((d) => ({ ...d.data(), id: d.id, collectionType: 'online orders', paymentMethod: 'online' }));
-      if (!initialLoad && docs.length > onlineOrders.length) {
-        playChime();
-        toast('New order received for packing!', { icon: '📦' });
-      }
-      setOnlineOrders(docs);
-      setLoading(false);
-    }, (err) => {
-      console.warn('Online sync error in Hub:', err);
-      setLoading(false);
-    });
-
-    initialLoad = false;
-
-    return () => {
-      unsubCod();
-      unsubOnline();
-    };
-  }, [stationAuth]);
-
-  // Combine and format active orders
-  const allOrders = useMemo(() => {
-    return [...codOrders, ...onlineOrders].map((o) => {
-      const corridorId = o.assignedCorridor || detectDeliveryZone(o.shipping);
-      const meta = CORRIDOR_METADATA[corridorId] || CORRIDOR_METADATA.central_town;
-      return {
-        ...o,
-        corridorId,
-        corridorMeta: meta,
-      };
-    });
-  }, [codOrders, onlineOrders]);
-
-  // Filtered orders for queue
-  const filteredOrders = useMemo(() => {
-    return allOrders.filter((o) => {
-      const st = String(o.orderStatus || 'placed').toLowerCase();
-
-      // Tab Filtering
-      if (activeTab === 'pending') {
-        if (!['placed', 'confirmed', ''].includes(st)) return false;
-      } else if (activeTab === 'packed') {
-        if (st !== 'packed') return false;
-      } else if (activeTab === 'in_transit') {
-        if (!['shipped', 'out_for_delivery'].includes(st)) return false;
-      }
-
-      // Corridor Filtering
-      if (selectedCorridor !== 'all' && o.corridorId !== selectedCorridor) {
-        return false;
-      }
-
-      // Search Query
-      if (searchQuery.trim()) {
-        const q = searchQuery.trim().toLowerCase();
-        const idMatch = String(o.orderId || o.id || '').toLowerCase().includes(q);
-        const nameMatch = String(o.customer?.name || '').toLowerCase().includes(q);
-        const phoneMatch = String(o.customer?.phone || '').includes(q);
-        const itemMatch = (o.items || []).some((it) => String(it.name || '').toLowerCase().includes(q));
-        if (!idMatch && !nameMatch && !phoneMatch && !itemMatch) return false;
-      }
-
-      return true;
-    }).sort((a, b) => {
-      const tA = a.createdAt?.seconds || 0;
-      const tB = b.createdAt?.seconds || 0;
-      return tB - tA;
-    });
-  }, [allOrders, activeTab, selectedCorridor, searchQuery]);
-
-  // Barcode Handler (Handles both Camera Scans & Hardware USB Scanner guns)
-  const handleBarcodeIdentified = (rawCode) => {
-    if (!rawCode) return;
-    const clean = String(rawCode).trim().toLowerCase();
-    setLastScannedBarcode(rawCode);
-    playScannerBeep();
-
-    const matched = allOrders.find((o) => {
-      const id = String(o.id || '').toLowerCase();
-      const orderId = String(o.orderId || '').toLowerCase();
-      return id === clean || orderId === clean || clean.includes(orderId) || clean.includes(id);
-    });
-
-    if (matched) {
-      toast.success(`📦 Barcode Matched: Order #${matched.orderId || matched.id}`, {
-        icon: '⚡',
-        duration: 4000,
-      });
-      const st = String(matched.orderStatus || 'placed').toLowerCase();
-      if (st === 'packed') {
-        setActiveTab('packed');
-      } else if (['shipped', 'out_for_delivery'].includes(st)) {
-        setActiveTab('in_transit');
-      } else {
-        setActiveTab('pending');
-      }
-      setSearchQuery('');
-      setLabelOrder(matched);
-    } else {
-      toast(`Scanned: "${rawCode}" (No order match found in queue)`, {
-        icon: '🔍',
-        duration: 4500,
-      });
-      setSearchQuery(rawCode);
-    }
-  };
-
-  // Hardware USB/Bluetooth Barcode Scanner Listener (Keyboard Wedge)
-  useEffect(() => {
-    if (!stationAuth) return;
-
-    let buffer = '';
-    let lastKeyTime = Date.now();
-
-    const handleKeyDown = (e) => {
-      const tag = e.target?.tagName?.toLowerCase();
-      const isInput = tag === 'input' || tag === 'textarea';
-
-      const now = Date.now();
-      const diff = now - lastKeyTime;
-      lastKeyTime = now;
-
-      if (e.key === 'Enter') {
-        if (buffer.length >= 4) {
-          e.preventDefault();
-          handleBarcodeIdentified(buffer);
-          buffer = '';
+        const res = await fetch(`/hub-version.json?t=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data && data.version) {
+            setVersionInfo(data);
+          }
         }
-        return;
-      }
-
-      if (isInput && diff > 100) {
-        buffer = '';
-        return;
-      }
-
-      if (e.key.length === 1) {
-        if (diff > 80) buffer = '';
-        buffer += e.key;
+      } catch (err) {
+        console.warn('Could not fetch dynamic hub-version.json, using bundled version:', err);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [stationAuth, allOrders]);
+    fetchLatestVersion();
+    return () => { isMounted = false; };
+  }, []);
 
-  // Item Checkbox Toggle
-  const toggleItemCheck = (orderKey, idx) => {
-    const key = `${orderKey}_${idx}`;
-    setCheckedItems((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+  // Compute canonical download URL
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const fullApkDownloadUrl = `${origin}/MotoDC-Hub.apk?v=${encodeURIComponent(versionInfo.version)}`;
+  const installPortalUrl = `${origin}/hub/install`;
+
+  // Dynamically regenerate the QR Code whenever versionInfo changes
+  useEffect(() => {
+    if (!origin) return;
+    try {
+      QRCode.toDataURL(fullApkDownloadUrl, {
+        width: 320,
+        margin: 2,
+        color: {
+          dark: '#05070b',
+          light: '#ffffff',
+        },
+        errorCorrectionLevel: 'H',
+      })
+        .then((url) => setQrCodeDataUrl(url))
+        .catch((err) => console.warn('QR Code generation error:', err));
+    } catch (e) {
+      console.warn('QR Code generation exception:', e);
+    }
+  }, [fullApkDownloadUrl, origin]);
+
+  // Lock background scroll when QR modal is active
+  useEffect(() => {
+    if (showQrModal) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [showQrModal]);
+
+  // Operational shift status check: 7:00 AM – 8:30 PM IST (Daily)
+  const isShiftOpen = () => {
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const currentMinutes = hours * 60 + minutes;
+    const shiftStart = 7 * 60; // 07:00 AM
+    const shiftEnd = 20 * 60 + 30; // 08:30 PM (20:30)
+    return currentMinutes >= shiftStart && currentMinutes < shiftEnd;
   };
 
-  // Stage 2 Completion: Mark Packed & Quality Verified
-  const handleMarkPackedAndVerified = async (order) => {
-    setUpdatingId(order.id);
-    try {
-      const docRef = doc(db, 'orders', order.collectionType, 'records', order.id);
-      await updateDoc(docRef, {
-        orderStatus: 'packed',
-        packedAt: new Date().toISOString(),
-        history: arrayUnion({
-          status: 'packed',
-          timestamp: new Date().toISOString(),
-          note: 'Packed & Quality Verified at MotoDC Central Warehouse (Karaikal Hub). Staged in ' + order.corridorMeta.name + ' rack.',
-        }),
-      });
-
-      playChime();
-      toast.success(`✅ Order #${order.orderId || order.id} Packed & Staged into ${order.corridorMeta.name}!`, {
-        duration: 5000,
-        icon: '📦',
-      });
-    } catch (err) {
-      console.error('Mark packed error:', err);
-      toast.error('Could not update status: ' + err.message);
-    } finally {
-      setUpdatingId(null);
+  const handleCopyLink = () => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(fullApkDownloadUrl);
+      setCopiedLink(true);
+      toast.success('App download link copied to clipboard!');
+      setTimeout(() => setCopiedLink(false), 2500);
     }
   };
 
-  // Station Lock Screen
-  if (!stationAuth) {
-    const shiftEnded = isShiftCompleted();
-    return (
-      <div className="hubStationLockScreen">
-        <div className="hubStationLockWrap">
-          <div className="hubStationLockCard">
-            <div className="hubStationLogoRow">
-              <Package size={34} color="#ff3157" />
-              <div>
-                <h2>Moto<span>DC</span> Hub Station</h2>
-                <p>Warehouse Fulfillment & Quality Inspection Portal</p>
-              </div>
-            </div>
+  const handleDirectDownload = () => {
+    toast.success(`Starting download: MotoDC-Hub.apk (v${versionInfo.version})`, { duration: 4000 });
+    const link = document.createElement('a');
+    link.href = fullApkDownloadUrl;
+    link.setAttribute('download', 'MotoDC-Hub.apk');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-            {shiftEnded && (
-              <div
-                className="hubShiftEndedNotice"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  background: 'rgba(245, 158, 11, 0.12)',
-                  border: '1px solid rgba(245, 158, 11, 0.35)',
-                  borderRadius: '10px',
-                  padding: '10px 14px',
-                  marginBottom: '16px',
-                  color: '#fbbf24',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                }}
-              >
-                <Clock size={18} color="#f59e0b" style={{ flexShrink: 0 }} />
-                <div>
-                  <strong style={{ display: 'block', color: '#fef08a' }}>
-                    Operational Shift Completed (8:30 PM)
-                  </strong>
-                  <span style={{ fontSize: '11.5px', color: '#cbd5e1', fontWeight: 500 }}>
-                    Daily warehouse packing shift has ended. Terminal automatically locked.
-                  </span>
-                </div>
-              </div>
-            )}
+  const formatLastUpdated = (isoString) => {
+    try {
+      const d = new Date(isoString);
+      return d.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+    } catch {
+      return 'Latest';
+    }
+  };
 
-            <div className="hubStationLockNotice">
-              <ShieldCheck size={18} color="#22c55e" />
-              <div>
-                <strong>Dedicated Warehouse Staff Terminal</strong>
-                <p>Zero admin financial access. Used exclusively for packing, box labeling, and parcel staging.</p>
-              </div>
-            </div>
-
-            <form onSubmit={handlePinSubmit} className="hubStationPinForm">
-              <label>
-                <span>Enter 4-Digit Station PIN</span>
-                <div className="hubPinInputWrap">
-                  <Key size={18} color="#94a3b8" />
-                  <input
-                    type="password"
-                    maxLength={4}
-                    value={pinInput}
-                    onChange={(e) => setPinInput(e.target.value)}
-                    placeholder="• • • •"
-                    autoFocus
-                  />
-                </div>
-              </label>
-
-              {pinError && <div className="hubPinError">{pinError}</div>}
-
-              <button type="submit" className="hubStationUnlockBtn">
-                Unlock Packing Terminal <ArrowRight size={16} />
-              </button>
-            </form>
+  return (
+    <div className="hubStationContainer">
+      <div className="hubStationInner">
+        
+        {/* ================================================================= */}
+        {/* 1. HERO & STATION IDENTITY BANNER                                 */}
+        {/* ================================================================= */}
+        <section className="hubHeroCard">
+          <div className="hubHeroBadgeRow">
+            <span className="hubBadge hubBadgePrimary">
+              <MapPin size={12} /> Karaikal Central Logistics HQ • HUB-KKL-01
+            </span>
+            <span className={`hubBadge ${isShiftOpen() ? 'hubBadgeSuccess' : 'hubBadgeWarning'}`}>
+              <Radio size={12} className={isShiftOpen() ? 'hubPulseDot' : ''} />
+              {isShiftOpen() ? 'Live Operations Active (7:00 AM – 8:30 PM)' : 'Shift Closed (Auto-Lock Active)'}
+            </span>
+            <span className="hubBadge hubBadgeMuted">
+              <Clock size={12} /> {currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </span>
           </div>
 
-          {/* Desktop / Laptop Callout: Open on Phone QR Code */}
-          <div className="hubDesktopPhoneQrCard">
-            <div className="hubPhoneQrHeader">
-              <div className="hubPhoneQrIconWrap">
-                <Smartphone size={24} color="#ff3157" />
+          <div className="hubHeroContent">
+            <div className="hubHeroText">
+              <h1>
+                Karaikal Hub <span>Fulfillment Station</span>
+              </h1>
+              <p className="hubHeroSubtitle">
+                Official warehouse dispatch facility for Karaikal district. Parcel staging racks,
+                thermal barcode labeling, and courier handovers are conducted via the handheld mobile terminal.
+              </p>
+            </div>
+
+            {/* Primary CTA: Install App Button */}
+            <div className="hubHeroActions">
+              <button
+                type="button"
+                className="hubInstallAppBtn"
+                onClick={() => setShowQrModal(true)}
+                aria-label="Install MotoDC Hub Mobile App"
+              >
+                <div className="hubInstallBtnIcon">
+                  <Smartphone size={22} />
+                </div>
+                <div className="hubInstallBtnText">
+                  <span className="hubInstallBtnTitle">Install Hub App</span>
+                  <span className="hubInstallBtnSubtitle">
+                    Scan QR to Install • v{versionInfo.version}
+                  </span>
+                </div>
+                <div className="hubInstallBtnBadge">
+                  <QrCode size={16} />
+                </div>
+              </button>
+
+              <button
+                type="button"
+                className="hubDirectDownloadBtn"
+                onClick={handleDirectDownload}
+                title="Download APK directly to your computer or phone"
+              >
+                <Download size={16} /> Direct APK ({versionInfo.fileSize || '5.5 MB'})
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================= */}
+        {/* 2. MOBILE FULFILLMENT TRANSITION NOTICE                           */}
+        {/* ================================================================= */}
+        <section className="hubTransitionNotice">
+          <div className="hubNoticeIconWrap">
+            <Smartphone size={24} />
+          </div>
+          <div className="hubNoticeBody">
+            <h3>Handheld Mobile Operations Standard</h3>
+            <p>
+              To maintain high mobility on the warehouse floor and support direct hardware barcode scanners,
+              all order staging, thermal shipping label printing, and rider parcel transfers are conducted
+              exclusively on the <strong>MotoDC Hub Mobile App</strong>.
+            </p>
+            <div className="hubNoticePills">
+              <span><Zap size={13} /> Dual Barcode Scanner (Hardware Wedge + 60FPS Camera)</span>
+              <span><Layers size={13} /> 4-Corridor Geographic Rack Staging</span>
+              <span><ShieldCheck size={13} /> 8:30 PM Shift Auto-Lock Security</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================= */}
+        {/* 3. ESSENTIAL HUB DETAILS GRID                                     */}
+        {/* ================================================================= */}
+        <section className="hubDetailsGrid">
+          
+          {/* Card 1: Station Identity */}
+          <div className="hubDetailCard">
+            <div className="hubCardHeader">
+              <div className="hubCardIconBox hubIconBlue">
+                <MapPin size={20} />
               </div>
               <div>
-                <h3>Open on Mobile Phone</h3>
-                <p>Use your phone's camera as a barcode scanner</p>
+                <h3>Station Information</h3>
+                <small>Facility Details & Geography</small>
               </div>
             </div>
-
-            <div className="hubPhoneQrCodeBox">
-              {hubQrCodeUrl ? (
-                <img src={hubQrCodeUrl} alt="Scan QR Code to open on phone" />
-              ) : (
-                <div className="hubQrLoading">Generating QR Code...</div>
-              )}
-              <div className="hubQrScanTip">
-                <Camera size={14} color="#ff3157" />
-                <span>Scan with Phone Camera or Google Lens</span>
+            <div className="hubCardContent">
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Facility Name</span>
+                <span className="hubInfoValue">Karaikal Central Warehouse</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Station Code</span>
+                <span className="hubInfoValue hubHighlightCode">HUB-KKL-01</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Physical Address</span>
+                <span className="hubInfoValue">
+                  14, Perumal Koil Street, Nedungadu, Karaikal, Puducherry - 609603
+                </span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Dispatch Radius</span>
+                <span className="hubInfoValue">All Karaikal + Nagore Transit Borders</span>
               </div>
             </div>
+          </div>
 
-            <div className="hubPhoneBenefitsList">
-              <div className="hubPhoneBenefitItem">
-                <CheckCircle2 size={15} color="#22c55e" />
-                <span>Portable scanning across warehouse racks</span>
+          {/* Card 2: Operating Shift & Security */}
+          <div className="hubDetailCard">
+            <div className="hubCardHeader">
+              <div className="hubCardIconBox hubIconAmber">
+                <Clock size={20} />
               </div>
-              <div className="hubPhoneBenefitItem">
-                <CheckCircle2 size={15} color="#22c55e" />
-                <span>Auto-focus camera barcode & QR reader</span>
-              </div>
-              <div className="hubPhoneBenefitItem">
-                <CheckCircle2 size={15} color="#22c55e" />
-                <span>Installs directly to phone home screen</span>
+              <div>
+                <h3>Operating Shift & PIN</h3>
+                <small>Terminal Authorization & Shift Rules</small>
               </div>
             </div>
+            <div className="hubCardContent">
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Operating Hours</span>
+                <span className="hubInfoValue">07:00 AM – 08:30 PM IST (Daily)</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Shift Cutoff Time</span>
+                <span className="hubInfoValue">08:30 PM IST (Overnight Security Lock)</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Default Station PIN</span>
+                <span className="hubInfoValue hubHighlightCode">
+                  <Key size={13} style={{ display: 'inline', marginRight: 4 }} />
+                  1234
+                </span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Staff Clearance</span>
+                <span className="hubInfoValue">Authorized MotoDC Warehouse Personnel</span>
+              </div>
+            </div>
+          </div>
 
+          {/* Card 3: 4 Active Corridor Staging Racks */}
+          <div className="hubDetailCard">
+            <div className="hubCardHeader">
+              <div className="hubCardIconBox hubIconGreen">
+                <Layers size={20} />
+              </div>
+              <div>
+                <h3>Staging Racks & Corridors</h3>
+                <small>Geographic Parcel Segregation</small>
+              </div>
+            </div>
+            <div className="hubCardContent">
+              <div className="hubRackItem">
+                <div className="hubRackBadge">Rack A • CTC-01</div>
+                <div className="hubRackText">
+                  <strong>Central Town Corridor</strong>
+                  <p>Karaikal Port, Church Road, Market Area, Beach Road</p>
+                </div>
+              </div>
+              <div className="hubRackItem">
+                <div className="hubRackBadge">Rack B • NRC-02</div>
+                <div className="hubRackText">
+                  <strong>Neravy - TR Pattinam Coastal</strong>
+                  <p>Polagam, Vizhidiyur, Vanjore, Southern Coastal Belt</p>
+                </div>
+              </div>
+              <div className="hubRackItem">
+                <div className="hubRackBadge">Rack C • SRC-03</div>
+                <div className="hubRackText">
+                  <strong>Nedungadu - Kottucherry</strong>
+                  <p>Thirunallar, Ambagarathur, Kurumbagaram, Western Sector</p>
+                </div>
+              </div>
+              <div className="hubRackItem">
+                <div className="hubRackBadge">Rack D • WTC-04</div>
+                <div className="hubRackText">
+                  <strong>Nagore Border Express Transit</strong>
+                  <p>National Highway Corridor, Inter-district Handover</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Terminal Hardware & Scanner Specs */}
+          <div className="hubDetailCard">
+            <div className="hubCardHeader">
+              <div className="hubCardIconBox hubIconPurple">
+                <Barcode size={20} />
+              </div>
+              <div>
+                <h3>Hardware & Scanner Specs</h3>
+                <small>Barcode & Printing Standards</small>
+              </div>
+            </div>
+            <div className="hubCardContent">
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Handheld Scanners</span>
+                <span className="hubInfoValue">Bluetooth / USB HID Keyboard Wedge</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Phone Camera Scanner</span>
+                <span className="hubInfoValue">60 FPS Auto-Focus with Laser Reticle</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Barcode Symbology</span>
+                <span className="hubInfoValue">1D Code-128 & 2D QR Code Compatible</span>
+              </div>
+              <div className="hubInfoRow">
+                <span className="hubInfoLabel">Thermal Label Printing</span>
+                <span className="hubInfoValue">4×6 Inch Standard Shipping Consignment</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        {/* ================================================================= */}
+        {/* 4. DYNAMIC APP VERSION & UPDATE CARD                              */}
+        {/* ================================================================= */}
+        <section className="hubVersionBanner">
+          <div className="hubVersionLeft">
+            <div className="hubVersionPill">
+              <Sparkles size={14} /> Production Build • Always Up-to-Date
+            </div>
+            <h2>
+              MotoDC Hub Fulfillment App <span>v{versionInfo.version}</span>
+            </h2>
+            <p>
+              Whenever an update or bug fix is committed, the QR code automatically encodes
+              and delivers the latest build with cache-busting version tags.
+            </p>
+            <div className="hubVersionMetaRow">
+              <span><strong>Updated:</strong> {formatLastUpdated(versionInfo.updatedAt)}</span>
+              <span><strong>Package:</strong> {versionInfo.packageId}</span>
+              <span><strong>Size:</strong> {versionInfo.fileSize || '5.5 MB'}</span>
+              <span><strong>Compatibility:</strong> {versionInfo.minAndroidVersion}</span>
+            </div>
+          </div>
+
+          <div className="hubVersionRight">
+            <button
+              type="button"
+              className="hubShowQrActionBtn"
+              onClick={() => setShowQrModal(true)}
+            >
+              <QrCode size={18} /> Show Install QR Code
+            </button>
             <button
               type="button"
               className="hubCopyLinkBtn"
-              onClick={() => {
-                const targetUrl = window.location.origin + '/hub';
-                navigator.clipboard?.writeText(targetUrl);
-                toast.success('Station link copied to clipboard!');
-              }}
+              onClick={handleCopyLink}
             >
-              <Copy size={13} /> Copy Station Link
+              {copiedLink ? <CheckCircle2 size={16} color="#10b981" /> : <Copy size={16} />}
+              {copiedLink ? 'Link Copied!' : 'Copy Direct Link'}
             </button>
           </div>
-        </div>
-      </div>
-    );
-  }
+        </section>
 
-  // Active Terminal View
-  return (
-    <div className="hubStationContainer">
-      {/* Top Header */}
-      <header className="hubStationHeader">
-        <div className="hubHeaderBrand">
-          <Package size={26} color="#ff3157" />
-          <div>
-            <h1>Karaikal Hub <span>Fulfillment Station</span></h1>
-            <p>Warehouse Packing • Quality Inspection • Parcel Staging Racks</p>
-          </div>
-        </div>
-
-        <div className="hubHeaderActions">
-          {/* Camera Barcode Scanner Launch Button */}
-          <button
-            type="button"
-            className="hubOpenScannerBtn"
-            onClick={() => setScannerOpen(true)}
-            title="Open Camera Barcode Scanner"
-            style={{ marginRight: '6px' }}
-          >
-            <Camera size={15} /> Barcode Scanner
-          </button>
-
-          {/* Open on Phone QR Code Trigger */}
-          <button
-            type="button"
-            className="hubOpenPhoneQrBtn"
-            onClick={() => setShowPhoneQrModal(true)}
-            title="Scan QR to open on phone"
-            style={{ marginRight: '6px' }}
-          >
-            <Smartphone size={15} /> Open on Phone
-          </button>
-
-          <div className="hubStationBadge">
-            <span className="liveBlinker" />
-            <span>Karaikal Central Warehouse (Active)</span>
-          </div>
-          {afterHoursOverride && (
-            <span
-              style={{
-                fontSize: '11px',
-                background: 'rgba(245, 158, 11, 0.18)',
-                color: '#fbbf24',
-                border: '1px solid rgba(245, 158, 11, 0.4)',
-                borderRadius: '6px',
-                padding: '4px 8px',
-                fontWeight: 700,
-              }}
-            >
-              After-Hours (8:30 PM+)
-            </span>
-          )}
-          <button type="button" onClick={handleStationLock} className="hubLockBtn" title="Lock Station Terminal">
-            <Lock size={15} /> Lock Station
-          </button>
-        </div>
-      </header>
-
-      {/* Pipeline 4-Stage Operational Banner */}
-      <div className="hubPipelineBanner">
-        <div className="hubPipelineStep step1 completed">
-          <div className="stepNum">1</div>
-          <div>
-            <strong>Order Placed & Confirmed</strong>
-            <small>Customer completed payment</small>
-          </div>
-        </div>
-        <div className="pipelineDivider" />
-        <div className="hubPipelineStep step2 current">
-          <div className="stepNum">2</div>
-          <div>
-            <strong>Packed & Quality Verified</strong>
-            <small>Staff pack, label & stage in bin (HERE)</small>
-          </div>
-        </div>
-        <div className="pipelineDivider" />
-        <div className="hubPipelineStep step3">
-          <div className="stepNum">3</div>
-          <div>
-            <strong>In Transit (Corridor Dispatch)</strong>
-            <small>Rider scans into bag & departs hub</small>
-          </div>
-        </div>
-        <div className="pipelineDivider" />
-        <div className="hubPipelineStep step4">
-          <div className="stepNum">4</div>
-          <div>
-            <strong>Out for Delivery (Handover)</strong>
-            <small>Doorstep 4-digit PIN verified</small>
-          </div>
-        </div>
       </div>
 
-      {/* Control Toolbar */}
-      <div className="hubToolbar">
-        {/* Status Tabs */}
-        <div className="hubTabs">
-          <button
-            type="button"
-            className={activeTab === 'pending' ? 'active' : ''}
-            onClick={() => setActiveTab('pending')}
-          >
-            <Clock size={15} /> Awaiting Packing & Label ({allOrders.filter((o) => ['placed', 'confirmed', ''].includes(String(o.orderStatus || 'placed').toLowerCase())).length})
-          </button>
-          <button
-            type="button"
-            className={activeTab === 'packed' ? 'active' : ''}
-            onClick={() => setActiveTab('packed')}
-          >
-            <CheckCircle2 size={15} /> Packed & Staged at Hub ({allOrders.filter((o) => String(o.orderStatus).toLowerCase() === 'packed').length})
-          </button>
-          <button
-            type="button"
-            className={activeTab === 'in_transit' ? 'active' : ''}
-            onClick={() => setActiveTab('in_transit')}
-          >
-            <Truck size={15} /> In Transit / On Road ({allOrders.filter((o) => ['shipped', 'out_for_delivery'].includes(String(o.orderStatus).toLowerCase())).length})
-          </button>
-        </div>
-
-        {/* Corridor Filter */}
-        <div className="hubCorridorFilter">
-          <label>Filter by Corridor:</label>
-          <select value={selectedCorridor} onChange={(e) => setSelectedCorridor(e.target.value)}>
-            <option value="all">All Corridors</option>
-            {Object.values(CORRIDOR_METADATA).map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.code} — {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Search */}
-        <div className="hubSearchBox">
-          <Search size={16} />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Scan / Search Order ID, Customer, Part..."
-          />
-        </div>
-      </div>
-
-      {/* Orders Grid */}
-      {loading ? (
-        <div className="hubEmptyState">
-          <RefreshCw size={32} className="spin" />
-          <p>Connecting to warehouse orders stream...</p>
-        </div>
-      ) : filteredOrders.length === 0 ? (
-        <div className="hubEmptyState">
-          <Package size={44} color="#64748b" />
-          <h3>No Orders in this Queue</h3>
-          <p>All matching parcels are packed or staged in corridor bins.</p>
-        </div>
-      ) : (
-        <div className="hubOrdersGrid">
-          {filteredOrders.map((o) => {
-            const isPacked = ['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(String(o.orderStatus).toLowerCase());
-            const items = o.items || [];
-            const allItemsTicked = items.length > 0 && items.every((_, idx) => Boolean(checkedItems[`${o.id}_${idx}`]));
-
-            return (
-              <div key={`${o.paymentMethod}-${o.id}`} className={`hubOrderCard ${isPacked ? 'orderPacked' : ''}`}>
-                {/* Card Top */}
-                <div className="hubCardHeader">
-                  <div>
-                    <span className="hubOrderId">#{o.orderId || o.id}</span>
-                    <span className="hubOrderMethodBadge">{o.paymentMethod === 'cod' ? '💵 Cash on Delivery' : '💳 Online Paid'}</span>
-                  </div>
-                  <span
-                    className="hubCorridorPill"
-                    style={{
-                      background: o.corridorMeta.bgLight,
-                      color: o.corridorMeta.color,
-                      border: `1px solid ${o.corridorMeta.color}40`,
-                    }}
-                  >
-                    <MapPin size={12} /> {o.corridorMeta.code} • {o.corridorMeta.name}
-                  </span>
+      {/* ================================================================= */}
+      {/* 5. QR CODE INSTALLATION MODAL                                     */}
+      {/* ================================================================= */}
+      {showQrModal && (
+        <div className="hubQrModalOverlay" onClick={() => setShowQrModal(false)}>
+          <div className="hubQrModal" onClick={(e) => e.stopPropagation()}>
+            
+            {/* Modal Header */}
+            <div className="hubQrModalHeader">
+              <div className="hubQrModalTitle">
+                <div className="hubQrModalIconBox">
+                  <Smartphone size={22} />
                 </div>
-
-                {/* Customer & Address Details */}
-                <div className="hubCustomerSection">
-                  <div className="hubCustomerName">
-                    <b>{o.customer?.name || 'Customer'}</b>
-                    <span>📞 {o.customer?.phone || 'No phone'}</span>
-                  </div>
-                  <p className="hubAddressText">
-                    📍 {o.shipping?.address || 'Doorstep Address'}, {o.shipping?.city || 'Karaikal'} - {o.shipping?.pincode || ''}
-                  </p>
-                </div>
-
-                {/* Packaging Item Checklist */}
-                <div className="hubItemsChecklist">
-                  <div className="checklistTitle">
-                    <span>📦 Parts to Box & Verify ({items.length} item{items.length > 1 ? 's' : ''}):</span>
-                    {!isPacked && <small>Tick each item after physical verification</small>}
-                  </div>
-                  <div className="checklistList">
-                    {items.map((it, idx) => {
-                      const isChecked = Boolean(checkedItems[`${o.id}_${idx}`]) || isPacked;
-                      return (
-                        <div
-                          key={idx}
-                          className={`checklistItem ${isChecked ? 'itemChecked' : ''}`}
-                          onClick={() => !isPacked && toggleItemCheck(o.id, idx)}
-                        >
-                          {isChecked ? (
-                            <CheckSquare size={16} color="#22c55e" />
-                          ) : (
-                            <Square size={16} color="#94a3b8" />
-                          )}
-                          <span className="itemQty">x{it.qty || 1}</span>
-                          <span className="itemName">{it.name || 'Automotive Spare Part'}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Corridor Bin Instruction */}
-                <div className="hubStagingRackHint">
-                  <Truck size={14} color={o.corridorMeta.color} />
-                  <span>
-                    Stage in <b>{o.corridorMeta.name} Rack ({o.corridorMeta.code})</b> for driver collection.
-                  </span>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="hubCardActions">
-                  <button
-                    type="button"
-                    className="hubPrintLabelBtn"
-                    onClick={() => setLabelOrder(o)}
-                    title="Print 4x6 / A6 Thermal or A4 Shipping Label"
-                  >
-                    <Printer size={15} /> Print Shipping Label
-                  </button>
-
-                  {!isPacked ? (
-                    <button
-                      type="button"
-                      className={`hubMarkPackedBtn ${allItemsTicked ? 'readyToVerify' : ''}`}
-                      disabled={updatingId === o.id}
-                      onClick={() => handleMarkPackedAndVerified(o)}
-                    >
-                      <CheckCircle2 size={16} />
-                      {updatingId === o.id ? 'Verifying...' : 'Mark Packed & Quality Verified'}
-                    </button>
-                  ) : (
-                    <div className="hubPackedStatusTag">
-                      <CheckCircle2 size={14} /> Packed & Quality Verified
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Shipping Label Modal */}
-      {labelOrder && (
-        <ShippingLabelModal
-          order={labelOrder}
-          onClose={() => setLabelOrder(null)}
-          onMarkPacked={(o) => handleMarkPackedAndVerified(o)}
-        />
-      )}
-
-      {/* Camera Barcode Scanner Modal */}
-      <BarcodeScannerModal
-        isOpen={scannerOpen}
-        onClose={() => setScannerOpen(false)}
-        onBarcodeDetected={handleBarcodeIdentified}
-      />
-
-      {/* Phone QR Code Modal */}
-      {showPhoneQrModal && (
-        <div className="hubScannerModalOverlay" onClick={() => setShowPhoneQrModal(false)}>
-          <div className="hubScannerModal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px' }}>
-            <div className="hubScannerHeader">
-              <div className="hubScannerTitleBox">
-                <Smartphone size={20} color="#ff3157" />
                 <div>
-                  <h3>Open Hub Station on Phone</h3>
-                  <p>Scan to use your phone's camera as a portable scanner</p>
+                  <h3>Scan to Install Hub App</h3>
+                  <p>Instant Android installation for warehouse floor staff</p>
                 </div>
               </div>
               <button
                 type="button"
-                className="hubScannerCloseBtn"
-                onClick={() => setShowPhoneQrModal(false)}
+                className="hubQrModalCloseBtn"
+                onClick={() => setShowQrModal(false)}
                 aria-label="Close"
               >
-                <X size={16} />
+                <X size={20} />
               </button>
             </div>
 
-            <div className="hubScannerBody" style={{ alignItems: 'center', textAlign: 'center' }}>
-              <div className="hubPhoneQrCodeBox modal">
-                {hubQrCodeUrl ? (
-                  <img src={hubQrCodeUrl} alt="Scan QR Code to open on phone" />
-                ) : (
-                  <div className="hubQrLoading">Generating QR Code...</div>
-                )}
-                <div className="hubQrScanTip">
-                  <Camera size={14} color="#ff3157" />
-                  <span>Point phone camera or Google Lens at this QR code</span>
+            {/* QR Code Presentation Frame */}
+            <div className="hubQrModalBody">
+              <div className="hubQrCodeWrapper">
+                <div className="hubQrCodeBox">
+                  {qrCodeDataUrl ? (
+                    <img
+                      src={qrCodeDataUrl}
+                      alt={`Scan QR Code to install MotoDC Hub App v${versionInfo.version}`}
+                      className="hubQrCodeImg"
+                    />
+                  ) : (
+                    <div className="hubQrLoading">Generating latest QR code...</div>
+                  )}
+
+                  {/* High-tech corner bracket guides */}
+                  <div className="hubQrCorner hubCornerTL" />
+                  <div className="hubQrCorner hubCornerTR" />
+                  <div className="hubQrCorner hubCornerBL" />
+                  <div className="hubQrCorner hubCornerBR" />
+                </div>
+
+                <div className="hubQrVersionBadge">
+                  <Download size={13} />
+                  <span>Latest Release: MotoDC-Hub.apk (v{versionInfo.version})</span>
                 </div>
               </div>
 
-              <p style={{ margin: '0 0 16px', fontSize: '12.5px', color: '#94a3b8', lineHeight: 1.5 }}>
-                Your phone will immediately open the packing terminal. You can walk around the warehouse racks and scan barcodes directly with your phone's camera!
-              </p>
+              {/* Step-by-Step Scan Instructions */}
+              <div className="hubQrSteps">
+                <div className="hubQrStepItem">
+                  <div className="hubStepCircle">1</div>
+                  <div className="hubStepText">
+                    <strong>Open Camera or Google Lens</strong>
+                    <p>Open the camera app or QR code scanner on any Android phone.</p>
+                  </div>
+                </div>
 
-              <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                <button
-                  type="button"
-                  className="hubCopyLinkBtn"
-                  style={{ flex: 1 }}
-                  onClick={() => {
-                    const targetUrl = window.location.origin + '/hub';
-                    navigator.clipboard?.writeText(targetUrl);
-                    toast.success('Station link copied to clipboard!');
-                  }}
-                >
-                  <Copy size={13} /> Copy Station Link
-                </button>
-                <button
-                  type="button"
-                  className="hubScannerRetryBtn"
-                  onClick={() => setShowPhoneQrModal(false)}
-                >
-                  Close
-                </button>
+                <div className="hubQrStepItem">
+                  <div className="hubStepCircle">2</div>
+                  <div className="hubStepText">
+                    <strong>Point at the QR Code</strong>
+                    <p>Align the camera with this screen. A direct download prompt will pop up.</p>
+                  </div>
+                </div>
+
+                <div className="hubQrStepItem">
+                  <div className="hubStepCircle">3</div>
+                  <div className="hubStepText">
+                    <strong>Tap to Install</strong>
+                    <p>Tap the banner to download and install. Allow "Install unknown apps" if prompted.</p>
+                  </div>
+                </div>
               </div>
+
             </div>
+
+            {/* Modal Actions Footer */}
+            <div className="hubQrModalFooter">
+              <button
+                type="button"
+                className="hubQrModalDownloadBtn"
+                onClick={handleDirectDownload}
+              >
+                <Download size={16} /> Download APK (v{versionInfo.version})
+              </button>
+
+              <button
+                type="button"
+                className="hubQrModalCopyBtn"
+                onClick={handleCopyLink}
+              >
+                {copiedLink ? <CheckCircle2 size={16} color="#10b981" /> : <Copy size={16} />}
+                {copiedLink ? 'Copied' : 'Copy Link'}
+              </button>
+
+              <button
+                type="button"
+                className="hubQrModalDoneBtn"
+                onClick={() => setShowQrModal(false)}
+              >
+                Done
+              </button>
+            </div>
+
           </div>
         </div>
       )}
 
-      {/* PWA Phone Download / Install Prompt */}
-      <InstallPrompt />
     </div>
   );
 }
