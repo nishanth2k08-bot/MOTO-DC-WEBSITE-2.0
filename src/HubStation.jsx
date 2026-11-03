@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { collection, onSnapshot, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import QRCode from 'qrcode';
 import { db } from './firebase';
 import ShippingLabelModal from './ShippingLabelModal';
 import BarcodeScannerModal from './BarcodeScannerModal';
@@ -24,7 +25,11 @@ import {
   LogOut,
   Info,
   Camera,
-  Zap
+  Zap,
+  Smartphone,
+  Copy,
+  QrCode,
+  X
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './hub-station.css';
@@ -98,6 +103,27 @@ export default function HubStation() {
   const [lastScannedBarcode, setLastScannedBarcode] = useState('');
   const [checkedItems, setCheckedItems] = useState({}); // { [orderId_itemIdx]: boolean }
   const [updatingId, setUpdatingId] = useState(null);
+
+  // Phone QR Code Generator (for desktop/laptop staff to open directly on phone)
+  const [hubQrCodeUrl, setHubQrCodeUrl] = useState('');
+  const [showPhoneQrModal, setShowPhoneQrModal] = useState(false);
+
+  useEffect(() => {
+    const hubUrl = typeof window !== 'undefined'
+      ? `${window.location.origin}/hub`
+      : 'https://motodc.in/hub';
+
+    QRCode.toDataURL(hubUrl, {
+      width: 240,
+      margin: 2,
+      color: {
+        dark: '#000000',
+        light: '#ffffff',
+      },
+    })
+      .then((url) => setHubQrCodeUrl(url))
+      .catch((err) => console.warn('QR generation error:', err));
+  }, []);
 
   // Sound chime for new incoming packing order & barcode scans
   const audioContextRef = useRef(null);
@@ -384,74 +410,128 @@ export default function HubStation() {
     const shiftEnded = isShiftCompleted();
     return (
       <div className="hubStationLockScreen">
-        <div className="hubStationLockCard">
-          <div className="hubStationLogoRow">
-            <Package size={34} color="#ff3157" />
-            <div>
-              <h2>Moto<span>DC</span> Hub Station</h2>
-              <p>Warehouse Fulfillment & Quality Inspection Portal</p>
+        <div className="hubStationLockWrap">
+          <div className="hubStationLockCard">
+            <div className="hubStationLogoRow">
+              <Package size={34} color="#ff3157" />
+              <div>
+                <h2>Moto<span>DC</span> Hub Station</h2>
+                <p>Warehouse Fulfillment & Quality Inspection Portal</p>
+              </div>
             </div>
+
+            {shiftEnded && (
+              <div
+                className="hubShiftEndedNotice"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  background: 'rgba(245, 158, 11, 0.12)',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  marginBottom: '16px',
+                  color: '#fbbf24',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                }}
+              >
+                <Clock size={18} color="#f59e0b" style={{ flexShrink: 0 }} />
+                <div>
+                  <strong style={{ display: 'block', color: '#fef08a' }}>
+                    Operational Shift Completed (8:30 PM)
+                  </strong>
+                  <span style={{ fontSize: '11.5px', color: '#cbd5e1', fontWeight: 500 }}>
+                    Daily warehouse packing shift has ended. Terminal automatically locked.
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="hubStationLockNotice">
+              <ShieldCheck size={18} color="#22c55e" />
+              <div>
+                <strong>Dedicated Warehouse Staff Terminal</strong>
+                <p>Zero admin financial access. Used exclusively for packing, box labeling, and parcel staging.</p>
+              </div>
+            </div>
+
+            <form onSubmit={handlePinSubmit} className="hubStationPinForm">
+              <label>
+                <span>Enter 4-Digit Station PIN</span>
+                <div className="hubPinInputWrap">
+                  <Key size={18} color="#94a3b8" />
+                  <input
+                    type="password"
+                    maxLength={4}
+                    value={pinInput}
+                    onChange={(e) => setPinInput(e.target.value)}
+                    placeholder="• • • •"
+                    autoFocus
+                  />
+                </div>
+              </label>
+
+              {pinError && <div className="hubPinError">{pinError}</div>}
+
+              <button type="submit" className="hubStationUnlockBtn">
+                Unlock Packing Terminal <ArrowRight size={16} />
+              </button>
+            </form>
           </div>
 
-          {shiftEnded && (
-            <div
-              className="hubShiftEndedNotice"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                background: 'rgba(245, 158, 11, 0.12)',
-                border: '1px solid rgba(245, 158, 11, 0.35)',
-                borderRadius: '10px',
-                padding: '10px 14px',
-                marginBottom: '16px',
-                color: '#fbbf24',
-                fontSize: '13px',
-                fontWeight: 600,
+          {/* Desktop / Laptop Callout: Open on Phone QR Code */}
+          <div className="hubDesktopPhoneQrCard">
+            <div className="hubPhoneQrHeader">
+              <div className="hubPhoneQrIconWrap">
+                <Smartphone size={24} color="#ff3157" />
+              </div>
+              <div>
+                <h3>Open on Mobile Phone</h3>
+                <p>Use your phone's camera as a barcode scanner</p>
+              </div>
+            </div>
+
+            <div className="hubPhoneQrCodeBox">
+              {hubQrCodeUrl ? (
+                <img src={hubQrCodeUrl} alt="Scan QR Code to open on phone" />
+              ) : (
+                <div className="hubQrLoading">Generating QR Code...</div>
+              )}
+              <div className="hubQrScanTip">
+                <Camera size={14} color="#ff3157" />
+                <span>Scan with Phone Camera or Google Lens</span>
+              </div>
+            </div>
+
+            <div className="hubPhoneBenefitsList">
+              <div className="hubPhoneBenefitItem">
+                <CheckCircle2 size={15} color="#22c55e" />
+                <span>Portable scanning across warehouse racks</span>
+              </div>
+              <div className="hubPhoneBenefitItem">
+                <CheckCircle2 size={15} color="#22c55e" />
+                <span>Auto-focus camera barcode & QR reader</span>
+              </div>
+              <div className="hubPhoneBenefitItem">
+                <CheckCircle2 size={15} color="#22c55e" />
+                <span>Installs directly to phone home screen</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="hubCopyLinkBtn"
+              onClick={() => {
+                const targetUrl = window.location.origin + '/hub';
+                navigator.clipboard?.writeText(targetUrl);
+                toast.success('Station link copied to clipboard!');
               }}
             >
-              <Clock size={18} color="#f59e0b" style={{ flexShrink: 0 }} />
-              <div>
-                <strong style={{ display: 'block', color: '#fef08a' }}>
-                  Operational Shift Completed (8:30 PM)
-                </strong>
-                <span style={{ fontSize: '11.5px', color: '#cbd5e1', fontWeight: 500 }}>
-                  Daily warehouse packing shift has ended. Terminal automatically locked.
-                </span>
-              </div>
-            </div>
-          )}
-
-          <div className="hubStationLockNotice">
-            <ShieldCheck size={18} color="#22c55e" />
-            <div>
-              <strong>Dedicated Warehouse Staff Terminal</strong>
-              <p>Zero admin financial access. Used exclusively for packing, box labeling, and parcel staging.</p>
-            </div>
-          </div>
-
-          <form onSubmit={handlePinSubmit} className="hubStationPinForm">
-            <label>
-              <span>Enter 4-Digit Station PIN</span>
-              <div className="hubPinInputWrap">
-                <Key size={18} color="#94a3b8" />
-                <input
-                  type="password"
-                  maxLength={4}
-                  value={pinInput}
-                  onChange={(e) => setPinInput(e.target.value)}
-                  placeholder="• • • •"
-                  autoFocus
-                />
-              </div>
-            </label>
-
-            {pinError && <div className="hubPinError">{pinError}</div>}
-
-            <button type="submit" className="hubStationUnlockBtn">
-              Unlock Packing Terminal <ArrowRight size={16} />
+              <Copy size={13} /> Copy Station Link
             </button>
-          </form>
+          </div>
         </div>
       </div>
     );
@@ -480,6 +560,17 @@ export default function HubStation() {
             style={{ marginRight: '6px' }}
           >
             <Camera size={15} /> Barcode Scanner
+          </button>
+
+          {/* Open on Phone QR Code Trigger */}
+          <button
+            type="button"
+            className="hubOpenPhoneQrBtn"
+            onClick={() => setShowPhoneQrModal(true)}
+            title="Scan QR to open on phone"
+            style={{ marginRight: '6px' }}
+          >
+            <Smartphone size={15} /> Open on Phone
           </button>
 
           <div className="hubStationBadge">
@@ -728,6 +819,71 @@ export default function HubStation() {
         onClose={() => setScannerOpen(false)}
         onBarcodeDetected={handleBarcodeIdentified}
       />
+
+      {/* Phone QR Code Modal */}
+      {showPhoneQrModal && (
+        <div className="hubScannerModalOverlay" onClick={() => setShowPhoneQrModal(false)}>
+          <div className="hubScannerModal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px' }}>
+            <div className="hubScannerHeader">
+              <div className="hubScannerTitleBox">
+                <Smartphone size={20} color="#ff3157" />
+                <div>
+                  <h3>Open Hub Station on Phone</h3>
+                  <p>Scan to use your phone's camera as a portable scanner</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="hubScannerCloseBtn"
+                onClick={() => setShowPhoneQrModal(false)}
+                aria-label="Close"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="hubScannerBody" style={{ alignItems: 'center', textAlign: 'center' }}>
+              <div className="hubPhoneQrCodeBox modal">
+                {hubQrCodeUrl ? (
+                  <img src={hubQrCodeUrl} alt="Scan QR Code to open on phone" />
+                ) : (
+                  <div className="hubQrLoading">Generating QR Code...</div>
+                )}
+                <div className="hubQrScanTip">
+                  <Camera size={14} color="#ff3157" />
+                  <span>Point phone camera or Google Lens at this QR code</span>
+                </div>
+              </div>
+
+              <p style={{ margin: '0 0 16px', fontSize: '12.5px', color: '#94a3b8', lineHeight: 1.5 }}>
+                Your phone will immediately open the packing terminal. You can walk around the warehouse racks and scan barcodes directly with your phone's camera!
+              </p>
+
+              <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <button
+                  type="button"
+                  className="hubCopyLinkBtn"
+                  style={{ flex: 1 }}
+                  onClick={() => {
+                    const targetUrl = window.location.origin + '/hub';
+                    navigator.clipboard?.writeText(targetUrl);
+                    toast.success('Station link copied to clipboard!');
+                  }}
+                >
+                  <Copy size={13} /> Copy Station Link
+                </button>
+                <button
+                  type="button"
+                  className="hubScannerRetryBtn"
+                  onClick={() => setShowPhoneQrModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* PWA Phone Download / Install Prompt */}
       <InstallPrompt />

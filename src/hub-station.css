@@ -1394,3 +1394,201 @@ body.light-theme .hubInstallText strong,
 .light-theme .hubInstallText strong {
   color: #0f172a;
 }
+
+
+/* ==========================================================================
+   DESKTOP / LAPTOP PHONE QR CARD STYLING
+   ========================================================================== */
+.hubStationLockWrap {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 28px;
+  max-width: 960px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .hubStationLockWrap {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hubDesktopPhoneQrCard {
+    display: none; /* Already on phone! */
+  }
+}
+
+.hubDesktopPhoneQrCard {
+  width: 100%;
+  max-width: 420px;
+  background: #0d121c;
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hubPhoneQrHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.hubPhoneQrIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 49, 87, 0.12);
+  border: 1px solid rgba(255, 49, 87, 0.3);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.hubPhoneQrHeader h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.hubPhoneQrHeader p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.hubPhoneQrCodeBox {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto 20px;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hubPhoneQrCodeBox img {
+  width: 170px;
+  height: 170px;
+  display: block;
+}
+
+.hubPhoneQrCodeBox.modal img {
+  width: 200px;
+  height: 200px;
+}
+
+.hubQrLoading {
+  width: 170px;
+  height: 170px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.hubQrScanTip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.hubPhoneBenefitsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.hubPhoneBenefitItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  color: #cbd5e1;
+}
+
+.hubCopyLinkBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.hubCopyLinkBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.hubOpenPhoneQrBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hubOpenPhoneQrBtn:hover {
+  background: #38bdf8;
+  color: #040810;
+}
+
+/* Light Theme Overrides */
+body.light-theme .hubDesktopPhoneQrCard,
+.light-theme .hubDesktopPhoneQrCard {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+body.light-theme .hubPhoneQrHeader h3,
+.light-theme .hubPhoneQrHeader h3 {
+  color: #0f172a;
+}
+
+body.light-theme .hubPhoneBenefitItem,
+.light-theme .hubPhoneBenefitItem {
+  color: #334155;
+}
+
+body.light-theme .hubCopyLinkBtn,
+.light-theme .hubCopyLinkBtn {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+body.light-theme .hubCopyLinkBtn:hover,
+.light-theme .hubCopyLinkBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
