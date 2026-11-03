@@ -120,7 +120,7 @@ export default function RiderPartnerPage() {
   const dlInputRef = useRef(null);
   const rcInputRef = useRef(null);
 
-  const APK_DOWNLOAD_URL = '/MotoDC-Partner.apk';
+  const APK_DOWNLOAD_URL = '/MotoDC-Partner.apk?v=1.0.17';
   const WHATSAPP_ONBOARDING_URL = 'https://wa.me/918903993371?text=Hello%20MotoDC,%20I%20have%20submitted%20my%20KYC%20documents%20for%20delivery%20partner%20onboarding.';
 
   // Helper to compress uploaded image using Canvas
@@ -1343,7 +1343,7 @@ export default function RiderPartnerPage() {
                 </div>
                 <div className="qrVersionTag">
                   <Download size={13} />
-                  <span>Latest Release • MotoDC-Partner.apk (v1.0.9 - Latest)</span>
+                  <span>Latest Release • MotoDC-Partner.apk (v1.0.17 - Latest)</span>
                 </div>
               </div>
 
@@ -1362,7 +1362,22 @@ export default function RiderPartnerPage() {
                 </div>
               </div>
 
-              <div className="qrModalFooter">
+              <div className="qrModalFooter" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <a
+                  href={APK_DOWNLOAD_URL}
+                  download="MotoDC-Partner.apk"
+                  style={{
+                    color: '#ff3157',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <Download size={14} /> Direct Download APK (v1.0.17)
+                </a>
                 <button 
                   type="button" 
                   className="modalDoneBtn"
