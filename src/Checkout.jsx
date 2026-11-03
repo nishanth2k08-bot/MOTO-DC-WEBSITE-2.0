@@ -552,14 +552,6 @@ export default function Checkout(){
               <span>Total Payable</span>
               <strong>{money(grandTotal)}</strong>
             </div>
-
-            {/* Tax Compliance Note */}
-            <div className="taxComplianceNote">
-              <ShieldCheck size={14} />
-              <span>
-                All item prices are Base MRP. 18% GST (HSN 8708/8714) and delivery are calculated transparently. Official Tax Invoice with GSTIN <b>34AABCM9120K1ZX</b> generated upon order confirmation.
-              </span>
-            </div>
           </aside>
         </div>
       </section>
