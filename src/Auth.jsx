@@ -2,9 +2,10 @@ import React,{useEffect,useRef,useState} from 'react';
 import {GoogleAuthProvider,OAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword,signInWithPhoneNumber,signInWithPopup,signOut,updateProfile,RecaptchaVerifier} from 'firebase/auth';
 import {doc,getDoc,setDoc,serverTimestamp} from 'firebase/firestore';
 import {useNavigate} from 'react-router-dom';
-import {User,Mail,Lock,LogOut,ArrowRight,Phone,ShieldCheck,Eye,EyeOff} from 'lucide-react';
+import {User,Mail,Lock,LogOut,ArrowRight,ArrowLeft,Phone,ShieldCheck,Eye,EyeOff} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {auth,db} from './firebase';
+import ThemeToggle from './ThemeToggle';
 import './auth.css';
 
 async function saveUserProfile(user,name=''){
@@ -41,6 +42,22 @@ export default function Auth(){
  const [resendTimer,setResendTimer]=useState(40);
 
  useEffect(()=>onAuthStateChanged(auth,u=>{setUser(u);setChecking(false)}),[]);
+ useEffect(()=>{
+  if(!user){
+   const prevBodyOverflow=document.body.style.overflow;
+   const prevHtmlOverflow=document.documentElement.style.overflow;
+   document.body.style.overflow='hidden';
+   document.documentElement.style.overflow='hidden';
+   document.body.classList.add('auth-scroll-locked');
+   document.documentElement.classList.add('auth-scroll-locked');
+   return()=>{
+    document.body.style.overflow=prevBodyOverflow;
+    document.documentElement.style.overflow=prevHtmlOverflow;
+    document.body.classList.remove('auth-scroll-locked');
+    document.documentElement.classList.remove('auth-scroll-locked');
+   };
+  }
+ },[user]);
  useEffect(()=>{let timer;if(confirmation&&resendTimer>0){timer=setInterval(()=>{setResendTimer(prev=>(prev>0?prev-1:0))},1000)}return()=>{if(timer)clearInterval(timer)}},[confirmation,resendTimer]);
  useEffect(()=>{if(confirmation)setTimeout(()=>otpRefs.current[0]?.focus(),50)},[confirmation]);
 
@@ -234,8 +251,16 @@ export default function Auth(){
  let methodForm=signInForm;
  if(SHOW_PHONE_AUTH&&method==='phone')methodForm=needsName?phoneNameForm:(confirmation?otpForm:phoneForm);
  return (
-  <section className="auth page">
+  <section className="auth page auth-signing-in">
    <div className="authcard">
+    <div className="authCardTopRow">
+     <button type="button" className="authBackStoreBtn" onClick={()=>nav('/')} aria-label="Back to Store">
+      <ArrowLeft size={16}/> <span>Back to Store</span>
+     </button>
+     <div className="authCardTopActions">
+      <ThemeToggle />
+     </div>
+    </div>
     {SHOW_PHONE_AUTH&&<div id="recaptcha-container"></div>}
     <div className="authintro">
      <p className="eyebrow">MOTODC ACCOUNT</p>
