@@ -250,18 +250,23 @@ export default async function handler(req, res) {
         const corridors = Object.keys(CORRIDOR_METADATA).map((cid) => {
           const meta = CORRIDOR_METADATA[cid];
           const stops = corridorBuckets[cid] || [];
-          const assignment = corridorAssignments[cid] || {};
+          const assignment = stops.length > 0 ? (corridorAssignments[cid] || {}) : {};
           const isAssigned = Boolean(assignment.assignedRiderId);
+
+          // If corridor has 0 stops left, automatically clean up any stale assignment in Firestore
+          if (stops.length === 0 && corridorAssignments[cid]?.assignedRiderId) {
+            corridorsCol.doc(cid).delete().catch(() => {});
+          }
 
           return {
             ...meta,
             stops,
             totalStops: stops.length,
             estimatedPayout: stops.length * 45, // Flat ₹45 base pay per drop
-            assignedRiderId: assignment.assignedRiderId || null,
-            assignedRiderName: assignment.assignedRiderName || null,
-            assignedRiderPhone: assignment.assignedRiderPhone || null,
-            assignedAt: assignment.assignedAt || null,
+            assignedRiderId: stops.length > 0 ? (assignment.assignedRiderId || null) : null,
+            assignedRiderName: stops.length > 0 ? (assignment.assignedRiderName || null) : null,
+            assignedRiderPhone: stops.length > 0 ? (assignment.assignedRiderPhone || null) : null,
+            assignedAt: stops.length > 0 ? (assignment.assignedAt || null) : null,
             status: stops.length === 0 ? 'empty' : isAssigned ? 'dispatched' : 'staged',
           };
         });

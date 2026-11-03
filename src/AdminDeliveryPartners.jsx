@@ -1129,7 +1129,38 @@ export default function AdminDeliveryPartners() {
 
                 {/* Driver Assignment Section */}
                 <div className="corridorAssignmentBox">
-                  {isAssigned ? (
+                  {corr.totalStops === 0 ? (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '4px 2px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          background: '#64748b',
+                          display: 'inline-block'
+                        }} />
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: '#94a3b8' }}>
+                          Corridor Idle • All deliveries completed
+                        </span>
+                      </div>
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: '#22c55e',
+                        background: 'rgba(34, 197, 94, 0.12)',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid rgba(34, 197, 94, 0.25)'
+                      }}>
+                        Ready
+                      </span>
+                    </div>
+                  ) : isAssigned ? (
                     <div className="assignedDriverInfo">
                       <div className="assignedDriverRow">
                         <div className="assignedDriverAvatar">
@@ -1185,47 +1216,35 @@ export default function AdminDeliveryPartners() {
                         className="unassignCorridorBtn"
                         disabled={isBusy}
                         onClick={() => handleUnassignCorridor(corr.id, corr.name)}
+                        title="Recall active undelivered parcels back to Hub"
                       >
                         <X size={12} /> {isBusy ? 'Recalling...' : 'Recall to Hub'}
                       </button>
                     </div>
                   ) : (
-                    <div className="unassignedActionWrap">
-                      <label htmlFor={`select-driver-${corr.id}`} className="assignSelectLabel">
-                        Assign Route to Driver:
-                      </label>
-                      <div className="assignControlsRow">
-                        <select
-                          id={`select-driver-${corr.id}`}
-                          className="driverSelectDropdown"
-                          value={selectedRidersForCorridor[corr.id] || ''}
-                          onChange={(e) =>
-                            setSelectedRidersForCorridor((prev) => ({
-                              ...prev,
-                              [corr.id]: e.target.value,
-                            }))
-                          }
-                          disabled={corr.totalStops === 0 || isBusy}
-                        >
-                          <option value="">-- Select Active Driver --</option>
-                          {partners
-                            .filter((p) => p.active !== false)
-                            .map((p) => (
-                              <option key={p.id || p.username} value={p.username || p.id}>
-                                {p.username || p.id} • {p.name} ({p.serviceMode || 'Standard'})
-                              </option>
-                            ))}
-                        </select>
-                        <button
-                          type="button"
-                          className="dispatchRouteBtn"
-                          disabled={corr.totalStops === 0 || !selectedRidersForCorridor[corr.id] || isBusy}
-                          onClick={() => handleAssignCorridor(corr.id)}
-                          style={{ background: corr.color }}
-                        >
-                          <Send size={13} /> {isBusy ? 'Dispatching...' : 'Dispatch'}
-                        </button>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '4px 2px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Package size={14} color={corr.color} />
+                        <span style={{ fontSize: '12px', color: '#e2e8f0', fontWeight: 600 }}>
+                          {corr.totalStops} Parcels Staged
+                        </span>
                       </div>
+                      <span style={{
+                        fontSize: '11px',
+                        color: '#f59e0b',
+                        background: 'rgba(245, 158, 11, 0.12)',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid rgba(245, 158, 11, 0.25)',
+                        fontWeight: 700
+                      }}>
+                        ⚡ Tap Auto-Dispatch Above
+                      </span>
                     </div>
                   )}
                 </div>
