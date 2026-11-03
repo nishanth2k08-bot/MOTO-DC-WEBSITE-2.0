@@ -1092,10 +1092,40 @@ export default function Orders() {
     [orders, setOrders] = useState([]),
     [loading, setLoading] = useState(true),
     [activeOrderId, setActiveOrderId] = useState(() => location.state?.orderId || null),
-    [filterStatus, setFilterStatus] = useState('in_transit'),
+    [filterStatus, setFilterStatus] = useState('all'),
     [tabInitialized, setTabInitialized] = useState(false),
     [searchQuery, setSearchQuery] = useState(''),
     [showRadarModal, setShowRadarModal] = useState(false);
+
+  // Local hidden/deleted orders (removes from page only; preserves official records in Firebase)
+  const [hiddenOrderIds, setHiddenOrderIds] = useState(() => {
+    try {
+      const u = auth.currentUser;
+      const key = u ? `motodc_hidden_orders_${u.uid}` : 'motodc_hidden_orders';
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const hideOrderFromView = (order) => {
+    if (!order) return;
+    const confirmMsg = `Remove Order #${order.orderId || order.id} from your order view?\n\n(Note: Your official order receipt and records remain securely saved in MotoDC database).`;
+    if (!window.confirm(confirmMsg)) return;
+
+    const idToHide = order.id;
+    const orderIdToHide = order.orderId;
+    const nextHidden = [...new Set([...hiddenOrderIds, idToHide, orderIdToHide].filter(Boolean))];
+    setHiddenOrderIds(nextHidden);
+    try {
+      const u = auth.currentUser;
+      const key = u ? `motodc_hidden_orders_${u.uid}` : 'motodc_hidden_orders';
+      localStorage.setItem(key, JSON.stringify(nextHidden));
+    } catch (_) {}
+
+    toast.success('Order removed from your view');
+  };
 
   useEffect(() => {
     if (location.state?.justPlaced && location.state?.orderId) {
@@ -1150,6 +1180,7 @@ export default function Orders() {
   }, [activeOrderId, location.state]);
 
   const displayOrders = useMemo(() => {
+    let base = orders;
     if (
       justPlacedData?.orderId &&
       !orders.some((o) => o.orderId === justPlacedData.orderId || o.id === justPlacedData.orderId)
@@ -1165,10 +1196,13 @@ export default function Orders() {
         delivery: 'FREE',
         statusHistory: [{ status: 'placed', updatedAt: new Date().toISOString() }],
       };
-      return [provisional, ...orders];
+      base = [provisional, ...orders];
     }
-    return orders;
-  }, [orders, justPlacedData]);
+    // Filter out orders that user deleted / removed from view (preserves Firebase records)
+    return base.filter(
+      (o) => !hiddenOrderIds.includes(o.id) && !hiddenOrderIds.includes(o.orderId)
+    );
+  }, [orders, justPlacedData, hiddenOrderIds]);
 
   // Separate in-transit vs delivered lists
   const inTransitOrders = useMemo(
@@ -1211,15 +1245,10 @@ export default function Orders() {
           return;
         }
       }
-      // If there are no active in-transit shipments, but delivered orders exist, auto-select delivered!
-      if (inTransitCount === 0 && deliveredCount > 0) {
-        setFilterStatus('delivered');
-      } else {
-        setFilterStatus('in_transit');
-      }
+      setFilterStatus('all');
       setTabInitialized(true);
     }
-  }, [loading, displayOrders, inTransitCount, deliveredCount, location.state, tabInitialized]);
+  }, [loading, displayOrders, location.state, tabInitialized]);
 
   // Filtered orders according to tab & search query
   const filteredOrders = useMemo(() => {
@@ -1455,13 +1484,155 @@ export default function Orders() {
         <button
           type="button"
           className="inspectorDeleteBtn"
-          onClick={() => deleteCompletedOrder(o, removeLocal)}
+          onClick={() => hideOrderFromView(o)}
+          title="Remove from your view (preserves database records)"
         >
           <XCircle size={15} /> Delete Order
         </button>
       </div>
     </div>
   );
+
+  // Clean, compact order summary card for "All Orders" view (no heavy appearing boxes)
+  const renderAllOrderSummaryCard = (o) => {
+    const st = String(o.orderStatus || 'placed').toLowerCase();
+    const isDeliv = st === 'delivered';
+    const isCanc = st === 'cancelled';
+    const isInTransit = ['placed', 'confirmed', 'packed', 'shipped', 'out_for_delivery'].includes(st);
+    const firstItem = o.items?.[0] || {};
+    const moreCount = (o.items?.length || 1) - 1;
+
+    return (
+      <div className="allOrderSummaryCard" key={o.id || o.orderId}>
+        {/* Top Meta Bar */}
+        <div className="allOrderSummaryTop">
+          <div className="allOrderSummaryMetaLeft">
+            <span className="allOrderSummaryId">ORDER #{o.orderId || o.id}</span>
+            <span>•</span>
+            <span>Placed {formatDate(o.createdAt)}</span>
+            <span>•</span>
+            <span>{o.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Verified)'}</span>
+          </div>
+
+          <div>
+            {isDeliv ? (
+              <span className="allOrderStatusTag delivered">
+                <CheckCircle size={13} /> Delivered
+              </span>
+            ) : isCanc ? (
+              <span className="allOrderStatusTag cancelled">
+                <Ban size={13} /> Cancelled
+              </span>
+            ) : (
+              <span className="allOrderStatusTag transit">
+                <span className="statusPulseDot" /> 🚚 In Transit ({labels[st] || 'Active'})
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Body Row: Thumbnail, Product Details, Total */}
+        <div className="allOrderSummaryBody">
+          <div className="allOrderSummaryThumb">
+            {firstItem.image ? (
+              <img src={firstItem.image} alt={firstItem.name || 'Product'} loading="lazy" />
+            ) : (
+              <Package size={26} />
+            )}
+          </div>
+
+          <div className="allOrderSummaryDetails">
+            <h4 className="allOrderSummaryTitle">
+              {firstItem.name || 'MotoDC Automotive Part'}
+              {moreCount > 0 && ` + ${moreCount} more ${moreCount === 1 ? 'item' : 'items'}`}
+            </h4>
+            <div className="allOrderSummarySub">
+              <span>{firstItem.variant || 'Standard Spec'}</span>
+              <span>•</span>
+              <span>Qty: {firstItem.qty || 1}</span>
+              {o.shipping?.city && (
+                <>
+                  <span>•</span>
+                  <span>Destination: {o.shipping.city}</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="allOrderSummaryPriceBox">
+            <span className="allOrderSummaryPriceLabel">Total Paid</span>
+            <span className="allOrderSummaryPrice">{money(o.total)}</span>
+          </div>
+        </div>
+
+        {/* Footer Actions Row */}
+        <div className="allOrderSummaryFooter">
+          <div className="allOrderSummaryFooterLeft">
+            {isDeliv ? (
+              <span>✓ Verified doorstep delivery on {formatDate(o.deliveredAt || o.createdAt)}</span>
+            ) : isInTransit ? (
+              <span>🚚 Live GPS road tracking active · PIN: <strong>{getDeliveryPin(o)}</strong></span>
+            ) : (
+              <span>Order status: {labels[st] || st}</span>
+            )}
+          </div>
+
+          <div className="allOrderSummaryActions">
+            {isInTransit && (
+              <button
+                type="button"
+                className="allOrderActionBtn primary"
+                onClick={() => {
+                  setActiveOrderId(o.id);
+                  setFilterStatus('in_transit');
+                }}
+              >
+                <Radio size={13} /> Live Track Package
+              </button>
+            )}
+
+            {isDeliv && (
+              <button
+                type="button"
+                className="allOrderActionBtn deliveredPrimary"
+                onClick={() => {
+                  setActiveOrderId(o.id);
+                  setFilterStatus('delivered');
+                }}
+              >
+                <CheckCircle size={13} /> View Delivery Details
+              </button>
+            )}
+
+            <button
+              type="button"
+              className="allOrderActionBtn"
+              onClick={() => downloadInvoice(o)}
+            >
+              <Download size={13} /> Tax Invoice
+            </button>
+
+            <button
+              type="button"
+              className="allOrderActionBtn"
+              onClick={() => nav('/products')}
+            >
+              <RotateCcw size={13} /> Buy Again
+            </button>
+
+            <button
+              type="button"
+              className="allOrderActionBtn"
+              onClick={() => hideOrderFromView(o)}
+              title="Remove from your view (preserves database records)"
+            >
+              <XCircle size={13} /> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const activeStatus = String(activeOrder?.orderStatus || 'placed').toLowerCase();
   const activeMeta = STATUS_META[activeStatus] || STATUS_META.placed;
@@ -1517,6 +1688,13 @@ export default function Orders() {
           <div className="ordersFilterTabs">
             <button
               type="button"
+              className={`ordersFilterPill ${filterStatus === 'all' ? 'active' : ''}`}
+              onClick={() => setFilterStatus('all')}
+            >
+              All Orders ({displayOrders.length})
+            </button>
+            <button
+              type="button"
               className={`ordersFilterPill ${filterStatus === 'in_transit' ? 'active' : ''}`}
               onClick={() => setFilterStatus('in_transit')}
             >
@@ -1528,13 +1706,6 @@ export default function Orders() {
               onClick={() => setFilterStatus('delivered')}
             >
               Delivered ({deliveredCount})
-            </button>
-            <button
-              type="button"
-              className={`ordersFilterPill ${filterStatus === 'all' ? 'active' : ''}`}
-              onClick={() => setFilterStatus('all')}
-            >
-              All Orders ({displayOrders.length})
             </button>
           </div>
 
@@ -1571,6 +1742,32 @@ export default function Orders() {
             Start Shopping
           </button>
         </div>
+      ) : filterStatus === 'all' ? (
+        /* ALL ORDERS TAB (CLEAN COMPACT LIST - NO HEAVY APPEARING BOXES) */
+        filteredOrders.length === 0 ? (
+          <div className="ordersNoMatch">
+            <Package size={36} />
+            <h3>No orders found</h3>
+            <p>
+              {searchQuery
+                ? 'No orders match your search criteria.'
+                : 'Your orders will appear here once placed.'}
+            </p>
+            {searchQuery && (
+              <button
+                type="button"
+                className="clearFilterBtn"
+                onClick={() => setSearchQuery('')}
+              >
+                Clear Search
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="allOrdersListContainer">
+            {filteredOrders.map(renderAllOrderSummaryCard)}
+          </div>
+        )
       ) : filterStatus === 'delivered' ? (
         /* DELIVERED ORDERS SECTION (FULL WIDTH NO SIDEBAR) */
         filteredOrders.length === 0 ? (
@@ -1593,7 +1790,7 @@ export default function Orders() {
             {filteredOrders.map(renderDeliveredCard)}
           </div>
         )
-      ) : filterStatus === 'in_transit' ? (
+      ) : (
         /* IN-TRANSIT SECTION (SPLIT COMMAND CENTER ONLY FOR ACTIVE ORDERS) */
         filteredOrders.length === 0 ? (
           <div className="ordersNoMatch">
@@ -1909,310 +2106,6 @@ export default function Orders() {
               </div>
             )}
           </div>
-        )
-      ) : (
-        /* ALL ORDERS TAB */
-        // If all orders are delivered, display full-width delivered cards (NO side area)
-        inTransitCount === 0 && deliveredCount > 0 ? (
-          <div className="deliveredOrdersContainer">
-            {filteredOrders.map(renderDeliveredCard)}
-          </div>
-        ) : (
-          <>
-            {inTransitOrders.length > 0 && (
-              <div className="ordersSplitLayout">
-                <div className="ordersSplitListCol">
-                  {inTransitOrders.map((o) => {
-                    const st = String(o.orderStatus || 'placed').toLowerCase();
-                    const isSelected = activeOrder?.id === o.id;
-
-                    return (
-                      <div
-                        key={o.id}
-                        className={`ordersSplitCard ${isSelected ? 'active' : ''}`}
-                        onClick={() => setActiveOrderId(o.id)}
-                      >
-                        <div className="ordersSplitCardInner">
-                          <div className="ordersSplitThumb">
-                            {o.items?.[0]?.image ? (
-                              <img
-                                src={o.items[0].image}
-                                alt={o.items[0].name || 'Product'}
-                                loading="lazy"
-                                decoding="async"
-                              />
-                            ) : (
-                              <Package size={24} />
-                            )}
-                          </div>
-
-                          <div className="ordersSplitContent">
-                            <div className="ordersSplitTopMeta">
-                              <span className="ordersSplitId">#{o.orderId || o.id}</span>
-                              <span className="ordersSplitStatusTag transit">
-                                <span className="statusPulseDot" />
-                                {labels[st] || st}
-                              </span>
-                            </div>
-
-                            <h4 className="ordersSplitTitle">
-                              {o.items?.[0]?.name || 'MOTO DC Order'}
-                            </h4>
-
-                            <div className="ordersSplitBottomMeta">
-                              <span className="ordersSplitDate">{formatDate(o.createdAt)}</span>
-                              <span className="ordersSplitPrice">{money(o.total)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {activeOrder && (
-                  <div className="ordersSplitInspectorCol">
-                    <div className="inspectorHeader">
-                      <div>
-                        <div className="inspectorSubMeta">
-                          <span className="inspectorOrderId">
-                            ORDER #{activeOrder.orderId || activeOrder.id}
-                          </span>
-                          <span className="metaDivider">•</span>
-                          <span className="inspectorPayment">
-                            {activeOrder.paymentMethod === 'cod'
-                              ? 'Cash on Delivery'
-                              : 'Online Payment (Verified)'}
-                          </span>
-                        </div>
-                        <h2 className="inspectorHeadline">
-                          {isCancelled
-                            ? 'Order Cancelled'
-                            : activeMeta.eta
-                            ? `Estimated Delivery: ${activeMeta.eta}`
-                            : 'In Express Fulfillment'}
-                        </h2>
-                        <p className="inspectorLocation">
-                          {activeMeta.phase} · {activeMeta.location}
-                        </p>
-                      </div>
-
-                      <div className="inspectorHeaderActions">
-                        <button
-                          type="button"
-                          className="inspectorInvoiceBtn"
-                          onClick={() => setShowRadarModal(true)}
-                          style={{ color: '#38bdf8', borderColor: 'rgba(56,189,248,0.3)' }}
-                        >
-                          <Radio size={14} /> Live GPS Radar
-                        </button>
-                        <button
-                          type="button"
-                          className="inspectorInvoiceBtn"
-                          onClick={() => downloadInvoice(activeOrder)}
-                        >
-                          <Download size={14} /> Tax Invoice (PDF)
-                        </button>
-                      </div>
-                    </div>
-
-                    {!isCancelled && (
-                      <div className="inspectorPinBox">
-                        <div className="inspectorPinLeft">
-                          <div className="inspectorPinIconWrap">
-                            <ShieldCheck size={22} />
-                          </div>
-                          <div>
-                            <div className="inspectorPinHeading">Doorstep Handover PIN</div>
-                            <p className="inspectorPinDesc">
-                              Share this 4-digit security code with your MotoDC delivery partner upon parcel arrival.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="inspectorPinCodeBadge">
-                          {getDeliveryPin(activeOrder)}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="inspectorTimeline">
-                      <div className="inspectorTimelineItem">
-                        <span className="timelineDot completed">✓</span>
-                        <div>
-                          <div className="timelineTitle">Order Placed & Confirmed</div>
-                          <div className="timelineSub">
-                            {formatDate(activeOrder.createdAt)} · MotoDC Central Warehouse
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="inspectorTimelineItem">
-                        <span
-                          className={`timelineDot ${
-                            ['packed', 'shipped', 'out_for_delivery'].includes(activeStatus)
-                              ? 'completed'
-                              : activeStatus === 'confirmed'
-                              ? 'current'
-                              : 'pending'
-                          }`}
-                        >
-                          {['packed', 'shipped', 'out_for_delivery'].includes(activeStatus) ? '✓' : '2'}
-                        </span>
-                        <div>
-                          <div className="timelineTitle">Packed & Quality Verified</div>
-                          <div className="timelineSub">
-                            Dual-layer protective automotive boxing & barcode staging
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="inspectorTimelineItem">
-                        <span
-                          className={`timelineDot ${
-                            ['shipped', 'out_for_delivery'].includes(activeStatus)
-                              ? activeStatus === 'shipped'
-                                ? 'current'
-                                : 'completed'
-                              : 'pending'
-                          }`}
-                        >
-                          {activeStatus === 'out_for_delivery' ? '✓' : activeStatus === 'shipped' ? '🚚' : '3'}
-                        </span>
-                        <div>
-                          <div className="timelineTitle">In Transit — Regional Logistics Corridor</div>
-                          <div className="timelineSub">
-                            {activeMeta.location} · Telemetry Speed: {activeMeta.speed}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="inspectorTimelineItem">
-                        <span
-                          className={`timelineDot ${
-                            activeStatus === 'out_for_delivery' ? 'current' : 'pending'
-                          }`}
-                        >
-                          4
-                        </span>
-                        <div>
-                          <div className="timelineTitle">Out for Delivery (Doorstep Route)</div>
-                          <div className="timelineSub">
-                            {activeStatus === 'out_for_delivery'
-                              ? 'Courier Unit is en route to your address'
-                              : 'Scheduled final-mile delivery'}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="inspectorDetailsGrid">
-                      <div className="inspectorDetailsCard">
-                        <span className="cardLabel">DELIVERING TO</span>
-                        <div className="cardName">{activeOrder.customer?.name || 'Customer'}</div>
-                        <div className="cardAddress">
-                          {[
-                            activeOrder.shipping?.address,
-                            activeOrder.shipping?.city,
-                            activeOrder.shipping?.state,
-                            activeOrder.shipping?.pincode,
-                          ]
-                            .filter(Boolean)
-                            .join(', ') || 'Address on file'}
-                        </div>
-                        {activeOrder.customer?.phone && (
-                          <div className="cardPhone">Ph: {activeOrder.customer.phone}</div>
-                        )}
-                      </div>
-
-                      <div className="inspectorDetailsCard">
-                        <span className="cardLabel">PAYMENT & SUMMARY</span>
-                        <div className="cardPaymentMethod">
-                          {activeOrder.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Paid)'}
-                        </div>
-                        <div className="cardAmountRow">
-                          <span>Order Total:</span>
-                          <strong>{money(activeOrder.total)}</strong>
-                        </div>
-                        <div className="cardShippingNote">Free Express Priority Shipping</div>
-                      </div>
-                    </div>
-
-                    <div className="inspectorItemsSection">
-                      <h4 className="inspectorItemsTitle">
-                        <Package size={15} /> Consignment Items ({activeOrder.items?.length || 1})
-                      </h4>
-                      <div className="inspectorItemsList">
-                        {(activeOrder.items || []).map((x, i) => (
-                          <div className="inspectorItemRow" key={i}>
-                            <div className="inspectorItemImg">
-                              {x.image ? (
-                                <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
-                              ) : (
-                                <Package size={20} />
-                              )}
-                            </div>
-                            <div className="inspectorItemInfo">
-                              <b>{x.name}</b>
-                              <small>
-                                {x.variant || 'Standard'} · Qty: {x.qty || 1}
-                              </small>
-                            </div>
-                            <div className="inspectorItemPrice">
-                              {money((x.price || 0) * (x.qty || 1))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="inspectorActionFooter">
-                      <a
-                        href={`https://wa.me/918903993371?text=${encodeURIComponent(
-                          `Hi MotoDC Team, I need assistance with my Order #${activeOrder.orderId || activeOrder.id} (${activeOrder.items?.[0]?.name || 'Parts'})`
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inspectorHelpBtn"
-                      >
-                        <MessageSquare size={15} />
-                        <span>Need Help with this Order?</span>
-                      </a>
-
-                      <button
-                        type="button"
-                        className="inspectorReorderBtn"
-                        onClick={() => nav('/products')}
-                      >
-                        <RotateCcw size={14} /> Buy Again
-                      </button>
-
-                      {canCancel && (
-                        <button
-                          type="button"
-                          className="inspectorCancelBtn"
-                          onClick={() => cancelOrder(activeOrder, removeLocal)}
-                        >
-                          <Ban size={15} /> Cancel Order
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {deliveredOrders.length > 0 && (
-              <div className="allOrdersDeliveredSection">
-                <div className="allOrdersSectionHeader">
-                  <h3>Delivered Orders ({deliveredOrders.length})</h3>
-                  <p>Completed orders verified at doorstep</p>
-                </div>
-                <div className="deliveredOrdersContainer">
-                  {deliveredOrders.map(renderDeliveredCard)}
-                </div>
-              </div>
-            )}
-          </>
         )
       )}
 
