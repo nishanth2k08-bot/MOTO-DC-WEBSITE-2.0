@@ -410,7 +410,7 @@ async function downloadInvoice(o) {
     const items = o.items || [];
     items.forEach((item, idx) => {
       const wrapped = pdf.splitTextToSize(safeText(item.name || 'Automotive Spare Part'), 78);
-      const rowH = Math.max(7, wrapped.length * 4.2 + 2);
+      const rowH = Math.max(9, wrapped.length * 4.2 + 4.5);
 
       // Check page break
       if (tableY + rowH > 220) {
@@ -434,7 +434,14 @@ async function downloadInvoice(o) {
       pdf.setTextColor(15, 23, 42);
       pdf.text(wrapped, 26, tableY + 4.5);
 
+      // Free Delivery & GST inclusive badge
       pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(5.5);
+      pdf.setTextColor(16, 185, 129);
+      pdf.text('[ 100% FREE DELIVERY ELIGIBLE | 18% GST INCL. ]', 26, tableY + 4.5 + (wrapped.length * 4.1));
+
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(7.2);
       pdf.setTextColor(100, 116, 139);
       pdf.text(safeText(item.hsn || '8708'), 108, tableY + 4.5);
 
@@ -459,7 +466,7 @@ async function downloadInvoice(o) {
 
     // --- 5. SUMMARY, QR CODE & OFFICIAL SEAL ---
     let sumY = Math.max(tableY + 5, 155);
-    if (sumY + 50 > 238) {
+    if (sumY + 52 > 238) {
       pdf.addPage();
       drawPageChrome(pdf, true);
       sumY = 32;
@@ -484,7 +491,7 @@ async function downloadInvoice(o) {
     // Left Container: QR Verification & Seal
     pdf.setFillColor(255, 255, 255);
     pdf.setDrawColor(226, 232, 240);
-    pdf.roundedRect(12, sumY, 90, 48, 1.5, 1.5, 'FD');
+    pdf.roundedRect(12, sumY, 90, 50, 1.5, 1.5, 'FD');
     pdf.setFillColor(15, 23, 42); // Slate top stripe
     pdf.rect(12, sumY, 90, 1.8, 'F');
 
@@ -507,22 +514,22 @@ async function downloadInvoice(o) {
     // Official Stamp Box
     pdf.setFillColor(240, 253, 244);
     pdf.setDrawColor(34, 197, 94);
-    pdf.roundedRect(16, sumY + 33, 82, 11, 1.2, 1.2, 'FD');
+    pdf.roundedRect(16, sumY + 34, 82, 12, 1.2, 1.2, 'FD');
 
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(6.8);
     pdf.setTextColor(21, 128, 61);
-    pdf.text('[ * ] MOTODC DISPATCH VERIFIED [ * ]', 57, sumY + 38, { align: 'center' });
+    pdf.text('[ * ] MOTODC DISPATCH VERIFIED [ * ]', 57, sumY + 39, { align: 'center' });
     pdf.setFontSize(5.8);
     pdf.setFont('helvetica', 'normal');
-    pdf.text('100% Genuine Certified Spares - Central Quality Assured', 57, sumY + 42, {
+    pdf.text('100% Genuine Certified Spares - Central Quality Assured', 57, sumY + 43.5, {
       align: 'center',
     });
 
     // Right Container: Financial Summary
     pdf.setFillColor(255, 255, 255);
     pdf.setDrawColor(226, 232, 240);
-    pdf.roundedRect(106, sumY, 92, 48, 1.5, 1.5, 'FD');
+    pdf.roundedRect(106, sumY, 92, 50, 1.5, 1.5, 'FD');
     pdf.setFillColor(255, 49, 87); // Crimson top stripe
     pdf.rect(106, sumY, 92, 1.8, 'F');
 
@@ -530,8 +537,11 @@ async function downloadInvoice(o) {
     const delivery = Number(o.delivery || 0);
     const subtotal = Number(o.subtotal ?? (total > delivery ? total - delivery : total));
     const taxable = Math.round((subtotal / 1.18) * 100) / 100;
-    const cgst = Math.round(((subtotal - taxable) / 2) * 100) / 100;
-    const sgst = Math.round((subtotal - taxable - cgst) * 100) / 100;
+    const isPuducherry = !o.shipping?.state || /puducherry|pondicherry|karaikal/i.test(o.shipping.state) || /karaikal/i.test(o.shipping?.city || '');
+    const totalGst = Math.round((subtotal - taxable) * 100) / 100;
+    const cgst = isPuducherry ? Math.round((totalGst / 2) * 100) / 100 : 0;
+    const sgst = isPuducherry ? Math.round((totalGst - cgst) * 100) / 100 : 0;
+    const igst = !isPuducherry ? totalGst : 0;
 
     const summaryRow = (lbl, val, yOff, isGreen = false) => {
       pdf.setFont('helvetica', 'normal');
@@ -545,38 +555,56 @@ async function downloadInvoice(o) {
     };
 
     summaryRow(
-      'Items Subtotal (Taxable Base)',
+      'Taxable Base Value',
       'Rs. ' + taxable.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
-      8
+      7.5
     );
+    if (isPuducherry) {
+      summaryRow(
+        'Central GST (CGST @ 9%)',
+        'Rs. ' + cgst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+        12
+      );
+      summaryRow(
+        'State GST (SGST @ 9%)',
+        'Rs. ' + sgst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+        16.5
+      );
+    } else {
+      summaryRow(
+        'Integrated GST (IGST @ 18%)',
+        'Rs. ' + igst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+        12
+      );
+      summaryRow(
+        'Inter-State Supply Tax',
+        'Rs. ' + igst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+        16.5
+      );
+    }
     summaryRow(
-      'Central GST (CGST @ 9%)',
-      'Rs. ' + cgst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
-      13
-    );
-    summaryRow(
-      'State GST (SGST @ 9%)',
-      'Rs. ' + sgst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
-      18
+      'Total 18% GST (Included)',
+      'Rs. ' + totalGst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+      21
     );
     summaryRow(
       'Doorstep Express Delivery',
-      delivery ? 'Rs. ' + delivery.toLocaleString('en-IN') : 'FREE (PROMO)',
-      23,
+      delivery ? 'Rs. ' + delivery.toLocaleString('en-IN') : 'FREE (ELIGIBLE)',
+      25.5,
       !delivery
     );
 
     // Grand Total Banner
     pdf.setFillColor(255, 49, 87);
-    pdf.roundedRect(108, sumY + 28, 88, 16, 1.2, 1.2, 'F');
+    pdf.roundedRect(108, sumY + 30.5, 88, 16.5, 1.2, 1.2, 'F');
 
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(7);
     pdf.setTextColor(255, 255, 255);
-    pdf.text('GRAND TOTAL AMOUNT (INCL. GST)', 112, sumY + 34);
+    pdf.text('GRAND TOTAL AMOUNT (INCL. GST)', 112, sumY + 36.5);
 
     pdf.setFontSize(13);
-    pdf.text('Rs. ' + total.toLocaleString('en-IN'), 192, sumY + 41, { align: 'right' });
+    pdf.text('Rs. ' + total.toLocaleString('en-IN'), 192, sumY + 43.5, { align: 'right' });
 
     // --- 6. TERMS & REPLACEMENT POLICY BOX ---
     pdf.setFillColor(248, 250, 252);

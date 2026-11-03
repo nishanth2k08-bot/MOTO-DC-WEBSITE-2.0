@@ -7,3 +7,362 @@
 .cartpage{padding-top:58px;padding-bottom:90px}.cartpage h1{margin-bottom:10px}.cartpage>.eyebrow{margin-bottom:12px}.cartpage .cartlayout{align-items:start}.cartitem{transition:background .2s ease,transform .2s ease;border-radius:12px;padding:14px 10px;margin-bottom:4px}.cartitem:hover{background:rgba(255,255,255,.025);transform:translateX(2px)}.cartitem img{border:1px solid #292e38;background:#0b0e13}.cartitem .qty{margin:0}.cartitem .qty button{transition:.18s}.cartitem .qty button:hover:not(:disabled){border-color:#ff3157;color:#ff3157}.cartitem .delete{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;transition:.18s}.cartitem .delete:hover{background:rgba(255,49,87,.1);color:#ff3157}.cartlayout aside{position:sticky;top:95px;box-shadow:0 18px 50px rgba(0,0,0,.18)}.cartlayout aside h3{font:700 20px Sora;margin-top:0}.cartlayout aside .heroBtn{margin-top:20px}.cartlayout aside .heroBtn:focus-visible,.cartitem button:focus-visible{outline:2px solid #ff3157;outline-offset:2px}.light-theme .cartitem:hover{background:rgba(0,0,0,.025)}.light-theme .cartitem img{border-color:#dfe2e8;background:#f5f6f8}.light-theme .cartlayout aside{box-shadow:0 18px 50px rgba(17,24,39,.08)}@media(max-width:850px){.cartpage{padding-top:42px;padding-bottom:65px}.cartlayout aside{position:static}.cartitem{padding:12px 4px}}@media(max-width:520px){.cartpage{padding-top:30px;padding-bottom:50px}.cartitem{border-radius:10px}.cartitem:hover{transform:none}.cartlayout aside{padding:18px}.cartlayout aside h2{font-size:18px}}
 /* Enhancement 4: checkout polish without changing payment/order logic. */
 .checkoutPage{padding-top:48px;padding-bottom:90px}.checkoutPage .backBtn{transition:color .18s ease,transform .18s ease}.checkoutPage .backBtn:hover{transform:translateX(-2px)}.checkoutPage .pagehead{margin-bottom:30px}.checkoutPage .pagehead h1{margin-bottom:10px}.checkoutPage .pagehead>p:last-child{color:#9299a6;max-width:620px}.checkoutBlock,.checkoutSummary{box-shadow:0 14px 45px rgba(0,0,0,.12);transition:border-color .2s ease,transform .2s ease}.checkoutBlock:hover{border-color:#333946}.checkoutBlock h2{letter-spacing:-.2px}.formGrid input{transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}.formGrid input:focus{box-shadow:0 0 0 3px rgba(255,49,87,.09);background:#0b0e13}.paymentOptions label{transition:border-color .18s ease,background .18s ease,transform .18s ease}.paymentOptions label:hover{border-color:#4a515e;transform:translateY(-1px)}.paymentOptions label.selected{box-shadow:0 8px 24px rgba(255,49,87,.08)}.placeOrder{min-height:48px;transition:filter .18s ease,transform .18s ease,box-shadow .18s ease}.placeOrder:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 28px rgba(255,49,87,.2)}.placeOrder:focus-visible,.paymentOptions label:focus-within,.checkoutPage .backBtn:focus-visible{outline:2px solid #ff3157;outline-offset:3px}.checkoutSummary{box-shadow:0 18px 55px rgba(0,0,0,.2)}.summaryItem{padding:7px 0;border-radius:9px;transition:background .18s ease}.summaryItem:hover{background:rgba(255,255,255,.025)}.summaryItem img{border:1px solid #292e38;background:#0b0e13}.checkoutSummary h3{margin-bottom:4px}.trust{background:rgba(255,49,87,.035);border-radius:9px;padding:12px;margin-top:16px;border-top:1px solid rgba(255,49,87,.12)}.checkoutLogin>div{max-width:520px;padding:34px;border:1px solid #252933;border-radius:18px;background:#0d1016;box-shadow:0 20px 60px rgba(0,0,0,.2)}.checkoutLogin>div>svg{color:#ff3157;margin-bottom:12px}.checkoutLogin h2{color:#fff;font:700 28px Sora;margin:6px 0 10px}.checkoutLogin p:not(.eyebrow){color:#9299a6;max-width:460px}.checkoutLogin .heroBtn{min-width:140px}.orderSuccess{padding:30px 0}.orderSuccess>svg{filter:drop-shadow(0 8px 24px rgba(255,49,87,.2))}.orderNumber{box-shadow:0 12px 35px rgba(0,0,0,.16)}.successActions .heroBtn,.successActions .secondaryBtn{transition:transform .18s ease,filter .18s ease}.successActions .heroBtn:hover,.successActions .secondaryBtn:hover{transform:translateY(-1px)}.light-theme .checkoutBlock,.light-theme .checkoutSummary,.light-theme .checkoutLogin>div{background:#fff;border-color:#dfe2e8;box-shadow:0 16px 45px rgba(17,24,39,.08)}.light-theme .checkoutBlock:hover{border-color:#cfd4dc}.light-theme .formGrid input{background:#f8f9fb;color:#171a21;border-color:#dfe2e8}.light-theme .formGrid input:focus{background:#fff}.light-theme .paymentOptions label{border-color:#dfe2e8}.light-theme .paymentOptions label:hover{border-color:#bcc3ce}.light-theme .paymentOptions span{color:#171a21}.light-theme .checkoutSummary .summaryItem:hover{background:rgba(0,0,0,.025)}.light-theme .summaryItem img{background:#f5f6f8;border-color:#dfe2e8}.light-theme .checkoutSummary hr,.light-theme .trust{border-color:#e7e9ed}.light-theme .checkoutLogin h2{color:#171a21}.light-theme .orderNumber{background:#fff;border-color:#dfe2e8}.light-theme .orderNumber strong{color:#171a21}@media(max-width:850px){.checkoutPage{padding-top:38px;padding-bottom:65px}.checkoutPage .pagehead{margin-bottom:24px}.checkoutLayout{gap:18px}.checkoutSummary{order:2}.checkoutForm{order:1}}@media(max-width:520px){.checkoutPage{padding-top:28px;padding-bottom:50px}.checkoutPage .backBtn{margin-bottom:20px}.checkoutPage .pagehead h1{font-size:34px}.checkoutBlock{padding:18px}.checkoutLogin>div{padding:26px 20px}.checkoutLogin h2{font-size:24px}.orderSuccess{min-height:520px;padding:20px 0}.orderNumber{max-width:100%;overflow:auto}.successActions{gap:8px}}
+
+/* ==========================================================================
+   Checkout Page Order Summary & GST / Free Delivery Styling
+   ========================================================================== */
+.checkoutSummary {
+  display: block !important;
+  background: rgba(13, 16, 22, 0.95);
+  border: 1px solid #252933;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.35);
+  position: sticky;
+  top: 90px;
+}
+
+.checkoutSummary h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.summaryItemCount {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.checkoutItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: 16px;
+}
+
+.summaryItem {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summaryItem img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #080b10;
+  border: 1px solid #252933;
+}
+
+.summaryItemInfo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.summaryItemInfo b {
+  font-size: 13px;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summaryItemInfo small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.itemFreeDeliveryTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 2px 7px;
+  border-radius: 5px;
+  width: fit-content;
+}
+
+.summaryItemPrice {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* Free Delivery Guarantee Banner */
+.checkoutFreeDeliveryCallout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(16, 185, 129, 0.05));
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 11px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+.freeDeliveryIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.checkoutFreeDeliveryCallout strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.checkoutFreeDeliveryCallout p {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
+/* GST & Financial Breakdown */
+.checkoutTaxBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px 0;
+  border-top: 1px solid #252933;
+  border-bottom: 1px solid #252933;
+  margin-bottom: 16px;
+}
+
+.taxRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.taxRow b {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.taxRow.totalGstRow {
+  color: #cbd5e1;
+  font-weight: 600;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.gstHighlight {
+  color: #38bdf8 !important;
+}
+
+.taxRow.deliveryRow {
+  color: #cbd5e1;
+}
+
+.freeDeliveryHighlight {
+  color: #22c55e !important;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.checkoutGrandTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.checkoutGrandTotal span {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.checkoutGrandTotal strong {
+  font-family: 'Sora', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ff3157;
+}
+
+.taxComplianceNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.taxComplianceNote svg {
+  color: #38bdf8;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Free Delivery Tag on Catalog Cards */
+.productFreeDeliveryTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.productGstBadge {
+  display: inline-block;
+  font-size: 9.5px;
+  color: #94a3b8;
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+.shippingMeterWrap.freeDeliveryUnlocked {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(16, 185, 129, 0.04));
+}
+
+.shippingMeterWrap.freeDeliveryUnlocked .shippingMeterText span {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.freeBadge {
+  background: #22c55e;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.shippingMeterSub {
+  display: block;
+  font-size: 10.5px;
+  color: #94a3b8;
+  margin-top: 6px;
+  line-height: 1.3;
+}
+
+.cartTaxBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px 0;
+  border-top: 1px solid #252933;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.cartTaxRow {
+  display: flex;
+  justify-content: space-between;
+  color: #94a3b8;
+}
+
+.cartTaxRow b {
+  color: #f1f5f9;
+}
+
+.cartTaxRow.gstRow b {
+  color: #38bdf8;
+}
+
+.light-theme .checkoutSummary {
+  background: #ffffff;
+  border-color: #dfe2e8;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.08);
+}
+.light-theme .checkoutSummary h2,
+.light-theme .summaryItemInfo b,
+.light-theme .summaryItemPrice,
+.light-theme .checkoutGrandTotal span {
+  color: #0f172a;
+}
+.light-theme .summaryItem {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+.light-theme .summaryItem img {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+.light-theme .checkoutTaxBreakdown {
+  border-color: #e2e8f0;
+}
+.light-theme .taxRow b {
+  color: #1e293b;
+}
+.light-theme .taxComplianceNote {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.cardPriceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 4px 0 2px;
+}
+
+.cardTaxInclusiveHint {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.light-theme .cardTaxInclusiveHint {
+  color: #64748b;
+}

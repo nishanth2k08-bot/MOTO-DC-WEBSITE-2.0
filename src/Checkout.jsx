@@ -72,7 +72,13 @@ export default function Checkout(){
     };
   },[user]);
 
-  const subtotal=items.reduce((a,x)=>a+Number(x.price||0)*Number(x.qty||1),0);
+  const subtotal = items.reduce((a,x)=>a+Number(x.price||0)*Number(x.qty||1),0);
+  const taxableBase = Math.round((subtotal / 1.18) * 100) / 100;
+  const totalGst = Math.round((subtotal - taxableBase) * 100) / 100;
+  const isPuducherry = !form.state || /puducherry|pondicherry|karaikal/i.test(form.state) || /karaikal/i.test(form.city);
+  const cgst = isPuducherry ? Math.round((totalGst / 2) * 100) / 100 : 0;
+  const sgst = isPuducherry ? Math.round((totalGst - cgst) * 100) / 100 : 0;
+  const igst = !isPuducherry ? totalGst : 0;
   const update=e=>setForm({...form,[e.target.name]:e.target.value});
 
   const handleCountryCodeChange=(e)=>{
@@ -458,13 +464,85 @@ export default function Checkout(){
             />
           </form>
           <aside className="checkoutSummary">
-            <h2>Order Summary</h2>
-            {items.map(x=><div className="summaryItem" key={x.id}><img src={x.image} alt={x.name} loading="lazy" decoding="async"/><div><b>{x.name}</b><small>Qty {x.qty}</small></div><strong>{money(x.price*x.qty)}</strong></div>)}
-            <hr/>
-            <p>Subtotal <b>{money(subtotal)}</b></p>
-            <p>Delivery <b>FREE</b></p>
-            <h3>Total <span>{money(subtotal)}</span></h3>
-            <div className="trust"><Truck size={17}/> Free delivery on this order</div>
+            <h2>
+              <span>Order Summary</span>
+              <span className="summaryItemCount">{items.length} {items.length === 1 ? 'item' : 'items'}</span>
+            </h2>
+
+            {/* Free Delivery Callout */}
+            <div className="checkoutFreeDeliveryCallout">
+              <div className="freeDeliveryIcon"><Truck size={18} /></div>
+              <div>
+                <strong>100% Free Express Delivery</strong>
+                <p>Zero delivery charges. Direct fulfillment from MotoDC Karaikal Depot.</p>
+              </div>
+            </div>
+
+            {/* Items List */}
+            <div className="checkoutItemsList">
+              {items.map(x => (
+                <div className="summaryItem" key={x.id}>
+                  <img src={x.image} alt={x.name} loading="lazy" decoding="async" />
+                  <div className="summaryItemInfo">
+                    <b>{x.name}</b>
+                    <small>Qty: {x.qty} · {money(x.price)}</small>
+                    <span className="itemFreeDeliveryTag">
+                      <Truck size={10} /> Eligible for Free Delivery
+                    </span>
+                  </div>
+                  <strong className="summaryItemPrice">{money(x.price * x.qty)}</strong>
+                </div>
+              ))}
+            </div>
+
+            {/* GST & Tax Breakdown */}
+            <div className="checkoutTaxBreakdown">
+              <div className="taxRow">
+                <span>Items Subtotal (Taxable Base)</span>
+                <b>{money(taxableBase)}</b>
+              </div>
+              {isPuducherry ? (
+                <>
+                  <div className="taxRow">
+                    <span>Central GST (CGST @ 9%)</span>
+                    <b>{money(cgst)}</b>
+                  </div>
+                  <div className="taxRow">
+                    <span>State GST (SGST @ 9%)</span>
+                    <b>{money(sgst)}</b>
+                  </div>
+                </>
+              ) : (
+                <div className="taxRow">
+                  <span>Integrated GST (IGST @ 18%)</span>
+                  <b>{money(igst)}</b>
+                </div>
+              )}
+              <div className="taxRow totalGstRow">
+                <span>Total Tax Included (18% GST)</span>
+                <b className="gstHighlight">{money(totalGst)}</b>
+              </div>
+              <div className="taxRow deliveryRow">
+                <span>Doorstep Express Delivery</span>
+                <b className="freeDeliveryHighlight">
+                  <span className="strikethrough">₹99</span> FREE
+                </b>
+              </div>
+            </div>
+
+            {/* Grand Total */}
+            <div className="checkoutGrandTotal">
+              <span>Total Payable</span>
+              <strong>{money(subtotal)}</strong>
+            </div>
+
+            {/* Tax Compliance Note */}
+            <div className="taxComplianceNote">
+              <ShieldCheck size={14} />
+              <span>
+                All prices are inclusive of 18% GST (HSN 8708/8714). Official Tax Invoice with GSTIN <b>34AABCM9120K1ZX</b> generated upon order confirmation.
+              </span>
+            </div>
           </aside>
         </div>
       </section>
