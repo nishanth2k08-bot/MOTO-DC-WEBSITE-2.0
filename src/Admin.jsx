@@ -430,29 +430,6 @@ export default function Admin(){
         >
           <Truck size={15}/> Delivery Partners & OTP
         </button>
-        <a
-          href="/hub"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="adminHubPortalNavBtn"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'rgba(56, 189, 248, 0.12)',
-            border: '1px solid rgba(56, 189, 248, 0.35)',
-            color: '#38bdf8',
-            padding: '9px 14px',
-            borderRadius: '9px',
-            fontSize: '12px',
-            fontWeight: 700,
-            textDecoration: 'none',
-            marginLeft: 'auto'
-          }}
-          title="Open Dedicated Hub Packing & Verification Station for Warehouse Staff"
-        >
-          <Package size={15} color="#38bdf8" /> Warehouse Packing Station (/hub) ↗
-        </a>
       </div>
 
       {activeTab==='products'&&(
