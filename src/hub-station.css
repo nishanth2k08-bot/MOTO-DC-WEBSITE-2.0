@@ -603,9 +603,12 @@ body.light-theme .hubVersionBanner {
 .hubQrModal {
   background: var(--hub-card-bg);
   border: 1px solid var(--hub-card-border);
-  border-radius: 22px;
+  border-radius: 20px;
   width: 100%;
-  max-width: 520px;
+  max-width: 440px;
+  max-height: min(90vh, 560px);
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   animation: hubScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -620,20 +623,21 @@ body.light-theme .hubVersionBanner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 22px 26px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--hub-card-border);
+  flex-shrink: 0;
 }
 
 .hubQrModalTitle {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .hubQrModalIconBox {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   background: rgba(255, 49, 87, 0.12);
   color: var(--hub-primary-red);
   display: flex;
@@ -643,14 +647,14 @@ body.light-theme .hubVersionBanner {
 }
 
 .hubQrModalTitle h3 {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
   color: var(--hub-text-primary);
 }
 
 .hubQrModalTitle p {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--hub-text-secondary);
   margin: 2px 0 0;
 }
@@ -659,9 +663,9 @@ body.light-theme .hubVersionBanner {
   background: var(--hub-surface);
   border: 1px solid var(--hub-card-border);
   color: var(--hub-text-secondary);
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -675,26 +679,28 @@ body.light-theme .hubVersionBanner {
 }
 
 .hubQrModalBody {
-  padding: 26px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 14px;
+  overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 .hubQrCodeWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .hubQrCodeBox {
   position: relative;
   background: #ffffff;
-  padding: 16px;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 8px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -702,56 +708,56 @@ body.light-theme .hubVersionBanner {
 
 .hubQrCodeImg {
   display: block;
-  width: 260px;
-  height: 260px;
-  border-radius: 6px;
+  width: 170px;
+  height: 170px;
+  border-radius: 4px;
 }
 
 .hubQrLoading {
-  width: 260px;
-  height: 260px;
+  width: 170px;
+  height: 170px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #64748b;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 /* Corner bracket reticles */
 .hubQrCorner {
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-color: #ff3157;
   pointer-events: none;
 }
 
 .hubCornerTL {
-  top: 6px;
-  left: 6px;
-  border-top: 3px solid #ff3157;
-  border-left: 3px solid #ff3157;
+  top: 4px;
+  left: 4px;
+  border-top: 2.5px solid #ff3157;
+  border-left: 2.5px solid #ff3157;
 }
 
 .hubCornerTR {
-  top: 6px;
-  right: 6px;
-  border-top: 3px solid #ff3157;
-  border-right: 3px solid #ff3157;
+  top: 4px;
+  right: 4px;
+  border-top: 2.5px solid #ff3157;
+  border-right: 2.5px solid #ff3157;
 }
 
 .hubCornerBL {
-  bottom: 6px;
-  left: 6px;
-  border-bottom: 3px solid #ff3157;
-  border-left: 3px solid #ff3157;
+  bottom: 4px;
+  left: 4px;
+  border-bottom: 2.5px solid #ff3157;
+  border-left: 2.5px solid #ff3157;
 }
 
 .hubCornerBR {
-  bottom: 6px;
-  right: 6px;
-  border-bottom: 3px solid #ff3157;
-  border-right: 3px solid #ff3157;
+  bottom: 4px;
+  right: 4px;
+  border-bottom: 2.5px solid #ff3157;
+  border-right: 2.5px solid #ff3157;
 }
 
 .hubQrVersionBadge {
@@ -761,9 +767,9 @@ body.light-theme .hubVersionBanner {
   background: rgba(16, 185, 129, 0.12);
   color: var(--hub-green);
   border: 1px solid rgba(16, 185, 129, 0.28);
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: 9999px;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 600;
 }
 
@@ -772,109 +778,86 @@ body.light-theme .hubVersionBanner {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .hubQrStepItem {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 14px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
   background: var(--hub-surface);
   border: 1px solid var(--hub-card-border);
-  border-radius: 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: var(--hub-text-secondary);
+}
+
+.hubQrStepItem strong {
+  color: var(--hub-text-primary);
 }
 
 .hubStepCircle {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--hub-primary-red);
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.hubStepText strong {
-  display: block;
-  font-size: 0.88rem;
-  color: var(--hub-text-primary);
-  margin-bottom: 2px;
-}
-
-.hubStepText p {
-  font-size: 0.8rem;
-  color: var(--hub-text-secondary);
-  margin: 0;
-  line-height: 1.4;
 }
 
 /* Modal Actions Footer */
 .hubQrModalFooter {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  padding: 18px 26px;
+  padding: 12px 20px;
   background: var(--hub-surface);
   border-top: 1px solid var(--hub-card-border);
-  flex-wrap: wrap;
-}
-
-.hubQrModalDownloadBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--hub-primary-red);
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.hubQrModalDownloadBtn:hover {
-  background: var(--hub-primary-hover);
+  flex-shrink: 0;
 }
 
 .hubQrModalCopyBtn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: var(--hub-card-bg);
-  color: var(--hub-text-primary);
-  border: 1px solid var(--hub-card-border);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 0.9rem;
+  gap: 7px;
+  background: var(--hub-primary-red);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 15px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
 .hubQrModalCopyBtn:hover {
-  border-color: var(--hub-primary-red);
+  opacity: 0.9;
 }
 
 .hubQrModalDoneBtn {
   margin-left: auto;
   background: transparent;
   color: var(--hub-text-secondary);
-  border: none;
-  font-size: 0.9rem;
+  border: 1px solid var(--hub-card-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 8px 16px;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .hubQrModalDoneBtn:hover {
   color: var(--hub-text-primary);
+  background: var(--hub-card-border);
 }
 
 /* ==========================================================================

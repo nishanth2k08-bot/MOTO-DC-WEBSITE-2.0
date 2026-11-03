@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
 import {
   Smartphone,
-  Download,
   QrCode,
   CheckCircle2,
   Clock,
@@ -11,34 +10,15 @@ import {
   Truck,
   ShieldCheck,
   Copy,
-  ExternalLink,
   Layers,
-  Sparkles,
-  Zap,
   Radio,
-  FileText,
-  Key,
+  Lock,
   X
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './hub-station.css';
 
-// Default fallback version configuration
-const DEFAULT_VERSION_CONFIG = {
-  version: '1.0.1',
-  buildNumber: 2,
-  appName: 'MotoDC Hub Station',
-  packageId: 'com.motodc.hub',
-  apkFileName: 'MotoDC-Hub.apk',
-  apkUrl: '/MotoDC-Hub.apk?v=1.0.1',
-  updatedAt: new Date().toISOString(),
-  fileSize: '5.5 MB',
-  minAndroidVersion: 'Android 8.0 (Oreo) or later',
-  releaseNotes: 'Karaikal Warehouse Fulfillment App with dual barcode scanner support (Hardware USB/Bluetooth Wedge + Camera 60FPS Laser Reticle), real-time Firestore synchronization, corridor rack staging, and 8:30 PM shift security.'
-};
-
 export default function HubStation() {
-  const [versionInfo, setVersionInfo] = useState(DEFAULT_VERSION_CONFIG);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const [showQrModal, setShowQrModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -50,52 +30,29 @@ export default function HubStation() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch the latest version manifest dynamically whenever the page loads
-  // Ensures the QR code and download links ALWAYS show the newest version
-  useEffect(() => {
-    let isMounted = true;
-    const fetchLatestVersion = async () => {
-      try {
-        const res = await fetch(`/hub-version.json?t=${Date.now()}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted && data && data.version) {
-            setVersionInfo(data);
-          }
-        }
-      } catch (err) {
-        console.warn('Could not fetch dynamic hub-version.json, using bundled version:', err);
-      }
-    };
-
-    fetchLatestVersion();
-    return () => { isMounted = false; };
-  }, []);
-
-  // Compute canonical download URL
+  // Compute canonical mobile Hub Terminal URL
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  const fullApkDownloadUrl = `${origin}/MotoDC-Hub.apk?v=${encodeURIComponent(versionInfo.version)}`;
-  const installPortalUrl = `${origin}/hub/install`;
+  const hubMobileAppUrl = `${origin}/hub-app`;
 
-  // Dynamically regenerate the QR Code whenever versionInfo changes
+  // Dynamically generate the QR Code pointing directly to the mobile Hub Station App
   useEffect(() => {
     if (!origin) return;
     try {
-      QRCode.toDataURL(fullApkDownloadUrl, {
-        width: 320,
-        margin: 2,
+      QRCode.toDataURL(hubMobileAppUrl, {
+        width: 220,
+        margin: 1,
         color: {
           dark: '#05070b',
           light: '#ffffff',
         },
-        errorCorrectionLevel: 'H',
+        errorCorrectionLevel: 'M',
       })
         .then((url) => setQrCodeDataUrl(url))
         .catch((err) => console.warn('QR Code generation error:', err));
     } catch (e) {
       console.warn('QR Code generation exception:', e);
     }
-  }, [fullApkDownloadUrl, origin]);
+  }, [hubMobileAppUrl, origin]);
 
   // Lock background scroll when QR modal is active
   useEffect(() => {
@@ -120,33 +77,10 @@ export default function HubStation() {
 
   const handleCopyLink = () => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(fullApkDownloadUrl);
+      navigator.clipboard.writeText(hubMobileAppUrl);
       setCopiedLink(true);
-      toast.success('App download link copied to clipboard!');
+      toast.success('Mobile Hub App link copied to clipboard!');
       setTimeout(() => setCopiedLink(false), 2500);
-    }
-  };
-
-  const handleDirectDownload = () => {
-    toast.success(`Starting download: MotoDC-Hub.apk (v${versionInfo.version})`, { duration: 4000 });
-    const link = document.createElement('a');
-    link.href = fullApkDownloadUrl;
-    link.setAttribute('download', 'MotoDC-Hub.apk');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const formatLastUpdated = (isoString) => {
-    try {
-      const d = new Date(isoString);
-      return d.toLocaleDateString('en-IN', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-    } catch {
-      return 'Latest';
     }
   };
 
@@ -182,35 +116,24 @@ export default function HubStation() {
               </p>
             </div>
 
-            {/* Primary CTA: Install App Button */}
+            {/* Primary Action: Install Hub App on Phone (Laptop / PC Gateway) */}
             <div className="hubHeroActions">
               <button
                 type="button"
                 className="hubInstallAppBtn"
                 onClick={() => setShowQrModal(true)}
-                aria-label="Install MotoDC Hub Mobile App"
+                aria-label="Install MotoDC Hub Mobile App on Phone"
               >
                 <div className="hubInstallBtnIcon">
                   <Smartphone size={22} />
                 </div>
                 <div className="hubInstallBtnText">
                   <span className="hubInstallBtnTitle">Install Hub App</span>
-                  <span className="hubInstallBtnSubtitle">
-                    Scan QR to Install • v{versionInfo.version}
-                  </span>
+                  <span className="hubInstallBtnSubtitle">Scan QR to Open on Phone</span>
                 </div>
                 <div className="hubInstallBtnBadge">
-                  <QrCode size={16} />
+                  <QrCode size={18} />
                 </div>
-              </button>
-
-              <button
-                type="button"
-                className="hubDirectDownloadBtn"
-                onClick={handleDirectDownload}
-                title="Download APK directly to your computer or phone"
-              >
-                <Download size={16} /> Direct APK ({versionInfo.fileSize || '5.5 MB'})
               </button>
             </div>
           </div>
@@ -226,12 +149,12 @@ export default function HubStation() {
           <div className="hubNoticeBody">
             <h3>Handheld Mobile Operations Standard</h3>
             <p>
-              To maintain high mobility on the warehouse floor and support direct hardware barcode scanners,
-              all order staging, thermal shipping label printing, and rider parcel transfers are conducted
-              exclusively on the <strong>MotoDC Hub Mobile App</strong>.
+              To maintain high mobility across warehouse shelves and support direct barcode scanners,
+              all order staging, thermal shipping label printing, and rider parcel handovers are conducted
+              on the handheld <strong>MotoDC Hub Mobile App</strong>.
             </p>
             <div className="hubNoticePills">
-              <span><Zap size={13} /> Dual Barcode Scanner (Hardware Wedge + 60FPS Camera)</span>
+              <span><Barcode size={13} /> Dual Barcode Scanner (Hardware Wedge + 60FPS Camera)</span>
               <span><Layers size={13} /> 4-Corridor Geographic Rack Staging</span>
               <span><ShieldCheck size={13} /> 8:30 PM Shift Auto-Lock Security</span>
             </div>
@@ -243,7 +166,7 @@ export default function HubStation() {
         {/* ================================================================= */}
         <section className="hubDetailsGrid">
           
-          {/* Card 1: Station Identity */}
+          {/* Card 1: Station Information */}
           <div className="hubDetailCard">
             <div className="hubCardHeader">
               <div className="hubCardIconBox hubIconBlue">
@@ -276,14 +199,14 @@ export default function HubStation() {
             </div>
           </div>
 
-          {/* Card 2: Operating Shift & Security */}
+          {/* Card 2: Operating Shift & Security (Secret PIN omitted for security) */}
           <div className="hubDetailCard">
             <div className="hubCardHeader">
               <div className="hubCardIconBox hubIconAmber">
                 <Clock size={20} />
               </div>
               <div>
-                <h3>Operating Shift & PIN</h3>
+                <h3>Operating Shift & Access</h3>
                 <small>Terminal Authorization & Shift Rules</small>
               </div>
             </div>
@@ -297,10 +220,10 @@ export default function HubStation() {
                 <span className="hubInfoValue">08:30 PM IST (Overnight Security Lock)</span>
               </div>
               <div className="hubInfoRow">
-                <span className="hubInfoLabel">Default Station PIN</span>
-                <span className="hubInfoValue hubHighlightCode">
-                  <Key size={13} style={{ display: 'inline', marginRight: 4 }} />
-                  1234
+                <span className="hubInfoLabel">Terminal Access</span>
+                <span className="hubInfoValue">
+                  <Lock size={13} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+                  Confidential Staff PIN (Issued Internally)
                 </span>
               </div>
               <div className="hubInfoRow">
@@ -387,26 +310,17 @@ export default function HubStation() {
         </section>
 
         {/* ================================================================= */}
-        {/* 4. DYNAMIC APP VERSION & UPDATE CARD                              */}
+        {/* 4. CLEAN MOBILE TERMINAL ACCESS BANNER                            */}
         {/* ================================================================= */}
         <section className="hubVersionBanner">
           <div className="hubVersionLeft">
-            <div className="hubVersionPill">
-              <Sparkles size={14} /> Production Build • Always Up-to-Date
-            </div>
             <h2>
-              MotoDC Hub Fulfillment App <span>v{versionInfo.version}</span>
+              MotoDC Hub <span>Mobile Terminal</span>
             </h2>
             <p>
-              Whenever an update or bug fix is committed, the QR code automatically encodes
-              and delivers the latest build with cache-busting version tags.
+              Point your Android phone camera at the QR code to open the fulfillment station
+              and install it directly to your home screen for high-speed warehouse barcode scanning.
             </p>
-            <div className="hubVersionMetaRow">
-              <span><strong>Updated:</strong> {formatLastUpdated(versionInfo.updatedAt)}</span>
-              <span><strong>Package:</strong> {versionInfo.packageId}</span>
-              <span><strong>Size:</strong> {versionInfo.fileSize || '5.5 MB'}</span>
-              <span><strong>Compatibility:</strong> {versionInfo.minAndroidVersion}</span>
-            </div>
           </div>
 
           <div className="hubVersionRight">
@@ -415,7 +329,7 @@ export default function HubStation() {
               className="hubShowQrActionBtn"
               onClick={() => setShowQrModal(true)}
             >
-              <QrCode size={18} /> Show Install QR Code
+              <QrCode size={18} /> Show QR Code
             </button>
             <button
               type="button"
@@ -423,7 +337,7 @@ export default function HubStation() {
               onClick={handleCopyLink}
             >
               {copiedLink ? <CheckCircle2 size={16} color="#10b981" /> : <Copy size={16} />}
-              {copiedLink ? 'Link Copied!' : 'Copy Direct Link'}
+              {copiedLink ? 'Link Copied!' : 'Copy Mobile Link'}
             </button>
           </div>
         </section>
@@ -431,7 +345,7 @@ export default function HubStation() {
       </div>
 
       {/* ================================================================= */}
-      {/* 5. QR CODE INSTALLATION MODAL                                     */}
+      {/* 5. QR CODE INSTALLATION MODAL (Fits Screen Perfectly)             */}
       {/* ================================================================= */}
       {showQrModal && (
         <div className="hubQrModalOverlay" onClick={() => setShowQrModal(false)}>
@@ -441,11 +355,11 @@ export default function HubStation() {
             <div className="hubQrModalHeader">
               <div className="hubQrModalTitle">
                 <div className="hubQrModalIconBox">
-                  <Smartphone size={22} />
+                  <Smartphone size={20} />
                 </div>
                 <div>
                   <h3>Scan to Install Hub App</h3>
-                  <p>Instant Android installation for warehouse floor staff</p>
+                  <p>Point phone camera to launch MotoDC Hub on your phone</p>
                 </div>
               </div>
               <button
@@ -454,25 +368,25 @@ export default function HubStation() {
                 onClick={() => setShowQrModal(false)}
                 aria-label="Close"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            {/* QR Code Presentation Frame */}
+            {/* QR Code Presentation Frame (Compact & Centered) */}
             <div className="hubQrModalBody">
               <div className="hubQrCodeWrapper">
                 <div className="hubQrCodeBox">
                   {qrCodeDataUrl ? (
                     <img
                       src={qrCodeDataUrl}
-                      alt={`Scan QR Code to install MotoDC Hub App v${versionInfo.version}`}
+                      alt="Scan QR Code to open MotoDC Hub Terminal"
                       className="hubQrCodeImg"
                     />
                   ) : (
-                    <div className="hubQrLoading">Generating latest QR code...</div>
+                    <div className="hubQrLoading">Generating QR code...</div>
                   )}
 
-                  {/* High-tech corner bracket guides */}
+                  {/* Corner bracket guides */}
                   <div className="hubQrCorner hubCornerTL" />
                   <div className="hubQrCorner hubCornerTR" />
                   <div className="hubQrCorner hubCornerBL" />
@@ -480,35 +394,21 @@ export default function HubStation() {
                 </div>
 
                 <div className="hubQrVersionBadge">
-                  <Download size={13} />
-                  <span>Latest Release: MotoDC-Hub.apk (v{versionInfo.version})</span>
+                  <Smartphone size={13} />
+                  <span>MotoDC Hub Warehouse Terminal</span>
                 </div>
               </div>
 
-              {/* Step-by-Step Scan Instructions */}
+              {/* Step-by-Step Scan Instructions (Compact) */}
               <div className="hubQrSteps">
                 <div className="hubQrStepItem">
-                  <div className="hubStepCircle">1</div>
-                  <div className="hubStepText">
-                    <strong>Open Camera or Google Lens</strong>
-                    <p>Open the camera app or QR code scanner on any Android phone.</p>
-                  </div>
+                  <span className="hubStepCircle">1</span>
+                  <span>Open <strong>Camera</strong> or <strong>Google Lens</strong> on your mobile phone</span>
                 </div>
 
                 <div className="hubQrStepItem">
-                  <div className="hubStepCircle">2</div>
-                  <div className="hubStepText">
-                    <strong>Point at the QR Code</strong>
-                    <p>Align the camera with this screen. A direct download prompt will pop up.</p>
-                  </div>
-                </div>
-
-                <div className="hubQrStepItem">
-                  <div className="hubStepCircle">3</div>
-                  <div className="hubStepText">
-                    <strong>Tap to Install</strong>
-                    <p>Tap the banner to download and install. Allow "Install unknown apps" if prompted.</p>
-                  </div>
+                  <span className="hubStepCircle">2</span>
+                  <span>Point at this QR code & tap the link to launch the <strong>MotoDC Hub Terminal</strong></span>
                 </div>
               </div>
 
@@ -518,19 +418,11 @@ export default function HubStation() {
             <div className="hubQrModalFooter">
               <button
                 type="button"
-                className="hubQrModalDownloadBtn"
-                onClick={handleDirectDownload}
-              >
-                <Download size={16} /> Download APK (v{versionInfo.version})
-              </button>
-
-              <button
-                type="button"
                 className="hubQrModalCopyBtn"
                 onClick={handleCopyLink}
               >
-                {copiedLink ? <CheckCircle2 size={16} color="#10b981" /> : <Copy size={16} />}
-                {copiedLink ? 'Copied' : 'Copy Link'}
+                {copiedLink ? <CheckCircle2 size={15} color="#10b981" /> : <Copy size={15} />}
+                {copiedLink ? 'Link Copied!' : 'Copy Mobile Link'}
               </button>
 
               <button
