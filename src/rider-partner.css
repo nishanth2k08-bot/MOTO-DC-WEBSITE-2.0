@@ -2094,3 +2094,141 @@
   margin-top: 4px;
 }
 
+/* ==========================================================================
+   Light Theme Support for MotoDC Partner Page
+   ========================================================================== */
+body.light-theme {
+  --rp-bg: #f6f7f9;
+  --rp-surface: #ffffff;
+  --rp-surface-2: #f1f5f9;
+  --rp-surface-hover: #e2e8f0;
+  --rp-border: #dfe2e8;
+  --rp-border-active: rgba(255, 49, 87, 0.5);
+  --rp-text: #171a21;
+  --rp-text-muted: #64748b;
+}
+
+body.light-theme .riderPartnerRoot {
+  background-color: #f6f7f9;
+  color: #171a21;
+}
+
+body.light-theme .partnerNavbar {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom-color: #dfe2e8;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .partnerLogoBadge .logoMain {
+  color: #171a21 !important;
+}
+
+body.light-theme .partnerHeroTitle {
+  color: #0f172a;
+}
+
+body.light-theme .partnerHeroSubtitle {
+  color: #475569;
+}
+
+body.light-theme .partnerSectionTitle {
+  color: #0f172a;
+}
+
+body.light-theme .partnerSectionSubtitle {
+  color: #64748b;
+}
+
+body.light-theme .perkCard,
+body.light-theme .corridorCard,
+body.light-theme .stepCard,
+body.light-theme .faqItem,
+body.light-theme .earningsCalcCard,
+body.light-theme .kycModalCard,
+body.light-theme .qrModalCard,
+body.light-theme .partnerStatCard,
+body.light-theme .fleetTestimonialCard,
+body.light-theme .partnerCtaCard {
+  background: #ffffff;
+  border-color: #dfe2e8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .perkCard h3,
+body.light-theme .corridorCard h3,
+body.light-theme .stepCard h3,
+body.light-theme .partnerStatVal,
+body.light-theme .earningsCalcCard h3 {
+  color: #0f172a;
+}
+
+body.light-theme .perkCard p,
+body.light-theme .corridorCard p,
+body.light-theme .stepCard p,
+body.light-theme .partnerStatLabel {
+  color: #475569;
+}
+
+body.light-theme .faqQuestion {
+  color: #0f172a;
+}
+
+body.light-theme .faqQuestion span {
+  color: #0f172a !important;
+}
+
+body.light-theme .faqAnswer p {
+  color: #475569;
+}
+
+body.light-theme .calcBreakdownRow {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .calcBreakdownRow span {
+  color: #475569;
+}
+
+body.light-theme .calcBreakdownRow strong {
+  color: #0f172a;
+}
+
+body.light-theme .partnerStickyBar {
+  background: rgba(255, 255, 255, 0.95);
+  border-top-color: #dfe2e8;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .stickyInfoText strong {
+  color: #0f172a;
+}
+
+body.light-theme .stickyInfoText span {
+  color: #64748b;
+}
+
+body.light-theme .kycModalHeader h2,
+body.light-theme .qrModalHeader h3 {
+  color: #0f172a;
+}
+
+body.light-theme .kycFormGroup label {
+  color: #334155;
+}
+
+body.light-theme .kycFormGroup input,
+body.light-theme .kycFormGroup select {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+body.light-theme .qrStepItem strong {
+  color: #0f172a;
+}
+
+body.light-theme .qrStepItem span {
+  color: #475569;
+}
+

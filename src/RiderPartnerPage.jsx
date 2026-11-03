@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import QRCode from 'qrcode';
+import ThemeToggle from './ThemeToggle';
 import './rider-partner.css';
 
 export default function RiderPartnerPage() {
@@ -406,6 +407,7 @@ export default function RiderPartnerPage() {
 
           {/* TOP RIGHT "INSTALL APP" BUTTON (Clean high-contrast text, version tag removed) */}
           <div className="partnerTopActions">
+            <ThemeToggle />
             {isVerifiedRider ? (
               <button 
                 type="button" 

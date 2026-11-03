@@ -3,6 +3,7 @@ import { collection, onSnapshot, doc, updateDoc, arrayUnion } from 'firebase/fir
 import { db } from './firebase';
 import ShippingLabelModal from './ShippingLabelModal';
 import { detectDeliveryZone, CORRIDOR_METADATA } from './corridorUtil';
+import ThemeToggle from './ThemeToggle';
 import {
   Package,
   Printer,
@@ -236,12 +237,15 @@ export default function HubStation() {
     return (
       <div className="hubStationLockScreen">
         <div className="hubStationLockCard">
-          <div className="hubStationLogoRow">
-            <Package size={34} color="#ff3157" />
-            <div>
-              <h2>Moto<span>DC</span> Hub Station</h2>
-              <p>Warehouse Fulfillment & Quality Inspection Portal</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', gap: '12px' }}>
+            <div className="hubStationLogoRow" style={{ marginBottom: 0 }}>
+              <Package size={34} color="#ff3157" />
+              <div>
+                <h2>Moto<span>DC</span> Hub Station</h2>
+                <p>Warehouse Fulfillment & Quality Inspection Portal</p>
+              </div>
             </div>
+            <ThemeToggle />
           </div>
 
           <div className="hubStationLockNotice">
@@ -298,6 +302,7 @@ export default function HubStation() {
             <span className="liveBlinker" />
             <span>Karaikal Central Warehouse (Active)</span>
           </div>
+          <ThemeToggle />
           <button type="button" onClick={handleStationLock} className="hubLockBtn" title="Lock Station Terminal">
             <Lock size={15} /> Lock Station
           </button>

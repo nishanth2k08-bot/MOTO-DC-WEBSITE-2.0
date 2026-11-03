@@ -691,3 +691,221 @@
     flex-direction: column;
   }
 }
+
+/* ==========================================================================
+   Light Theme Support for Karaikal Hub Station
+   ========================================================================== */
+body.light-theme .hubStationContainer,
+body.light-theme .hubStationLockScreen {
+  background: #f6f7f9;
+  color: #171a21;
+}
+
+body.light-theme .hubStationLockCard {
+  background: #ffffff;
+  border-color: #dfe2e8;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .hubStationLogoRow h2 {
+  color: #171a21;
+}
+
+body.light-theme .hubStationLogoRow p {
+  color: #64748b;
+}
+
+body.light-theme .hubStationLockNotice {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+body.light-theme .hubStationLockNotice strong {
+  color: #16a34a;
+}
+
+body.light-theme .hubStationLockNotice p {
+  color: #475569;
+}
+
+body.light-theme .hubStationPinForm label {
+  color: #334155;
+}
+
+body.light-theme .hubPinInputWrap {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+body.light-theme .hubPinInputWrap input {
+  color: #0f172a;
+}
+
+body.light-theme .hubStationDefaultHint {
+  color: #64748b;
+}
+
+body.light-theme .hubStationHeader {
+  border-bottom-color: #e2e8f0;
+}
+
+body.light-theme .hubHeaderBrand h1 {
+  color: #171a21;
+}
+
+body.light-theme .hubHeaderBrand p {
+  color: #64748b;
+}
+
+body.light-theme .hubStationBadge {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+body.light-theme .hubLockBtn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+body.light-theme .hubLockBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+body.light-theme .hubPipelineBanner {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .hubPipelineStep h4 {
+  color: #1e293b;
+}
+
+body.light-theme .hubPipelineStep p {
+  color: #64748b;
+}
+
+body.light-theme .pipelineDivider {
+  background: #e2e8f0;
+}
+
+body.light-theme .hubToolbar {
+  border-bottom-color: #e2e8f0;
+}
+
+body.light-theme .hubTabs {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .hubTabBtn {
+  color: #64748b;
+}
+
+body.light-theme .hubTabBtn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .hubSearchBox {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+body.light-theme .hubSearchBox input {
+  color: #0f172a;
+}
+
+body.light-theme .hubSearchBox input::placeholder {
+  color: #94a3b8;
+}
+
+body.light-theme .hubOrderCard {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .hubCardHeader {
+  border-bottom-color: #f1f5f9;
+}
+
+body.light-theme .hubOrderNum {
+  color: #0f172a;
+}
+
+body.light-theme .hubCustomerBlock {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .hubCustomerName {
+  color: #0f172a;
+}
+
+body.light-theme .hubCustomerPhone,
+body.light-theme .hubCustomerAddr {
+  color: #475569;
+}
+
+body.light-theme .hubItemsChecklist {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .hubChecklistTitle {
+  color: #1e293b;
+}
+
+body.light-theme .checklistItem {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+body.light-theme .checklistItem.checked {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+body.light-theme .checklistItemTitle {
+  color: #0f172a;
+}
+
+body.light-theme .checklistItemMeta {
+  color: #64748b;
+}
+
+body.light-theme .hubPrintLabelBtn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+body.light-theme .hubPrintLabelBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+body.light-theme .hubMarkPackedBtn:not(.readyToVerify) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+body.light-theme .hubEmptyState {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .hubEmptyState h3 {
+  color: #0f172a;
+}
+
+body.light-theme .hubEmptyState p {
+  color: #64748b;
+}
