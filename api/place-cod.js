@@ -29,7 +29,10 @@ export default async function handler(req,res){
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
     function computePin(id){let hash=0;const s=String(id||'7482');for(let i=0;i<s.length;i++)hash=(hash*31+s.charCodeAt(i))>>>0;return String(1000+(hash%9000));}
     const deliveryPin=computePin(orderId);
-    let total=0;
+    let subtotal=0;
+    const FREE_DELIVERY_THRESHOLD=799;
+    const STANDARD_DELIVERY_FEE=99;
+    let tax=0,deliveryFee=0,grandTotal=0;
     const safeItems=[];
     await db.runTransaction(async tx=>{
       const productRefs=items.map(item=>db.collection('products').doc(String(item.id)));
@@ -44,7 +47,7 @@ export default async function handler(req,res){
         if(!p)throw new Error('A product is no longer available');
         const qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
         if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
-        const price=Number(p.price||0);total+=price*qty;
+        const price=Number(p.price||0);subtotal+=price*qty;
         safeItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
       });
       tx.set(categoryRef,{name:'cod orders',paymentMethod:'cod',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
@@ -62,14 +65,17 @@ export default async function handler(req,res){
           });
         }
       });
-      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
+      tax=Math.round(subtotal*0.18*100)/100;
+      deliveryFee=subtotal>=FREE_DELIVERY_THRESHOLD?0:STANDARD_DELIVERY_FEE;
+      grandTotal=Math.round((subtotal+tax+deliveryFee)*100)/100;
+      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
     });
-    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal:total,total,delivery:'FREE',deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
+    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
     waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_COD_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('COD order email error:',emailError);}})());
     else console.error('COD order email skipped: MSG91_TEMPLATE_COD_ORDER is not configured');
-    return send(res,200,{ok:true,orderId,total,docId:orderRef.id});
+    return send(res,200,{ok:true,orderId,subtotal,tax,delivery:deliveryFee,total:grandTotal,docId:orderRef.id});
   }catch(e){
     console.error('place-cod error:',e);
     const message=String(e?.message||'');

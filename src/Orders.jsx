@@ -438,7 +438,7 @@ async function downloadInvoice(o) {
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(5.5);
       pdf.setTextColor(16, 185, 129);
-      pdf.text('[ 100% FREE DELIVERY ELIGIBLE | 18% GST INCL. ]', 26, tableY + 4.5 + (wrapped.length * 4.1));
+      pdf.text('[ BASE MRP | 18% GST APPLICABLE ]', 26, tableY + 4.5 + (wrapped.length * 4.1));
 
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(7.2);
@@ -534,11 +534,10 @@ async function downloadInvoice(o) {
     pdf.rect(106, sumY, 92, 1.8, 'F');
 
     const total = Number(o.total || 0);
-    const delivery = Number(o.delivery || 0);
-    const subtotal = Number(o.subtotal ?? (total > delivery ? total - delivery : total));
-    const taxable = Math.round((subtotal / 1.18) * 100) / 100;
+    const delivery = (o.delivery === 'FREE' || !o.delivery || Number(o.delivery) === 0) ? 0 : Number(o.delivery);
+    const subtotal = Number(o.subtotal || 0) || (total ? Math.round(((total - delivery) / 1.18) * 100) / 100 : 0);
+    const totalGst = (typeof o.tax === 'number' && o.tax > 0) ? Number(o.tax) : Math.round(subtotal * 0.18 * 100) / 100;
     const isPuducherry = !o.shipping?.state || /puducherry|pondicherry|karaikal/i.test(o.shipping.state) || /karaikal/i.test(o.shipping?.city || '');
-    const totalGst = Math.round((subtotal - taxable) * 100) / 100;
     const cgst = isPuducherry ? Math.round((totalGst / 2) * 100) / 100 : 0;
     const sgst = isPuducherry ? Math.round((totalGst - cgst) * 100) / 100 : 0;
     const igst = !isPuducherry ? totalGst : 0;
@@ -555,8 +554,8 @@ async function downloadInvoice(o) {
     };
 
     summaryRow(
-      'Taxable Base Value',
-      'Rs. ' + taxable.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+      'Items Subtotal (Base MRP)',
+      'Rs. ' + subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
       7.5
     );
     if (isPuducherry) {
@@ -583,7 +582,7 @@ async function downloadInvoice(o) {
       );
     }
     summaryRow(
-      'Total 18% GST (Included)',
+      'Total 18% GST (Added)',
       'Rs. ' + totalGst.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
       21
     );

@@ -72,13 +72,17 @@ export default function Checkout(){
     };
   },[user]);
 
+  const FREE_DELIVERY_THRESHOLD = 799;
+  const STANDARD_DELIVERY_FEE = 99;
   const subtotal = items.reduce((a,x)=>a+Number(x.price||0)*Number(x.qty||1),0);
-  const taxableBase = Math.round((subtotal / 1.18) * 100) / 100;
-  const totalGst = Math.round((subtotal - taxableBase) * 100) / 100;
+  const totalGst = Math.round(subtotal * 0.18 * 100) / 100;
   const isPuducherry = !form.state || /puducherry|pondicherry|karaikal/i.test(form.state) || /karaikal/i.test(form.city);
   const cgst = isPuducherry ? Math.round((totalGst / 2) * 100) / 100 : 0;
   const sgst = isPuducherry ? Math.round((totalGst - cgst) * 100) / 100 : 0;
   const igst = !isPuducherry ? totalGst : 0;
+  const isFreeDelivery = subtotal >= FREE_DELIVERY_THRESHOLD;
+  const deliveryFee = isFreeDelivery ? 0 : STANDARD_DELIVERY_FEE;
+  const grandTotal = Math.round((subtotal + totalGst + deliveryFee) * 100) / 100;
   const update=e=>setForm({...form,[e.target.name]:e.target.value});
 
   const handleCountryCodeChange=(e)=>{
@@ -216,7 +220,7 @@ export default function Checkout(){
       const create=await fetch('/api/create-payment',{
         method:'POST',
         headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
-        body:JSON.stringify({items:items.map(x=>({id:x.id,qty:x.qty})),amount:subtotal})
+        body:JSON.stringify({items:items.map(x=>({id:x.id,qty:x.qty})),amount:grandTotal})
       });
       created=await readApiResponse(create);
     }catch(err){
@@ -280,7 +284,7 @@ export default function Checkout(){
             state:{
               justPlaced:true,
               orderId:result?.orderId||instantOrderId,
-              total:result?.total||subtotal,
+              total:result?.total||grandTotal,
               method:'online'
             }
           });
@@ -294,7 +298,7 @@ export default function Checkout(){
             state:{
               justPlaced:true,
               orderId:instantOrderId,
-              total:subtotal,
+              total:grandTotal,
               method:'online'
             }
           });
@@ -470,11 +474,20 @@ export default function Checkout(){
             </h2>
 
             {/* Free Delivery Callout */}
-            <div className="checkoutFreeDeliveryCallout">
-              <div className="freeDeliveryIcon"><Truck size={18} /></div>
+            <div className="checkoutFreeDeliveryCallout" style={!isFreeDelivery?{borderColor:'rgba(251,191,36,0.4)',background:'rgba(251,191,36,0.06)'}:{}}>
+              <div className="freeDeliveryIcon" style={!isFreeDelivery?{background:'rgba(251,191,36,0.18)',color:'#fbbf24'}:{}}><Truck size={18} /></div>
               <div>
-                <strong>100% Free Express Delivery</strong>
-                <p>Zero delivery charges. Direct fulfillment from MotoDC Karaikal Depot.</p>
+                {isFreeDelivery ? (
+                  <>
+                    <strong>🎉 100% Free Delivery Unlocked!</strong>
+                    <p>Order exceeds ₹{FREE_DELIVERY_THRESHOLD}. You saved ₹{STANDARD_DELIVERY_FEE} on express shipping.</p>
+                  </>
+                ) : (
+                  <>
+                    <strong style={{color:'#fbbf24'}}>Standard Courier Delivery (₹{STANDARD_DELIVERY_FEE})</strong>
+                    <p>Add <b>{money(FREE_DELIVERY_THRESHOLD - subtotal)}</b> more to unlock 100% FREE express delivery!</p>
+                  </>
+                )}
               </div>
             </div>
 
@@ -485,9 +498,9 @@ export default function Checkout(){
                   <img src={x.image} alt={x.name} loading="lazy" decoding="async" />
                   <div className="summaryItemInfo">
                     <b>{x.name}</b>
-                    <small>Qty: {x.qty} · {money(x.price)}</small>
+                    <small>Qty: {x.qty} · Base: {money(x.price)}</small>
                     <span className="itemFreeDeliveryTag">
-                      <Truck size={10} /> Eligible for Free Delivery
+                      {isFreeDelivery ? <><Truck size={10} /> Free Delivery Unlocked</> : <><Truck size={10} /> Free delivery ₹{FREE_DELIVERY_THRESHOLD}+</>}
                     </span>
                   </div>
                   <strong className="summaryItemPrice">{money(x.price * x.qty)}</strong>
@@ -498,8 +511,8 @@ export default function Checkout(){
             {/* GST & Tax Breakdown */}
             <div className="checkoutTaxBreakdown">
               <div className="taxRow">
-                <span>Items Subtotal (Taxable Base)</span>
-                <b>{money(taxableBase)}</b>
+                <span>Items Subtotal (Base MRP)</span>
+                <b>{money(subtotal)}</b>
               </div>
               {isPuducherry ? (
                 <>
@@ -519,28 +532,32 @@ export default function Checkout(){
                 </div>
               )}
               <div className="taxRow totalGstRow">
-                <span>Total Tax Included (18% GST)</span>
+                <span>Total 18% GST (Added)</span>
                 <b className="gstHighlight">{money(totalGst)}</b>
               </div>
               <div className="taxRow deliveryRow">
                 <span>Doorstep Express Delivery</span>
-                <b className="freeDeliveryHighlight">
-                  <span className="strikethrough">₹99</span> FREE
-                </b>
+                {isFreeDelivery ? (
+                  <b className="freeDeliveryHighlight">
+                    <span className="strikethrough">₹{STANDARD_DELIVERY_FEE}</span> FREE
+                  </b>
+                ) : (
+                  <b>{money(STANDARD_DELIVERY_FEE)}</b>
+                )}
               </div>
             </div>
 
             {/* Grand Total */}
             <div className="checkoutGrandTotal">
               <span>Total Payable</span>
-              <strong>{money(subtotal)}</strong>
+              <strong>{money(grandTotal)}</strong>
             </div>
 
             {/* Tax Compliance Note */}
             <div className="taxComplianceNote">
               <ShieldCheck size={14} />
               <span>
-                All prices are inclusive of 18% GST (HSN 8708/8714). Official Tax Invoice with GSTIN <b>34AABCM9120K1ZX</b> generated upon order confirmation.
+                All item prices are Base MRP. 18% GST (HSN 8708/8714) and delivery are calculated transparently. Official Tax Invoice with GSTIN <b>34AABCM9120K1ZX</b> generated upon order confirmation.
               </span>
             </div>
           </aside>

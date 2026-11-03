@@ -42,7 +42,10 @@ export default async function handler(req,res){
     const deliveryPin=computePin(orderId);
     const orderCategoryRef=db.collection('orders').doc('online orders');
     const orderRef=orderCategoryRef.collection('records').doc();
-    let total=0;
+    let subtotal=0;
+    const FREE_DELIVERY_THRESHOLD=799;
+    const STANDARD_DELIVERY_FEE=99;
+    let tax=0,deliveryFee=0,grandTotal=0;
     const finalItems=[];
     await db.runTransaction(async tx=>{
       const requestedItems=(intent.items||[]).map(item=>({id:String(item.id),qty:Math.max(1,Math.floor(Number(item.qty||1)))}));
@@ -59,10 +62,13 @@ export default async function handler(req,res){
         if(!p)throw new Error('A product is no longer available');
         const qty=item.qty,stock=Number(p.stock||0);
         if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
-        const price=Number(p.price||0);total+=price*qty;
+        const price=Number(p.price||0);subtotal+=price*qty;
         finalItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
       }
-      if(Math.round(total*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
+      tax=Math.round(subtotal*0.18*100)/100;
+      deliveryFee=subtotal>=FREE_DELIVERY_THRESHOLD?0:STANDARD_DELIVERY_FEE;
+      grandTotal=Math.round((subtotal+tax+deliveryFee)*100)/100;
+      if(Math.round(grandTotal*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
       for(const item of requestedItems){
         const snap=productMap.get(item.id);
         const p=snap?.exists?snap.data():getCatalogProduct(item.id);
@@ -77,15 +83,15 @@ export default async function handler(req,res){
         }
       }
       tx.set(orderCategoryRef,{name:'online orders',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
-      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',deliveryPin,paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
+      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
-    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal:total,total,delivery:'FREE',deliveryPin,paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
+    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
     waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_ONLINE_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('Online order email error:',emailError);}})());
     else console.error('Online order email skipped: MSG91_TEMPLATE_ONLINE_ORDER is not configured');
-    return send(res,200,{ok:true,orderId,docId:orderRef.id,total});
+    return send(res,200,{ok:true,orderId,docId:orderRef.id,subtotal,tax,delivery:deliveryFee,total:grandTotal});
   }catch(e){
     console.error('verify-payment error:',e);
     const message=String(e?.message||'');

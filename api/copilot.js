@@ -155,7 +155,7 @@ CORE CAPABILITIES & BEHAVIORS:
 
 2. MOTODC STORE POLICIES (ALWAYS ACCURATE):
    - Cash on Delivery (COD): 100% Cash on Delivery available across all pin codes in India with zero advance payment.
-   - Delivery: Dispatched within 24 hours, delivered in 3-5 business days across India. Free shipping on orders over ₹2,000 (flat ₹99 otherwise).
+   - Delivery: Dispatched within 24 hours, delivered in 3-5 business days across India. Free shipping on orders over ₹799 (flat ₹99 otherwise). All prices are Base MRP; 18% GST (CGST 9% + SGST 9% / IGST 18%) is added transparently at checkout.
    - Returns: 7-Day Hassle-Free Return & Replacement Guarantee with free door pickup via "My Orders".
    - Authenticity: 100% Genuine OEM/OES components backed by manufacturer warranty (Brembo, Bosch, Motul, Castrol, NGK, Philips, Rolon).
 

@@ -24,7 +24,7 @@ export default async function handler(req,res){
     const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
     const refs=items.map(x=>db.collection('products').doc(String(x.id)));
     const snaps=await db.getAll(...refs);
-    let total=0;const safeItems=[];
+    let subtotal=0;const safeItems=[];
     for(let i=0;i<snaps.length;i++){
       const snap=snaps[i],requested=Math.max(1,Math.floor(Number(items[i].qty||1)));
       let p=snap.exists?snap.data():null;
@@ -43,20 +43,25 @@ export default async function handler(req,res){
       if(!p)return send(res,400,{error:'A product is no longer available'});
       const stock=Number(p.stock||0);
       if(requested>stock)return send(res,400,{error:`Insufficient stock for ${p.name}`});
-      const price=Number(p.price||0);total+=price*requested;
+      const price=Number(p.price||0);subtotal+=price*requested;
       safeItems.push({id:String(items[i].id),name:p.name,category:p.category||'',price,qty:requested,image:p.image||''});
     }
-    if(Math.round(total*100)!==Math.round(Number(amount)*100))return send(res,400,{error:'Cart total changed. Please refresh and try again.'});
+    const FREE_DELIVERY_THRESHOLD=799;
+    const STANDARD_DELIVERY_FEE=99;
+    const tax=Math.round(subtotal*0.18*100)/100;
+    const deliveryFee=subtotal>=FREE_DELIVERY_THRESHOLD?0:STANDARD_DELIVERY_FEE;
+    const grandTotal=Math.round((subtotal+tax+deliveryFee)*100)/100;
+    if(Math.round(grandTotal*100)!==Math.round(Number(amount)*100))return send(res,400,{error:'Cart total changed. Please refresh and try again.'});
     const keyId=process.env.RAZORPAY_KEY_ID,keySecret=process.env.RAZORPAY_KEY_SECRET;
     if(!keyId||!keySecret)return send(res,503,{error:'Razorpay server credentials are missing'});
     const receipt=`MDC-${Date.now()}-${decoded.uid.slice(0,8)}`;
-    const response=await fetch('https://api.razorpay.com/v1/orders',{method:'POST',headers:{Authorization:`Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`,'Content-Type':'application/json'},body:JSON.stringify({amount:Math.round(total*100),currency:'INR',receipt,notes:{userId:decoded.uid}})});
+    const response=await fetch('https://api.razorpay.com/v1/orders',{method:'POST',headers:{Authorization:`Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`,'Content-Type':'application/json'},body:JSON.stringify({amount:Math.round(grandTotal*100),currency:'INR',receipt,notes:{userId:decoded.uid}})});
     const data=await response.json().catch(()=>({}));
     if(!response.ok)return send(res,502,{error:data.error?.description||'Razorpay rejected the server credentials or request'});
     const categoryRef=db.collection('paymentIntents').doc('online payment intents');
     await Promise.all([
       categoryRef.set({name:'online payment intents',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true}),
-      categoryRef.collection('records').doc(data.id).set({userId:decoded.uid,amount:total,currency:'INR',items:safeItems,status:'created',createdAt:admin.firestore.FieldValue.serverTimestamp()})
+      categoryRef.collection('records').doc(data.id).set({userId:decoded.uid,amount:grandTotal,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,currency:'INR',items:safeItems,status:'created',createdAt:admin.firestore.FieldValue.serverTimestamp()})
     ]);
     return send(res,200,{keyId,orderId:data.id,amount:data.amount,currency:data.currency});
   }catch(e){
