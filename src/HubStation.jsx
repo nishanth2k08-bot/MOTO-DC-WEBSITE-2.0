@@ -25,6 +25,26 @@ export default function HubStation() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Device detection: Identify phone/handheld vs laptop/desktop PC
+  const [isMobileDevice, setIsMobileDevice] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
+    const isMobileUa = /mobi|android.*mobile|iphone|ipod|blackberry|opera mini|iemobile/i.test(ua);
+    const isSmallScreen = window.innerWidth <= 768;
+    return isMobileUa || isSmallScreen;
+  });
+
+  useEffect(() => {
+    const checkDevice = () => {
+      const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
+      const isMobileUa = /mobi|android.*mobile|iphone|ipod|blackberry|opera mini|iemobile/i.test(ua);
+      const isSmallScreen = window.innerWidth <= 768;
+      setIsMobileDevice(isMobileUa || isSmallScreen);
+    };
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
   // Real-time clock update (every second)
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -127,7 +147,11 @@ export default function HubStation() {
                 aria-label="Install MotoDC Hub Mobile App on Phone"
               >
                 <div className="hubInstallBtnIcon">
-                  <Smartphone size={22} />
+                  <img
+                    src="/hub-app-icon.png"
+                    alt="MotoDC Hub"
+                    style={{ width: 28, height: 28, borderRadius: 6, objectFit: 'cover' }}
+                  />
                 </div>
                 <div className="hubInstallBtnText">
                   <span className="hubInstallBtnTitle">Install Hub App</span>
@@ -356,9 +380,19 @@ export default function HubStation() {
             {/* Modal Header */}
             <div className="hubQrModalHeader">
               <div className="hubQrModalTitle">
-                <div className="hubQrModalIconBox">
-                  <Smartphone size={20} />
-                </div>
+                <img
+                  src="/hub-app-icon.png"
+                  alt="MotoDC Hub App Icon"
+                  className="hubQrModalAppLogo"
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 10,
+                    objectFit: 'cover',
+                    boxShadow: '0 4px 14px rgba(255, 49, 87, 0.28)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)'
+                  }}
+                />
                 <div>
                   <h3>Scan to Install Hub App</h3>
                   <p>Direct Android APK download for warehouse floor staff</p>
@@ -423,28 +457,31 @@ export default function HubStation() {
 
             {/* Modal Actions Footer */}
             <div className="hubQrModalFooter">
-              <a
-                href={APK_DOWNLOAD_URL}
-                download="MotoDC-Hub.apk"
-                className="hubQrModalDownloadBtn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  background: 'linear-gradient(135deg, #ff3157 0%, #e02447 100%)',
-                  color: '#ffffff',
-                  padding: '9px 16px',
-                  borderRadius: '10px',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  border: 'none',
-                }}
-              >
-                <Download size={15} />
-                Download APK
-              </a>
+              {/* Only show direct download button when viewing on a phone screen where scanning the screen itself is impossible */}
+              {isMobileDevice && (
+                <a
+                  href={APK_DOWNLOAD_URL}
+                  download="MotoDC-Hub.apk"
+                  className="hubQrModalDownloadBtn"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'linear-gradient(135deg, #ff3157 0%, #e02447 100%)',
+                    color: '#ffffff',
+                    padding: '9px 16px',
+                    borderRadius: '10px',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    border: 'none',
+                  }}
+                >
+                  <Download size={15} />
+                  Download APK (v{LATEST_APP_VERSION})
+                </a>
+              )}
 
               <button
                 type="button"
