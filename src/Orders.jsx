@@ -3,6 +3,7 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import {
   Package,
+  PackageCheck,
   MapPin,
   Truck,
   CheckCircle,
@@ -1091,7 +1092,8 @@ export default function Orders() {
     [orders, setOrders] = useState([]),
     [loading, setLoading] = useState(true),
     [activeOrderId, setActiveOrderId] = useState(() => location.state?.orderId || null),
-    [filterStatus, setFilterStatus] = useState('all'),
+    [filterStatus, setFilterStatus] = useState('in_transit'),
+    [tabInitialized, setTabInitialized] = useState(false),
     [searchQuery, setSearchQuery] = useState(''),
     [showRadarModal, setShowRadarModal] = useState(false);
 
@@ -1168,61 +1170,87 @@ export default function Orders() {
     return orders;
   }, [orders, justPlacedData]);
 
-  // Counts for tabs
-  const inTransitCount = useMemo(
+  // Separate in-transit vs delivered lists
+  const inTransitOrders = useMemo(
     () =>
       displayOrders.filter((o) =>
         ['placed', 'confirmed', 'packed', 'shipped', 'out_for_delivery'].includes(
           String(o.orderStatus || '').toLowerCase()
         )
-      ).length,
+      ),
     [displayOrders]
   );
 
-  const deliveredCount = useMemo(
+  const deliveredOrders = useMemo(
     () =>
       displayOrders.filter(
         (o) => String(o.orderStatus || '').toLowerCase() === 'delivered'
-      ).length,
+      ),
     [displayOrders]
   );
 
+  const inTransitCount = inTransitOrders.length;
+  const deliveredCount = deliveredOrders.length;
+
+  // Intelligent Tab & Active Order Selection on Load
+  useEffect(() => {
+    if (!loading && displayOrders.length > 0 && !tabInitialized) {
+      if (location.state?.orderId) {
+        const target = displayOrders.find(
+          (o) => o.id === location.state.orderId || o.orderId === location.state.orderId
+        );
+        if (target) {
+          const st = String(target.orderStatus || '').toLowerCase();
+          if (st === 'delivered') {
+            setFilterStatus('delivered');
+          } else {
+            setFilterStatus('in_transit');
+          }
+          setActiveOrderId(target.id);
+          setTabInitialized(true);
+          return;
+        }
+      }
+      // If there are no active in-transit shipments, but delivered orders exist, auto-select delivered!
+      if (inTransitCount === 0 && deliveredCount > 0) {
+        setFilterStatus('delivered');
+      } else {
+        setFilterStatus('in_transit');
+      }
+      setTabInitialized(true);
+    }
+  }, [loading, displayOrders, inTransitCount, deliveredCount, location.state, tabInitialized]);
+
   // Filtered orders according to tab & search query
   const filteredOrders = useMemo(() => {
-    return displayOrders.filter((o) => {
-      const st = String(o.orderStatus || 'placed').toLowerCase();
-      if (
-        filterStatus === 'in_transit' &&
-        !['placed', 'confirmed', 'packed', 'shipped', 'out_for_delivery'].includes(st)
-      ) {
-        return false;
-      }
-      if (filterStatus === 'delivered' && st !== 'delivered') {
-        return false;
-      }
+    const baseList =
+      filterStatus === 'in_transit'
+        ? inTransitOrders
+        : filterStatus === 'delivered'
+        ? deliveredOrders
+        : displayOrders;
 
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const orderIdMatch = String(o.orderId || o.id || '').toLowerCase().includes(q);
-        const itemMatch = (o.items || []).some((item) =>
-          String(item.name || '').toLowerCase().includes(q)
-        );
-        if (!orderIdMatch && !itemMatch) return false;
-      }
-      return true;
+    if (!searchQuery.trim()) return baseList;
+
+    const q = searchQuery.toLowerCase().trim();
+    return baseList.filter((o) => {
+      const orderIdMatch = String(o.orderId || o.id || '').toLowerCase().includes(q);
+      const itemMatch = (o.items || []).some((item) =>
+        String(item.name || '').toLowerCase().includes(q)
+      );
+      return orderIdMatch || itemMatch;
     });
-  }, [displayOrders, filterStatus, searchQuery]);
+  }, [filterStatus, inTransitOrders, deliveredOrders, displayOrders, searchQuery]);
 
-  // Selected Active Order
+  // Selected Active Order (for In-Transit Split Command Center)
   const activeOrder = useMemo(() => {
+    const pool = filterStatus === 'in_transit' ? inTransitOrders : filteredOrders;
     return (
-      filteredOrders.find((o) => o.id === activeOrderId || o.orderId === activeOrderId) ||
-      filteredOrders[0] ||
-      displayOrders.find((o) => o.id === activeOrderId || o.orderId === activeOrderId) ||
-      displayOrders[0] ||
+      pool.find((o) => o.id === activeOrderId || o.orderId === activeOrderId) ||
+      pool[0] ||
       null
     );
-  }, [filteredOrders, displayOrders, activeOrderId]);
+  }, [filterStatus, inTransitOrders, filteredOrders, activeOrderId]);
 
   const removeLocal = (id) => {
     setOrders((xs) => xs.filter((x) => x.id !== id));
@@ -1231,6 +1259,209 @@ export default function Orders() {
       setActiveOrderId(remaining[0]?.id || null);
     }
   };
+
+  // Helper to render full-width completed order card with NO side area
+  const renderDeliveredCard = (o) => (
+    <div className="deliveredOrderCard" key={o.id || o.orderId}>
+      {/* Header Box */}
+      <div className="inspectorHeader">
+        <div>
+          <div className="inspectorSubMeta">
+            <span className="inspectorOrderId">
+              ORDER #{o.orderId || o.id}
+            </span>
+            <span className="metaDivider">•</span>
+            <span className="inspectorPayment">
+              {o.paymentMethod === 'cod'
+                ? 'Cash on Delivery'
+                : 'Online Payment (Verified)'}
+            </span>
+          </div>
+          <h2 className="inspectorHeadline">
+            Delivered on {formatDate(o.deliveredAt || o.createdAt)}
+          </h2>
+          <p className="inspectorLocation">
+            Completed at Doorstep · Customer Address
+          </p>
+        </div>
+
+        <div className="inspectorHeaderActions">
+          <button
+            type="button"
+            className="inspectorInvoiceBtn"
+            onClick={() => downloadInvoice(o)}
+          >
+            <Download size={14} /> Tax Invoice (PDF)
+          </button>
+        </div>
+      </div>
+
+      {/* DOORSTEP HANDOVER VERIFIED CALLOUT BOX */}
+      <div className="inspectorDeliveredVerifiedBox">
+        <div className="deliveredCheckIcon">
+          <CheckCircle size={20} />
+        </div>
+        <div>
+          <div className="deliveredVerifiedTitle">Doorstep Handover Verified</div>
+          <p className="deliveredVerifiedSub">
+            Delivered securely with driver barcode scan and recipient OTP verification.
+          </p>
+        </div>
+      </div>
+
+      {/* VERTICAL STEPPER TIMELINE */}
+      <div className="inspectorTimeline">
+        <div className="inspectorTimelineItem">
+          <span className="timelineDot completed">✓</span>
+          <div>
+            <div className="timelineTitle">Order Placed & Confirmed</div>
+            <div className="timelineSub">
+              {formatDate(o.createdAt)} · MotoDC Central Warehouse
+            </div>
+          </div>
+        </div>
+
+        <div className="inspectorTimelineItem">
+          <span className="timelineDot completed">✓</span>
+          <div>
+            <div className="timelineTitle">Packed & Quality Verified</div>
+            <div className="timelineSub">
+              Dual-layer protective automotive boxing & barcode staging
+            </div>
+          </div>
+        </div>
+
+        <div className="inspectorTimelineItem">
+          <span className="timelineDot completed">✓</span>
+          <div>
+            <div className="timelineTitle">
+              In Transit — Regional Logistics Corridor
+            </div>
+            <div className="timelineSub">
+              Customer Address · Telemetry Speed: Parked
+            </div>
+          </div>
+        </div>
+
+        <div className="inspectorTimelineItem">
+          <span className="timelineDot completed">✓</span>
+          <div>
+            <div className="timelineTitle">Out for Delivery (Doorstep Route)</div>
+            <div className="timelineSub">
+              Handed over & verified at customer doorstep
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* DELIVERY ADDRESS & PAYMENT BREAKDOWN */}
+      <div className="inspectorDetailsGrid">
+        <div className="inspectorDetailsCard">
+          <span className="cardLabel">DELIVERING TO</span>
+          <div className="cardName">{o.customer?.name || 'Customer'}</div>
+          <div className="cardAddress">
+            {[
+              o.shipping?.address,
+              o.shipping?.city,
+              o.shipping?.state,
+              o.shipping?.pincode,
+            ]
+              .filter(Boolean)
+              .join(', ') || 'Address on file'}
+          </div>
+          {o.customer?.phone && (
+            <div className="cardPhone">Ph: {o.customer.phone}</div>
+          )}
+        </div>
+
+        <div className="inspectorDetailsCard">
+          <span className="cardLabel">PAYMENT & SUMMARY</span>
+          <div className="cardPaymentMethod">
+            {o.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Paid)'}
+          </div>
+          <div className="cardAmountRow">
+            <span>Order Total:</span>
+            <strong>{money(o.total)}</strong>
+          </div>
+          <div className="cardShippingNote">Free Express Priority Shipping</div>
+        </div>
+      </div>
+
+      {/* ORDER ITEMS LIST */}
+      <div className="inspectorItemsSection">
+        <h4 className="inspectorItemsTitle">
+          <Package size={15} /> Consignment Items ({o.items?.length || 1})
+        </h4>
+        <div className="inspectorItemsList">
+          {(o.items || []).map((x, i) => (
+            <div className="inspectorItemRow" key={i}>
+              <div className="inspectorItemImg">
+                {x.image ? (
+                  <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
+                ) : (
+                  <Package size={20} />
+                )}
+              </div>
+              <div className="inspectorItemInfo">
+                <b>{x.name}</b>
+                <small>
+                  {x.variant || 'Standard'} · Qty: {x.qty || 1}
+                </small>
+              </div>
+              <div className="inspectorItemPrice">
+                {money((x.price || 0) * (x.qty || 1))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ACTION FOOTER */}
+      <div className="inspectorActionFooter">
+        <a
+          href={`https://wa.me/918903993371?text=${encodeURIComponent(
+            `Hi MotoDC Team, I need assistance with my Delivered Order #${o.orderId || o.id} (${o.items?.[0]?.name || 'Parts'})`
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inspectorHelpBtn"
+        >
+          <MessageSquare size={15} />
+          <span>Need Help with this Order?</span>
+        </a>
+
+        <button
+          type="button"
+          className="inspectorReorderBtn"
+          onClick={() => nav('/products')}
+        >
+          <RotateCcw size={14} /> Buy Again
+        </button>
+
+        <button
+          type="button"
+          className="inspectorReturnBtn"
+          onClick={() => {
+            if (isOrderPast7Days(o)) {
+              toast.error('Your time period for return is closed', { duration: 4500, icon: '⏳' });
+              return;
+            }
+            nav('/returns');
+          }}
+        >
+          <RotateCcw size={15} /> Return / Replace
+        </button>
+
+        <button
+          type="button"
+          className="inspectorDeleteBtn"
+          onClick={() => deleteCompletedOrder(o, removeLocal)}
+        >
+          <XCircle size={15} /> Delete Order
+        </button>
+      </div>
+    </div>
+  );
 
   const activeStatus = String(activeOrder?.orderStatus || 'placed').toLowerCase();
   const activeMeta = STATUS_META[activeStatus] || STATUS_META.placed;
@@ -1286,13 +1517,6 @@ export default function Orders() {
           <div className="ordersFilterTabs">
             <button
               type="button"
-              className={`ordersFilterPill ${filterStatus === 'all' ? 'active' : ''}`}
-              onClick={() => setFilterStatus('all')}
-            >
-              All Orders ({displayOrders.length})
-            </button>
-            <button
-              type="button"
               className={`ordersFilterPill ${filterStatus === 'in_transit' ? 'active' : ''}`}
               onClick={() => setFilterStatus('in_transit')}
             >
@@ -1304,6 +1528,13 @@ export default function Orders() {
               onClick={() => setFilterStatus('delivered')}
             >
               Delivered ({deliveredCount})
+            </button>
+            <button
+              type="button"
+              className={`ordersFilterPill ${filterStatus === 'all' ? 'active' : ''}`}
+              onClick={() => setFilterStatus('all')}
+            >
+              All Orders ({displayOrders.length})
             </button>
           </div>
 
@@ -1328,7 +1559,7 @@ export default function Orders() {
         </div>
       </div>
 
-      {/* Main Split-View Layout */}
+      {/* Main Content Area */}
       {loading && !displayOrders.length ? (
         <div className="empty">Loading your orders...</div>
       ) : !displayOrders.length ? (
@@ -1340,375 +1571,649 @@ export default function Orders() {
             Start Shopping
           </button>
         </div>
-      ) : filteredOrders.length === 0 ? (
-        <div className="ordersNoMatch">
-          <Search size={32} />
-          <h3>No matching orders found</h3>
-          <p>Try clearing your search query or switching filter tabs.</p>
-          <button
-            type="button"
-            className="clearFilterBtn"
-            onClick={() => {
-              setFilterStatus('all');
-              setSearchQuery('');
-            }}
-          >
-            Clear Filters
-          </button>
-        </div>
-      ) : (
-        <div className="ordersSplitLayout">
-          {/* LEFT COLUMN: ORDER LIST SELECTOR (5 cols) */}
-          <div className="ordersSplitListCol">
-            {filteredOrders.map((o) => {
-              const st = String(o.orderStatus || 'placed').toLowerCase();
-              const isSelected = activeOrder?.id === o.id;
-              const isOrderDelivered = st === 'delivered';
-              const isOrderInTransit = [
-                'placed',
-                'confirmed',
-                'packed',
-                'shipped',
-                'out_for_delivery',
-              ].includes(st);
-
-              return (
-                <div
-                  key={o.id}
-                  className={`ordersSplitCard ${isSelected ? 'active' : ''}`}
-                  onClick={() => setActiveOrderId(o.id)}
-                >
-                  <div className="ordersSplitCardInner">
-                    <div className="ordersSplitThumb">
-                      {o.items?.[0]?.image ? (
-                        <img
-                          src={o.items[0].image}
-                          alt={o.items[0].name || 'Product'}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      ) : (
-                        <Package size={24} />
-                      )}
-                    </div>
-
-                    <div className="ordersSplitContent">
-                      <div className="ordersSplitTopMeta">
-                        <span className="ordersSplitId">#{o.orderId || o.id}</span>
-                        <span
-                          className={`ordersSplitStatusTag ${
-                            isOrderDelivered
-                              ? 'delivered'
-                              : isOrderInTransit
-                              ? 'transit'
-                              : 'cancelled'
-                          }`}
-                        >
-                          {isOrderInTransit && <span className="statusPulseDot" />}
-                          {labels[st] || st}
-                        </span>
-                      </div>
-
-                      <h4 className="ordersSplitTitle">
-                        {o.items?.[0]?.name || 'MOTO DC Order'}
-                      </h4>
-
-                      <div className="ordersSplitBottomMeta">
-                        <span className="ordersSplitDate">{formatDate(o.createdAt)}</span>
-                        <span className="ordersSplitPrice">{money(o.total)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+      ) : filterStatus === 'delivered' ? (
+        /* DELIVERED ORDERS SECTION (FULL WIDTH NO SIDEBAR) */
+        filteredOrders.length === 0 ? (
+          <div className="ordersNoMatch">
+            <Package size={36} />
+            <h3>No delivered orders found</h3>
+            <p>Orders will appear here once delivered safely to your doorstep.</p>
+            {inTransitCount > 0 && (
+              <button
+                type="button"
+                className="clearFilterBtn"
+                onClick={() => setFilterStatus('in_transit')}
+              >
+                View In-Transit Orders ({inTransitCount})
+              </button>
+            )}
           </div>
+        ) : (
+          <div className="deliveredOrdersContainer">
+            {filteredOrders.map(renderDeliveredCard)}
+          </div>
+        )
+      ) : filterStatus === 'in_transit' ? (
+        /* IN-TRANSIT SECTION (SPLIT COMMAND CENTER ONLY FOR ACTIVE ORDERS) */
+        filteredOrders.length === 0 ? (
+          <div className="ordersNoMatch">
+            <PackageCheck size={42} color="#10b981" />
+            <h3>No active shipments in transit</h3>
+            <p>All your orders have arrived safely at your doorstep.</p>
+            {deliveredCount > 0 && (
+              <button
+                type="button"
+                className="clearFilterBtn"
+                onClick={() => setFilterStatus('delivered')}
+              >
+                View Delivered Orders ({deliveredCount})
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="ordersSplitLayout">
+            {/* LEFT COLUMN: ORDER LIST SELECTOR (ONLY ACTIVE IN-TRANSIT ORDERS) */}
+            <div className="ordersSplitListCol">
+              {filteredOrders.map((o) => {
+                const st = String(o.orderStatus || 'placed').toLowerCase();
+                const isSelected = activeOrder?.id === o.id;
 
-          {/* RIGHT COLUMN: FOCUSED ORDER INSPECTOR (7 cols) */}
-          {activeOrder && (
-            <div className="ordersSplitInspectorCol">
-              {/* Header Box */}
-              <div className="inspectorHeader">
-                <div>
-                  <div className="inspectorSubMeta">
-                    <span className="inspectorOrderId">
-                      ORDER #{activeOrder.orderId || activeOrder.id}
-                    </span>
-                    <span className="metaDivider">•</span>
-                    <span className="inspectorPayment">
-                      {activeOrder.paymentMethod === 'cod'
-                        ? 'Cash on Delivery'
-                        : 'Online Payment (Verified)'}
-                    </span>
-                  </div>
-                  <h2 className="inspectorHeadline">
-                    {isDelivered
-                      ? `Delivered on ${formatDate(activeOrder.createdAt)}`
-                      : isCancelled
-                      ? 'Order Cancelled'
-                      : activeMeta.eta
-                      ? `Estimated Delivery: ${activeMeta.eta}`
-                      : 'In Express Fulfillment'}
-                  </h2>
-                  <p className="inspectorLocation">
-                    {activeMeta.phase} · {activeMeta.location}
-                  </p>
-                </div>
-
-                <div className="inspectorHeaderActions">
-                  <button
-                    type="button"
-                    className="inspectorInvoiceBtn"
-                    onClick={() => downloadInvoice(activeOrder)}
+                return (
+                  <div
+                    key={o.id}
+                    className={`ordersSplitCard ${isSelected ? 'active' : ''}`}
+                    onClick={() => setActiveOrderId(o.id)}
                   >
-                    <Download size={14} /> Tax Invoice (PDF)
-                  </button>
-                </div>
-              </div>
-
-              {/* DOORSTEP HANDOVER PIN CALLOUT BOX */}
-              {!isCancelled && !isDelivered && (
-                <div className="inspectorPinBox">
-                  <div className="inspectorPinLeft">
-                    <div className="inspectorPinIconWrap">
-                      <ShieldCheck size={22} />
-                    </div>
-                    <div>
-                      <div className="inspectorPinHeading">Doorstep Handover PIN</div>
-                      <p className="inspectorPinDesc">
-                        Share this 4-digit security code with your MotoDC delivery partner upon parcel
-                        arrival.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="inspectorPinCodeBadge">
-                    {getDeliveryPin(activeOrder)}
-                  </div>
-                </div>
-              )}
-
-              {isDelivered && (
-                <div className="inspectorDeliveredVerifiedBox">
-                  <div className="deliveredCheckIcon">
-                    <CheckCircle size={20} />
-                  </div>
-                  <div>
-                    <div className="deliveredVerifiedTitle">Doorstep Handover Verified</div>
-                    <p className="deliveredVerifiedSub">
-                      Delivered securely with driver barcode scan and recipient OTP verification.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* VERTICAL STEPPER TIMELINE */}
-              <div className="inspectorTimeline">
-                <div className="inspectorTimelineItem">
-                  <span className="timelineDot completed">✓</span>
-                  <div>
-                    <div className="timelineTitle">Order Placed & Confirmed</div>
-                    <div className="timelineSub">
-                      {formatDate(activeOrder.createdAt)} · MotoDC Central Warehouse
-                    </div>
-                  </div>
-                </div>
-
-                <div className="inspectorTimelineItem">
-                  <span
-                    className={`timelineDot ${
-                      ['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(activeStatus)
-                        ? 'completed'
-                        : activeStatus === 'confirmed'
-                        ? 'current'
-                        : 'pending'
-                    }`}
-                  >
-                    {['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(activeStatus)
-                      ? '✓'
-                      : '2'}
-                  </span>
-                  <div>
-                    <div className="timelineTitle">Packed & Quality Verified</div>
-                    <div className="timelineSub">
-                      Dual-layer protective automotive boxing & barcode staging
-                    </div>
-                  </div>
-                </div>
-
-                <div className="inspectorTimelineItem">
-                  <span
-                    className={`timelineDot ${
-                      ['shipped', 'out_for_delivery', 'delivered'].includes(activeStatus)
-                        ? activeStatus === 'shipped'
-                          ? 'current'
-                          : 'completed'
-                        : 'pending'
-                    }`}
-                  >
-                    {['out_for_delivery', 'delivered'].includes(activeStatus)
-                      ? '✓'
-                      : activeStatus === 'shipped'
-                      ? '🚚'
-                      : '3'}
-                  </span>
-                  <div>
-                    <div className="timelineTitle">
-                      In Transit — Regional Logistics Corridor
-                    </div>
-                    <div className="timelineSub">
-                      {activeMeta.location} · Telemetry Speed: {activeMeta.speed}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="inspectorTimelineItem">
-                  <span
-                    className={`timelineDot ${
-                      activeStatus === 'delivered'
-                        ? 'completed'
-                        : activeStatus === 'out_for_delivery'
-                        ? 'current'
-                        : 'pending'
-                    }`}
-                  >
-                    {activeStatus === 'delivered' ? '✓' : '4'}
-                  </span>
-                  <div>
-                    <div className="timelineTitle">Out for Delivery (Doorstep Route)</div>
-                    <div className="timelineSub">
-                      {activeStatus === 'out_for_delivery'
-                        ? 'Courier Unit is en route to your address'
-                        : 'Scheduled final-mile delivery'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* DELIVERY ADDRESS & PAYMENT BREAKDOWN */}
-              <div className="inspectorDetailsGrid">
-                <div className="inspectorDetailsCard">
-                  <span className="cardLabel">DELIVERING TO</span>
-                  <div className="cardName">{activeOrder.customer?.name || 'Customer'}</div>
-                  <div className="cardAddress">
-                    {[
-                      activeOrder.shipping?.address,
-                      activeOrder.shipping?.city,
-                      activeOrder.shipping?.state,
-                      activeOrder.shipping?.pincode,
-                    ]
-                      .filter(Boolean)
-                      .join(', ') || 'Address on file'}
-                  </div>
-                  {activeOrder.customer?.phone && (
-                    <div className="cardPhone">Ph: {activeOrder.customer.phone}</div>
-                  )}
-                </div>
-
-                <div className="inspectorDetailsCard">
-                  <span className="cardLabel">PAYMENT & SUMMARY</span>
-                  <div className="cardPaymentMethod">
-                    {activeOrder.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Paid)'}
-                  </div>
-                  <div className="cardAmountRow">
-                    <span>Order Total:</span>
-                    <strong>{money(activeOrder.total)}</strong>
-                  </div>
-                  <div className="cardShippingNote">Free Express Priority Shipping</div>
-                </div>
-              </div>
-
-              {/* ORDER ITEMS LIST */}
-              <div className="inspectorItemsSection">
-                <h4 className="inspectorItemsTitle">
-                  <Package size={15} /> Consignment Items ({activeOrder.items?.length || 1})
-                </h4>
-                <div className="inspectorItemsList">
-                  {(activeOrder.items || []).map((x, i) => (
-                    <div className="inspectorItemRow" key={i}>
-                      <div className="inspectorItemImg">
-                        {x.image ? (
-                          <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
+                    <div className="ordersSplitCardInner">
+                      <div className="ordersSplitThumb">
+                        {o.items?.[0]?.image ? (
+                          <img
+                            src={o.items[0].image}
+                            alt={o.items[0].name || 'Product'}
+                            loading="lazy"
+                            decoding="async"
+                          />
                         ) : (
-                          <Package size={20} />
+                          <Package size={24} />
                         )}
                       </div>
-                      <div className="inspectorItemInfo">
-                        <b>{x.name}</b>
-                        <small>
-                          {x.variant || 'Standard'} · Qty: {x.qty || 1}
-                        </small>
-                      </div>
-                      <div className="inspectorItemPrice">
-                        {money((x.price || 0) * (x.qty || 1))}
+
+                      <div className="ordersSplitContent">
+                        <div className="ordersSplitTopMeta">
+                          <span className="ordersSplitId">#{o.orderId || o.id}</span>
+                          <span className="ordersSplitStatusTag transit">
+                            <span className="statusPulseDot" />
+                            {labels[st] || st}
+                          </span>
+                        </div>
+
+                        <h4 className="ordersSplitTitle">
+                          {o.items?.[0]?.name || 'MOTO DC Order'}
+                        </h4>
+
+                        <div className="ordersSplitBottomMeta">
+                          <span className="ordersSplitDate">{formatDate(o.createdAt)}</span>
+                          <span className="ordersSplitPrice">{money(o.total)}</span>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* RIGHT COLUMN: FOCUSED ACTIVE ORDER INSPECTOR */}
+            {activeOrder && (
+              <div className="ordersSplitInspectorCol">
+                {/* Header Box */}
+                <div className="inspectorHeader">
+                  <div>
+                    <div className="inspectorSubMeta">
+                      <span className="inspectorOrderId">
+                        ORDER #{activeOrder.orderId || activeOrder.id}
+                      </span>
+                      <span className="metaDivider">•</span>
+                      <span className="inspectorPayment">
+                        {activeOrder.paymentMethod === 'cod'
+                          ? 'Cash on Delivery'
+                          : 'Online Payment (Verified)'}
+                      </span>
+                    </div>
+                    <h2 className="inspectorHeadline">
+                      {isCancelled
+                        ? 'Order Cancelled'
+                        : activeMeta.eta
+                        ? `Estimated Delivery: ${activeMeta.eta}`
+                        : 'In Express Fulfillment'}
+                    </h2>
+                    <p className="inspectorLocation">
+                      {activeMeta.phase} · {activeMeta.location}
+                    </p>
+                  </div>
+
+                  <div className="inspectorHeaderActions">
+                    <button
+                      type="button"
+                      className="inspectorInvoiceBtn"
+                      onClick={() => setShowRadarModal(true)}
+                      style={{ color: '#38bdf8', borderColor: 'rgba(56,189,248,0.3)' }}
+                    >
+                      <Radio size={14} /> Live GPS Radar
+                    </button>
+                    <button
+                      type="button"
+                      className="inspectorInvoiceBtn"
+                      onClick={() => downloadInvoice(activeOrder)}
+                    >
+                      <Download size={14} /> Tax Invoice (PDF)
+                    </button>
+                  </div>
+                </div>
+
+                {/* DOORSTEP HANDOVER PIN CALLOUT BOX */}
+                {!isCancelled && (
+                  <div className="inspectorPinBox">
+                    <div className="inspectorPinLeft">
+                      <div className="inspectorPinIconWrap">
+                        <ShieldCheck size={22} />
+                      </div>
+                      <div>
+                        <div className="inspectorPinHeading">Doorstep Handover PIN</div>
+                        <p className="inspectorPinDesc">
+                          Share this 4-digit security code with your MotoDC delivery partner upon parcel
+                          arrival.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="inspectorPinCodeBadge">
+                      {getDeliveryPin(activeOrder)}
+                    </div>
+                  </div>
+                )}
+
+                {/* VERTICAL STEPPER TIMELINE */}
+                <div className="inspectorTimeline">
+                  <div className="inspectorTimelineItem">
+                    <span className="timelineDot completed">✓</span>
+                    <div>
+                      <div className="timelineTitle">Order Placed & Confirmed</div>
+                      <div className="timelineSub">
+                        {formatDate(activeOrder.createdAt)} · MotoDC Central Warehouse
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="inspectorTimelineItem">
+                    <span
+                      className={`timelineDot ${
+                        ['packed', 'shipped', 'out_for_delivery'].includes(activeStatus)
+                          ? 'completed'
+                          : activeStatus === 'confirmed'
+                          ? 'current'
+                          : 'pending'
+                      }`}
+                    >
+                      {['packed', 'shipped', 'out_for_delivery'].includes(activeStatus)
+                        ? '✓'
+                        : '2'}
+                    </span>
+                    <div>
+                      <div className="timelineTitle">Packed & Quality Verified</div>
+                      <div className="timelineSub">
+                        Dual-layer protective automotive boxing & barcode staging
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="inspectorTimelineItem">
+                    <span
+                      className={`timelineDot ${
+                        ['shipped', 'out_for_delivery'].includes(activeStatus)
+                          ? activeStatus === 'shipped'
+                            ? 'current'
+                            : 'completed'
+                          : 'pending'
+                      }`}
+                    >
+                      {activeStatus === 'out_for_delivery'
+                        ? '✓'
+                        : activeStatus === 'shipped'
+                        ? '🚚'
+                        : '3'}
+                    </span>
+                    <div>
+                      <div className="timelineTitle">
+                        In Transit — Regional Logistics Corridor
+                      </div>
+                      <div className="timelineSub">
+                        {activeMeta.location} · Telemetry Speed: {activeMeta.speed}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="inspectorTimelineItem">
+                    <span
+                      className={`timelineDot ${
+                        activeStatus === 'out_for_delivery'
+                          ? 'current'
+                          : 'pending'
+                      }`}
+                    >
+                      4
+                    </span>
+                    <div>
+                      <div className="timelineTitle">Out for Delivery (Doorstep Route)</div>
+                      <div className="timelineSub">
+                        {activeStatus === 'out_for_delivery'
+                          ? 'Courier Unit is en route to your address'
+                          : 'Scheduled final-mile delivery'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* DELIVERY ADDRESS & PAYMENT BREAKDOWN */}
+                <div className="inspectorDetailsGrid">
+                  <div className="inspectorDetailsCard">
+                    <span className="cardLabel">DELIVERING TO</span>
+                    <div className="cardName">{activeOrder.customer?.name || 'Customer'}</div>
+                    <div className="cardAddress">
+                      {[
+                        activeOrder.shipping?.address,
+                        activeOrder.shipping?.city,
+                        activeOrder.shipping?.state,
+                        activeOrder.shipping?.pincode,
+                      ]
+                        .filter(Boolean)
+                        .join(', ') || 'Address on file'}
+                    </div>
+                    {activeOrder.customer?.phone && (
+                      <div className="cardPhone">Ph: {activeOrder.customer.phone}</div>
+                    )}
+                  </div>
+
+                  <div className="inspectorDetailsCard">
+                    <span className="cardLabel">PAYMENT & SUMMARY</span>
+                    <div className="cardPaymentMethod">
+                      {activeOrder.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Paid)'}
+                    </div>
+                    <div className="cardAmountRow">
+                      <span>Order Total:</span>
+                      <strong>{money(activeOrder.total)}</strong>
+                    </div>
+                    <div className="cardShippingNote">Free Express Priority Shipping</div>
+                  </div>
+                </div>
+
+                {/* ORDER ITEMS LIST */}
+                <div className="inspectorItemsSection">
+                  <h4 className="inspectorItemsTitle">
+                    <Package size={15} /> Consignment Items ({activeOrder.items?.length || 1})
+                  </h4>
+                  <div className="inspectorItemsList">
+                    {(activeOrder.items || []).map((x, i) => (
+                      <div className="inspectorItemRow" key={i}>
+                        <div className="inspectorItemImg">
+                          {x.image ? (
+                            <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
+                          ) : (
+                            <Package size={20} />
+                          )}
+                        </div>
+                        <div className="inspectorItemInfo">
+                          <b>{x.name}</b>
+                          <small>
+                            {x.variant || 'Standard'} · Qty: {x.qty || 1}
+                          </small>
+                        </div>
+                        <div className="inspectorItemPrice">
+                          {money((x.price || 0) * (x.qty || 1))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ACTION FOOTER */}
+                <div className="inspectorActionFooter">
+                  <a
+                    href={`https://wa.me/918903993371?text=${encodeURIComponent(
+                      `Hi MotoDC Team, I need assistance with my Order #${activeOrder.orderId || activeOrder.id} (${activeOrder.items?.[0]?.name || 'Parts'})`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inspectorHelpBtn"
+                  >
+                    <MessageSquare size={15} />
+                    <span>Need Help with this Order?</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    className="inspectorReorderBtn"
+                    onClick={() => nav('/products')}
+                  >
+                    <RotateCcw size={14} /> Buy Again
+                  </button>
+
+                  {canCancel && (
+                    <button
+                      type="button"
+                      className="inspectorCancelBtn"
+                      onClick={() => cancelOrder(activeOrder, removeLocal)}
+                    >
+                      <Ban size={15} /> Cancel Order
+                    </button>
+                  )}
                 </div>
               </div>
+            )}
+          </div>
+        )
+      ) : (
+        /* ALL ORDERS TAB */
+        // If all orders are delivered, display full-width delivered cards (NO side area)
+        inTransitCount === 0 && deliveredCount > 0 ? (
+          <div className="deliveredOrdersContainer">
+            {filteredOrders.map(renderDeliveredCard)}
+          </div>
+        ) : (
+          <>
+            {inTransitOrders.length > 0 && (
+              <div className="ordersSplitLayout">
+                <div className="ordersSplitListCol">
+                  {inTransitOrders.map((o) => {
+                    const st = String(o.orderStatus || 'placed').toLowerCase();
+                    const isSelected = activeOrder?.id === o.id;
 
-              {/* ACTION FOOTER */}
-              <div className="inspectorActionFooter">
-                {/* 1-Click WhatsApp Support with pre-filled Order ID */}
-                <a
-                  href={`https://wa.me/918903993371?text=${encodeURIComponent(
-                    `Hi MotoDC Team, I need assistance with my Order #${activeOrder.orderId || activeOrder.id} (${activeOrder.items?.[0]?.name || 'Parts'})`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inspectorHelpBtn"
-                >
-                  <MessageSquare size={15} />
-                  <span>Need Help with this Order?</span>
-                </a>
+                    return (
+                      <div
+                        key={o.id}
+                        className={`ordersSplitCard ${isSelected ? 'active' : ''}`}
+                        onClick={() => setActiveOrderId(o.id)}
+                      >
+                        <div className="ordersSplitCardInner">
+                          <div className="ordersSplitThumb">
+                            {o.items?.[0]?.image ? (
+                              <img
+                                src={o.items[0].image}
+                                alt={o.items[0].name || 'Product'}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            ) : (
+                              <Package size={24} />
+                            )}
+                          </div>
 
-                {/* Buy Again / Re-order */}
-                <button
-                  type="button"
-                  className="inspectorReorderBtn"
-                  onClick={() => nav('/products')}
-                >
-                  <RotateCcw size={14} /> Buy Again
-                </button>
+                          <div className="ordersSplitContent">
+                            <div className="ordersSplitTopMeta">
+                              <span className="ordersSplitId">#{o.orderId || o.id}</span>
+                              <span className="ordersSplitStatusTag transit">
+                                <span className="statusPulseDot" />
+                                {labels[st] || st}
+                              </span>
+                            </div>
 
-                {canCancel && (
-                  <button
-                    type="button"
-                    className="inspectorCancelBtn"
-                    onClick={() => cancelOrder(activeOrder, removeLocal)}
-                  >
-                    <Ban size={15} /> Cancel Order
-                  </button>
-                )}
+                            <h4 className="ordersSplitTitle">
+                              {o.items?.[0]?.name || 'MOTO DC Order'}
+                            </h4>
 
-                {isDelivered && (
-                  <button
-                    type="button"
-                    className="inspectorReturnBtn"
-                    onClick={() => {
-                      if (isOrderPast7Days(activeOrder)) {
-                        toast.error('Your time period for return is closed', { duration: 4500, icon: '⏳' });
-                        return;
-                      }
-                      nav('/returns');
-                    }}
-                  >
-                    <RotateCcw size={15} /> Return / Replace
-                  </button>
-                )}
+                            <div className="ordersSplitBottomMeta">
+                              <span className="ordersSplitDate">{formatDate(o.createdAt)}</span>
+                              <span className="ordersSplitPrice">{money(o.total)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
-                {(isDelivered || isCancelled) && (
-                  <button
-                    type="button"
-                    className="inspectorDeleteBtn"
-                    onClick={() => deleteCompletedOrder(activeOrder, removeLocal)}
-                  >
-                    <XCircle size={15} /> Delete Order
-                  </button>
+                {activeOrder && (
+                  <div className="ordersSplitInspectorCol">
+                    <div className="inspectorHeader">
+                      <div>
+                        <div className="inspectorSubMeta">
+                          <span className="inspectorOrderId">
+                            ORDER #{activeOrder.orderId || activeOrder.id}
+                          </span>
+                          <span className="metaDivider">•</span>
+                          <span className="inspectorPayment">
+                            {activeOrder.paymentMethod === 'cod'
+                              ? 'Cash on Delivery'
+                              : 'Online Payment (Verified)'}
+                          </span>
+                        </div>
+                        <h2 className="inspectorHeadline">
+                          {isCancelled
+                            ? 'Order Cancelled'
+                            : activeMeta.eta
+                            ? `Estimated Delivery: ${activeMeta.eta}`
+                            : 'In Express Fulfillment'}
+                        </h2>
+                        <p className="inspectorLocation">
+                          {activeMeta.phase} · {activeMeta.location}
+                        </p>
+                      </div>
+
+                      <div className="inspectorHeaderActions">
+                        <button
+                          type="button"
+                          className="inspectorInvoiceBtn"
+                          onClick={() => setShowRadarModal(true)}
+                          style={{ color: '#38bdf8', borderColor: 'rgba(56,189,248,0.3)' }}
+                        >
+                          <Radio size={14} /> Live GPS Radar
+                        </button>
+                        <button
+                          type="button"
+                          className="inspectorInvoiceBtn"
+                          onClick={() => downloadInvoice(activeOrder)}
+                        >
+                          <Download size={14} /> Tax Invoice (PDF)
+                        </button>
+                      </div>
+                    </div>
+
+                    {!isCancelled && (
+                      <div className="inspectorPinBox">
+                        <div className="inspectorPinLeft">
+                          <div className="inspectorPinIconWrap">
+                            <ShieldCheck size={22} />
+                          </div>
+                          <div>
+                            <div className="inspectorPinHeading">Doorstep Handover PIN</div>
+                            <p className="inspectorPinDesc">
+                              Share this 4-digit security code with your MotoDC delivery partner upon parcel arrival.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="inspectorPinCodeBadge">
+                          {getDeliveryPin(activeOrder)}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="inspectorTimeline">
+                      <div className="inspectorTimelineItem">
+                        <span className="timelineDot completed">✓</span>
+                        <div>
+                          <div className="timelineTitle">Order Placed & Confirmed</div>
+                          <div className="timelineSub">
+                            {formatDate(activeOrder.createdAt)} · MotoDC Central Warehouse
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="inspectorTimelineItem">
+                        <span
+                          className={`timelineDot ${
+                            ['packed', 'shipped', 'out_for_delivery'].includes(activeStatus)
+                              ? 'completed'
+                              : activeStatus === 'confirmed'
+                              ? 'current'
+                              : 'pending'
+                          }`}
+                        >
+                          {['packed', 'shipped', 'out_for_delivery'].includes(activeStatus) ? '✓' : '2'}
+                        </span>
+                        <div>
+                          <div className="timelineTitle">Packed & Quality Verified</div>
+                          <div className="timelineSub">
+                            Dual-layer protective automotive boxing & barcode staging
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="inspectorTimelineItem">
+                        <span
+                          className={`timelineDot ${
+                            ['shipped', 'out_for_delivery'].includes(activeStatus)
+                              ? activeStatus === 'shipped'
+                                ? 'current'
+                                : 'completed'
+                              : 'pending'
+                          }`}
+                        >
+                          {activeStatus === 'out_for_delivery' ? '✓' : activeStatus === 'shipped' ? '🚚' : '3'}
+                        </span>
+                        <div>
+                          <div className="timelineTitle">In Transit — Regional Logistics Corridor</div>
+                          <div className="timelineSub">
+                            {activeMeta.location} · Telemetry Speed: {activeMeta.speed}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="inspectorTimelineItem">
+                        <span
+                          className={`timelineDot ${
+                            activeStatus === 'out_for_delivery' ? 'current' : 'pending'
+                          }`}
+                        >
+                          4
+                        </span>
+                        <div>
+                          <div className="timelineTitle">Out for Delivery (Doorstep Route)</div>
+                          <div className="timelineSub">
+                            {activeStatus === 'out_for_delivery'
+                              ? 'Courier Unit is en route to your address'
+                              : 'Scheduled final-mile delivery'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="inspectorDetailsGrid">
+                      <div className="inspectorDetailsCard">
+                        <span className="cardLabel">DELIVERING TO</span>
+                        <div className="cardName">{activeOrder.customer?.name || 'Customer'}</div>
+                        <div className="cardAddress">
+                          {[
+                            activeOrder.shipping?.address,
+                            activeOrder.shipping?.city,
+                            activeOrder.shipping?.state,
+                            activeOrder.shipping?.pincode,
+                          ]
+                            .filter(Boolean)
+                            .join(', ') || 'Address on file'}
+                        </div>
+                        {activeOrder.customer?.phone && (
+                          <div className="cardPhone">Ph: {activeOrder.customer.phone}</div>
+                        )}
+                      </div>
+
+                      <div className="inspectorDetailsCard">
+                        <span className="cardLabel">PAYMENT & SUMMARY</span>
+                        <div className="cardPaymentMethod">
+                          {activeOrder.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Paid)'}
+                        </div>
+                        <div className="cardAmountRow">
+                          <span>Order Total:</span>
+                          <strong>{money(activeOrder.total)}</strong>
+                        </div>
+                        <div className="cardShippingNote">Free Express Priority Shipping</div>
+                      </div>
+                    </div>
+
+                    <div className="inspectorItemsSection">
+                      <h4 className="inspectorItemsTitle">
+                        <Package size={15} /> Consignment Items ({activeOrder.items?.length || 1})
+                      </h4>
+                      <div className="inspectorItemsList">
+                        {(activeOrder.items || []).map((x, i) => (
+                          <div className="inspectorItemRow" key={i}>
+                            <div className="inspectorItemImg">
+                              {x.image ? (
+                                <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
+                              ) : (
+                                <Package size={20} />
+                              )}
+                            </div>
+                            <div className="inspectorItemInfo">
+                              <b>{x.name}</b>
+                              <small>
+                                {x.variant || 'Standard'} · Qty: {x.qty || 1}
+                              </small>
+                            </div>
+                            <div className="inspectorItemPrice">
+                              {money((x.price || 0) * (x.qty || 1))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="inspectorActionFooter">
+                      <a
+                        href={`https://wa.me/918903993371?text=${encodeURIComponent(
+                          `Hi MotoDC Team, I need assistance with my Order #${activeOrder.orderId || activeOrder.id} (${activeOrder.items?.[0]?.name || 'Parts'})`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inspectorHelpBtn"
+                      >
+                        <MessageSquare size={15} />
+                        <span>Need Help with this Order?</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        className="inspectorReorderBtn"
+                        onClick={() => nav('/products')}
+                      >
+                        <RotateCcw size={14} /> Buy Again
+                      </button>
+
+                      {canCancel && (
+                        <button
+                          type="button"
+                          className="inspectorCancelBtn"
+                          onClick={() => cancelOrder(activeOrder, removeLocal)}
+                        >
+                          <Ban size={15} /> Cancel Order
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
-          )}
-        </div>
+            )}
+
+            {deliveredOrders.length > 0 && (
+              <div className="allOrdersDeliveredSection">
+                <div className="allOrdersSectionHeader">
+                  <h3>Delivered Orders ({deliveredOrders.length})</h3>
+                  <p>Completed orders verified at doorstep</p>
+                </div>
+                <div className="deliveredOrdersContainer">
+                  {deliveredOrders.map(renderDeliveredCard)}
+                </div>
+              </div>
+            )}
+          </>
+        )
       )}
 
       {/* ON-DEMAND LIVE GPS RADAR MODAL */}

@@ -348,6 +348,58 @@
   top: 85px;
 }
 
+/* ============================================================
+   DELIVERED ORDERS SECTION (FULL-WIDTH NO-SIDEBAR LAYOUT)
+   ============================================================ */
+.deliveredOrdersContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.deliveredOrderCard {
+  background: #0b101a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.deliveredOrderCard:hover {
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 20px 48px rgba(16, 185, 129, 0.08), 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.allOrdersDeliveredSection {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.allOrdersSectionHeader {
+  margin-bottom: 20px;
+}
+
+.allOrdersSectionHeader h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 4px;
+}
+
+.allOrdersSectionHeader p {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+}
+
 /* Inspector Header */
 .inspectorHeader {
   display: flex;
@@ -1177,10 +1229,28 @@
 
 .light-theme .ordersToolbarGroup,
 .light-theme .ordersSplitCard,
-.light-theme .ordersSplitInspectorCol {
+.light-theme .ordersSplitInspectorCol,
+.light-theme .deliveredOrderCard {
   background: #ffffff;
   border-color: #e2e8f0;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+.light-theme .deliveredOrderCard:hover {
+  border-color: #10b981;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
+}
+
+.light-theme .allOrdersDeliveredSection {
+  border-top-color: #e2e8f0;
+}
+
+.light-theme .allOrdersSectionHeader h3 {
+  color: #0f172a;
+}
+
+.light-theme .allOrdersSectionHeader p {
+  color: #64748b;
 }
 
 .light-theme .ordersSplitCard.active {
