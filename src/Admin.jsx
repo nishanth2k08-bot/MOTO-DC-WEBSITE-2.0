@@ -4,7 +4,7 @@ import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/au
 import {adminAuth,adminDb,adminStorage} from './firebase';
 import AdminOrders from './AdminOrders';
 import AdminDeliveryPartners from './AdminDeliveryPartners';
-import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search,Truck} from 'lucide-react';
+import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search,Truck,Bell,Zap} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {majorSpareProducts} from './major-spares';
 import {mergeProductsWithMajorSpares} from './productsMerge';
@@ -92,6 +92,146 @@ function uploadToCloudinary(file,onProgress){
 
 export default function Admin(){
  const fileInputRef=useRef(null); const [user,setUser]=useState(null),[checking,setChecking]=useState(true),[allowed,setAllowed]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[loginBusy,setLoginBusy]=useState(false),[products,setProducts]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[uploadProgress,setUploadProgress]=useState(0),[bulkImporting,setBulkImporting]=useState(false),[activeTab,setActiveTab]=useState('dashboard'),[searchQuery,setSearchQuery]=useState(''),[adminPage,setAdminPage]=useState(1);
+ const [newOrderNotification, setNewOrderNotification] = useState(null);
+ const [autoDispatchingOrder, setAutoDispatchingOrder] = useState(false);
+ const [desktopNotifyPerm, setDesktopNotifyPerm] = useState(
+   typeof window !== 'undefined' && 'Notification' in window ? Notification.permission : 'denied'
+ );
+
+ function playNewOrderSound() {
+   try {
+     const AudioCtx = window.AudioContext || window.webkitAudioContext;
+     if (!AudioCtx) return;
+     const ctx = new AudioCtx();
+     if (ctx.state === 'suspended') {
+       ctx.resume();
+     }
+     const now = ctx.currentTime;
+     const notes = [
+       { freq: 659.25, time: 0, dur: 0.22, vol: 0.25 },
+       { freq: 880.00, time: 0.12, dur: 0.28, vol: 0.30 },
+       { freq: 1318.51, time: 0.25, dur: 0.65, vol: 0.38 }
+     ];
+     notes.forEach(n => {
+       const osc = ctx.createOscillator();
+       const gain = ctx.createGain();
+       osc.type = 'sine';
+       osc.frequency.setValueAtTime(n.freq, now + n.time);
+       gain.gain.setValueAtTime(n.vol, now + n.time);
+       gain.gain.exponentialRampToValueAtTime(0.001, now + n.time + n.dur);
+       osc.connect(gain);
+       gain.connect(ctx.destination);
+       osc.start(now + n.time);
+       osc.stop(now + n.time + n.dur);
+     });
+   } catch (err) {
+     console.warn('Could not play order chime:', err);
+   }
+ }
+
+ const handleQuickAutoDispatch = async () => {
+   setAutoDispatchingOrder(true);
+   try {
+     const res = await fetch('/api/delivery-partner?action=auto-dispatch-all', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+     });
+     const data = await res.json();
+     if (res.ok && data.ok) {
+       if (data.dispatchedCount > 0) {
+         toast.success(`⚡ Auto-Dispatched ${data.dispatchedCount} corridor(s) to active delivery partners!`, { duration: 5000 });
+       } else {
+         toast(data.message || 'Corridors staged or assigned.', { icon: 'ℹ️' });
+       }
+       handleTabChange('partners');
+       setNewOrderNotification(null);
+     } else {
+       toast.error(data.error || 'Auto-dispatch failed.');
+     }
+   } catch (e) {
+     toast.error(e.message || 'Could not auto-dispatch.');
+   } finally {
+     setAutoDispatchingOrder(false);
+   }
+ };
+
+ const requestNotificationPermission = async () => {
+   if (typeof window !== 'undefined' && 'Notification' in window) {
+     const perm = await Notification.requestPermission();
+     setDesktopNotifyPerm(perm);
+     if (perm === 'granted') {
+       toast.success('Desktop order notifications enabled!');
+     }
+   }
+ };
+
+ useEffect(() => {
+   if (!allowed) return;
+   const knownOrderIds = new Set();
+   let isInitial = true;
+
+   const codCol = collection(adminDb, 'orders', 'cod orders', 'records');
+   const onlineCol = collection(adminDb, 'orders', 'online orders', 'records');
+
+   let codInitDone = false;
+   let onlineInitDone = false;
+
+   const handleSnap = (snap, method) => {
+     if (isInitial) {
+       snap.docs.forEach(d => knownOrderIds.add(d.id));
+       return;
+     }
+
+     snap.docChanges().forEach(change => {
+       if (change.type === 'added' && !knownOrderIds.has(change.doc.id)) {
+         knownOrderIds.add(change.doc.id);
+         const data = change.doc.data();
+         const orderId = data.orderId || change.doc.id;
+         const customerName = data.customer?.name || 'Customer';
+         const total = data.total || 0;
+         const corridor = data.assignedCorridor || 'Karaikal Corridor';
+
+         playNewOrderSound();
+
+         setNewOrderNotification({
+           id: change.doc.id,
+           orderId,
+           customerName,
+           total,
+           corridor,
+           method,
+           timestamp: Date.now()
+         });
+
+         if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+           try {
+             new Notification(`📦 New MotoDC Order: #${orderId}`, {
+               body: `₹${Number(total).toLocaleString('en-IN')} from ${customerName} (${method}). Click to Auto-Dispatch!`,
+               icon: '/favicon.ico'
+             });
+           } catch (e) {}
+         }
+       }
+     });
+   };
+
+   const unsubCod = onSnapshot(codCol, (s) => {
+     handleSnap(s, 'COD');
+     codInitDone = true;
+     if (codInitDone && onlineInitDone) isInitial = false;
+   }, (e) => console.error('Admin COD notify listener:', e));
+
+   const unsubOnline = onSnapshot(onlineCol, (s) => {
+     handleSnap(s, 'Online');
+     onlineInitDone = true;
+     if (codInitDone && onlineInitDone) isInitial = false;
+   }, (e) => console.error('Admin Online notify listener:', e));
+
+   return () => {
+     unsubCod();
+     unsubOnline();
+   };
+ }, [allowed]);
  const filteredProducts=products.filter(p=>{if(!searchQuery.trim())return true;const q=searchQuery.toLowerCase().trim();return (p.name&&p.name.toLowerCase().includes(q))||(p.brand&&p.brand.toLowerCase().includes(q))||(p.category&&p.category.toLowerCase().includes(q))||(p.fitment&&p.fitment.toLowerCase().includes(q))||(p.id&&p.id.toLowerCase().includes(q))});
  const ADMIN_PAGE_SIZE=10;
  useEffect(()=>{setAdminPage(1);},[searchQuery]);
@@ -195,8 +335,63 @@ export default function Admin(){
             </>
           )}
         </div>
-        <button className="adminsignout" onClick={()=>signOut(adminAuth)}><LogOut size={16}/> Sign out</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {desktopNotifyPerm !== 'granted' && typeof window !== 'undefined' && 'Notification' in window && (
+            <button
+              type="button"
+              className="adminNotifyPermBtn"
+              onClick={requestNotificationPermission}
+              title="Enable Desktop alerts for new orders"
+            >
+              <Bell size={14} /> Desktop Alerts
+            </button>
+          )}
+          <button className="adminsignout" onClick={()=>signOut(adminAuth)}><LogOut size={16}/> Sign out</button>
+        </div>
       </div>
+
+      {newOrderNotification && (
+        <div className="adminOrderAlertBanner" role="alert">
+          <div className="adminAlertLeft">
+            <span className="adminAlertPulse"><Bell size={18} /></span>
+            <div className="adminAlertText">
+              <strong>🔔 New Order Received: #{newOrderNotification.orderId}</strong>
+              <span>
+                ₹{Number(newOrderNotification.total).toLocaleString('en-IN')} ({newOrderNotification.method}) · {newOrderNotification.customerName} · {newOrderNotification.corridor}
+              </span>
+            </div>
+          </div>
+          <div className="adminAlertActions">
+            <button
+              type="button"
+              className="adminAlertDispatchBtn"
+              onClick={handleQuickAutoDispatch}
+              disabled={autoDispatchingOrder}
+              title="Automatically assign active drivers to delivery corridors"
+            >
+              <Zap size={15} /> {autoDispatchingOrder ? 'Auto-Dispatching...' : '⚡ Auto-Dispatch Now'}
+            </button>
+            <button
+              type="button"
+              className="adminAlertViewBtn"
+              onClick={() => {
+                handleTabChange('orders');
+                setNewOrderNotification(null);
+              }}
+            >
+              View Orders
+            </button>
+            <button
+              type="button"
+              className="adminAlertCloseBtn"
+              onClick={() => setNewOrderNotification(null)}
+              title="Dismiss notification"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="adminSectionNav" role="tablist" aria-label="Admin Navigation">
         <button

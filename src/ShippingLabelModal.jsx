@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import JsBarcode from 'jsbarcode';
 import QRCode from 'qrcode';
-import { Printer, X, Package } from 'lucide-react';
+import { Printer, X, Package, CheckCircle2 } from 'lucide-react';
 import './shipping-label.css';
 
 const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
 
-export default function ShippingLabelModal({ order, onClose }) {
+export default function ShippingLabelModal({ order, onClose, onMarkPacked }) {
   const barcodeRef = useRef(null);
   const [qrDataUrl, setQrDataUrl] = useState('');
+  const [isPackedLocally, setIsPackedLocally] = useState(
+    ['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(order?.orderStatus)
+  );
 
   const barcodeValue = String(order?.orderId || order?.id || 'MDC-0000').trim();
   const isCod = String(order?.paymentMethod || '').toLowerCase() === 'cod';
@@ -60,7 +63,16 @@ export default function ShippingLabelModal({ order, onClose }) {
 
   if (!order) return null;
 
+  const handleMarkPacked = () => {
+    setIsPackedLocally(true);
+    onMarkPacked?.(order);
+  };
+
   const handlePrint = () => {
+    if (!isPackedLocally) {
+      setIsPackedLocally(true);
+      onMarkPacked?.(order);
+    }
     window.print();
   };
 
@@ -73,6 +85,20 @@ export default function ShippingLabelModal({ order, onClose }) {
             <Package size={18} color="#ff3157" /> Shipping Label & Dispatch Slip
           </h3>
           <div className="shippingLabelActions">
+            {!isPackedLocally ? (
+              <button
+                type="button"
+                className="shippingVerifyBtn"
+                onClick={handleMarkPacked}
+                title="Verify parts & mark as Packed in warehouse"
+              >
+                <CheckCircle2 size={15} /> Mark Packed & Quality Verified
+              </button>
+            ) : (
+              <span className="shippingStatusBadge packed">
+                <CheckCircle2 size={14} /> Packed & Quality Verified
+              </span>
+            )}
             <button type="button" className="shippingPrintBtn" onClick={handlePrint}>
               <Printer size={15} /> Print Label
             </button>
@@ -90,7 +116,7 @@ export default function ShippingLabelModal({ order, onClose }) {
               Moto<span>DC</span> Express
             </div>
             <div className="labelServiceBadge">
-              EXPRESS DOORSTEP DELIVERY
+              {isPackedLocally ? '✓ QUALITY VERIFIED & PACKED' : 'EXPRESS DOORSTEP DELIVERY'}
             </div>
           </div>
 
