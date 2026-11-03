@@ -981,3 +981,416 @@ body.light-theme .hubEmptyState h3 {
 body.light-theme .hubEmptyState p {
   color: #64748b !important;
 }
+
+
+/* ==========================================================================
+   BARCODE SCANNER & HARDWARE WEDGE STYLES
+   ========================================================================== */
+.hubScannerIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 6px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.hubOpenScannerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 49, 87, 0.15);
+  border: 1px solid rgba(255, 49, 87, 0.4);
+  color: #ff3157;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hubOpenScannerBtn:hover {
+  background: #ff3157;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.35);
+}
+
+.hubLastScannedBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.hubLastScannedBanner button {
+  background: transparent;
+  border: none;
+  color: #10b981;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Camera Barcode Scanner Modal */
+.hubScannerModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(4, 7, 12, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.hubScannerModal {
+  background: #0f141d;
+  border: 1px solid #2a3242;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  color: #f8fafc;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.hubScannerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #141a24;
+  border-bottom: 1px solid #232a38;
+}
+
+.hubScannerTitleBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hubScannerTitleBox h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.hubScannerTitleBox p {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.hubScannerCloseBtn {
+  background: #202735;
+  color: #94a3b8;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hubScannerCloseBtn:hover {
+  background: #2a3447;
+  color: #fff;
+}
+
+.hubScannerBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hubScannerViewport {
+  position: relative;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #2a3242;
+}
+
+.hubScannerReticle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hubScannerLaser {
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff3157, #ff3157, transparent);
+  box-shadow: 0 0 10px #ff3157;
+  animation: hubLaserSweep 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes hubLaserSweep {
+  0% { transform: translateY(-70px); }
+  100% { transform: translateY(70px); }
+}
+
+.hubHardwareScannerBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #cbd5e1;
+}
+
+.hubHardwareScannerBanner strong {
+  display: block;
+  font-size: 12px;
+  color: #38bdf8;
+  margin-bottom: 2px;
+}
+
+.hubHardwareScannerBanner small {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.hubScannerManualForm {
+  display: flex;
+  gap: 8px;
+}
+
+.hubScannerManualForm input {
+  flex: 1;
+  background: #090c12;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+
+.hubScannerManualForm input:focus {
+  border-color: #ff3157;
+}
+
+.hubScannerManualForm button {
+  background: #ff3157;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hubScannerManualForm button:hover {
+  background: #ff476b;
+}
+
+.hubScannerErrorBox {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px dashed rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hubScannerErrorBox p {
+  margin: 0;
+  font-size: 12px;
+  color: #f87171;
+  max-width: 320px;
+}
+
+.hubScannerRetryBtn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Light Theme Overrides for Scanner */
+body.light-theme .hubScannerModal,
+.light-theme .hubScannerModal {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+body.light-theme .hubScannerHeader,
+.light-theme .hubScannerHeader {
+  background: #f8fafc;
+  border-bottom-color: #e2e8f0;
+}
+
+body.light-theme .hubScannerTitleBox h3,
+.light-theme .hubScannerTitleBox h3 {
+  color: #0f172a;
+}
+
+body.light-theme .hubScannerManualForm input,
+.light-theme .hubScannerManualForm input {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+
+/* ==========================================================================
+   PHONE INSTALL / DOWNLOAD BANNER STYLING
+   ========================================================================== */
+.hubInstallBanner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 520px;
+  background: #0f141d;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  z-index: 99999;
+  animation: hubSlideUp 0.3s ease-out;
+}
+
+@keyframes hubSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.hubInstallInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hubInstallIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 49, 87, 0.15);
+  border: 1px solid rgba(255, 49, 87, 0.3);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.hubInstallText {
+  display: flex;
+  flex-direction: column;
+}
+
+.hubInstallText strong {
+  font-size: 13px;
+  color: #fff;
+}
+
+.hubInstallText small {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.hubInstallActionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hubInstallPrimaryBtn {
+  background: #ff3157;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.hubInstallPrimaryBtn:hover {
+  background: #ff476b;
+  transform: translateY(-1px);
+}
+
+.hubInstallDismissBtn {
+  background: #1e293b;
+  color: #94a3b8;
+  border: none;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.hubInstallDismissBtn:hover {
+  background: #334155;
+  color: #fff;
+}
+
+body.light-theme .hubInstallBanner,
+.light-theme .hubInstallBanner {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .hubInstallText strong,
+.light-theme .hubInstallText strong {
+  color: #0f172a;
+}

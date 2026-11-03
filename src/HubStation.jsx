@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { collection, onSnapshot, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from './firebase';
 import ShippingLabelModal from './ShippingLabelModal';
+import BarcodeScannerModal from './BarcodeScannerModal';
+import InstallPrompt from './InstallPrompt';
 import { detectDeliveryZone, CORRIDOR_METADATA } from './corridorUtil';
 import {
   Package,
@@ -20,7 +22,9 @@ import {
   Clock,
   ArrowRight,
   LogOut,
-  Info
+  Info,
+  Camera,
+  Zap
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import './hub-station.css';
@@ -90,10 +94,12 @@ export default function HubStation() {
 
   // Modal & Checklist State
   const [labelOrder, setLabelOrder] = useState(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [lastScannedBarcode, setLastScannedBarcode] = useState('');
   const [checkedItems, setCheckedItems] = useState({}); // { [orderId_itemIdx]: boolean }
   const [updatingId, setUpdatingId] = useState(null);
 
-  // Sound chime for new incoming packing order
+  // Sound chime for new incoming packing order & barcode scans
   const audioContextRef = useRef(null);
 
   const playChime = () => {
@@ -113,6 +119,25 @@ export default function HubStation() {
       gain.connect(ctx.destination);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.35);
+    } catch (_) {}
+  };
+
+  const playScannerBeep = () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!audioContextRef.current) audioContextRef.current = new AudioCtx();
+      const ctx = audioContextRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(1760, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.12);
     } catch (_) {}
   };
 
@@ -240,6 +265,82 @@ export default function HubStation() {
       return tB - tA;
     });
   }, [allOrders, activeTab, selectedCorridor, searchQuery]);
+
+  // Barcode Handler (Handles both Camera Scans & Hardware USB Scanner guns)
+  const handleBarcodeIdentified = (rawCode) => {
+    if (!rawCode) return;
+    const clean = String(rawCode).trim().toLowerCase();
+    setLastScannedBarcode(rawCode);
+    playScannerBeep();
+
+    const matched = allOrders.find((o) => {
+      const id = String(o.id || '').toLowerCase();
+      const orderId = String(o.orderId || '').toLowerCase();
+      return id === clean || orderId === clean || clean.includes(orderId) || clean.includes(id);
+    });
+
+    if (matched) {
+      toast.success(`📦 Barcode Matched: Order #${matched.orderId || matched.id}`, {
+        icon: '⚡',
+        duration: 4000,
+      });
+      const st = String(matched.orderStatus || 'placed').toLowerCase();
+      if (st === 'packed') {
+        setActiveTab('packed');
+      } else if (['shipped', 'out_for_delivery'].includes(st)) {
+        setActiveTab('in_transit');
+      } else {
+        setActiveTab('pending');
+      }
+      setSearchQuery('');
+      setLabelOrder(matched);
+    } else {
+      toast(`Scanned: "${rawCode}" (No order match found in queue)`, {
+        icon: '🔍',
+        duration: 4500,
+      });
+      setSearchQuery(rawCode);
+    }
+  };
+
+  // Hardware USB/Bluetooth Barcode Scanner Listener (Keyboard Wedge)
+  useEffect(() => {
+    if (!stationAuth) return;
+
+    let buffer = '';
+    let lastKeyTime = Date.now();
+
+    const handleKeyDown = (e) => {
+      const tag = e.target?.tagName?.toLowerCase();
+      const isInput = tag === 'input' || tag === 'textarea';
+
+      const now = Date.now();
+      const diff = now - lastKeyTime;
+      lastKeyTime = now;
+
+      if (e.key === 'Enter') {
+        if (buffer.length >= 4) {
+          e.preventDefault();
+          handleBarcodeIdentified(buffer);
+          buffer = '';
+        }
+        return;
+      }
+
+      if (isInput && diff > 100) {
+        buffer = '';
+        return;
+      }
+
+      if (e.key.length === 1) {
+        if (diff > 80) buffer = '';
+        buffer += e.key;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [stationAuth, allOrders]);
 
   // Item Checkbox Toggle
   const toggleItemCheck = (orderKey, idx) => {
@@ -370,6 +471,17 @@ export default function HubStation() {
         </div>
 
         <div className="hubHeaderActions">
+          {/* Camera Barcode Scanner Launch Button */}
+          <button
+            type="button"
+            className="hubOpenScannerBtn"
+            onClick={() => setScannerOpen(true)}
+            title="Open Camera Barcode Scanner"
+            style={{ marginRight: '6px' }}
+          >
+            <Camera size={15} /> Barcode Scanner
+          </button>
+
           <div className="hubStationBadge">
             <span className="liveBlinker" />
             <span>Karaikal Central Warehouse (Active)</span>
@@ -609,6 +721,16 @@ export default function HubStation() {
           onMarkPacked={(o) => handleMarkPackedAndVerified(o)}
         />
       )}
+
+      {/* Camera Barcode Scanner Modal */}
+      <BarcodeScannerModal
+        isOpen={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onBarcodeDetected={handleBarcodeIdentified}
+      />
+
+      {/* PWA Phone Download / Install Prompt */}
+      <InstallPrompt />
     </div>
   );
 }
