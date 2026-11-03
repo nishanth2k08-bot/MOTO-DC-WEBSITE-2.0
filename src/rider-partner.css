@@ -2109,36 +2109,158 @@ body.light-theme {
 }
 
 body.light-theme .riderPartnerRoot {
-  background-color: #f6f7f9;
-  color: #171a21;
+  background-color: #f6f7f9 !important;
+  color: #171a21 !important;
 }
 
+/* Scroll Up Button (Back to Top) Light Mode Visibility Fix */
+body.light-theme .riderPartnerRoot .backToTopBtn,
+body.light-theme .backToTopBtn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16) !important;
+}
+
+body.light-theme .riderPartnerRoot .backToTopBtn,
+body.light-theme .riderPartnerRoot .backToTopBtn *,
+body.light-theme .riderPartnerRoot .backToTopBtn svg,
+body.light-theme .backToTopBtn,
+body.light-theme .backToTopBtn *,
+body.light-theme .backToTopBtn svg {
+  color: #0f172a !important;
+}
+
+body.light-theme .riderPartnerRoot .backToTopBtn:hover,
+body.light-theme .backToTopBtn:hover {
+  background: #fff1f2 !important;
+  border-color: #ff3157 !important;
+}
+
+body.light-theme .riderPartnerRoot .backToTopBtn:hover *,
+body.light-theme .backToTopBtn:hover * {
+  color: #ff3157 !important;
+}
+
+/* Navbar */
 body.light-theme .partnerNavbar {
-  background: rgba(255, 255, 255, 0.94);
-  border-bottom-color: #dfe2e8;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom-color: #dfe2e8 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
 }
 
 body.light-theme .partnerLogoBadge .logoMain {
   color: #171a21 !important;
 }
 
+/* Hero Badge */
+body.light-theme .partnerHeroBadge {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 49, 87, 0.35) !important;
+  box-shadow: 0 4px 18px rgba(255, 49, 87, 0.12) !important;
+}
+
+body.light-theme .badgeGradientText {
+  background: linear-gradient(90deg, #0f172a 0%, #e11d48 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+body.light-theme .badgeNetworkTag {
+  background: rgba(255, 49, 87, 0.1) !important;
+  border-color: rgba(255, 49, 87, 0.25) !important;
+  color: #e11d48 !important;
+}
+
+/* Hero Titles */
 body.light-theme .partnerHeroTitle {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .partnerHeroSubtitle {
-  color: #475569;
+  color: #475569 !important;
 }
 
+/* Secondary CTA Button (Apply for KYC) - Full High Contrast */
+body.light-theme .heroCtaSecondary,
+body.light-theme .heroCtaSecondary *,
+body.light-theme .heroCtaSecondary span,
+body.light-theme .heroCtaSecondary .heroCtaSecondaryText {
+  background: #f0f9ff !important;
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+}
+
+body.light-theme .heroCtaSecondary:hover {
+  background: #e0f2fe !important;
+  border-color: #0369a1 !important;
+}
+
+body.light-theme .heroCtaSecondary:hover *,
+body.light-theme .heroCtaSecondary:hover span {
+  color: #0369a1 !important;
+}
+
+/* Verified Rider Alert Banner */
+body.light-theme .verifiedRiderNoticeBanner {
+  background: #f0fdf4 !important;
+  border: 1px solid #86efac !important;
+}
+
+body.light-theme .verifiedRiderNoticeBanner,
+body.light-theme .verifiedRiderNoticeBanner span,
+body.light-theme .verifiedRiderNoticeBanner strong {
+  color: #15803d !important;
+}
+
+body.light-theme .verifiedRiderNoticeBanner svg {
+  color: #16a34a !important;
+}
+
+body.light-theme .switchRiderBtn,
+body.light-theme .switchRiderBtn * {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+body.light-theme .switchRiderBtn:hover {
+  background: #fee2e2 !important;
+  border-color: #f87171 !important;
+}
+
+body.light-theme .switchRiderBtn:hover * {
+  color: #dc2626 !important;
+}
+
+/* Perks Strip (4 Stats Under Hero) */
+body.light-theme .partnerPerksStrip {
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06) !important;
+}
+
+body.light-theme .perkDetails strong {
+  color: #0f172a !important;
+}
+
+body.light-theme .perkDetails small {
+  color: #475569 !important;
+}
+
+body.light-theme .perkDivider {
+  background: #e2e8f0 !important;
+}
+
+/* Section Headings */
 body.light-theme .partnerSectionTitle {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .partnerSectionSubtitle {
-  color: #64748b;
+  color: #64748b !important;
 }
 
+/* Cards & Modals */
 body.light-theme .perkCard,
 body.light-theme .corridorCard,
 body.light-theme .stepCard,
@@ -2146,12 +2268,14 @@ body.light-theme .faqItem,
 body.light-theme .earningsCalcCard,
 body.light-theme .kycModalCard,
 body.light-theme .qrModalCard,
+body.light-theme .qrDownloadModalContent,
 body.light-theme .partnerStatCard,
 body.light-theme .fleetTestimonialCard,
 body.light-theme .partnerCtaCard {
-  background: #ffffff;
-  border-color: #dfe2e8;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
 }
 
 body.light-theme .perkCard h3,
@@ -2159,18 +2283,31 @@ body.light-theme .corridorCard h3,
 body.light-theme .stepCard h3,
 body.light-theme .partnerStatVal,
 body.light-theme .earningsCalcCard h3 {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .perkCard p,
 body.light-theme .corridorCard p,
 body.light-theme .stepCard p,
 body.light-theme .partnerStatLabel {
-  color: #475569;
+  color: #475569 !important;
 }
 
+body.light-theme .corridorStat strong {
+  color: #0f172a !important;
+}
+
+body.light-theme .corridorStat span {
+  color: #64748b !important;
+}
+
+body.light-theme .stepActionBtn {
+  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.35) !important;
+}
+
+/* FAQ */
 body.light-theme .faqQuestion {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .faqQuestion span {
@@ -2178,57 +2315,108 @@ body.light-theme .faqQuestion span {
 }
 
 body.light-theme .faqAnswer p {
-  color: #475569;
+  color: #475569 !important;
+}
+
+/* Earnings Calculator */
+body.light-theme .calcValueDisplay {
+  color: #ff3157 !important;
+}
+
+body.light-theme .calcSliderLabel {
+  color: #334155 !important;
 }
 
 body.light-theme .calcBreakdownRow {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
 }
 
 body.light-theme .calcBreakdownRow span {
-  color: #475569;
+  color: #475569 !important;
 }
 
 body.light-theme .calcBreakdownRow strong {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
+body.light-theme .calcTotalCard {
+  background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
+  border: 1px solid #fecdd3 !important;
+}
+
+body.light-theme .calcTotalLabel {
+  color: #e11d48 !important;
+}
+
+body.light-theme .calcTotalAmount {
+  color: #9f1239 !important;
+}
+
+/* Testimonials */
+body.light-theme .testimonialRiderName {
+  color: #0f172a !important;
+}
+
+body.light-theme .testimonialRiderQuote {
+  color: #334155 !important;
+}
+
+/* Mobile Sticky Install Bar */
 body.light-theme .partnerStickyBar {
-  background: rgba(255, 255, 255, 0.95);
-  border-top-color: #dfe2e8;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-top: 1px solid #dfe2e8 !important;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
 }
 
 body.light-theme .stickyInfoText strong {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .stickyInfoText span {
-  color: #64748b;
+  color: #64748b !important;
 }
 
+/* KYC Form Modal */
 body.light-theme .kycModalHeader h2,
 body.light-theme .qrModalHeader h3 {
-  color: #0f172a;
+  color: #0f172a !important;
+}
+
+body.light-theme .kycModalHeader p,
+body.light-theme .qrModalHeader p {
+  color: #64748b !important;
 }
 
 body.light-theme .kycFormGroup label {
-  color: #334155;
+  color: #334155 !important;
 }
 
 body.light-theme .kycFormGroup input,
 body.light-theme .kycFormGroup select {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .kycCloseBtn,
+body.light-theme .qrModalCloseBtn {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+body.light-theme .kycCloseBtn:hover,
+body.light-theme .qrModalCloseBtn:hover {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
 }
 
 body.light-theme .qrStepItem strong {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .qrStepItem span {
-  color: #475569;
+  color: #475569 !important;
 }
 

@@ -1,47 +1,55 @@
 import React, { useState, useEffect } from 'react';
 
 export default function ThemeToggle({ className = '', style = {} }) {
-  const [theme, setTheme] = useState(() => {
+  const readCurrentTheme = () => {
     try {
       return localStorage.getItem('motodc-theme') || 'dark';
     } catch {
       return 'dark';
     }
-  });
+  };
 
+  const [theme, setTheme] = useState(readCurrentTheme);
+
+  // Sync theme to DOM on mount
   useEffect(() => {
-    const isLight = theme === 'light';
+    const current = readCurrentTheme();
+    setTheme(current);
+    const isLight = current === 'light';
+    document.documentElement.classList.toggle('light-theme', isLight);
     document.body.classList.toggle('light-theme', isLight);
-    try {
-      localStorage.setItem('motodc-theme', theme);
-    } catch (_) {}
-  }, [theme]);
-
-  // Sync across tabs/windows or multiple toggle buttons
-  useEffect(() => {
-    const handleStorage = (e) => {
-      if (e.key === 'motodc-theme' && e.newValue) {
-        setTheme(e.newValue);
-      }
-    };
-    const handleCustom = (e) => {
-      if (e.detail && e.detail !== theme) {
-        setTheme(e.detail);
-      }
-    };
-    window.addEventListener('storage', handleStorage);
-    window.addEventListener('motodc:theme-change', handleCustom);
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-      window.removeEventListener('motodc:theme-change', handleCustom);
-    };
-  }, [theme]);
+  }, []);
 
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
+    const isLight = next === 'light';
+    document.documentElement.classList.toggle('light-theme', isLight);
+    document.body.classList.toggle('light-theme', isLight);
+    try {
+      localStorage.setItem('motodc-theme', next);
+    } catch (_) {}
     window.dispatchEvent(new CustomEvent('motodc:theme-change', { detail: next }));
   };
+
+  // Sync with storage changes and custom events
+  useEffect(() => {
+    const sync = () => {
+      const current = readCurrentTheme();
+      if (current !== theme) {
+        setTheme(current);
+        const isLight = current === 'light';
+        document.documentElement.classList.toggle('light-theme', isLight);
+        document.body.classList.toggle('light-theme', isLight);
+      }
+    };
+    window.addEventListener('storage', sync);
+    window.addEventListener('motodc:theme-change', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('motodc:theme-change', sync);
+    };
+  }, [theme]);
 
   return (
     <button

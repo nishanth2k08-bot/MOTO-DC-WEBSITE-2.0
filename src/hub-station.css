@@ -697,215 +697,287 @@
    ========================================================================== */
 body.light-theme .hubStationContainer,
 body.light-theme .hubStationLockScreen {
-  background: #f6f7f9;
-  color: #171a21;
+  background: #f6f7f9 !important;
+  color: #171a21 !important;
 }
 
 body.light-theme .hubStationLockCard {
-  background: #ffffff;
-  border-color: #dfe2e8;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  background: #ffffff !important;
+  border-color: #dfe2e8 !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08) !important;
 }
 
 body.light-theme .hubStationLogoRow h2 {
-  color: #171a21;
+  color: #171a21 !important;
 }
 
 body.light-theme .hubStationLogoRow p {
-  color: #64748b;
+  color: #64748b !important;
 }
 
 body.light-theme .hubStationLockNotice {
-  background: rgba(34, 197, 94, 0.08);
-  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.08) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
 }
 
 body.light-theme .hubStationLockNotice strong {
-  color: #16a34a;
+  color: #16a34a !important;
 }
 
 body.light-theme .hubStationLockNotice p {
-  color: #475569;
+  color: #475569 !important;
 }
 
 body.light-theme .hubStationPinForm label {
-  color: #334155;
+  color: #334155 !important;
 }
 
 body.light-theme .hubPinInputWrap {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
 }
 
 body.light-theme .hubPinInputWrap input {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .hubStationDefaultHint {
-  color: #64748b;
+  color: #64748b !important;
 }
 
 body.light-theme .hubStationHeader {
-  border-bottom-color: #e2e8f0;
+  border-bottom-color: #e2e8f0 !important;
 }
 
 body.light-theme .hubHeaderBrand h1 {
-  color: #171a21;
+  color: #171a21 !important;
 }
 
 body.light-theme .hubHeaderBrand p {
-  color: #64748b;
+  color: #64748b !important;
 }
 
 body.light-theme .hubStationBadge {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: #1e293b;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
 }
 
 body.light-theme .hubLockBtn {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: #475569;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
 }
 
 body.light-theme .hubLockBtn:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
+/* 4-Stage Operational Banner */
 body.light-theme .hubPipelineBanner {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
 }
 
-body.light-theme .hubPipelineStep h4 {
-  color: #1e293b;
+body.light-theme .hubPipelineStep strong {
+  color: #1e293b !important;
 }
 
-body.light-theme .hubPipelineStep p {
-  color: #64748b;
+body.light-theme .hubPipelineStep small {
+  color: #64748b !important;
+}
+
+body.light-theme .hubPipelineStep.completed strong {
+  color: #16a34a !important;
 }
 
 body.light-theme .pipelineDivider {
-  background: #e2e8f0;
+  background: #e2e8f0 !important;
 }
 
+/* Toolbar & Filter Bar */
 body.light-theme .hubToolbar {
-  border-bottom-color: #e2e8f0;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
 }
 
-body.light-theme .hubTabs {
-  background: #f1f5f9;
-  border-color: #e2e8f0;
+body.light-theme .hubTabs button {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
 }
 
-body.light-theme .hubTabBtn {
-  color: #64748b;
+body.light-theme .hubTabs button:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
 }
 
-body.light-theme .hubTabBtn.active {
-  background: #ffffff;
-  color: #0f172a;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+body.light-theme .hubTabs button.active {
+  background: #ff3157 !important;
+  border-color: #ff3157 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 12px rgba(255, 49, 87, 0.35) !important;
+}
+
+body.light-theme .hubCorridorFilter {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+body.light-theme .hubCorridorFilter select {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .hubCorridorFilter select option {
+  background: #ffffff !important;
+  color: #0f172a !important;
 }
 
 body.light-theme .hubSearchBox {
-  background: #ffffff;
-  border-color: #cbd5e1;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
 }
 
 body.light-theme .hubSearchBox input {
-  color: #0f172a;
+  background: transparent !important;
+  color: #0f172a !important;
 }
 
 body.light-theme .hubSearchBox input::placeholder {
-  color: #94a3b8;
+  color: #94a3b8 !important;
 }
 
+body.light-theme .hubSearchBox svg {
+  color: #64748b !important;
+}
+
+/* Order Cards */
 body.light-theme .hubOrderCard {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
 }
 
-body.light-theme .hubCardHeader {
-  border-bottom-color: #f1f5f9;
+body.light-theme .hubOrderCard:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08) !important;
 }
 
-body.light-theme .hubOrderNum {
-  color: #0f172a;
+body.light-theme .hubOrderCard.orderPacked {
+  background: #f0fdf4 !important;
+  border-color: #86efac !important;
 }
 
-body.light-theme .hubCustomerBlock {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+body.light-theme .hubOrderId {
+  color: #0f172a !important;
+}
+
+body.light-theme .hubOrderMethodBadge {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.light-theme .hubCustomerSection {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
 }
 
 body.light-theme .hubCustomerName {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
-body.light-theme .hubCustomerPhone,
-body.light-theme .hubCustomerAddr {
-  color: #475569;
+body.light-theme .hubCustomerName strong {
+  color: #0f172a !important;
+}
+
+body.light-theme .hubCustomerName span {
+  color: #64748b !important;
+}
+
+body.light-theme .hubAddressText {
+  color: #475569 !important;
 }
 
 body.light-theme .hubItemsChecklist {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
 }
 
-body.light-theme .hubChecklistTitle {
-  color: #1e293b;
+body.light-theme .checklistTitle {
+  color: #0f172a !important;
 }
 
 body.light-theme .checklistItem {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  color: #1e293b;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
-body.light-theme .checklistItem.checked {
-  background: #f0fdf4;
-  border-color: #86efac;
+body.light-theme .checklistItem:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
 }
 
-body.light-theme .checklistItemTitle {
-  color: #0f172a;
+body.light-theme .checklistItem.itemChecked {
+  background: #f0fdf4 !important;
+  border-color: #86efac !important;
 }
 
-body.light-theme .checklistItemMeta {
-  color: #64748b;
+body.light-theme .checklistItem .itemQty {
+  background: #e0f2fe !important;
+  color: #0284c7 !important;
+}
+
+body.light-theme .checklistItem .itemName {
+  color: #0f172a !important;
+}
+
+body.light-theme .hubStagingRackHint {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+body.light-theme .hubStagingRackHint b {
+  color: #0f172a !important;
 }
 
 body.light-theme .hubPrintLabelBtn {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #334155;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
 }
 
 body.light-theme .hubPrintLabelBtn:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: #f1f5f9 !important;
+  border-color: #ff3157 !important;
+  color: #0f172a !important;
 }
 
 body.light-theme .hubMarkPackedBtn:not(.readyToVerify) {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: #64748b;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #64748b !important;
 }
 
 body.light-theme .hubEmptyState {
-  background: #ffffff;
-  border-color: #e2e8f0;
+  background: #ffffff !important;
+  border: 1px dashed #cbd5e1 !important;
+  color: #64748b !important;
 }
 
 body.light-theme .hubEmptyState h3 {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 body.light-theme .hubEmptyState p {
-  color: #64748b;
+  color: #64748b !important;
 }

@@ -320,9 +320,19 @@ header.scrolled {
   border-color: #cbd5e1 !important;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
 }
+.light-theme .backToTopBtn,
+.light-theme .backToTopBtn *,
+.light-theme .backToTopBtn svg {
+  color: #0f172a !important;
+}
 .light-theme .backToTopBtn:hover {
   background: #fff1f2 !important;
   border-color: #ff3157 !important;
+  color: #ff3157 !important;
+}
+.light-theme .backToTopBtn:hover,
+.light-theme .backToTopBtn:hover *,
+.light-theme .backToTopBtn:hover svg {
   color: #ff3157 !important;
 }
 .light-theme .checkoutBlock {
