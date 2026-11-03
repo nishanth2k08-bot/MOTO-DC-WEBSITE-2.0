@@ -122,7 +122,7 @@ export default function RiderPartnerPage() {
 
   // App version constant - automatically synchronized across QR code, download URL, and release badges
   const LATEST_APP_VERSION = '1.0.17';
-  const APK_DOWNLOAD_URL = `/MotoDC-Partner.apk?v=${LATEST_APP_VERSION}`;
+  const APK_DOWNLOAD_URL = `/api/download-apk?v=${LATEST_APP_VERSION}`;
   const WHATSAPP_ONBOARDING_URL = 'https://wa.me/918903993371?text=Hello%20MotoDC,%20I%20have%20submitted%20my%20KYC%20documents%20for%20delivery%20partner%20onboarding.';
 
   // Helper to compress uploaded image using Canvas
