@@ -2096,6 +2096,7 @@
 
 /* ==========================================================================
    Light Theme Support for MotoDC Partner Page
+   (All white text converted to crisp black/charcoal for premium readability)
    ========================================================================== */
 body.light-theme {
   --rp-bg: #f6f7f9;
@@ -2104,55 +2105,55 @@ body.light-theme {
   --rp-surface-hover: #e2e8f0;
   --rp-border: #dfe2e8;
   --rp-border-active: rgba(255, 49, 87, 0.5);
-  --rp-text: #171a21;
-  --rp-text-muted: #64748b;
+  --rp-text: #0f172a;
+  --rp-text-muted: #475569;
 }
 
 body.light-theme .riderPartnerRoot {
   background-color: #f6f7f9 !important;
-  color: #171a21 !important;
-}
-
-/* Scroll Up Button (Back to Top) Light Mode Visibility Fix */
-body.light-theme .riderPartnerRoot .backToTopBtn,
-body.light-theme .backToTopBtn {
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16) !important;
-}
-
-body.light-theme .riderPartnerRoot .backToTopBtn,
-body.light-theme .riderPartnerRoot .backToTopBtn *,
-body.light-theme .riderPartnerRoot .backToTopBtn svg,
-body.light-theme .backToTopBtn,
-body.light-theme .backToTopBtn *,
-body.light-theme .backToTopBtn svg {
   color: #0f172a !important;
 }
 
-body.light-theme .riderPartnerRoot .backToTopBtn:hover,
-body.light-theme .backToTopBtn:hover {
-  background: #fff1f2 !important;
-  border-color: #ff3157 !important;
+/* 1. Global Headings & Section Titles -> Pure Crisp Black */
+body.light-theme .riderPartnerRoot h1,
+body.light-theme .riderPartnerRoot h2,
+body.light-theme .riderPartnerRoot h3,
+body.light-theme .riderPartnerRoot h4,
+body.light-theme .riderPartnerRoot h5,
+body.light-theme .riderPartnerRoot h6,
+body.light-theme .riderPartnerRoot .sectionTitle,
+body.light-theme .riderPartnerRoot .partnerHeroTitle,
+body.light-theme .riderPartnerRoot .footerLogo,
+body.light-theme .riderPartnerRoot .logoMain,
+body.light-theme .riderPartnerRoot .stickyBarTitle,
+body.light-theme .riderPartnerRoot .modalTitleWrap h3,
+body.light-theme .riderPartnerRoot .kycModalHeader h2,
+body.light-theme .riderPartnerRoot .qrModalHeader h3,
+body.light-theme .riderPartnerRoot .kycSuccessState h4 {
+  color: #0f172a !important;
 }
 
-body.light-theme .riderPartnerRoot .backToTopBtn:hover *,
-body.light-theme .backToTopBtn:hover * {
-  color: #ff3157 !important;
+/* 2. Subtitles & Body Paragraphs -> Readable Slate */
+body.light-theme .riderPartnerRoot p,
+body.light-theme .riderPartnerRoot .sectionSubtitle,
+body.light-theme .riderPartnerRoot .partnerHeroSubtitle,
+body.light-theme .riderPartnerRoot .modalSub,
+body.light-theme .riderPartnerRoot .kycSuccessMsg {
+  color: #475569 !important;
 }
 
-/* Navbar */
+/* 3. Top Navbar & Brand Logo */
 body.light-theme .partnerNavbar {
-  background: rgba(255, 255, 255, 0.94) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   border-bottom-color: #dfe2e8 !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
 }
 
 body.light-theme .partnerLogoBadge .logoMain {
-  color: #171a21 !important;
+  color: #0f172a !important;
 }
 
-/* Hero Badge */
+/* 4. Hero Section */
 body.light-theme .partnerHeroBadge {
   background: #ffffff !important;
   border: 1px solid rgba(255, 49, 87, 0.35) !important;
@@ -2171,16 +2172,6 @@ body.light-theme .badgeNetworkTag {
   color: #e11d48 !important;
 }
 
-/* Hero Titles */
-body.light-theme .partnerHeroTitle {
-  color: #0f172a !important;
-}
-
-body.light-theme .partnerHeroSubtitle {
-  color: #475569 !important;
-}
-
-/* Secondary CTA Button (Apply for KYC) - Full High Contrast */
 body.light-theme .heroCtaSecondary,
 body.light-theme .heroCtaSecondary *,
 body.light-theme .heroCtaSecondary span,
@@ -2200,7 +2191,6 @@ body.light-theme .heroCtaSecondary:hover span {
   color: #0369a1 !important;
 }
 
-/* Verified Rider Alert Banner */
 body.light-theme .verifiedRiderNoticeBanner {
   background: #f0fdf4 !important;
   border: 1px solid #86efac !important;
@@ -2232,7 +2222,7 @@ body.light-theme .switchRiderBtn:hover * {
   color: #dc2626 !important;
 }
 
-/* Perks Strip (4 Stats Under Hero) */
+/* 5. Perks Strip (4 Stats Under Hero) */
 body.light-theme .partnerPerksStrip {
   background: #ffffff !important;
   border: 1px solid #dfe2e8 !important;
@@ -2251,172 +2241,324 @@ body.light-theme .perkDivider {
   background: #e2e8f0 !important;
 }
 
-/* Section Headings */
-body.light-theme .partnerSectionTitle {
-  color: #0f172a !important;
-}
-
-body.light-theme .partnerSectionSubtitle {
-  color: #64748b !important;
-}
-
-/* Cards & Modals */
-body.light-theme .perkCard,
-body.light-theme .corridorCard,
-body.light-theme .stepCard,
-body.light-theme .faqItem,
-body.light-theme .earningsCalcCard,
-body.light-theme .kycModalCard,
-body.light-theme .qrModalCard,
-body.light-theme .qrDownloadModalContent,
-body.light-theme .partnerStatCard,
-body.light-theme .fleetTestimonialCard,
-body.light-theme .partnerCtaCard {
+/* 6. Feature Cards (4 Platform Features) */
+body.light-theme .featureCard {
   background: #ffffff !important;
   border: 1px solid #dfe2e8 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-theme .featureCard:hover {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .featureCardHot {
+  background: #ffffff !important;
+  border-color: rgba(255, 49, 87, 0.4) !important;
+}
+
+body.light-theme .featureCard h3 {
   color: #0f172a !important;
 }
 
-body.light-theme .perkCard h3,
-body.light-theme .corridorCard h3,
-body.light-theme .stepCard h3,
-body.light-theme .partnerStatVal,
-body.light-theme .earningsCalcCard h3 {
-  color: #0f172a !important;
-}
-
-body.light-theme .perkCard p,
-body.light-theme .corridorCard p,
-body.light-theme .stepCard p,
-body.light-theme .partnerStatLabel {
+body.light-theme .featureCard p {
   color: #475569 !important;
 }
 
-body.light-theme .corridorStat strong {
+/* 7. Earnings Estimator Card */
+body.light-theme .earningsCard {
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-theme .earningsHeader h2 {
   color: #0f172a !important;
 }
 
-body.light-theme .corridorStat span {
+body.light-theme .earningsHeader p {
+  color: #475569 !important;
+}
+
+body.light-theme .sliderLabels span {
+  color: #0f172a !important;
+}
+
+body.light-theme .earningBox {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+body.light-theme .earningBox strong {
+  color: #0f172a !important;
+}
+
+body.light-theme .earningBoxHighlight {
+  background: #fff1f2 !important;
+  border-color: #fecdd3 !important;
+}
+
+body.light-theme .earningBoxHighlight strong {
+  color: #e11d48 !important;
+}
+
+body.light-theme .earningBox small,
+body.light-theme .earningBox span,
+body.light-theme .earningsFooterNote span {
   color: #64748b !important;
 }
 
-body.light-theme .stepActionBtn {
-  box-shadow: 0 4px 14px rgba(255, 49, 87, 0.35) !important;
+/* 8. Eligibility Checklist (Requirement Cards) */
+body.light-theme .requirementCard {
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* FAQ */
-body.light-theme .faqQuestion {
+body.light-theme .requirementCard h3 {
   color: #0f172a !important;
 }
 
+body.light-theme .requirementCard p {
+  color: #475569 !important;
+}
+
+body.light-theme .reqDocs span {
+  color: #334155 !important;
+}
+
+body.light-theme .reqNumber {
+  color: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* 9. Steps Cards (Onboarding Steps) */
+body.light-theme .stepCard {
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-theme .stepCard h3 {
+  color: #0f172a !important;
+}
+
+body.light-theme .stepCard p {
+  color: #475569 !important;
+}
+
+/* 10. FAQ Accordion (Image 2 Fix) */
+body.light-theme .faqItem {
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+}
+
+body.light-theme .faqOpen {
+  background: #f8fafc !important;
+  border-color: rgba(255, 49, 87, 0.4) !important;
+}
+
+body.light-theme .faqQuestion,
 body.light-theme .faqQuestion span {
   color: #0f172a !important;
+}
+
+body.light-theme .faqAnswer {
+  border-top: 1px solid #e2e8f0 !important;
 }
 
 body.light-theme .faqAnswer p {
   color: #475569 !important;
 }
 
-/* Earnings Calculator */
-body.light-theme .calcValueDisplay {
+/* 11. Contact & Support Card */
+body.light-theme .contactCard {
+  background: #ffffff !important;
+  border: 1px solid #dfe2e8 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-theme .contactDetails h2 {
+  color: #0f172a !important;
+}
+
+body.light-theme .contactAddress,
+body.light-theme .contactPhone,
+body.light-theme .contactHours,
+body.light-theme .contactAddress span,
+body.light-theme .contactPhone span,
+body.light-theme .contactHours span {
+  color: #334155 !important;
+}
+
+body.light-theme .contactWhatsappBtn {
+  background: #f0fdf4 !important;
+  border: 1px solid #86efac !important;
+}
+
+body.light-theme .contactWhatsappBtn strong {
+  color: #14532d !important;
+}
+
+body.light-theme .contactWhatsappBtn small {
+  color: #16a34a !important;
+}
+
+/* 12. Isolated Footer & MotoDC Logo (Image 1 Fix) */
+body.light-theme .partnerFooter {
+  background: #ffffff !important;
+  border-top: 1px solid #dfe2e8 !important;
+}
+
+body.light-theme .footerBrand .footerLogo {
+  color: #0f172a !important;
+}
+
+body.light-theme .footerBrand .logoRed {
   color: #ff3157 !important;
 }
 
-body.light-theme .calcSliderLabel {
-  color: #334155 !important;
-}
-
-body.light-theme .calcBreakdownRow {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-}
-
-body.light-theme .calcBreakdownRow span {
+body.light-theme .footerBrand p {
   color: #475569 !important;
 }
 
-body.light-theme .calcBreakdownRow strong {
+body.light-theme .footerInfoBlock h4 {
   color: #0f172a !important;
 }
 
-body.light-theme .calcTotalCard {
-  background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
-  border: 1px solid #fecdd3 !important;
+body.light-theme .footerInfoBlock p {
+  color: #475569 !important;
 }
 
-body.light-theme .calcTotalLabel {
-  color: #e11d48 !important;
-}
-
-body.light-theme .calcTotalAmount {
-  color: #9f1239 !important;
-}
-
-/* Testimonials */
-body.light-theme .testimonialRiderName {
-  color: #0f172a !important;
-}
-
-body.light-theme .testimonialRiderQuote {
+body.light-theme .footerLegalBlock p {
   color: #334155 !important;
 }
 
-/* Mobile Sticky Install Bar */
-body.light-theme .partnerStickyBar {
-  background: rgba(255, 255, 255, 0.95) !important;
+body.light-theme .footerLegalBlock small {
+  color: #64748b !important;
+}
+
+/* 13. Mobile Sticky Bottom Install Bar */
+body.light-theme .mobileStickyInstallBar {
+  background: rgba(255, 255, 255, 0.96) !important;
   border-top: 1px solid #dfe2e8 !important;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
 }
 
-body.light-theme .stickyInfoText strong {
+body.light-theme .stickyBarTitle {
   color: #0f172a !important;
 }
 
-body.light-theme .stickyInfoText span {
+body.light-theme .stickyBarSub {
   color: #64748b !important;
 }
 
-/* KYC Form Modal */
-body.light-theme .kycModalHeader h2,
-body.light-theme .qrModalHeader h3 {
+/* 14. KYC & QR Modals */
+body.light-theme .kycGateModalContent,
+body.light-theme .qrDownloadModalContent {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15) !important;
   color: #0f172a !important;
 }
 
-body.light-theme .kycModalHeader p,
-body.light-theme .qrModalHeader p {
+body.light-theme .modalHeader {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+body.light-theme .modalCloseBtn {
   color: #64748b !important;
 }
 
-body.light-theme .kycFormGroup label {
+body.light-theme .modalCloseBtn:hover {
+  color: #0f172a !important;
+}
+
+body.light-theme .kycModalTabs {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+body.light-theme .kycModalTab {
+  color: #64748b !important;
+}
+
+body.light-theme .kycModalTab.active {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border-bottom-color: var(--rp-red) !important;
+}
+
+body.light-theme .kycField span {
   color: #334155 !important;
 }
 
-body.light-theme .kycFormGroup input,
-body.light-theme .kycFormGroup select {
+body.light-theme .kycField input,
+body.light-theme .kycField select {
   background: #f8fafc !important;
   border: 1px solid #cbd5e1 !important;
   color: #0f172a !important;
 }
 
-body.light-theme .kycCloseBtn,
-body.light-theme .qrModalCloseBtn {
-  background: #f1f5f9 !important;
-  color: #475569 !important;
+body.light-theme .statusSearchForm input {
+  background: #f8fafc !important;
   border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
-body.light-theme .kycCloseBtn:hover,
-body.light-theme .qrModalCloseBtn:hover {
-  background: #fee2e2 !important;
-  color: #dc2626 !important;
+body.light-theme .statusSearchForm button {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .qrInstructionSteps {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+body.light-theme .qrStepItem {
+  color: #475569 !important;
 }
 
 body.light-theme .qrStepItem strong {
   color: #0f172a !important;
 }
 
-body.light-theme .qrStepItem span {
+body.light-theme .qrVersionTag {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
   color: #475569 !important;
 }
+
+/* 15. Scroll Up Button (Back to Top) */
+body.light-theme .riderPartnerRoot .backToTopBtn,
+body.light-theme .backToTopBtn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16) !important;
+}
+
+body.light-theme .riderPartnerRoot .backToTopBtn,
+body.light-theme .riderPartnerRoot .backToTopBtn *,
+body.light-theme .riderPartnerRoot .backToTopBtn svg,
+body.light-theme .backToTopBtn,
+body.light-theme .backToTopBtn *,
+body.light-theme .backToTopBtn svg {
+  color: #0f172a !important;
+}
+
+body.light-theme .riderPartnerRoot .backToTopBtn:hover,
+body.light-theme .backToTopBtn:hover {
+  background: #fff1f2 !important;
+  border-color: #ff3157 !important;
+}
+
+body.light-theme .riderPartnerRoot .backToTopBtn:hover *,
+body.light-theme .backToTopBtn:hover * {
+  color: #ff3157 !important;
+}
+
 
