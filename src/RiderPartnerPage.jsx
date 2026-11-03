@@ -122,7 +122,8 @@ export default function RiderPartnerPage() {
 
   // App version constant - automatically synchronized across QR code, download URL, and release badges
   const LATEST_APP_VERSION = '1.0.17';
-  const APK_DOWNLOAD_URL = `/api/download-apk?v=${LATEST_APP_VERSION}`;
+  const APK_DOWNLOAD_URL = `/api/delivery-partner?action=download-apk&v=${LATEST_APP_VERSION}`;
+  const GITHUB_RELEASE_APK_URL = `https://github.com/nishanth2k08-bot/MOTODC-APP/releases/download/v${LATEST_APP_VERSION}/MotoDC-Partner.apk`;
   const WHATSAPP_ONBOARDING_URL = 'https://wa.me/918903993371?text=Hello%20MotoDC,%20I%20have%20submitted%20my%20KYC%20documents%20for%20delivery%20partner%20onboarding.';
 
   // Helper to compress uploaded image using Canvas
@@ -1365,21 +1366,36 @@ export default function RiderPartnerPage() {
               </div>
 
               <div className="qrModalFooter" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                <a
-                  href={APK_DOWNLOAD_URL}
-                  download="MotoDC-Partner.apk"
-                  style={{
-                    color: '#ff3157',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  <Download size={14} /> Direct Download APK (v{LATEST_APP_VERSION})
-                </a>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <a
+                    href={APK_DOWNLOAD_URL}
+                    download="MotoDC-Partner.apk"
+                    style={{
+                      color: '#ff3157',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <Download size={14} /> Download APK (v{LATEST_APP_VERSION})
+                  </a>
+                  <a
+                    href={GITHUB_RELEASE_APK_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#94a3b8',
+                      fontSize: '11px',
+                      textDecoration: 'underline'
+                    }}
+                    title="Direct CDN Mirror from GitHub Releases"
+                  >
+                    CDN Mirror
+                  </a>
+                </div>
                 <button 
                   type="button" 
                   className="modalDoneBtn"

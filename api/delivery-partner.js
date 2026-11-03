@@ -164,6 +164,13 @@ export default async function handler(req, res) {
       const action = String(req.query.action || '').trim().toLowerCase();
       const riderId = String(req.query.riderId || '').trim();
 
+      // Instant Redirect to High-Speed GitHub Releases CDN for mobile APK downloads
+      if (action === 'download-apk' || action === 'latest-apk') {
+        const version = req.query.v || '1.0.17';
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        return res.redirect(302, `https://github.com/nishanth2k08-bot/MOTODC-APP/releases/download/v${version}/MotoDC-Partner.apk`);
+      }
+
       // -----------------------------------------------------------------------
       // 1A. CLUSTER MANIFESTS (Admin Dispatch Console - Solution A)
       // Returns 4 corridor manifests with parcels, total payout, and rider assignments
