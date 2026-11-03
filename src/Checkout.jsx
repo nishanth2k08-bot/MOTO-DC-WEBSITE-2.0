@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
-import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,ShieldCheck,Phone,Clock} from 'lucide-react';
+import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,Phone,Clock} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import SlideToOrder, { triggerHaptic } from './SlideToOrder';
 
@@ -368,10 +368,6 @@ export default function Checkout(){
             </div>
             <h2>{processingState.title}</h2>
             <p>{processingState.subtitle}</p>
-            <div className="checkoutProcessingSecurity">
-              <ShieldCheck size={16}/>
-              <span>256-Bit SSL Secured · MotoDC Rapid Fleet</span>
-            </div>
             <div className="checkoutProcessingNotice">
               <Clock size={13}/>
               <span>Please do not refresh, close, or press the back button.</span>
