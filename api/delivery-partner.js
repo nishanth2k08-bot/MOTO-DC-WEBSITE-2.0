@@ -167,8 +167,12 @@ export default async function handler(req, res) {
       // Instant Redirect to High-Speed GitHub Releases CDN for mobile APK downloads
       if (action === 'download-apk' || action === 'latest-apk') {
         const version = req.query.v || '1.0.17';
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        return res.redirect(302, `https://github.com/nishanth2k08-bot/MOTODC-APP/releases/download/v${version}/MotoDC-Partner.apk`);
+        const targetUrl = `https://github.com/nishanth2k08-bot/MOTODC-APP/releases/download/v${version}/MotoDC-Partner.apk`;
+        res.writeHead(302, {
+          Location: targetUrl,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        });
+        return res.end();
       }
 
       // -----------------------------------------------------------------------
