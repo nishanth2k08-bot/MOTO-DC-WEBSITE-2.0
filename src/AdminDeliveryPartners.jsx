@@ -1388,37 +1388,63 @@ export default function AdminDeliveryPartners() {
                   </td>
                   <td>
                     <strong>{p.name}</strong>
-                    {p.lastLocation?.lat ? (
-                      <div style={{ marginTop: '4px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <a
-                          href={`https://www.google.com/maps?q=${p.lastLocation.lat},${p.lastLocation.lng}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '3px',
-                            color: '#22c55e',
-                            textDecoration: 'none',
-                            fontWeight: 600,
-                            background: 'rgba(34, 197, 94, 0.12)',
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            border: '1px solid rgba(34, 197, 94, 0.25)'
-                          }}
-                          title={`Accuracy: ${Math.round(p.lastLocation.accuracy || 0)}m • Speed: ${Math.round(p.lastLocation.speed || 0)} km/h`}
-                        >
-                          <MapPin size={11} color="#22c55e" /> Live GPS
-                        </a>
-                        <span style={{ color: '#94a3b8', fontSize: '10px' }}>
-                          {new Date(p.lastLocation.updatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                    ) : (
-                      <div style={{ marginTop: '3px', fontSize: '10px', color: '#64748b' }}>
-                        ⚪ GPS Inactive (Off-route)
-                      </div>
-                    )}
+                    {(() => {
+                      const hasLocation = Boolean(p.lastLocation?.lat);
+                      const isRecent = hasLocation && p.lastLocation?.updatedAt && (Date.now() - new Date(p.lastLocation.updatedAt).getTime() < 15 * 60 * 1000);
+                      const isLive = p.isGpsActive !== false && isRecent;
+
+                      if (isLive) {
+                        return (
+                          <div style={{ marginTop: '4px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <a
+                              href={`https://www.google.com/maps?q=${p.lastLocation.lat},${p.lastLocation.lng}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                color: '#22c55e',
+                                textDecoration: 'none',
+                                fontWeight: 700,
+                                background: 'rgba(34, 197, 94, 0.15)',
+                                padding: '2px 7px',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(34, 197, 94, 0.35)'
+                              }}
+                              title={`Live GPS Active • Accuracy: ${Math.round(p.lastLocation.accuracy || 0)}m • Speed: ${Math.round(p.lastLocation.speed || 0)} km/h`}
+                            >
+                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 6px #22c55e' }}></span>
+                              <MapPin size={11} color="#22c55e" /> Live GPS
+                            </a>
+                            <span style={{ color: '#94a3b8', fontSize: '10px' }}>
+                              {new Date(p.lastLocation.updatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        );
+                      } else if (hasLocation) {
+                        return (
+                          <div style={{ marginTop: '4px', fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <a
+                              href={`https://www.google.com/maps?q=${p.lastLocation.lat},${p.lastLocation.lng}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: '#94a3b8', textDecoration: 'underline' }}
+                              title="Click to view last known coordinates on Google Maps"
+                            >
+                              Last seen {new Date(p.lastLocation.updatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                            </a>
+                            <span style={{ color: '#64748b' }}>⚪ (Off-route)</span>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div style={{ marginTop: '3px', fontSize: '10px', color: '#64748b' }}>
+                            ⚪ GPS Inactive (Off-route)
+                          </div>
+                        );
+                      }
+                    })()}
                   </td>
                   <td>{p.phone || '—'}</td>
                   <td>

@@ -865,12 +865,28 @@ export default async function handler(req, res) {
       // 2D. UPDATE RIDER LIVE GPS LOCATION (Active Delivery Run Only)
       // -----------------------------------------------------------------------
       if (action === 'update-rider-location') {
-        const { riderId, riderName, lat, lng, speed, heading, accuracy } = body;
-        if (!riderId || lat == null || lng == null) {
-          return send(res, 400, { error: 'riderId, lat, and lng are required' });
+        const { riderId, riderName, lat, lng, speed, heading, accuracy, isGpsActive } = body;
+        if (!riderId) {
+          return send(res, 400, { error: 'riderId is required' });
         }
 
         const cleanRiderId = String(riderId).trim().toUpperCase();
+
+        if (isGpsActive === false) {
+          await partnersCol.doc(cleanRiderId).set(
+            {
+              isGpsActive: false,
+              lastSeenAt: new Date().toISOString(),
+            },
+            { merge: true }
+          );
+          return send(res, 200, { ok: true, isGpsActive: false });
+        }
+
+        if (lat == null || lng == null) {
+          return send(res, 400, { error: 'lat and lng are required' });
+        }
+
         const locationPayload = {
           lat: Number(lat),
           lng: Number(lng),
@@ -897,6 +913,7 @@ export default async function handler(req, res) {
           {
             lastLocation: locationPayload,
             lastSeenAt: locationPayload.updatedAt,
+            isGpsActive: true,
           },
           { merge: true }
         );
