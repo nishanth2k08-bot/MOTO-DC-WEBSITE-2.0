@@ -1180,7 +1180,11 @@ export default function AdminDeliveryPartners() {
                             const matchedRider = partners.find(
                               (p) => String(p.username || p.id).toUpperCase() === String(corr.assignedRiderId).toUpperCase()
                             );
-                            if (matchedRider?.lastLocation?.lat) {
+                            const hasLocation = Boolean(matchedRider?.lastLocation?.lat);
+                            const isRecent = hasLocation && matchedRider?.lastLocation?.updatedAt && (Date.now() - new Date(matchedRider.lastLocation.updatedAt).getTime() < 15 * 60 * 1000);
+                            const isLiveOnRoute = matchedRider?.isGpsActive === true && isRecent && corr.totalStops > 0;
+
+                            if (isLiveOnRoute) {
                               return (
                                 <a
                                   href={`https://www.google.com/maps?q=${matchedRider.lastLocation.lat},${matchedRider.lastLocation.lng}`}
@@ -1200,13 +1204,35 @@ export default function AdminDeliveryPartners() {
                                     borderRadius: '5px',
                                     marginTop: '4px'
                                   }}
-                                  title="Live road coordinates from driver phone"
+                                  title="Active on Road • Live GPS transmitting from driver phone"
                                 >
-                                  <MapPin size={11} color="#22c55e" /> Live GPS Pin
+                                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 6px #22c55e' }} />
+                                  <MapPin size={11} color="#22c55e" /> Live GPS Pin (En Route)
                                 </a>
                               );
                             }
-                            return null;
+
+                            return (
+                              <span
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  fontSize: '10px',
+                                  fontWeight: 600,
+                                  color: '#94a3b8',
+                                  background: 'rgba(148, 163, 184, 0.12)',
+                                  border: '1px solid rgba(148, 163, 184, 0.25)',
+                                  padding: '2px 6px',
+                                  borderRadius: '5px',
+                                  marginTop: '4px'
+                                }}
+                                title="Driver assigned. Awaiting parcel collection at Karaikal Hub before GPS turns on."
+                              >
+                                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
+                                Staged at Hub (GPS Standby)
+                              </span>
+                            );
                           })()}
                         </div>
                       </div>

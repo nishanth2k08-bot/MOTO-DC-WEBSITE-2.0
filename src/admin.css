@@ -2208,3 +2208,66 @@
     margin-top: 6px;
   }
 }
+
+/* ==========================================================================
+   Order Card Responsive Toolbar & Label Button (Never squished on any screen)
+   ========================================================================== */
+.orderCard .orderTop {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 14px !important;
+}
+
+.orderCard .orderTop > div:first-child {
+  flex: 1 1 180px !important;
+  min-width: 140px !important;
+}
+
+.orderCard .orderTop > strong {
+  flex: 0 0 auto !important;
+  font-size: 15px !important;
+}
+
+.adminOrderLabelBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  min-width: 86px !important;
+  width: auto !important;
+  padding: 0 14px !important;
+  border-radius: 9px !important;
+  background: #172030 !important;
+  border: 1px solid #2b3b55 !important;
+  color: #f1f5f9 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+.orderCard .orderTop select {
+  flex: 0 1 auto !important;
+  min-width: 130px !important;
+  height: 36px !important;
+  padding: 0 10px !important;
+  border-radius: 9px !important;
+  border: 1px solid #303540 !important;
+  background: #151922 !important;
+  color: #f8fafc !important;
+  font-size: 12px !important;
+}
+
+.orderCard .orderTop .orderToggle {
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+
