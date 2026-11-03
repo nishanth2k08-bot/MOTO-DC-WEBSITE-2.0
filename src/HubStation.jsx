@@ -3,7 +3,6 @@ import { collection, onSnapshot, doc, updateDoc, arrayUnion } from 'firebase/fir
 import { db } from './firebase';
 import ShippingLabelModal from './ShippingLabelModal';
 import { detectDeliveryZone, CORRIDOR_METADATA } from './corridorUtil';
-import ThemeToggle from './ThemeToggle';
 import {
   Package,
   Printer,
@@ -28,9 +27,29 @@ import './hub-station.css';
 
 const DEFAULT_STATION_PIN = '1234';
 
+// Hub Shift Schedule: 7:00 AM to 8:30 PM IST (Daily)
+// Auto-lock / logout after shift completion (>= 8:30 PM / 20:30)
+const isShiftCompleted = () => {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const currentMinutes = hours * 60 + minutes;
+  const shiftEndMinutes = 20 * 60 + 30; // 8:30 PM = 1230 minutes
+  const morningShiftStartMinutes = 7 * 60; // 7:00 AM = 420 minutes
+
+  // Shift is completed if current time is 8:30 PM or later, or before 7:00 AM
+  return currentMinutes >= shiftEndMinutes || currentMinutes < morningShiftStartMinutes;
+};
+
 export default function HubStation() {
+  const [afterHoursOverride, setAfterHoursOverride] = useState(false);
   const [stationAuth, setStationAuth] = useState(() => {
     try {
+      // If shift has completed for today, automatically logout and clear session
+      if (isShiftCompleted()) {
+        localStorage.removeItem('motodc_hub_auth');
+        return false;
+      }
       return localStorage.getItem('motodc_hub_auth') === 'granted';
     } catch {
       return false;
@@ -38,6 +57,26 @@ export default function HubStation() {
   });
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
+
+  // Auto-logout when shift completes at 8:30 PM
+  useEffect(() => {
+    const checkShiftTimer = () => {
+      if (isShiftCompleted() && stationAuth && !afterHoursOverride) {
+        setStationAuth(false);
+        try {
+          localStorage.removeItem('motodc_hub_auth');
+        } catch (_) {}
+        toast('Operational shift completed (8:30 PM). Station terminal automatically locked.', {
+          icon: '🌙',
+          duration: 6000,
+        });
+      }
+    };
+
+    checkShiftTimer();
+    const interval = setInterval(checkShiftTimer, 5000);
+    return () => clearInterval(interval);
+  }, [stationAuth, afterHoursOverride]);
 
   // Orders State
   const [codOrders, setCodOrders] = useState([]);
@@ -81,20 +120,27 @@ export default function HubStation() {
   const handlePinSubmit = (e) => {
     e.preventDefault();
     if (pinInput.trim() === DEFAULT_STATION_PIN) {
+      const shiftEnded = isShiftCompleted();
+      if (shiftEnded) {
+        setAfterHoursOverride(true);
+        toast('Overtime / After-Hours Access Unlocked (Shift ended at 8:30 PM)', { icon: '⚠️', duration: 5000 });
+      } else {
+        toast.success('Station Unlocked • Karaikal Hub Packing Portal Active');
+      }
       setStationAuth(true);
       setPinError('');
       try {
         localStorage.setItem('motodc_hub_auth', 'granted');
       } catch (_) {}
-      toast.success('Station Unlocked • Karaikal Hub Packing Portal Active');
     } else {
-      setPinError('Incorrect Station PIN. Try 1234');
+      setPinError('Incorrect Station PIN');
       toast.error('Invalid Station PIN');
     }
   };
 
   const handleStationLock = () => {
     setStationAuth(false);
+    setAfterHoursOverride(false);
     try {
       localStorage.removeItem('motodc_hub_auth');
     } catch (_) {}
@@ -234,19 +280,46 @@ export default function HubStation() {
 
   // Station Lock Screen
   if (!stationAuth) {
+    const shiftEnded = isShiftCompleted();
     return (
       <div className="hubStationLockScreen">
         <div className="hubStationLockCard">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', gap: '12px' }}>
-            <div className="hubStationLogoRow" style={{ marginBottom: 0 }}>
-              <Package size={34} color="#ff3157" />
+          <div className="hubStationLogoRow">
+            <Package size={34} color="#ff3157" />
+            <div>
+              <h2>Moto<span>DC</span> Hub Station</h2>
+              <p>Warehouse Fulfillment & Quality Inspection Portal</p>
+            </div>
+          </div>
+
+          {shiftEnded && (
+            <div
+              className="hubShiftEndedNotice"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+                borderRadius: '10px',
+                padding: '10px 14px',
+                marginBottom: '16px',
+                color: '#fbbf24',
+                fontSize: '13px',
+                fontWeight: 600,
+              }}
+            >
+              <Clock size={18} color="#f59e0b" style={{ flexShrink: 0 }} />
               <div>
-                <h2>Moto<span>DC</span> Hub Station</h2>
-                <p>Warehouse Fulfillment & Quality Inspection Portal</p>
+                <strong style={{ display: 'block', color: '#fef08a' }}>
+                  Operational Shift Completed (8:30 PM)
+                </strong>
+                <span style={{ fontSize: '11.5px', color: '#cbd5e1', fontWeight: 500 }}>
+                  Daily warehouse packing shift has ended. Terminal automatically locked.
+                </span>
               </div>
             </div>
-            <ThemeToggle />
-          </div>
+          )}
 
           <div className="hubStationLockNotice">
             <ShieldCheck size={18} color="#22c55e" />
@@ -277,7 +350,6 @@ export default function HubStation() {
             <button type="submit" className="hubStationUnlockBtn">
               Unlock Packing Terminal <ArrowRight size={16} />
             </button>
-            <p className="hubStationDefaultHint">Default station access PIN: <b>1234</b></p>
           </form>
         </div>
       </div>
@@ -302,7 +374,21 @@ export default function HubStation() {
             <span className="liveBlinker" />
             <span>Karaikal Central Warehouse (Active)</span>
           </div>
-          <ThemeToggle />
+          {afterHoursOverride && (
+            <span
+              style={{
+                fontSize: '11px',
+                background: 'rgba(245, 158, 11, 0.18)',
+                color: '#fbbf24',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                borderRadius: '6px',
+                padding: '4px 8px',
+                fontWeight: 700,
+              }}
+            >
+              After-Hours (8:30 PM+)
+            </span>
+          )}
           <button type="button" onClick={handleStationLock} className="hubLockBtn" title="Lock Station Terminal">
             <Lock size={15} /> Lock Station
           </button>
