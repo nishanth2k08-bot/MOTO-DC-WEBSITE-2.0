@@ -140,6 +140,123 @@ export function computeOrderDeliveryPin(order) {
   return String(1000 + (hash % 9000));
 }
 
+/**
+ * Dispatches instant notification (Email, SMS, and Firestore record) to assigned rider.
+ * Guarantees rider is alerted immediately even when their app is closed/swiped away.
+ */
+async function notifyRiderOfAssignment({ db, riderId, riderName, riderPhone, orders, corridorName }) {
+  try {
+    const cleanId = String(riderId || '').trim().toUpperCase();
+    if (!cleanId) return;
+
+    let phone = riderPhone;
+    let email = '';
+    let name = riderName || 'MotoDC Partner';
+
+    try {
+      const partnerDoc = await db.collection('deliveryPartners').doc(cleanId).get();
+      if (partnerDoc.exists) {
+        const pData = partnerDoc.data();
+        if (!phone) phone = pData.phone;
+        if (!email) email = pData.email;
+        if (!name || name === 'MotoDC Partner') name = pData.name || name;
+      }
+    } catch (_) {}
+
+    const orderCount = orders.length;
+    const orderIds = orders.map((o) => o.orderId || o.id).filter(Boolean);
+    const orderListStr = orderIds.join(', ');
+
+    // 1. Write instant notification document into Firestore
+    try {
+      await db.collection('deliveryPartners').doc(cleanId).collection('notifications').add({
+        type: 'ORDER_ASSIGNMENT',
+        title: 'New Delivery Assigned!',
+        message: `${orderCount} order(s) assigned to your route in ${corridorName} (${orderListStr})`,
+        orderIds,
+        corridorName,
+        createdAt: new Date().toISOString(),
+        read: false,
+      });
+    } catch (_) {}
+
+    const authKey = process.env.MSG91_AUTHKEY;
+    const domain = process.env.MSG91_EMAIL_DOMAIN;
+    const fromEmail = String(process.env.MSG91_FROM_EMAIL || `dispatch@${domain || 'motodc.in'}`).trim();
+
+    // 2. High-Priority Dispatch Email via MSG91
+    if (authKey && domain && email) {
+      try {
+        const templateId = process.env.MSG91_TEMPLATE_ORDER_STATUS || process.env.MSG91_TEMPLATE_DISPATCH || 'motodc_dispatch_alert';
+        await fetch('https://control.msg91.com/api/v5/email/send', {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            authkey: authKey,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            recipients: [
+              {
+                to: [{ name, email }],
+                variables: {
+                  customer_name: name,
+                  rider_name: name,
+                  order_id: orderIds[0] || 'DISPATCH',
+                  order_status: 'dispatched',
+                  status: 'out for delivery',
+                  corridor_name: corridorName,
+                  order_count: String(orderCount),
+                  orders_list: orderListStr,
+                  amount: String(orderCount * 45),
+                },
+              },
+            ],
+            from: { name: process.env.MSG91_FROM_NAME || 'MOTO DC FLEET', email: fromEmail },
+            domain,
+            template_id: templateId,
+            validate_before_send: true,
+          }),
+        }).catch((e) => console.warn('Dispatch email warning:', e.message));
+      } catch (err) {
+        console.warn('Dispatch email error:', err.message);
+      }
+    }
+
+    // 3. Instant SMS via MSG91 Flow
+    if (authKey && phone) {
+      try {
+        const cleanPhone = String(phone).replace(/\D/g, '');
+        const mobiles = cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone;
+        await fetch('https://control.msg91.com/api/v5/flow/', {
+          method: 'POST',
+          headers: {
+            authkey: authKey,
+            'content-type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify({
+            template_id: process.env.MSG91_TEMPLATE_SMS_DISPATCH || 'motodc_dispatch_sms',
+            short_url: 0,
+            recipients: [
+              {
+                mobiles,
+                rider_name: name,
+                orders: orderListStr,
+                corridor: corridorName,
+              },
+            ],
+          }),
+        }).catch(() => {});
+      } catch (smsErr) {
+        console.warn('Dispatch SMS error:', smsErr.message);
+      }
+    }
+  } catch (globalErr) {
+    console.warn('notifyRiderOfAssignment failure:', globalErr.message);
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -315,13 +432,37 @@ export default async function handler(req, res) {
           return !['delivered', 'cancelled', 'returned'].includes(st);
         });
 
-        // If riderId is supplied (e.g. MDC-9377 logged into Partner App)
+        // If riderId is supplied (e.g. MDC-8586 or username "NISHAN" logged into Partner App)
         if (riderId) {
           const cleanRiderId = riderId.trim().toUpperCase();
 
+          // Collect all alias identifiers for this rider (username, riderId, document ID, name)
+          const riderAliases = new Set([cleanRiderId]);
+          try {
+            const partnersSnap = await partnersCol.get();
+            partnersSnap.docs.forEach((doc) => {
+              const pData = doc.data();
+              const docId = doc.id.toUpperCase();
+              const uName = String(pData.username || '').toUpperCase();
+              const rId = String(pData.riderId || '').toUpperCase();
+              const name = String(pData.name || '').toUpperCase();
+
+              if (docId === cleanRiderId || uName === cleanRiderId || rId === cleanRiderId || name === cleanRiderId) {
+                if (docId) riderAliases.add(docId);
+                if (uName) riderAliases.add(uName);
+                if (rId) riderAliases.add(rId);
+                if (name) riderAliases.add(name);
+              }
+            });
+          } catch (_) {}
+
           // Check which corridor(s) are assigned to this rider in deliveryCorridors
           const assignedCorridorEntry = Object.entries(corridorAssignments).find(
-            ([, data]) => String(data.assignedRiderId || '').toUpperCase() === cleanRiderId
+            ([, data]) => {
+              const assignedId = String(data.assignedRiderId || '').toUpperCase();
+              const assignedName = String(data.assignedRiderName || '').toUpperCase();
+              return riderAliases.has(assignedId) || riderAliases.has(assignedName);
+            }
           );
 
           const assignedCorridorId = assignedCorridorEntry ? assignedCorridorEntry[0] : null;
@@ -330,7 +471,9 @@ export default async function handler(req, res) {
           // Either order.assignedRiderId matches rider OR order falls in rider's assigned corridor
           const riderStops = activePool
             .filter((o) => {
-              if (String(o.assignedRiderId || '').toUpperCase() === cleanRiderId) return true;
+              const orderRiderId = String(o.assignedRiderId || '').toUpperCase();
+              const orderRiderName = String(o.assignedRiderName || '').toUpperCase();
+              if (riderAliases.has(orderRiderId) || riderAliases.has(orderRiderName)) return true;
               if (assignedCorridorId) {
                 const zone = o.assignedCorridor || detectDeliveryZone(o.shipping);
                 return zone === assignedCorridorId;
@@ -420,6 +563,81 @@ export default async function handler(req, res) {
         });
 
         return send(res, 200, { ok: true, stops: allStops });
+      }
+
+      // -----------------------------------------------------------------------
+      // 1B-2. HUB FULFILLMENT STATION ORDERS (Warehouse Handheld & Web Terminal)
+      // Provides authenticated/bypassed access to all active orders for packing & label printing
+      // -----------------------------------------------------------------------
+      if (action === 'hub-orders') {
+        const [recentCod, recentOnline, corridorDocsSnap] = await Promise.all([
+          codCol.limit(100).get(),
+          onlineCol.limit(100).get(),
+          corridorsCol.get(),
+        ]);
+
+        const corridorAssignments = {};
+        corridorDocsSnap.docs.forEach((d) => {
+          corridorAssignments[d.id] = d.data();
+        });
+
+        const pool = [
+          ...recentCod.docs.map((d) => ({ ...d.data(), id: d.id, collectionType: 'cod orders', paymentMethod: 'cod' })),
+          ...recentOnline.docs.map((d) => ({ ...d.data(), id: d.id, collectionType: 'online orders', paymentMethod: 'online' })),
+        ];
+
+        // Active orders: exclude delivered, cancelled, returned
+        const orders = pool
+          .filter((o) => {
+            const st = String(o.orderStatus || 'placed').toLowerCase();
+            return !['delivered', 'cancelled', 'returned'].includes(st);
+          })
+          .map((o) => {
+            const corridorId = o.assignedCorridor || detectDeliveryZone(o.shipping);
+            const assignment = corridorAssignments[corridorId] || {};
+            const assignedRiderId = o.assignedRiderId || assignment.assignedRiderId || null;
+            const assignedRiderName = o.assignedRiderName || assignment.assignedRiderName || null;
+
+            return {
+              id: o.id,
+              orderId: o.orderId || o.id,
+              collectionType: o.collectionType,
+              paymentMethod: o.paymentMethod || 'cod',
+              orderStatus: o.orderStatus || 'placed',
+              packedAt: o.packedAt || null,
+              shippedAt: o.shippedAt || null,
+              total: Number(o.total || 0),
+              customer: {
+                name: o.customer?.name || 'Customer',
+                phone: o.customer?.phone || '',
+                email: o.customer?.email || '',
+              },
+              shipping: {
+                address: o.shipping?.address || 'Doorstep Address',
+                city: o.shipping?.city || 'Karaikal',
+                state: o.shipping?.state || '',
+                pincode: o.shipping?.pincode || '',
+              },
+              items: (o.items || []).map((it) => ({
+                name: it.name || 'Automotive Part',
+                qty: Number(it.qty || 1),
+                price: Number(it.price || 0),
+                sku: it.sku || it.id || '',
+              })),
+              deliveryPin: computeOrderDeliveryPin(o),
+              assignedCorridor: corridorId,
+              assignedRiderId,
+              assignedRiderName,
+              createdAt: o.createdAt || null,
+              history: o.history || [],
+            };
+          });
+
+        return send(res, 200, {
+          ok: true,
+          count: orders.length,
+          orders,
+        });
       }
 
       // -----------------------------------------------------------------------
@@ -572,6 +790,39 @@ export default async function handler(req, res) {
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
 
       // -----------------------------------------------------------------------
+      // 2-HUB. HUB APP: MARK ORDER PACKED & QUALITY VERIFIED
+      // Bypasses unauthenticated client Firestore write limitations safely
+      // -----------------------------------------------------------------------
+      if (action === 'hub-mark-packed') {
+        const { orderId, collectionType, note } = body;
+        if (!orderId) {
+          return send(res, 400, { error: 'orderId is required' });
+        }
+        const coll = collectionType === 'online orders' ? onlineCol : codCol;
+        let targetDoc = await coll.doc(orderId).get();
+        if (!targetDoc.exists) {
+          const altColl = collectionType === 'online orders' ? codCol : onlineCol;
+          targetDoc = await altColl.doc(orderId).get();
+        }
+
+        if (!targetDoc.exists) {
+          return send(res, 404, { error: `Order ${orderId} not found in records` });
+        }
+
+        await targetDoc.ref.update({
+          orderStatus: 'packed',
+          packedAt: new Date().toISOString(),
+          history: FieldValue.arrayUnion({
+            status: 'packed',
+            timestamp: new Date().toISOString(),
+            note: note || 'Packed & Quality Verified at Karaikal Central Hub Fulfillment Station',
+          }),
+        });
+
+        return send(res, 200, { ok: true, orderId });
+      }
+
+      // -----------------------------------------------------------------------
       // 2A. ASSIGN CORRIDOR ROUTE TO RIDER (Solution A)
       // Dispatches an entire geographic corridor manifest to a specific driver
       // -----------------------------------------------------------------------
@@ -615,6 +866,7 @@ export default async function handler(req, res) {
         ];
 
         let assignedCount = 0;
+        const matchedOrders = [];
         const updates = allDocs
           .filter((item) => {
             const st = String(item.data.orderStatus || 'placed').toLowerCase();
@@ -624,6 +876,7 @@ export default async function handler(req, res) {
           })
           .map((item) => {
             assignedCount++;
+            matchedOrders.push({ id: item.ref.id, ...item.data });
             return item.ref.update({
               assignedCorridor: corridorId,
               assignedRiderId: cleanRiderId,
@@ -639,6 +892,17 @@ export default async function handler(req, res) {
           });
 
         await Promise.all(updates);
+
+        if (matchedOrders.length > 0) {
+          notifyRiderOfAssignment({
+            db,
+            riderId: cleanRiderId,
+            riderName: cleanRiderName,
+            riderPhone: cleanRiderPhone,
+            orders: matchedOrders,
+            corridorName: CORRIDOR_METADATA[corridorId].name,
+          }).catch((err) => console.warn('notifyRiderOfAssignment warning:', err.message));
+        }
 
         return send(res, 200, {
           ok: true,
@@ -847,6 +1111,21 @@ export default async function handler(req, res) {
             })
           );
           await Promise.all(orderUpdates);
+
+          const corrOrders = (corridorOrdersMap[corr.id] || []).map((it) => ({
+            id: it.ref.id,
+            ...it.data,
+          }));
+          if (corrOrders.length > 0) {
+            notifyRiderOfAssignment({
+              db,
+              riderId: rId,
+              riderName: rName,
+              riderPhone: rPhone,
+              orders: corrOrders,
+              corridorName: corr.name,
+            }).catch((err) => console.warn('auto-dispatch notify warning:', err.message));
+          }
 
           assignments.push({
             corridorId: corr.id,

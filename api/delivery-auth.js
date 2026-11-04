@@ -522,8 +522,10 @@ export default async function handler(req, res) {
         ok: true,
         rider: {
           username: pData.username || cleanUser,
+          riderId: pData.riderId || pData.username || cleanUser,
           name: pData.name || 'Delivery Partner',
           phone: pData.phone || '',
+          email: pData.email || '',
           serviceMode: pData.serviceMode || 'Standard',
           lateStrikes: pData.lateStrikes || 0,
           bonusCutoff: Boolean(pData.bonusCutoff),
