@@ -52,7 +52,7 @@ export default function HubStation() {
   }, []);
 
   // Hub App Release & Direct APK Download URLs
-  const LATEST_APP_VERSION = '1.0.21';
+  const LATEST_APP_VERSION = '1.0.22';
   const GITHUB_RELEASE_APK_URL = `https://github.com/nishanth2k08-bot/MOTODC-APP/releases/download/v${LATEST_APP_VERSION}/MotoDC-Hub.apk`;
   const LOCAL_MIRROR_APK_URL = `/MotoDC-Hub.apk?v=${LATEST_APP_VERSION}`;
   const APK_DOWNLOAD_URL = GITHUB_RELEASE_APK_URL;
