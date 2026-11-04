@@ -442,7 +442,7 @@ export default function App() {
                   pattern="[0-9]*"
                   maxLength={4}
                   autoComplete="one-time-code"
-                  placeholder="••••"
+                  placeholder=""
                   value={pinInput}
                   onChange={(e) => {
                     const clean = e.target.value.replace(/\D/g, '').slice(0, 4);
@@ -557,7 +557,8 @@ export default function App() {
             onClick={() => setActiveTab('pending')}
           >
             <Clock size={15} />
-            <span>Awaiting Packing</span>
+            <span className="hubTabTitleFull">Awaiting Packing</span>
+            <span className="hubTabTitleShort">Awaiting</span>
             <span className="hubTabCount">{pendingCount}</span>
           </button>
           <button
@@ -568,7 +569,8 @@ export default function App() {
             onClick={() => setActiveTab('packed')}
           >
             <CheckCircle2 size={15} />
-            <span>Packed & Staged</span>
+            <span className="hubTabTitleFull">Packed & Staged</span>
+            <span className="hubTabTitleShort">Packed</span>
             <span className="hubTabCount">{packedCount}</span>
           </button>
           <button
@@ -579,7 +581,8 @@ export default function App() {
             onClick={() => setActiveTab('in_transit')}
           >
             <Truck size={15} />
-            <span>In Transit</span>
+            <span className="hubTabTitleFull">In Transit</span>
+            <span className="hubTabTitleShort">Transit</span>
             <span className="hubTabCount">{inTransitCount}</span>
           </button>
         </div>
@@ -693,7 +696,7 @@ export default function App() {
                       }}
                     >
                       <MapPin size={12} />
-                      <span>{order.corridorMeta.code} · {order.corridorMeta.name}</span>
+                      <span>{order.corridorMeta.code} • {order.corridorMeta.name}</span>
                     </div>
                   </div>
 
