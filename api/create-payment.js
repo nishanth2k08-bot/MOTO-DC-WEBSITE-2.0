@@ -64,9 +64,6 @@ export default async function handler(req,res){
 
       return send(res,200,{keyId,orderId:data.id,amount:data.amount,currency:data.currency,plan:chosenPlan,planAmount});
     }
-    const auth=req.headers.authorization||'';
-    const idToken=auth.startsWith('Bearer ')?auth.slice(7):'';
-    if(!idToken)return send(res,401,{error:'Authentication required'});
     if(!Array.isArray(items)||!items.length)return send(res,400,{error:'Cart is empty'});
     if(!Number.isFinite(Number(amount))||Number(amount)<=0)return send(res,400,{error:'Invalid amount'});
     const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken),db=getFirestore(a.app(),'asia-south1');
