@@ -357,8 +357,8 @@ export default async function handler(req, res) {
             })),
             deliveryPin: computeOrderDeliveryPin(o),
             assignedCorridor: zone,
-            assignedRiderId: o.assignedRiderId || assignedData.assignedRiderId || null,
-            assignedRiderName: o.assignedRiderName || assignedData.assignedRiderName || null,
+            assignedRiderId: o.assignedRiderId || null,
+            assignedRiderName: o.assignedRiderName || null,
             createdAt: o.createdAt || null,
           });
         });
@@ -367,11 +367,13 @@ export default async function handler(req, res) {
         const corridors = Object.keys(CORRIDOR_METADATA).map((cid) => {
           const meta = CORRIDOR_METADATA[cid];
           const stops = corridorBuckets[cid] || [];
-          const assignment = stops.length > 0 ? (corridorAssignments[cid] || {}) : {};
-          const isAssigned = Boolean(assignment.assignedRiderId);
+          const assignedStops = stops.filter((s) => Boolean(s.assignedRiderId));
+          const hasAssignedOrders = assignedStops.length > 0;
+          const assignment = hasAssignedOrders ? (corridorAssignments[cid] || {}) : {};
+          const isAssigned = hasAssignedOrders && Boolean(assignment.assignedRiderId || assignedStops[0]?.assignedRiderId);
 
-          // If corridor has 0 stops left, automatically clean up any stale assignment in Firestore
-          if (stops.length === 0 && corridorAssignments[cid]?.assignedRiderId) {
+          // If corridor has 0 stops left OR active orders are not yet assigned, clear stale Firestore corridor doc
+          if ((stops.length === 0 || !hasAssignedOrders) && corridorAssignments[cid]?.assignedRiderId) {
             corridorsCol.doc(cid).delete().catch(() => {});
           }
 
@@ -380,10 +382,10 @@ export default async function handler(req, res) {
             stops,
             totalStops: stops.length,
             estimatedPayout: stops.length * 45, // Flat ₹45 base pay per drop
-            assignedRiderId: stops.length > 0 ? (assignment.assignedRiderId || null) : null,
-            assignedRiderName: stops.length > 0 ? (assignment.assignedRiderName || null) : null,
-            assignedRiderPhone: stops.length > 0 ? (assignment.assignedRiderPhone || null) : null,
-            assignedAt: stops.length > 0 ? (assignment.assignedAt || null) : null,
+            assignedRiderId: hasAssignedOrders ? (assignment.assignedRiderId || assignedStops[0]?.assignedRiderId || null) : null,
+            assignedRiderName: hasAssignedOrders ? (assignment.assignedRiderName || assignedStops[0]?.assignedRiderName || null) : null,
+            assignedRiderPhone: hasAssignedOrders ? (assignment.assignedRiderPhone || assignedStops[0]?.assignedRiderPhone || null) : null,
+            assignedAt: hasAssignedOrders ? (assignment.assignedAt || null) : null,
             status: stops.length === 0 ? 'empty' : isAssigned ? 'dispatched' : 'staged',
           };
         });
@@ -468,17 +470,12 @@ export default async function handler(req, res) {
           const assignedCorridorId = assignedCorridorEntry ? assignedCorridorEntry[0] : null;
 
           // Filter stops that belong to this rider:
-          // Either order.assignedRiderId matches rider OR order falls in rider's assigned corridor
+          // An order belongs to this rider ONLY if it has been assigned by Admin dispatch or Auto-Dispatch
           const riderStops = activePool
             .filter((o) => {
               const orderRiderId = String(o.assignedRiderId || '').toUpperCase();
               const orderRiderName = String(o.assignedRiderName || '').toUpperCase();
-              if (riderAliases.has(orderRiderId) || riderAliases.has(orderRiderName)) return true;
-              if (assignedCorridorId) {
-                const zone = o.assignedCorridor || detectDeliveryZone(o.shipping);
-                return zone === assignedCorridorId;
-              }
-              return false;
+              return riderAliases.has(orderRiderId) || riderAliases.has(orderRiderName);
             })
             .map((o) => {
               const zone = o.assignedCorridor || detectDeliveryZone(o.shipping);
@@ -595,8 +592,8 @@ export default async function handler(req, res) {
           .map((o) => {
             const corridorId = o.assignedCorridor || detectDeliveryZone(o.shipping);
             const assignment = corridorAssignments[corridorId] || {};
-            const assignedRiderId = o.assignedRiderId || assignment.assignedRiderId || null;
-            const assignedRiderName = o.assignedRiderName || assignment.assignedRiderName || null;
+            const assignedRiderId = o.assignedRiderId || null;
+            const assignedRiderName = o.assignedRiderName || null;
 
             return {
               id: o.id,
@@ -818,22 +815,14 @@ export default async function handler(req, res) {
         let assignedRiderName = oData.assignedRiderName;
         let assignedRiderPhone = oData.assignedRiderPhone || '';
 
-        if (!assignedRiderId) {
-          const corrDoc = await corridorsCol.doc(corrId).get();
-          if (corrDoc.exists && corrDoc.data()?.assignedRiderId) {
-            const cData = corrDoc.data();
-            assignedRiderId = cData.assignedRiderId;
-            assignedRiderName = cData.assignedRiderName || 'MotoDC Partner';
-            assignedRiderPhone = cData.assignedRiderPhone || '';
-            riderFields = {
-              assignedCorridor: corrId,
-              assignedRiderId,
-              assignedRiderName,
-              assignedRiderPhone,
-              assignedAt: new Date().toISOString(),
-            };
-            justAssignedRider = true;
-          }
+        // Keep existing assignment if already dispatched by admin, otherwise leave unassigned for Auto-Dispatch
+        if (assignedRiderId) {
+          riderFields = {
+            assignedCorridor: corrId,
+            assignedRiderId,
+            assignedRiderName,
+            assignedRiderPhone,
+          };
         }
 
         await targetDoc.ref.update({
