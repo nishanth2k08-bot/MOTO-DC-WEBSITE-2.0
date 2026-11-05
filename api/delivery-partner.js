@@ -368,6 +368,10 @@ export default async function handler(req, res) {
           const meta = CORRIDOR_METADATA[cid];
           const stops = corridorBuckets[cid] || [];
           const assignedStops = stops.filter((s) => Boolean(s.assignedRiderId));
+          const packedStops = stops.filter((s) => String(s.orderStatus || '').toLowerCase() === 'packed');
+          const awaitingStops = stops.filter(
+            (s) => String(s.orderStatus || '').toLowerCase() !== 'packed' && !s.assignedRiderId
+          );
           const hasAssignedOrders = assignedStops.length > 0;
           const assignment = hasAssignedOrders ? (corridorAssignments[cid] || {}) : {};
           const isAssigned = hasAssignedOrders && Boolean(assignment.assignedRiderId || assignedStops[0]?.assignedRiderId);
@@ -381,6 +385,10 @@ export default async function handler(req, res) {
             ...meta,
             stops,
             totalStops: stops.length,
+            packedCount: packedStops.length,
+            awaitingPackingCount: awaitingStops.length,
+            assignedCount: assignedStops.length,
+            canDispatch: packedStops.length > 0,
             estimatedPayout: stops.length * 45, // Flat ₹45 base pay per drop
             assignedRiderId: hasAssignedOrders ? (assignment.assignedRiderId || assignedStops[0]?.assignedRiderId || null) : null,
             assignedRiderName: hasAssignedOrders ? (assignment.assignedRiderName || assignedStops[0]?.assignedRiderName || null) : null,
@@ -391,6 +399,8 @@ export default async function handler(req, res) {
         });
 
         const totalActiveOrders = activeOrders.length;
+        const totalPackedOrders = activeOrders.filter((o) => String(o.orderStatus || '').toLowerCase() === 'packed').length;
+        const totalAwaitingOrders = totalActiveOrders - totalPackedOrders;
         const totalDispatchedOrders = corridors.reduce((sum, c) => (c.assignedRiderId ? sum + c.totalStops : sum), 0);
         const totalPayout = totalActiveOrders * 45;
 
@@ -399,6 +409,8 @@ export default async function handler(req, res) {
           corridors,
           summary: {
             totalActiveOrders,
+            totalPackedOrders,
+            totalAwaitingOrders,
             totalDispatchedOrders,
             totalPayout,
             stagedCorridorsCount: corridors.filter((c) => c.status === 'staged').length,
@@ -869,7 +881,32 @@ export default async function handler(req, res) {
         const cleanRiderName = String(riderName || 'MotoDC Partner').trim();
         const cleanRiderPhone = String(riderPhone || '').trim();
 
-        // 1. Update Corridor Record
+        // 1. Find all active orders belonging to this corridor that are PACKED & VERIFIED
+        const [recentCod, recentOnline] = await Promise.all([
+          codCol.limit(50).get(),
+          onlineCol.limit(50).get(),
+        ]);
+
+        const allDocs = [
+          ...recentCod.docs.map((d) => ({ ref: d.ref, data: d.data(), coll: 'cod orders' })),
+          ...recentOnline.docs.map((d) => ({ ref: d.ref, data: d.data(), coll: 'online orders' })),
+        ];
+
+        // STRICT RULE: Only PACKED orders are ready for courier dispatch
+        const packedDocs = allDocs.filter((item) => {
+          const st = String(item.data.orderStatus || 'placed').toLowerCase();
+          if (st !== 'packed') return false;
+          const zone = item.data.assignedCorridor || detectDeliveryZone(item.data.shipping);
+          return zone === corridorId;
+        });
+
+        if (packedDocs.length === 0) {
+          return send(res, 400, {
+            error: `Cannot dispatch ${CORRIDOR_METADATA[corridorId].name}: 0 packed & verified parcels ready. Please scan and pack parcels at Karaikal Hub before dispatching.`,
+          });
+        }
+
+        // 2. Update Corridor Record
         await corridorsCol.doc(corridorId).set(
           {
             corridorId,
@@ -884,42 +921,24 @@ export default async function handler(req, res) {
           { merge: true }
         );
 
-        // 2. Find all active orders belonging to this corridor and mark out_for_delivery
-        const [recentCod, recentOnline] = await Promise.all([
-          codCol.limit(50).get(),
-          onlineCol.limit(50).get(),
-        ]);
-
-        const allDocs = [
-          ...recentCod.docs.map((d) => ({ ref: d.ref, data: d.data(), coll: 'cod orders' })),
-          ...recentOnline.docs.map((d) => ({ ref: d.ref, data: d.data(), coll: 'online orders' })),
-        ];
-
         let assignedCount = 0;
         const matchedOrders = [];
-        const updates = allDocs
-          .filter((item) => {
-            const st = String(item.data.orderStatus || 'placed').toLowerCase();
-            if (['delivered', 'cancelled', 'returned'].includes(st)) return false;
-            const zone = item.data.assignedCorridor || detectDeliveryZone(item.data.shipping);
-            return zone === corridorId;
-          })
-          .map((item) => {
-            assignedCount++;
-            matchedOrders.push({ id: item.ref.id, ...item.data });
-            return item.ref.update({
-              assignedCorridor: corridorId,
-              assignedRiderId: cleanRiderId,
-              assignedRiderName: cleanRiderName,
-              assignedAt: new Date().toISOString(),
-              orderStatus: 'out_for_delivery',
-              history: FieldValue.arrayUnion({
-                status: 'out_for_delivery',
-                timestamp: new Date().toISOString(),
-                note: `Dispatched in ${CORRIDOR_METADATA[corridorId].name} manifest to ${cleanRiderName} (${cleanRiderId})`,
-              }),
-            });
+        const updates = packedDocs.map((item) => {
+          assignedCount++;
+          matchedOrders.push({ id: item.ref.id, ...item.data });
+          return item.ref.update({
+            assignedCorridor: corridorId,
+            assignedRiderId: cleanRiderId,
+            assignedRiderName: cleanRiderName,
+            assignedAt: new Date().toISOString(),
+            orderStatus: 'out_for_delivery',
+            history: FieldValue.arrayUnion({
+              status: 'out_for_delivery',
+              timestamp: new Date().toISOString(),
+              note: `Dispatched in ${CORRIDOR_METADATA[corridorId].name} manifest to ${cleanRiderName} (${cleanRiderId})`,
+            }),
           });
+        });
 
         await Promise.all(updates);
 
@@ -1063,41 +1082,53 @@ export default async function handler(req, res) {
         });
 
         const assignments = [];
+        const heldBatches = [];
         let totalOrdersDispatched = 0;
+        const customMinBatch = Number(body?.minBatch) || 0;
+
+        // Rider Trip Batch Quota based on Service Mode (prevents riders having to make repeated solo trips)
+        const getRequiredQuota = (serviceMode) => {
+          if (customMinBatch > 0) return customMinBatch; // Admin manual override
+          const mode = String(serviceMode || 'Standard').toLowerCase();
+          if (mode.includes('part')) return 2;   // Part-Time: min 2 packed parcels per run
+          if (mode.includes('power')) return 4;  // Power Rider: min 4 packed parcels per run
+          return 3;                             // Standard: min 3 packed parcels per run
+        };
 
         // 1. Sync unassigned active orders in corridors that are ALREADY assigned to a driver
+        // STRICT RULE: Only PACKED orders can be assigned and dispatched!
         for (const [cid, cData] of Object.entries(corridorAssignments)) {
           const assignedRiderId = String(cData?.assignedRiderId || '').toUpperCase();
           if (!assignedRiderId) continue;
 
           const ordersInCorridor = corridorOrdersMap[cid] || [];
-          const unassignedOrders = ordersInCorridor.filter(
-            (o) => !o.data.assignedRiderId || String(o.data.assignedRiderId).toUpperCase() !== assignedRiderId
+          const packedUnassignedOrders = ordersInCorridor.filter(
+            (o) =>
+              String(o.data.orderStatus || '').toLowerCase() === 'packed' &&
+              (!o.data.assignedRiderId || String(o.data.assignedRiderId).toUpperCase() !== assignedRiderId)
           );
 
-          if (unassignedOrders.length > 0) {
+          if (packedUnassignedOrders.length > 0) {
             const rName = cData.assignedRiderName || 'MotoDC Partner';
             const rPhone = cData.assignedRiderPhone || '';
-            const orderUpdates = unassignedOrders.map((item) => {
-              const currentSt = String(item.data.orderStatus || 'placed').toLowerCase();
-              const newSt = currentSt === 'packed' ? 'out_for_delivery' : (currentSt === 'placed' ? 'confirmed' : currentSt);
-              return item.ref.update({
+            const orderUpdates = packedUnassignedOrders.map((item) =>
+              item.ref.update({
                 assignedCorridor: cid,
                 assignedRiderId: assignedRiderId,
                 assignedRiderName: rName,
                 assignedAt: new Date().toISOString(),
-                orderStatus: newSt,
+                orderStatus: 'out_for_delivery',
                 history: FieldValue.arrayUnion({
-                  status: 'assigned',
+                  status: 'out_for_delivery',
                   timestamp: new Date().toISOString(),
-                  note: `Assigned in ${CORRIDOR_METADATA[cid]?.name || cid} manifest to ${rName} (${assignedRiderId}) via Smart Dispatcher`,
+                  note: `Dispatched in ${CORRIDOR_METADATA[cid]?.name || cid} manifest to ${rName} (${assignedRiderId}) via Smart Dispatcher`,
                 }),
-              });
-            });
+              })
+            );
             await Promise.all(orderUpdates);
-            totalOrdersDispatched += unassignedOrders.length;
+            totalOrdersDispatched += packedUnassignedOrders.length;
 
-            const newStops = unassignedOrders.map((it) => ({
+            const newStops = packedUnassignedOrders.map((it) => ({
               id: it.ref.id,
               ...it.data,
               assignedRiderId,
@@ -1119,22 +1150,30 @@ export default async function handler(req, res) {
               riderId: assignedRiderId,
               riderName: rName,
               serviceMode: 'Assigned Corridor Sync',
-              stopsAssigned: unassignedOrders.length,
-              estimatedPayout: unassignedOrders.length * 45,
+              stopsAssigned: packedUnassignedOrders.length,
+              estimatedPayout: packedUnassignedOrders.length * 45,
             });
           }
         }
 
-        // 2. Find corridors that do NOT yet have an assigned rider and have active orders
+        // 2. Find corridors that do NOT yet have an assigned rider and have active PACKED orders
         const unassignedCorridors = Object.keys(CORRIDOR_METADATA)
-          .map((cid) => ({
-            id: cid,
-            name: CORRIDOR_METADATA[cid].name,
-            stopCount: corridorOrdersMap[cid]?.length || 0,
-            currentlyAssigned: corridorAssignments[cid]?.assignedRiderId || null,
-          }))
-          .filter((c) => !c.currentlyAssigned && c.stopCount > 0)
-          .sort((a, b) => b.stopCount - a.stopCount); // Largest volume corridors first
+          .map((cid) => {
+            const packedOrders = (corridorOrdersMap[cid] || []).filter(
+              (o) => String(o.data.orderStatus || '').toLowerCase() === 'packed' && !o.data.assignedRiderId
+            );
+            const totalOrders = (corridorOrdersMap[cid] || []).filter((o) => !o.data.assignedRiderId);
+            return {
+              id: cid,
+              name: CORRIDOR_METADATA[cid].name,
+              packedOrders,
+              packedCount: packedOrders.length,
+              totalOrdersCount: totalOrders.length,
+              currentlyAssigned: corridorAssignments[cid]?.assignedRiderId || null,
+            };
+          })
+          .filter((c) => !c.currentlyAssigned && c.totalOrdersCount > 0)
+          .sort((a, b) => b.packedCount - a.packedCount);
 
         if (unassignedCorridors.length > 0) {
           // Find available riders not already assigned to another corridor
@@ -1158,8 +1197,40 @@ export default async function handler(req, res) {
 
           for (let i = 0; i < unassignedCorridors.length; i++) {
             const corr = unassignedCorridors[i];
-            const rider = availableRiders[i] || activePartners[i % activePartners.length]; // Fallback round-robin if fewer riders
+
+            // STRICT RULE: If corridor has 0 packed orders, it CANNOT be dispatched
+            if (corr.packedCount === 0) {
+              heldBatches.push({
+                corridorId: corr.id,
+                corridorName: corr.name,
+                packedCount: 0,
+                requiredQuota: 2,
+                reason: 'Awaiting Packing',
+                message: `${corr.name}: 0 packed parcels ready. Staff must scan and pack parcels at Karaikal Hub before dispatching.`,
+              });
+              continue;
+            }
+
+            const rider = availableRiders[i] || activePartners[i % activePartners.length];
             if (!rider) break;
+
+            const rMode = rider.serviceMode || 'Standard';
+            const quota = getRequiredQuota(rMode);
+
+            // BATCH THRESHOLD CHECK: Does this corridor have enough packed parcels for the rider's service mode?
+            if (corr.packedCount < quota && customMinBatch !== 1) {
+              heldBatches.push({
+                corridorId: corr.id,
+                corridorName: corr.name,
+                packedCount: corr.packedCount,
+                requiredQuota: quota,
+                riderName: rider.name || 'Rider',
+                riderMode: rMode,
+                reason: 'Batch Accumulating',
+                message: `${corr.name}: ${corr.packedCount}/${quota} packed parcels ready. Waiting for full batch for ${rMode} rider (${rider.name || 'Partner'}) so they don't make repeated solo trips.`,
+              });
+              continue; // Do not dispatch yet! Accumulate full batch first
+            }
 
             const rId = String(rider.username || rider.id).toUpperCase();
             const rName = rider.name || 'MotoDC Partner';
@@ -1180,8 +1251,8 @@ export default async function handler(req, res) {
               { merge: true }
             );
 
-            // Update orders in that corridor
-            const orderUpdates = (corridorOrdersMap[corr.id] || []).map((item) =>
+            // Update only PACKED orders in that corridor to out_for_delivery
+            const orderUpdates = corr.packedOrders.map((item) =>
               item.ref.update({
                 assignedCorridor: corr.id,
                 assignedRiderId: rId,
@@ -1191,14 +1262,14 @@ export default async function handler(req, res) {
                 history: FieldValue.arrayUnion({
                   status: 'out_for_delivery',
                   timestamp: new Date().toISOString(),
-                  note: `Auto-dispatched in ${CORRIDOR_METADATA[corr.id].name} manifest to ${rName} (${rId}) via Smart Dispatcher`,
+                  note: `Auto-dispatched batch in ${CORRIDOR_METADATA[corr.id].name} manifest to ${rName} (${rId}) via Smart Dispatcher`,
                 }),
               })
             );
             await Promise.all(orderUpdates);
-            totalOrdersDispatched += (corridorOrdersMap[corr.id] || []).length;
+            totalOrdersDispatched += corr.packedOrders.length;
 
-            const corrOrders = (corridorOrdersMap[corr.id] || []).map((it) => ({
+            const corrOrders = corr.packedOrders.map((it) => ({
               id: it.ref.id,
               ...it.data,
             }));
@@ -1218,18 +1289,35 @@ export default async function handler(req, res) {
               corridorName: corr.name,
               riderId: rId,
               riderName: rName,
-              serviceMode: rider.serviceMode || 'Standard',
-              stopsAssigned: corr.stopCount,
-              estimatedPayout: corr.stopCount * 45,
+              serviceMode: rMode,
+              stopsAssigned: corr.packedOrders.length,
+              estimatedPayout: corr.packedOrders.length * 45,
             });
           }
         }
 
         if (totalOrdersDispatched === 0 && assignments.length === 0) {
+          if (heldBatches.length > 0) {
+            const hasAwaitingOnly = heldBatches.every((h) => h.packedCount === 0);
+            if (hasAwaitingOnly) {
+              return send(res, 400, {
+                error: 'Cannot auto-dispatch: All incoming orders are still awaiting packing at Karaikal Hub. Please scan and pack parcels before dispatching.',
+                heldBatches,
+              });
+            }
+            return send(res, 200, {
+              ok: true,
+              dispatchedCount: 0,
+              heldCount: heldBatches.length,
+              heldBatches,
+              message: heldBatches.map((h) => h.message).join(' • '),
+            });
+          }
+
           return send(res, 200, {
             ok: true,
             dispatchedCount: 0,
-            message: 'All corridors with active orders are already dispatched and up to date.',
+            message: 'All corridors with packed orders are already dispatched and up to date.',
           });
         }
 

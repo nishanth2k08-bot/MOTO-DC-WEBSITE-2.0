@@ -77,6 +77,7 @@ export default function AdminDeliveryPartners() {
   const [expandedCorridors, setExpandedCorridors] = useState({});
   const [dispatchingCorridorId, setDispatchingCorridorId] = useState(null);
   const [autoDispatching, setAutoDispatching] = useState(false);
+  const [minBatchThreshold, setMinBatchThreshold] = useState('auto');
 
   const fetchCorridors = async () => {
     setCorridorsLoading(true);
@@ -159,21 +160,28 @@ export default function AdminDeliveryPartners() {
     }
   };
 
-  const handleAutoDispatchAll = async () => {
+  const handleAutoDispatchAll = async (forceMinBatch = null) => {
     setAutoDispatching(true);
     try {
+      const batchParam = forceMinBatch !== null ? forceMinBatch : (minBatchThreshold === 'auto' ? 0 : Number(minBatchThreshold));
       const res = await fetch('/api/delivery-partner?action=auto-dispatch-all', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ minBatch: batchParam }),
       });
       const data = await res.json();
       if (res.ok && data.ok) {
         if (data.dispatchedCount > 0) {
           toast.success(
-            `⚡ Smart Auto-Dispatch Complete! Assigned ${data.dispatchedCount} corridor(s) to active riders.`
+            `⚡ Smart Auto-Dispatch Complete! Assigned ${data.dispatchedCount} packed parcel(s) to active riders.`
+          );
+        } else if (data.heldCount > 0) {
+          toast(
+            `⏳ Batch Accumulating: ${data.message}`,
+            { icon: '📦', duration: 7000 }
           );
         } else {
-          toast(data.message || 'All corridors are already dispatched.');
+          toast(data.message || 'All corridors with packed parcels are dispatched.');
         }
         fetchCorridors();
       } else {
@@ -1045,27 +1053,64 @@ export default function AdminDeliveryPartners() {
             <div className="dispatchSummaryStats">
               <div className="statPill">
                 <Package size={13} />
-                <span><strong>{corridorSummary.totalActiveOrders}</strong> Active Parcels</span>
+                <span><strong>{corridorSummary.totalActiveOrders}</strong> Total Orders</span>
+              </div>
+              <div className="statPill" style={{ border: '1px solid rgba(34,197,94,0.3)', background: 'rgba(34,197,94,0.08)' }}>
+                <span style={{ color: '#22c55e', fontWeight: 700 }}>
+                  ✓ {corridorSummary.totalPackedOrders || 0} Packed
+                </span>
+              </div>
+              <div className="statPill" style={{ border: '1px solid rgba(245,158,11,0.3)', background: 'rgba(245,158,11,0.08)' }}>
+                <span style={{ color: '#f59e0b', fontWeight: 700 }}>
+                  ⏳ {corridorSummary.totalAwaitingOrders || 0} Awaiting Packing
+                </span>
               </div>
               <div className="statPill">
                 <Truck size={13} />
-                <span><strong>{corridorSummary.dispatchedCorridorsCount} / 4</strong> Corridors Dispatched</span>
+                <span><strong>{corridorSummary.dispatchedCorridorsCount} / 4</strong> Dispatched</span>
               </div>
               <div className="statPill payoutStatPill">
                 <span>Fleet Base Pay: <strong>₹{corridorSummary.totalPayout}</strong></span>
               </div>
             </div>
 
-            <button
-              type="button"
-              className="autoDispatchBtn"
-              onClick={handleAutoDispatchAll}
-              disabled={autoDispatching || corridorsLoading || corridorSummary.totalActiveOrders === 0}
-              title="Auto-pair active corridors with available drivers based on service mode"
-            >
-              <Zap size={15} className={autoDispatching ? 'pulsingIcon' : ''} />
-              {autoDispatching ? 'Auto-Dispatching Fleet...' : 'Auto-Dispatch'}
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <select
+                value={minBatchThreshold}
+                onChange={(e) => setMinBatchThreshold(e.target.value)}
+                style={{
+                  background: '#0d1527',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  color: '#e2e8f0',
+                  padding: '8px 10px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+                title="Service Mode Quota: Part-Time riders require 2+ packed parcels, Standard riders require 3+, Power Riders require 4+ parcels to trigger auto-dispatch"
+              >
+                <option value="auto">🎯 Service Mode Quota (2-4 drops)</option>
+                <option value="1">⚡ Instant Dispatch (Min 1 Parcel)</option>
+                <option value="2">📦 Min 2 Packed Parcels</option>
+                <option value="3">📦 Min 3 Packed Parcels</option>
+                <option value="4">📦 Min 4 Packed Parcels</option>
+              </select>
+
+              <button
+                type="button"
+                className="autoDispatchBtn"
+                onClick={() => handleAutoDispatchAll()}
+                disabled={autoDispatching || corridorsLoading || (corridorSummary.totalPackedOrders || 0) === 0}
+                title={(corridorSummary.totalPackedOrders || 0) === 0
+                  ? "Cannot Auto-Dispatch: 0 parcels have been packed and verified at Karaikal Hub yet. Scan and pack parcels first."
+                  : "Auto-pair active corridors with available drivers based on packed parcel quota"}
+              >
+                <Zap size={15} className={autoDispatching ? 'pulsingIcon' : ''} />
+                {autoDispatching ? 'Auto-Dispatching Fleet...' : 'Auto-Dispatch'}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1250,27 +1295,81 @@ export default function AdminDeliveryPartners() {
                   ) : (
                     <div style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
+                      flexDirection: 'column',
+                      gap: '8px',
                       padding: '4px 2px'
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Package size={14} color={corr.color} />
-                        <span style={{ fontSize: '12px', color: '#e2e8f0', fontWeight: 600 }}>
-                          {corr.totalStops} Parcels Staged
-                        </span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Package size={14} color={corr.color} />
+                          <span style={{ fontSize: '12px', color: '#e2e8f0', fontWeight: 600 }}>
+                            {corr.totalStops} Parcels in Zone
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <span style={{
+                            fontSize: '11px',
+                            color: (corr.packedCount || 0) > 0 ? '#22c55e' : '#94a3b8',
+                            background: (corr.packedCount || 0) > 0 ? 'rgba(34, 197, 94, 0.12)' : 'rgba(148, 163, 184, 0.1)',
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            border: `1px solid ${(corr.packedCount || 0) > 0 ? 'rgba(34, 197, 94, 0.3)' : 'rgba(148, 163, 184, 0.2)'}`,
+                            fontWeight: 700
+                          }}>
+                            ✓ {corr.packedCount || 0} Packed
+                          </span>
+                          {(corr.awaitingPackingCount || 0) > 0 && (
+                            <span style={{
+                              fontSize: '11px',
+                              color: '#f59e0b',
+                              background: 'rgba(245, 158, 11, 0.12)',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              border: '1px solid rgba(245, 158, 11, 0.25)',
+                              fontWeight: 700
+                            }}>
+                              ⏳ {corr.awaitingPackingCount} Unpacked
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <span style={{
-                        fontSize: '11px',
-                        color: '#f59e0b',
-                        background: 'rgba(245, 158, 11, 0.12)',
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        border: '1px solid rgba(245, 158, 11, 0.25)',
-                        fontWeight: 700
-                      }}>
-                        ⚡ Tap Auto-Dispatch Above
-                      </span>
+
+                      {(corr.packedCount || 0) === 0 ? (
+                        <div style={{
+                          fontSize: '11px',
+                          color: '#f87171',
+                          background: 'rgba(239, 68, 68, 0.08)',
+                          border: '1px solid rgba(239, 68, 68, 0.2)',
+                          padding: '4px 8px',
+                          borderRadius: '4px'
+                        }}>
+                          ⚠️ Cannot dispatch: Staff must scan & pack parcels in Hub Terminal first.
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
+                          <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>
+                            🎯 Batch Ready: {corr.packedCount} Packed
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleAutoDispatchAll(1)}
+                            disabled={autoDispatching}
+                            style={{
+                              background: 'rgba(56, 189, 248, 0.15)',
+                              border: '1px solid rgba(56, 189, 248, 0.35)',
+                              color: '#38bdf8',
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              cursor: 'pointer'
+                            }}
+                            title="Force dispatch whatever packed parcels are currently ready without waiting for quota"
+                          >
+                            ⚡ Force Dispatch ({corr.packedCount})
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1295,13 +1394,34 @@ export default function AdminDeliveryPartners() {
                             <div className="stopDetails">
                               <div className="stopCustomerRow">
                                 <strong>{stop.customer?.name || 'Customer'}</strong>
-                                <span
-                                  className={`stopPaymentBadge ${
-                                    stop.paymentMethod === 'cod' ? 'badgeCod' : 'badgeOnline'
-                                  }`}
-                                >
-                                  {stop.paymentMethod?.toUpperCase() || 'COD'}
-                                </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                  <span style={{
+                                    fontSize: '10px',
+                                    fontWeight: 700,
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    background: stop.orderStatus === 'packed' || stop.orderStatus === 'out_for_delivery'
+                                      ? 'rgba(34, 197, 94, 0.15)'
+                                      : 'rgba(245, 158, 11, 0.15)',
+                                    color: stop.orderStatus === 'packed' || stop.orderStatus === 'out_for_delivery'
+                                      ? '#22c55e'
+                                      : '#f59e0b',
+                                    border: `1px solid ${
+                                      stop.orderStatus === 'packed' || stop.orderStatus === 'out_for_delivery'
+                                        ? 'rgba(34, 197, 94, 0.3)'
+                                        : 'rgba(245, 158, 11, 0.3)'
+                                    }`
+                                  }}>
+                                    {stop.orderStatus === 'out_for_delivery' ? '🚚 OUT FOR DELIVERY' : stop.orderStatus === 'packed' ? '✓ PACKED & VERIFIED' : '⏳ AWAITING PACKING'}
+                                  </span>
+                                  <span
+                                    className={`stopPaymentBadge ${
+                                      stop.paymentMethod === 'cod' ? 'badgeCod' : 'badgeOnline'
+                                    }`}
+                                  >
+                                    {stop.paymentMethod?.toUpperCase() || 'COD'}
+                                  </span>
+                                </div>
                               </div>
                               <p className="stopAddress">
                                 {stop.shipping?.address}, {stop.shipping?.city}
