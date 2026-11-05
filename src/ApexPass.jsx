@@ -143,13 +143,13 @@ export default function ApexPassModal({ isOpen, onClose }) {
       const [_, idToken] = await Promise.all([loadRazorpay(), user.getIdToken()]);
 
       // 2. Create order on server
-      const res = await fetch('/api/apex-membership?action=create-order', {
+      const res = await fetch('/api/create-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${idToken}`
         },
-        body: JSON.stringify({ plan })
+        body: JSON.stringify({ membership: 'apex_pass', plan })
       });
 
       const orderData = await res.json();
@@ -183,13 +183,14 @@ export default function ApexPassModal({ isOpen, onClose }) {
           try {
             toast.loading('Verifying payment and activating VIP privileges...', { id: 'apex-verify' });
 
-            const verifyRes = await fetch('/api/apex-membership?action=verify-payment', {
+            const verifyRes = await fetch('/api/verify-payment', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${idToken}`
               },
               body: JSON.stringify({
+                membership: 'apex_pass',
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,

@@ -27,6 +27,47 @@ export default async function handler(req,res){
     if(!secret)return send(res,503,{error:'Payment verification is not configured'});
     const signature=String(razorpay_signature),expected=crypto.createHmac('sha256',secret).update(`${razorpay_order_id}|${razorpay_payment_id}`).digest('hex');
     if(signature.length!==expected.length||!crypto.timingSafeEqual(Buffer.from(expected),Buffer.from(signature)))return send(res,400,{error:'Payment verification failed'});
+
+    // Handle MotoDC Apex VIP Pass Verification
+    if (req.body?.membership === 'apex_pass' || req.query?.type === 'apex') {
+      const chosenPlan = req.body?.plan === 'monthly' ? 'monthly' : 'annual';
+      const durationDays = chosenPlan === 'monthly' ? 30 : 365;
+      const expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+      const amountPaid = chosenPlan === 'monthly' ? 29 : 199;
+      const db = getFirestore(a.app(), 'asia-south1');
+
+      await db.collection('users').doc(decoded.uid).set({
+        isApexMember: true,
+        apexPlan: chosenPlan,
+        apexStartedAt: admin.firestore.FieldValue.serverTimestamp(),
+        apexExpiresAt: expiresAt,
+        apexLastPaymentId: razorpay_payment_id,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      await db.collection('apex_memberships').doc(razorpay_payment_id).set({
+        membershipId: `APEX-VIP-${decoded.uid.slice(0, 6).toUpperCase()}`,
+        userId: decoded.uid,
+        userEmail: decoded.email || '',
+        plan: chosenPlan,
+        amount: amountPaid,
+        currency: 'INR',
+        razorpay_order_id,
+        razorpay_payment_id,
+        startedAt: admin.firestore.FieldValue.serverTimestamp(),
+        expiresAt,
+        status: 'active'
+      });
+
+      return send(res, 200, {
+        ok: true,
+        isApexMember: true,
+        plan: chosenPlan,
+        expiresAt,
+        paymentId: razorpay_payment_id,
+        message: '🏆 MotoDC Apex VIP Activated!'
+      });
+    }
     const db=getFirestore(a.app(),'asia-south1'),intentRef=db.collection('paymentIntents').doc('online payment intents').collection('records').doc(razorpay_order_id),keyId=process.env.RAZORPAY_KEY_ID;
     const [intentSnap,paymentResponse]=await Promise.all([
       intentRef.get(),

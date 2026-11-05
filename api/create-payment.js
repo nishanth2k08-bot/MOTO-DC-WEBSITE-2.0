@@ -15,7 +15,55 @@ function getAdmin(){
 export default async function handler(req,res){
   if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});
   try{
-    const {items,amount}=req.body||{};
+    const {items,amount,membership,plan}=req.body||{};
+    const auth=req.headers.authorization||'';
+    const idToken=auth.startsWith('Bearer ')?auth.slice(7):'';
+    if(!idToken)return send(res,401,{error:'Authentication required'});
+
+    // MotoDC Apex Pass Subscription Checkout
+    if(membership==='apex_pass'||req.query?.type==='apex'){
+      const a=getAdmin(),decoded=await a.auth().verifyIdToken(idToken);
+      const chosenPlan=plan==='monthly'?'monthly':'annual';
+      const planAmount=chosenPlan==='monthly'?29:199;
+      const keyId=process.env.RAZORPAY_KEY_ID,keySecret=process.env.RAZORPAY_KEY_SECRET;
+      if(!keyId||!keySecret)return send(res,503,{error:'Razorpay credentials not configured'});
+
+      const receipt=`APEX-${Date.now().toString().slice(-8)}-${decoded.uid.slice(0,6)}`;
+      const response=await fetch('https://api.razorpay.com/v1/orders',{
+        method:'POST',
+        headers:{
+          Authorization:`Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          amount:Math.round(planAmount*100),
+          currency:'INR',
+          receipt,
+          notes:{
+            userId:decoded.uid,
+            userEmail:decoded.email||'',
+            membershipType:'moto_apex_pass',
+            plan:chosenPlan
+          }
+        })
+      });
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)return send(res,502,{error:data.error?.description||'Razorpay rejected the subscription request'});
+
+      const db=getFirestore(a.app(),'asia-south1');
+      await db.collection('apex_orders').doc(data.id).set({
+        orderId:data.id,
+        userId:decoded.uid,
+        userEmail:decoded.email||'',
+        plan:chosenPlan,
+        amount:planAmount,
+        currency:'INR',
+        status:'created',
+        createdAt:admin.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+
+      return send(res,200,{keyId,orderId:data.id,amount:data.amount,currency:data.currency,plan:chosenPlan,planAmount});
+    }
     const auth=req.headers.authorization||'';
     const idToken=auth.startsWith('Bearer ')?auth.slice(7):'';
     if(!idToken)return send(res,401,{error:'Authentication required'});
