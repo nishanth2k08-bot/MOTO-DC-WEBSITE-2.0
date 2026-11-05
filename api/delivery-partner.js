@@ -809,17 +809,58 @@ export default async function handler(req, res) {
           return send(res, 404, { error: `Order ${orderId} not found in records` });
         }
 
+        const oData = targetDoc.data() || {};
+        const corrId = oData.assignedCorridor || detectDeliveryZone(oData.shipping);
+
+        let riderFields = {};
+        let justAssignedRider = false;
+        let assignedRiderId = oData.assignedRiderId;
+        let assignedRiderName = oData.assignedRiderName;
+        let assignedRiderPhone = oData.assignedRiderPhone || '';
+
+        if (!assignedRiderId) {
+          const corrDoc = await corridorsCol.doc(corrId).get();
+          if (corrDoc.exists && corrDoc.data()?.assignedRiderId) {
+            const cData = corrDoc.data();
+            assignedRiderId = cData.assignedRiderId;
+            assignedRiderName = cData.assignedRiderName || 'MotoDC Partner';
+            assignedRiderPhone = cData.assignedRiderPhone || '';
+            riderFields = {
+              assignedCorridor: corrId,
+              assignedRiderId,
+              assignedRiderName,
+              assignedRiderPhone,
+              assignedAt: new Date().toISOString(),
+            };
+            justAssignedRider = true;
+          }
+        }
+
         await targetDoc.ref.update({
           orderStatus: 'packed',
           packedAt: new Date().toISOString(),
+          ...riderFields,
           history: FieldValue.arrayUnion({
             status: 'packed',
             timestamp: new Date().toISOString(),
-            note: note || 'Packed & Quality Verified at Karaikal Central Hub Fulfillment Station',
+            note: note || (justAssignedRider
+              ? `Packed & Quality Verified at Karaikal Hub. Assigned to ${assignedRiderName} (${assignedRiderId}) for ${CORRIDOR_METADATA[corrId]?.name || corrId}.`
+              : 'Packed & Quality Verified at Karaikal Central Hub Fulfillment Station'),
           }),
         });
 
-        return send(res, 200, { ok: true, orderId });
+        if (justAssignedRider && assignedRiderId) {
+          notifyRiderOfAssignment({
+            db,
+            riderId: assignedRiderId,
+            riderName: assignedRiderName,
+            riderPhone: assignedRiderPhone,
+            orders: [{ id: targetDoc.id, ...oData, ...riderFields, orderStatus: 'packed' }],
+            corridorName: CORRIDOR_METADATA[corrId]?.name || corrId,
+          }).catch((err) => console.warn('hub-mark-packed notify warning:', err.message));
+        }
+
+        return send(res, 200, { ok: true, orderId, assignedRiderId, assignedRiderName });
       }
 
       // -----------------------------------------------------------------------
@@ -1032,7 +1073,70 @@ export default async function handler(req, res) {
           }
         });
 
-        // Find corridors that need dispatch
+        const assignments = [];
+        let totalOrdersDispatched = 0;
+
+        // 1. Sync unassigned active orders in corridors that are ALREADY assigned to a driver
+        for (const [cid, cData] of Object.entries(corridorAssignments)) {
+          const assignedRiderId = String(cData?.assignedRiderId || '').toUpperCase();
+          if (!assignedRiderId) continue;
+
+          const ordersInCorridor = corridorOrdersMap[cid] || [];
+          const unassignedOrders = ordersInCorridor.filter(
+            (o) => !o.data.assignedRiderId || String(o.data.assignedRiderId).toUpperCase() !== assignedRiderId
+          );
+
+          if (unassignedOrders.length > 0) {
+            const rName = cData.assignedRiderName || 'MotoDC Partner';
+            const rPhone = cData.assignedRiderPhone || '';
+            const orderUpdates = unassignedOrders.map((item) => {
+              const currentSt = String(item.data.orderStatus || 'placed').toLowerCase();
+              const newSt = currentSt === 'packed' ? 'out_for_delivery' : (currentSt === 'placed' ? 'confirmed' : currentSt);
+              return item.ref.update({
+                assignedCorridor: cid,
+                assignedRiderId: assignedRiderId,
+                assignedRiderName: rName,
+                assignedAt: new Date().toISOString(),
+                orderStatus: newSt,
+                history: FieldValue.arrayUnion({
+                  status: 'assigned',
+                  timestamp: new Date().toISOString(),
+                  note: `Assigned in ${CORRIDOR_METADATA[cid]?.name || cid} manifest to ${rName} (${assignedRiderId}) via Smart Dispatcher`,
+                }),
+              });
+            });
+            await Promise.all(orderUpdates);
+            totalOrdersDispatched += unassignedOrders.length;
+
+            const newStops = unassignedOrders.map((it) => ({
+              id: it.ref.id,
+              ...it.data,
+              assignedRiderId,
+              assignedRiderName: rName,
+            }));
+
+            notifyRiderOfAssignment({
+              db,
+              riderId: assignedRiderId,
+              riderName: rName,
+              riderPhone: rPhone,
+              orders: newStops,
+              corridorName: CORRIDOR_METADATA[cid]?.name || cid,
+            }).catch((err) => console.warn('Sync existing corridor notify warning:', err.message));
+
+            assignments.push({
+              corridorId: cid,
+              corridorName: CORRIDOR_METADATA[cid]?.name || cid,
+              riderId: assignedRiderId,
+              riderName: rName,
+              serviceMode: 'Assigned Corridor Sync',
+              stopsAssigned: unassignedOrders.length,
+              estimatedPayout: unassignedOrders.length * 45,
+            });
+          }
+        }
+
+        // 2. Find corridors that do NOT yet have an assigned rider and have active orders
         const unassignedCorridors = Object.keys(CORRIDOR_METADATA)
           .map((cid) => ({
             id: cid,
@@ -1043,104 +1147,106 @@ export default async function handler(req, res) {
           .filter((c) => !c.currentlyAssigned && c.stopCount > 0)
           .sort((a, b) => b.stopCount - a.stopCount); // Largest volume corridors first
 
-        if (unassignedCorridors.length === 0) {
+        if (unassignedCorridors.length > 0) {
+          // Find available riders not already assigned to another corridor
+          const currentlyAssignedRiderIds = new Set(
+            Object.values(corridorAssignments)
+              .map((a) => String(a?.assignedRiderId || '').toUpperCase())
+              .filter(Boolean)
+          );
+
+          const availableRiders = activePartners.filter(
+            (p) => !currentlyAssignedRiderIds.has(String(p.username || p.id).toUpperCase())
+          );
+
+          // Sort riders by serviceMode capacity
+          const modeRank = { 'power rider': 3, standard: 2, 'part-time': 1 };
+          availableRiders.sort((a, b) => {
+            const rankA = modeRank[String(a.serviceMode || 'standard').toLowerCase()] || 2;
+            const rankB = modeRank[String(b.serviceMode || 'standard').toLowerCase()] || 2;
+            return rankB - rankA;
+          });
+
+          for (let i = 0; i < unassignedCorridors.length; i++) {
+            const corr = unassignedCorridors[i];
+            const rider = availableRiders[i] || activePartners[i % activePartners.length]; // Fallback round-robin if fewer riders
+            if (!rider) break;
+
+            const rId = String(rider.username || rider.id).toUpperCase();
+            const rName = rider.name || 'MotoDC Partner';
+            const rPhone = rider.phone || '';
+
+            // Update corridor doc
+            await corridorsCol.doc(corr.id).set(
+              {
+                corridorId: corr.id,
+                corridorName: CORRIDOR_METADATA[corr.id].name,
+                assignedRiderId: rId,
+                assignedRiderName: rName,
+                assignedRiderPhone: rPhone,
+                assignedAt: new Date().toISOString(),
+                status: 'dispatched',
+                updatedAt: Date.now(),
+              },
+              { merge: true }
+            );
+
+            // Update orders in that corridor
+            const orderUpdates = (corridorOrdersMap[corr.id] || []).map((item) =>
+              item.ref.update({
+                assignedCorridor: corr.id,
+                assignedRiderId: rId,
+                assignedRiderName: rName,
+                assignedAt: new Date().toISOString(),
+                orderStatus: 'out_for_delivery',
+                history: FieldValue.arrayUnion({
+                  status: 'out_for_delivery',
+                  timestamp: new Date().toISOString(),
+                  note: `Auto-dispatched in ${CORRIDOR_METADATA[corr.id].name} manifest to ${rName} (${rId}) via Smart Dispatcher`,
+                }),
+              })
+            );
+            await Promise.all(orderUpdates);
+            totalOrdersDispatched += (corridorOrdersMap[corr.id] || []).length;
+
+            const corrOrders = (corridorOrdersMap[corr.id] || []).map((it) => ({
+              id: it.ref.id,
+              ...it.data,
+            }));
+            if (corrOrders.length > 0) {
+              notifyRiderOfAssignment({
+                db,
+                riderId: rId,
+                riderName: rName,
+                riderPhone: rPhone,
+                orders: corrOrders,
+                corridorName: corr.name,
+              }).catch((err) => console.warn('auto-dispatch notify warning:', err.message));
+            }
+
+            assignments.push({
+              corridorId: corr.id,
+              corridorName: corr.name,
+              riderId: rId,
+              riderName: rName,
+              serviceMode: rider.serviceMode || 'Standard',
+              stopsAssigned: corr.stopCount,
+              estimatedPayout: corr.stopCount * 45,
+            });
+          }
+        }
+
+        if (totalOrdersDispatched === 0 && assignments.length === 0) {
           return send(res, 200, {
             ok: true,
             dispatchedCount: 0,
-            message: 'All corridors with active orders are already dispatched or empty.',
-          });
-        }
-
-        // Find available riders not already assigned to another corridor
-        const currentlyAssignedRiderIds = new Set(
-          Object.values(corridorAssignments)
-            .map((a) => String(a?.assignedRiderId || '').toUpperCase())
-            .filter(Boolean)
-        );
-
-        const availableRiders = activePartners.filter(
-          (p) => !currentlyAssignedRiderIds.has(String(p.username || p.id).toUpperCase())
-        );
-
-        // Sort riders by serviceMode capacity
-        const modeRank = { 'power rider': 3, standard: 2, 'part-time': 1 };
-        availableRiders.sort((a, b) => {
-          const rankA = modeRank[String(a.serviceMode || 'standard').toLowerCase()] || 2;
-          const rankB = modeRank[String(b.serviceMode || 'standard').toLowerCase()] || 2;
-          return rankB - rankA;
-        });
-
-        const assignments = [];
-        for (let i = 0; i < unassignedCorridors.length; i++) {
-          const corr = unassignedCorridors[i];
-          const rider = availableRiders[i] || activePartners[i % activePartners.length]; // Fallback round-robin if fewer riders
-          if (!rider) break;
-
-          const rId = String(rider.username || rider.id).toUpperCase();
-          const rName = rider.name || 'MotoDC Partner';
-          const rPhone = rider.phone || '';
-
-          // Update corridor doc
-          await corridorsCol.doc(corr.id).set(
-            {
-              corridorId: corr.id,
-              corridorName: CORRIDOR_METADATA[corr.id].name,
-              assignedRiderId: rId,
-              assignedRiderName: rName,
-              assignedRiderPhone: rPhone,
-              assignedAt: new Date().toISOString(),
-              status: 'dispatched',
-              updatedAt: Date.now(),
-            },
-            { merge: true }
-          );
-
-          // Update orders in that corridor
-          const orderUpdates = (corridorOrdersMap[corr.id] || []).map((item) =>
-            item.ref.update({
-              assignedCorridor: corr.id,
-              assignedRiderId: rId,
-              assignedRiderName: rName,
-              assignedAt: new Date().toISOString(),
-              orderStatus: 'out_for_delivery',
-              history: FieldValue.arrayUnion({
-                status: 'out_for_delivery',
-                timestamp: new Date().toISOString(),
-                note: `Auto-dispatched in ${CORRIDOR_METADATA[corr.id].name} manifest to ${rName} (${rId}) via Smart Dispatcher`,
-              }),
-            })
-          );
-          await Promise.all(orderUpdates);
-
-          const corrOrders = (corridorOrdersMap[corr.id] || []).map((it) => ({
-            id: it.ref.id,
-            ...it.data,
-          }));
-          if (corrOrders.length > 0) {
-            notifyRiderOfAssignment({
-              db,
-              riderId: rId,
-              riderName: rName,
-              riderPhone: rPhone,
-              orders: corrOrders,
-              corridorName: corr.name,
-            }).catch((err) => console.warn('auto-dispatch notify warning:', err.message));
-          }
-
-          assignments.push({
-            corridorId: corr.id,
-            corridorName: corr.name,
-            riderId: rId,
-            riderName: rName,
-            serviceMode: rider.serviceMode || 'Standard',
-            stopsAssigned: corr.stopCount,
-            estimatedPayout: corr.stopCount * 45,
+            message: 'All corridors with active orders are already dispatched and up to date.',
           });
         }
 
         return send(res, 200, {
           ok: true,
-          dispatchedCount: assignments.length,
+          dispatchedCount: totalOrdersDispatched,
           assignments,
         });
       }
