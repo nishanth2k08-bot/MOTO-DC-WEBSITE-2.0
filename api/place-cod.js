@@ -65,12 +65,50 @@ export default async function handler(req,res){
           });
         }
       });
-      tax=Math.round(subtotal*0.18*100)/100;
-      deliveryFee=subtotal>=FREE_DELIVERY_THRESHOLD?0:STANDARD_DELIVERY_FEE;
-      grandTotal=Math.round((subtotal+tax+deliveryFee)*100)/100;
-      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
+            const isApex = Boolean(req.body?.isApexMember);
+      const apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
+      const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
+      tax = Math.round(taxableSubtotal * 0.18 * 100) / 100;
+      deliveryFee = isApex || subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : STANDARD_DELIVERY_FEE;
+      grandTotal = Math.round((taxableSubtotal + tax + deliveryFee) * 100) / 100;
+      tx.set(orderRef, {
+        orderId,
+        userId: decoded.uid,
+        customer: customer || {},
+        shipping: shipping || {},
+        items: safeItems,
+        subtotal,
+        isApexMember: isApex,
+        apexDiscount,
+        tax,
+        delivery: deliveryFee === 0 ? 'FREE' : deliveryFee,
+        total: grandTotal,
+        deliveryPin,
+        paymentMethod: 'cod',
+        paymentStatus: 'pending',
+        orderStatus: 'placed',
+        statusHistory: [{ status: 'placed', updatedAt: new Date().toISOString() }],
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+      });
     });
-    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:safeItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'cod',paymentStatus:'pending',orderStatus:'placed'};
+    const order = {
+      id: orderRef.id,
+      orderId,
+      userId: decoded.uid,
+      customer: customer || {},
+      shipping: shipping || {},
+      items: safeItems,
+      subtotal,
+      isApexMember: isApex,
+      apexDiscount,
+      tax,
+      delivery: deliveryFee === 0 ? 'FREE' : deliveryFee,
+      total: grandTotal,
+      deliveryPin,
+      paymentMethod: 'cod',
+      paymentStatus: 'pending',
+      orderStatus: 'placed'
+    };
     waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_COD_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('COD order email error:',emailError);}})());

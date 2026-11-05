@@ -4,6 +4,7 @@ import {auth} from './firebase';
 import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,Phone,Clock} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import SlideToOrder, { triggerHaptic } from './SlideToOrder';
+import { isApexMember } from './ApexPass';
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const getCart=()=>{try{return JSON.parse(localStorage.getItem('motodc-cart')||'[]')}catch{return[]}};
@@ -74,15 +75,18 @@ export default function Checkout(){
 
   const FREE_DELIVERY_THRESHOLD = 799;
   const STANDARD_DELIVERY_FEE = 99;
+  const isApex = isApexMember();
   const subtotal = items.reduce((a,x)=>a+Number(x.price||0)*Number(x.qty||1),0);
-  const totalGst = Math.round(subtotal * 0.18 * 100) / 100;
+  const apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
+  const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
+  const totalGst = Math.round(taxableSubtotal * 0.18 * 100) / 100;
   const isPuducherry = !form.state || /puducherry|pondicherry|karaikal/i.test(form.state) || /karaikal/i.test(form.city);
   const cgst = isPuducherry ? Math.round((totalGst / 2) * 100) / 100 : 0;
   const sgst = isPuducherry ? Math.round((totalGst - cgst) * 100) / 100 : 0;
   const igst = !isPuducherry ? totalGst : 0;
-  const isFreeDelivery = subtotal >= FREE_DELIVERY_THRESHOLD;
+  const isFreeDelivery = isApex || subtotal >= FREE_DELIVERY_THRESHOLD;
   const deliveryFee = isFreeDelivery ? 0 : STANDARD_DELIVERY_FEE;
-  const grandTotal = Math.round((subtotal + totalGst + deliveryFee) * 100) / 100;
+  const grandTotal = Math.round((taxableSubtotal + totalGst + deliveryFee) * 100) / 100;
   const update=e=>setForm({...form,[e.target.name]:e.target.value});
 
   const handleCountryCodeChange=(e)=>{
@@ -186,7 +190,8 @@ export default function Checkout(){
         body:JSON.stringify({
           items:items.map(x=>({id:x.id,qty:x.qty})),
           customer:{name:form.name,email:form.email,phone:fullPhone},
-          shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode}
+          shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode},
+          isApexMember: isApex
         })
       });
       const result=await readApiResponse(response);
@@ -272,7 +277,8 @@ export default function Checkout(){
               razorpay_signature:response.razorpay_signature,
               customer:{name:form.name,email:form.email,phone:fullPhone},
               shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode},
-              paymentMethod:'online'
+              paymentMethod:'online',
+              isApexMember: isApex
             })
           });
           const result=await readApiResponse(verify);
@@ -470,10 +476,15 @@ export default function Checkout(){
             </h2>
 
             {/* Free Delivery Callout */}
-            <div className="checkoutFreeDeliveryCallout" style={!isFreeDelivery?{borderColor:'rgba(251,191,36,0.4)',background:'rgba(251,191,36,0.06)'}:{}}>
-              <div className="freeDeliveryIcon" style={!isFreeDelivery?{background:'rgba(251,191,36,0.18)',color:'#fbbf24'}:{}}><Truck size={18} /></div>
+            <div className="checkoutFreeDeliveryCallout" style={isApex?{borderColor:'rgba(245,158,11,0.4)',background:'rgba(245,158,11,0.08)'}:!isFreeDelivery?{borderColor:'rgba(251,191,36,0.4)',background:'rgba(251,191,36,0.06)'}:{}}>
+              <div className="freeDeliveryIcon" style={isApex?{background:'rgba(245,158,11,0.2)',color:'#f59e0b'}:!isFreeDelivery?{background:'rgba(251,191,36,0.18)',color:'#fbbf24'}:{}}><Truck size={18} /></div>
               <div>
-                {isFreeDelivery ? (
+                {isApex ? (
+                  <>
+                    <strong style={{color:'#f59e0b'}}>⚡ MotoDC Apex Pass Active!</strong>
+                    <p>Unlimited ₹0 Express Delivery on all orders + 10% Member Discount + Priority Hub Staging.</p>
+                  </>
+                ) : isFreeDelivery ? (
                   <>
                     <strong>🎉 100% Free Delivery Unlocked!</strong>
                     <p>Order exceeds ₹{FREE_DELIVERY_THRESHOLD}. You saved ₹{STANDARD_DELIVERY_FEE} on express shipping.</p>
@@ -510,6 +521,12 @@ export default function Checkout(){
                 <span>Items Subtotal (Base MRP)</span>
                 <b>{money(subtotal)}</b>
               </div>
+              {isApex && (
+                <div className="taxRow" style={{ color: '#f59e0b' }}>
+                  <span>⚡ MotoDC Apex Pass (10% Off)</span>
+                  <b style={{ color: '#f59e0b' }}>-{money(apexDiscount)}</b>
+                </div>
+              )}
               {isPuducherry ? (
                 <>
                   <div className="taxRow">

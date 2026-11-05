@@ -4,7 +4,7 @@ import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/au
 import {adminAuth,adminDb,adminStorage} from './firebase';
 import AdminOrders from './AdminOrders';
 import AdminDeliveryPartners from './AdminDeliveryPartners';
-import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search,Truck,Bell,Zap} from 'lucide-react';
+import {Plus,Trash2,LogOut,Edit3,X,Package,Upload,LayoutDashboard,ShoppingCart,Search,Truck,Bell,Zap,Clock} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {majorSpareProducts} from './major-spares';
 import {mergeProductsWithMajorSpares} from './productsMerge';
@@ -130,6 +130,10 @@ export default function Admin(){
  }
 
  const handleQuickAutoDispatch = async () => {
+   if (newOrderNotification && !newOrderNotification.isPacked) {
+     toast.error(`⚠️ Order #${newOrderNotification.orderId} must be scanned & packed at Karaikal Hub before courier dispatch!`, { duration: 5500, icon: '📦' });
+     return;
+   }
    setAutoDispatchingOrder(true);
    try {
      const res = await fetch('/api/delivery-partner?action=auto-dispatch-all', {
@@ -184,35 +188,46 @@ export default function Admin(){
 
      snap.docChanges().forEach(change => {
        if (change.type === 'added' && !knownOrderIds.has(change.doc.id)) {
-         knownOrderIds.add(change.doc.id);
-         const data = change.doc.data();
-         const orderId = data.orderId || change.doc.id;
-         const customerName = data.customer?.name || 'Customer';
-         const total = data.total || 0;
-         const corridor = data.assignedCorridor || 'Karaikal Corridor';
+          knownOrderIds.add(change.doc.id);
+          const data = change.doc.data();
+          const orderId = data.orderId || change.doc.id;
+          const customerName = data.customer?.name || 'Customer';
+          const total = data.total || 0;
+          const corridor = data.assignedCorridor || 'Karaikal Corridor';
+          const isPacked = data.orderStatus === 'packed' || Boolean(data.packedAt);
 
-         playNewOrderSound();
+          playNewOrderSound();
 
-         setNewOrderNotification({
-           id: change.doc.id,
-           orderId,
-           customerName,
-           total,
-           corridor,
-           method,
-           timestamp: Date.now()
-         });
+          setNewOrderNotification({
+            id: change.doc.id,
+            orderId,
+            customerName,
+            total,
+            corridor,
+            method,
+            isPacked,
+            timestamp: Date.now()
+          });
 
-         if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-           try {
-             new Notification(`📦 New MotoDC Order: #${orderId}`, {
-               body: `₹${Number(total).toLocaleString('en-IN')} from ${customerName} (${method}). Click to Auto-Dispatch!`,
-               icon: '/favicon.ico'
-             });
-           } catch (e) {}
-         }
-       }
-     });
+          if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+            try {
+              new Notification('📦 New MotoDC Order: #' + orderId, {
+                body: '₹' + Number(total).toLocaleString('en-IN') + ' from ' + customerName + ' (' + method + '). Awaiting Hub verification & packing.',
+                icon: '/favicon.ico'
+              });
+            } catch (e) {}
+          }
+        } else if (change.type === 'modified') {
+          const data = change.doc.data();
+          const isPacked = data.orderStatus === 'packed' || Boolean(data.packedAt);
+          setNewOrderNotification((curr) => {
+            if (curr && (curr.id === change.doc.id || curr.orderId === data.orderId)) {
+              return { ...curr, isPacked, orderStatus: data.orderStatus };
+            }
+            return curr;
+          });
+        }
+      });
    };
 
    const unsubCod = onSnapshot(codCol, (s) => {
@@ -362,15 +377,39 @@ export default function Admin(){
             </div>
           </div>
           <div className="adminAlertActions">
-            <button
-              type="button"
-              className="adminAlertDispatchBtn"
-              onClick={handleQuickAutoDispatch}
-              disabled={autoDispatchingOrder}
-              title="Automatically assign active drivers to delivery corridors"
-            >
-              <Zap size={15} /> {autoDispatchingOrder ? 'Auto-Dispatching...' : '⚡ Auto-Dispatch Now'}
-            </button>
+            {newOrderNotification.isPacked ? (
+              <button
+                type="button"
+                className="adminAlertDispatchBtn ready"
+                onClick={handleQuickAutoDispatch}
+                disabled={autoDispatchingOrder}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981, #059669)',
+                  boxShadow: '0 4px 14px rgba(16,185,129,0.35)',
+                }}
+                title="Order is packed and verified at Hub! Click to Auto-Dispatch to active delivery partner"
+              >
+                <Zap size={15} /> {autoDispatchingOrder ? 'Auto-Dispatching...' : '⚡ Packed! Auto-Dispatch Now'}
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="adminAlertDispatchBtn awaiting"
+                onClick={() => {
+                  toast('⏳ Order #' + newOrderNotification.orderId + ' is awaiting Hub packing. Staff must verify & pack it first.', { icon: '📦' });
+                  handleTabChange('orders');
+                }}
+                style={{
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  border: '1px solid rgba(245, 158, 11, 0.4)',
+                  color: '#f59e0b',
+                  cursor: 'pointer',
+                }}
+                title="Order must be scanned and packed in Karaikal Hub Terminal before rider can be dispatched"
+              >
+                <Clock size={14} /> ⏳ Awaiting Hub Packing
+              </button>
+            )}
             <button
               type="button"
               className="adminAlertViewBtn"

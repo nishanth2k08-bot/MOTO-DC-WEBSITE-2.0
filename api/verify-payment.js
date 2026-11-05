@@ -65,9 +65,12 @@ export default async function handler(req,res){
         const price=Number(p.price||0);subtotal+=price*qty;
         finalItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
       }
-      tax=Math.round(subtotal*0.18*100)/100;
-      deliveryFee=subtotal>=FREE_DELIVERY_THRESHOLD?0:STANDARD_DELIVERY_FEE;
-      grandTotal=Math.round((subtotal+tax+deliveryFee)*100)/100;
+            const isApex = Boolean(req.body?.isApexMember);
+      const apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
+      const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
+      tax = Math.round(taxableSubtotal * 0.18 * 100) / 100;
+      deliveryFee = isApex || subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : STANDARD_DELIVERY_FEE;
+      grandTotal = Math.round((taxableSubtotal + tax + deliveryFee) * 100) / 100;
       if(Math.round(grandTotal*100)!==Math.round(Number(intent.amount)*100))throw new Error('Product prices changed. Payment requires review.');
       for(const item of requestedItems){
         const snap=productMap.get(item.id);
@@ -83,7 +86,7 @@ export default async function handler(req,res){
         }
       }
       tx.set(orderCategoryRef,{name:'online orders',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
-      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
+      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,isApexMember:isApex,apexDiscount,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
     const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};

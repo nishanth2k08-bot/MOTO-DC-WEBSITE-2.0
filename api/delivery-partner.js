@@ -1329,6 +1329,67 @@ export default async function handler(req, res) {
       }
 
       // -----------------------------------------------------------------------
+      // 2C-DEPART. RIDER DEPARTS HUB WITH VERIFIED PACKAGES
+      // Transitions all assigned orders to 'out_for_delivery' (In Transit)
+      // -----------------------------------------------------------------------
+      if (action === 'rider-depart-hub') {
+        const { riderId, riderName, orderIds } = body;
+        if (!riderId) {
+          return send(res, 400, { error: 'riderId is required' });
+        }
+        const cleanRiderId = String(riderId).trim().toUpperCase();
+        const cleanRiderName = String(riderName || 'MotoDC Partner').trim();
+
+        const [codSnap, onlineSnap] = await Promise.all([
+          codCol.where('assignedRiderId', '==', cleanRiderId).get(),
+          onlineCol.where('assignedRiderId', '==', cleanRiderId).get(),
+        ]);
+
+        const allDocs = [...codSnap.docs, ...onlineSnap.docs];
+        const targetDocs = allDocs.filter((d) => {
+          const st = String(d.data()?.orderStatus || '').toLowerCase();
+          const id = String(d.id);
+          const orderId = String(d.data()?.orderId || '');
+          if (['delivered', 'cancelled', 'returned'].includes(st)) return false;
+          if (Array.isArray(orderIds) && orderIds.length > 0) {
+            const cleanTargetIds = orderIds.map((x) => String(x).replace(/^#/, '').toLowerCase());
+            return cleanTargetIds.includes(id.toLowerCase()) || cleanTargetIds.includes(orderId.toLowerCase());
+          }
+          return true;
+        });
+
+        const nowIso = new Date().toISOString();
+        const updates = targetDocs.map((d) =>
+          d.ref.update({
+            orderStatus: 'out_for_delivery',
+            departedHubAt: nowIso,
+            history: FieldValue.arrayUnion({
+              status: 'out_for_delivery',
+              timestamp: nowIso,
+              note: `Courier ${cleanRiderName} (${cleanRiderId}) scanned parcel into delivery bag and departed Karaikal Hub. On road with live GPS route.`,
+            }),
+          })
+        );
+
+        await Promise.all([
+          ...updates,
+          partnersCol.doc(cleanRiderId).set(
+            {
+              isGpsActive: true,
+              lastSeenAt: nowIso,
+            },
+            { merge: true }
+          ),
+        ]);
+
+        return send(res, 200, {
+          ok: true,
+          departedOrdersCount: updates.length,
+          message: `Departed Karaikal Hub with ${updates.length} parcel(s). In Transit / Out for Delivery active.`,
+        });
+      }
+
+      // -----------------------------------------------------------------------
       // 2D. UPDATE RIDER LIVE GPS LOCATION (Active Delivery Run Only)
       // -----------------------------------------------------------------------
       if (action === 'update-rider-location') {

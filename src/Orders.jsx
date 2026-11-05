@@ -1943,21 +1943,21 @@ export default function Orders() {
                   <div className="inspectorTimelineItem">
                     <span
                       className={`timelineDot ${
-                        ['packed', 'shipped', 'out_for_delivery'].includes(activeStatus)
+                        ['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(activeStatus)
                           ? 'completed'
-                          : activeStatus === 'confirmed'
-                          ? 'current'
-                          : 'pending'
+                          : 'current'
                       }`}
                     >
-                      {['packed', 'shipped', 'out_for_delivery'].includes(activeStatus)
+                      {['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(activeStatus)
                         ? '✓'
                         : '2'}
                     </span>
                     <div>
                       <div className="timelineTitle">Packed & Quality Verified</div>
                       <div className="timelineSub">
-                        Dual-layer protective automotive boxing & barcode staging
+                        {['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(activeStatus)
+                          ? 'Dual-layer protective automotive boxing & barcode staging completed'
+                          : 'Undergoing quality inspection at Karaikal Hub'}
                       </div>
                     </div>
                   </div>
@@ -1965,14 +1965,14 @@ export default function Orders() {
                   <div className="inspectorTimelineItem">
                     <span
                       className={`timelineDot ${
-                        ['shipped', 'out_for_delivery'].includes(activeStatus)
-                          ? activeStatus === 'shipped'
-                            ? 'current'
-                            : 'completed'
+                        ['out_for_delivery', 'delivered'].includes(activeStatus)
+                          ? 'completed'
+                          : activeStatus === 'shipped'
+                          ? 'current'
                           : 'pending'
                       }`}
                     >
-                      {activeStatus === 'out_for_delivery'
+                      {['out_for_delivery', 'delivered'].includes(activeStatus)
                         ? '✓'
                         : activeStatus === 'shipped'
                         ? '🚚'
@@ -1983,7 +1983,11 @@ export default function Orders() {
                         In Transit — Regional Logistics Corridor
                       </div>
                       <div className="timelineSub">
-                        {activeMeta.location} · Telemetry Speed: {activeMeta.speed}
+                        {['out_for_delivery', 'delivered'].includes(activeStatus)
+                          ? `Courier Handover Verified · Departed Karaikal Central Hub`
+                          : activeStatus === 'shipped'
+                          ? `${activeMeta.location} · Telemetry Speed: ${activeMeta.speed}`
+                          : 'Awaiting Hub dispatch & courier handover'}
                       </div>
                     </div>
                   </div>
@@ -1991,19 +1995,41 @@ export default function Orders() {
                   <div className="inspectorTimelineItem">
                     <span
                       className={`timelineDot ${
-                        activeStatus === 'out_for_delivery'
+                        activeStatus === 'delivered'
+                          ? 'completed'
+                          : activeStatus === 'out_for_delivery'
                           ? 'current'
                           : 'pending'
                       }`}
                     >
-                      4
+                      {activeStatus === 'delivered' ? '✓' : activeStatus === 'out_for_delivery' ? '🛵' : '4'}
                     </span>
                     <div>
                       <div className="timelineTitle">Out for Delivery (Doorstep Route)</div>
                       <div className="timelineSub">
-                        {activeStatus === 'out_for_delivery'
-                          ? 'Courier Unit is en route to your address'
-                          : 'Scheduled final-mile delivery'}
+                        {activeStatus === 'delivered'
+                          ? 'Handover completed at doorstep'
+                          : activeStatus === 'out_for_delivery'
+                          ? (activeOrder.assignedRiderName ? `Courier ${activeOrder.assignedRiderName} is en route to your address` : 'Courier unit is en route to your address')
+                          : 'Scheduled final-mile doorstep delivery'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="inspectorTimelineItem">
+                    <span
+                      className={`timelineDot ${
+                        activeStatus === 'delivered' ? 'completed' : 'pending'
+                      }`}
+                    >
+                      {activeStatus === 'delivered' ? '✓' : '5'}
+                    </span>
+                    <div>
+                      <div className="timelineTitle">Delivered & Verified</div>
+                      <div className="timelineSub">
+                        {activeStatus === 'delivered'
+                          ? `Delivered safely · Security PIN verified`
+                          : 'Doorstep handover with 4-digit security PIN'}
                       </div>
                     </div>
                   </div>

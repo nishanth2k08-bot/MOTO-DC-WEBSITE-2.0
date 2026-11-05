@@ -161,6 +161,10 @@ export default function AdminDeliveryPartners() {
   };
 
   const handleAutoDispatchAll = async (forceMinBatch = null) => {
+    if ((corridorSummary.totalPackedOrders || 0) === 0) {
+      toast.error('⚠️ Cannot Auto-Dispatch: 0 parcels have been packed and verified at Karaikal Hub yet. Warehouse staff must scan & pack parcels first.', { duration: 6000, icon: '📦' });
+      return;
+    }
     setAutoDispatching(true);
     try {
       const batchParam = forceMinBatch !== null ? forceMinBatch : (minBatchThreshold === 'auto' ? 0 : Number(minBatchThreshold));
@@ -1103,12 +1107,17 @@ export default function AdminDeliveryPartners() {
                 className="autoDispatchBtn"
                 onClick={() => handleAutoDispatchAll()}
                 disabled={autoDispatching || corridorsLoading || (corridorSummary.totalPackedOrders || 0) === 0}
+                style={{
+                  opacity: (corridorSummary.totalPackedOrders || 0) === 0 ? 0.55 : 1,
+                  cursor: (corridorSummary.totalPackedOrders || 0) === 0 ? 'not-allowed' : 'pointer',
+                  filter: (corridorSummary.totalPackedOrders || 0) === 0 ? 'grayscale(0.7)' : 'none',
+                }}
                 title={(corridorSummary.totalPackedOrders || 0) === 0
-                  ? "Cannot Auto-Dispatch: 0 parcels have been packed and verified at Karaikal Hub yet. Scan and pack parcels first."
+                  ? "Cannot Auto-Dispatch: 0 parcels have been packed and verified at Karaikal Hub yet. Warehouse staff must scan & pack parcels first."
                   : "Auto-pair active corridors with available drivers based on packed parcel quota"}
               >
                 <Zap size={15} className={autoDispatching ? 'pulsingIcon' : ''} />
-                {autoDispatching ? 'Auto-Dispatching Fleet...' : 'Auto-Dispatch'}
+                {autoDispatching ? 'Auto-Dispatching Fleet...' : (corridorSummary.totalPackedOrders || 0) === 0 ? '⏳ Awaiting Hub Packing' : 'Auto-Dispatch'}
               </button>
             </div>
           </div>
