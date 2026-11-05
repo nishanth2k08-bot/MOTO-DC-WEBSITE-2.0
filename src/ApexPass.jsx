@@ -39,7 +39,11 @@ const loadRazorpay = () =>
     document.head.appendChild(s);
   });
 
+// Feature toggle: Preserved for easy future re-activation
+export const ENABLE_APEX_PASS = false;
+
 export function isApexMember() {
+  if (!ENABLE_APEX_PASS) return false;
   try {
     const isMember = localStorage.getItem('motodc-apex-member') === 'true';
     const expiresAt = localStorage.getItem('motodc-apex-expires');

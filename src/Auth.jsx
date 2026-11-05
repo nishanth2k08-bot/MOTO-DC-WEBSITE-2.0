@@ -279,72 +279,7 @@ export default function Auth(){
     </div>
    </div>
 
-   {/* Dedicated Amazon Prime-style MotoDC Apex VIP Membership Hub */}
-   <div className="accountApexCard">
-    <div className="accountApexHeader">
-     <div>
-      <div className="accountApexBadge">
-       <Crown size={14} color="#ffd700" />
-       <span>MOTO APEX CLUB • VIP STATUS</span>
-      </div>
-      <h3 className="accountApexTitle">
-       MotoDC <span>APEX PASS</span>
-      </h3>
-      <p className="accountApexDesc">
-       {isApex
-        ? 'Your VIP Motorsport privileges are active! Enjoy unlimited ₹0 free express delivery on every order and an extra 10% auto-discount on genuine spares & lubricants.'
-        : 'Upgrade to MotoDC Apex VIP for unlimited ₹0 free express delivery on every order with no minimum order threshold, plus an extra 10% member discount on genuine spares & lubricants.'}
-      </p>
-     </div>
-    </div>
-
-    <div className="accountApexPerksList">
-     <div className="accountApexPerkItem">
-      <Truck size={16} />
-      <span>₹0 Free Express Delivery (No Minimum)</span>
-     </div>
-     <div className="accountApexPerkItem">
-      <Zap size={16} />
-      <span>Extra 10% Auto Discount on Spares</span>
-     </div>
-     <div className="accountApexPerkItem">
-      <Sparkles size={16} />
-      <span>Priority Express Packing at Karaikal Hub</span>
-     </div>
-     <div className="accountApexPerkItem">
-      <ShieldCheck size={16} />
-      <span>Priority Top Power Rider Allocation</span>
-     </div>
-    </div>
-
-    <div className="accountApexActionRow">
-     <div className="accountApexPriceNote">
-      {isApex ? (
-       <span>Plan: <strong>{apexDetails.plan === 'monthly' ? 'Monthly Flex (₹29/mo)' : 'Annual VIP (₹199/yr)'}</strong></span>
-      ) : (
-       <span>From <strong>₹16/mo</strong> (₹199/yr) or ₹29/mo</span>
-      )}
-     </div>
-     {isApex ? (
-      <button
-       type="button"
-       className="accountApexManageBtn"
-       onClick={() => window.dispatchEvent(new CustomEvent('motodc:open-apex'))}
-      >
-       <Crown size={15} /> Manage VIP Membership
-      </button>
-     ) : (
-      <button
-       type="button"
-       className="accountApexUpgradeBtn"
-       onClick={() => window.dispatchEvent(new CustomEvent('motodc:open-apex'))}
-      >
-       <Crown size={16} /> Upgrade to Apex VIP <ArrowRight size={15} />
-      </button>
-     )}
-    </div>
-   </div>
-  </section>
+   </section>
  );
  const google=new GoogleAuthProvider();const apple=new OAuthProvider('apple.com');
  const signInForm=<form className="authform" onSubmit={submitEmail}>{mode==='signup'&&<label><span>Name</span><div><User size={17}/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" autoComplete="name" required/></div></label>}<label><span>Email</span><div><Mail size={17}/><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required/></div></label><label><span>Password</span><div className="passwordInputWrap"><Lock size={17}/><input type={showPassword?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 6 characters" autoComplete={mode==='signin'?'current-password':'new-password'} minLength="6" required/><button type="button" className="pwToggleBtn" onClick={()=>setShowPassword(prev=>!prev)} aria-label={showPassword?'Hide password':'Show password'} title={showPassword?'Hide password':'Show password'}>{showPassword?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></label><button className="heroBtn" disabled={busy}>{busy?(mode==='signin'?'Signing in...':'Creating account...'):(mode==='signin'?'Sign in':'Create account')}<ArrowRight size={17}/></button></form>;

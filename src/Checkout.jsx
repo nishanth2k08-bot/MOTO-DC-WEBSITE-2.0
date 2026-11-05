@@ -76,7 +76,7 @@ export default function Checkout(){
 
   const FREE_DELIVERY_THRESHOLD = 799;
   const STANDARD_DELIVERY_FEE = 99;
-  const isApex = isApexMember();
+  const isApex = false; /* Apex Pass dormant for future */
   const subtotal = items.reduce((a,x)=>a+Number(x.price||0)*Number(x.qty||1),0);
   const apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
   const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
@@ -499,25 +499,7 @@ export default function Checkout(){
               </div>
             </div>
 
-            {!isApex && (
-              <div
-                className="cartApexPrimeBanner"
-                style={{ marginBottom: '16px' }}
-                onClick={() => window.dispatchEvent(new CustomEvent('motodc:open-apex'))}
-                role="button"
-                aria-label="Unlock ₹0 Free Delivery with MotoDC Apex VIP"
-              >
-                <div className="leftCol">
-                  <strong>
-                    <Crown size={15} color="#ffd700" /> Save ₹{STANDARD_DELIVERY_FEE} delivery fee today
-                  </strong>
-                  <small>Join MotoDC Apex VIP for ₹29/mo or ₹199/yr · Extra 10% Off</small>
-                </div>
-                <span className="cartApexJoinPill">
-                  <Zap size={12} /> Get ₹0 Delivery
-                </span>
-              </div>
-            )}
+
 
             {/* Items List */}
             <div className="checkoutItemsList">
