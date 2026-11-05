@@ -2,11 +2,13 @@ import React,{useEffect,useRef,useState} from 'react';
 import {GoogleAuthProvider,OAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword,signInWithPhoneNumber,signInWithPopup,signOut,updateProfile,RecaptchaVerifier} from 'firebase/auth';
 import {doc,getDoc,setDoc,serverTimestamp} from 'firebase/firestore';
 import {useNavigate} from 'react-router-dom';
-import {User,Mail,Lock,LogOut,ArrowRight,ArrowLeft,Phone,ShieldCheck,Eye,EyeOff} from 'lucide-react';
+import {User,Mail,Lock,LogOut,ArrowRight,ArrowLeft,Phone,ShieldCheck,Eye,EyeOff,Crown,Truck,Zap,Sparkles,Package,Heart} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {auth,db} from './firebase';
+import {isApexMember,getApexMemberDetails} from './ApexPass';
 import ThemeToggle from './ThemeToggle';
 import './auth.css';
+import './apex-pass.css';
 
 async function saveUserProfile(user,name=''){
  const ref=doc(db,'users',user.uid);
@@ -40,6 +42,17 @@ export default function Auth(){
  const [needsName,setNeedsName]=useState(false);
  const [busy,setBusy]=useState(false);
  const [resendTimer,setResendTimer]=useState(40);
+ const [isApex,setIsApex]=useState(()=>isApexMember());
+ const [apexDetails,setApexDetails]=useState(()=>getApexMemberDetails());
+
+ useEffect(()=>{
+  const sync=()=>{
+   setIsApex(isApexMember());
+   setApexDetails(getApexMemberDetails());
+  };
+  window.addEventListener('apexchange',sync);
+  return()=>window.removeEventListener('apexchange',sync);
+ },[]);
 
  useEffect(()=>onAuthStateChanged(auth,u=>{setUser(u);setChecking(false)}),[]);
  useEffect(()=>{
@@ -241,7 +254,98 @@ export default function Auth(){
 
  const logout=async()=>{setBusy(true);try{await signOut(auth);nav('/account',{replace:true})}catch{toast.error('Could not sign out');setBusy(false)}};
  if(checking)return <section className="auth page"><div className="authcard"><p>Loading account...</p></div></section>;
- if(user)return <section className="auth page"><div className="accountcard"><div className="accounticon"><User size={30}/></div><p className="eyebrow">MOTODC ACCOUNT</p><h1>Welcome, <span>{user.displayName||'Rider'}.</span></h1><p className="accountmuted">Your customer account is connected to Firebase.</p><div className="accountinfo"><div><small>Name</small><b>{user.displayName||'Not set'}</b></div><div><small>Email</small><b>{user.email||'Phone account'}</b></div>{user.phoneNumber&&<div><small>Phone</small><b>{user.phoneNumber}</b></div>}</div><button className="heroBtn" onClick={logout} disabled={busy}><LogOut size={17}/>{busy?'Signing out...':'Sign out'}</button></div></section>;
+ if(user)return (
+  <section className="auth page">
+   <div className="accountcard">
+    <div className="accounticon"><User size={30}/></div>
+    <p className="eyebrow">MOTODC ACCOUNT</p>
+    <h1>Welcome, <span>{user.displayName||'Rider'}.</span></h1>
+    <p className="accountmuted">Your customer account is connected to Firebase.</p>
+    <div className="accountinfo">
+     <div><small>Name</small><b>{user.displayName||'Not set'}</b></div>
+     <div><small>Email</small><b>{user.email||'Phone account'}</b></div>
+     {user.phoneNumber&&<div><small>Phone</small><b>{user.phoneNumber}</b></div>}
+    </div>
+    <div style={{display:'flex',gap:'10px',marginTop:'18px',flexWrap:'wrap'}}>
+     <button type="button" className="heroBtn" onClick={()=>nav('/orders')} style={{flex:1,minWidth:'130px',display:'inline-flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
+      <Package size={16}/> My Orders
+     </button>
+     <button type="button" className="secondaryBtn" onClick={()=>nav('/wishlist')} style={{flex:1,minWidth:'130px',display:'inline-flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
+      <Heart size={16}/> Wishlist
+     </button>
+     <button type="button" className="textBtn" onClick={logout} disabled={busy} style={{marginLeft:'auto',display:'inline-flex',alignItems:'center',gap:'6px'}}>
+      <LogOut size={16}/> {busy?'Signing out...':'Sign out'}
+     </button>
+    </div>
+   </div>
+
+   {/* Dedicated Amazon Prime-style MotoDC Apex VIP Membership Hub */}
+   <div className="accountApexCard">
+    <div className="accountApexHeader">
+     <div>
+      <div className="accountApexBadge">
+       <Crown size={14} color="#ffd700" />
+       <span>MOTO APEX CLUB • VIP STATUS</span>
+      </div>
+      <h3 className="accountApexTitle">
+       MotoDC <span>APEX PASS</span>
+      </h3>
+      <p className="accountApexDesc">
+       {isApex
+        ? 'Your VIP Motorsport privileges are active! Enjoy unlimited ₹0 free express delivery on every order and an extra 10% auto-discount on genuine spares & lubricants.'
+        : 'Upgrade to MotoDC Apex VIP for unlimited ₹0 free express delivery on every order with no minimum order threshold, plus an extra 10% member discount on genuine spares & lubricants.'}
+      </p>
+     </div>
+    </div>
+
+    <div className="accountApexPerksList">
+     <div className="accountApexPerkItem">
+      <Truck size={16} />
+      <span>₹0 Free Express Delivery (No Minimum)</span>
+     </div>
+     <div className="accountApexPerkItem">
+      <Zap size={16} />
+      <span>Extra 10% Auto Discount on Spares</span>
+     </div>
+     <div className="accountApexPerkItem">
+      <Sparkles size={16} />
+      <span>Priority Express Packing at Karaikal Hub</span>
+     </div>
+     <div className="accountApexPerkItem">
+      <ShieldCheck size={16} />
+      <span>Priority Top Power Rider Allocation</span>
+     </div>
+    </div>
+
+    <div className="accountApexActionRow">
+     <div className="accountApexPriceNote">
+      {isApex ? (
+       <span>Plan: <strong>{apexDetails.plan === 'monthly' ? 'Monthly Flex (₹29/mo)' : 'Annual VIP (₹199/yr)'}</strong></span>
+      ) : (
+       <span>From <strong>₹16/mo</strong> (₹199/yr) or ₹29/mo</span>
+      )}
+     </div>
+     {isApex ? (
+      <button
+       type="button"
+       className="accountApexManageBtn"
+       onClick={() => window.dispatchEvent(new CustomEvent('motodc:open-apex'))}
+      >
+       <Crown size={15} /> Manage VIP Membership
+      </button>
+     ) : (
+      <button
+       type="button"
+       className="accountApexUpgradeBtn"
+       onClick={() => window.dispatchEvent(new CustomEvent('motodc:open-apex'))}
+      >
+       <Crown size={16} /> Upgrade to Apex VIP <ArrowRight size={15} />
+      </button>
+     )}
+    </div>
+   </div>
+  </section>
+ );
  const google=new GoogleAuthProvider();const apple=new OAuthProvider('apple.com');
  const signInForm=<form className="authform" onSubmit={submitEmail}>{mode==='signup'&&<label><span>Name</span><div><User size={17}/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" autoComplete="name" required/></div></label>}<label><span>Email</span><div><Mail size={17}/><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required/></div></label><label><span>Password</span><div className="passwordInputWrap"><Lock size={17}/><input type={showPassword?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 6 characters" autoComplete={mode==='signin'?'current-password':'new-password'} minLength="6" required/><button type="button" className="pwToggleBtn" onClick={()=>setShowPassword(prev=>!prev)} aria-label={showPassword?'Hide password':'Show password'} title={showPassword?'Hide password':'Show password'}>{showPassword?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></label><button className="heroBtn" disabled={busy}>{busy?(mode==='signin'?'Signing in...':'Creating account...'):(mode==='signin'?'Sign in':'Create account')}<ArrowRight size={17}/></button></form>;
  const phoneNameForm=<form className="authform" onSubmit={submitPhoneName}><label><span>Your name</span><div><User size={17}/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Enter your full name" autoComplete="name" required autoFocus/></div></label><p className="authhint"><ShieldCheck size={15}/> Mobile verified. Enter your name to create your MotoDC account.</p><button className="heroBtn" disabled={busy}>{busy?'Creating account...':'Continue'}<ArrowRight size={17}/></button></form>;

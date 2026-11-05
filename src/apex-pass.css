@@ -1,115 +1,128 @@
-/* MotoDC Apex Pass Stylesheet */
+/* MotoDC Apex Pass Luxury VIP Stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Sora:wght@400;600;700;800&display=swap');
+
 .apexModalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(3, 7, 18, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(4, 7, 14, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  animation: apexFadeIn 0.25s ease-out;
+  animation: apexFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes apexFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.apexModalCard {
+.apexModalCard.premiumCard {
   position: relative;
   width: 100%;
-  max-width: 580px;
-  background: #090e1a;
+  max-width: 620px;
+  background: linear-gradient(145deg, #0d121f 0%, #060911 100%);
   border: 1px solid rgba(245, 158, 11, 0.35);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(245, 158, 11, 0.15);
-  border-radius: 20px;
-  padding: 28px 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(217, 119, 6, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 32px 28px;
   color: #f1f5f9;
   font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
 }
 
-.apexModalCard::before {
-  content: '';
+/* 24K Gold Shimmer Top Bar */
+.apexGoldShimmerBar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #f59e0b, #e11d48, #38bdf8);
+  height: 4px;
+  background: linear-gradient(90deg, #b45309, #f59e0b, #fbbf24, #f59e0b, #b45309);
+  background-size: 200% auto;
+  animation: apexShimmerMove 3s linear infinite;
+}
+
+@keyframes apexShimmerMove {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 .apexModalCloseBtn {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #94a3b8;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
+  z-index: 10;
 }
 
 .apexModalCloseBtn:hover {
   background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
   border-color: rgba(239, 68, 68, 0.4);
+  transform: rotate(90deg);
 }
 
 .apexModalHeader {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
-.apexBadgePill {
+.apexLuxuryInsignia {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #f59e0b;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.18), rgba(245, 158, 11, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.8px;
-  padding: 4px 12px;
+  letter-spacing: 1.2px;
+  padding: 5px 14px;
   border-radius: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
 }
 
 .apexBrandTitle {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
   letter-spacing: -0.5px;
+  font-family: 'Cinzel', serif;
 }
 
-.apexBrandTitle span {
+.apexBrandTitle .redAccent {
   color: #ff3157;
 }
 
-.apexBrandTitle .apexGold {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+.apexBrandTitle .apexGoldText {
+  background: linear-gradient(135deg, #ffd700 0%, #f59e0b 50%, #d97706 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
-  font-style: italic;
-  margin-left: 6px;
+  text-shadow: 0 0 25px rgba(245, 158, 11, 0.45);
+  font-weight: 900;
+  letter-spacing: 1px;
 }
 
 .apexBrandSub {
   font-size: 13px;
   color: #94a3b8;
-  line-height: 1.5;
-  max-width: 460px;
+  line-height: 1.55;
+  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -117,240 +130,351 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-  padding: 6px 14px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.25), rgba(245, 158, 11, 0.15));
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+  padding: 8px 18px;
+  border-radius: 12px;
   font-size: 12px;
   font-weight: 700;
-  margin-top: 12px;
+  margin-top: 14px;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
 }
 
-/* Perks Grid */
-.apexPerksGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.apexActiveStatusBadge small {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Comparison Table */
+.apexComparisonTable {
+  background: rgba(13, 19, 33, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
   margin-bottom: 22px;
 }
 
+.apexComparisonRow {
+  display: grid;
+  grid-template-columns: 2.2fr 1.4fr 1.6fr;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.apexComparisonRow:last-child {
+  border-bottom: none;
+}
+
+.apexComparisonRow.headerRow {
+  background: rgba(17, 24, 39, 0.9);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.apexComparisonRow.headerRow .apexCol {
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.benefitCol strong {
+  display: block;
+  font-size: 12px;
+  color: #f1f5f9;
+}
+
+.benefitCol small {
+  display: block;
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.standardCol {
+  font-size: 11px;
+}
+
+.standardCol.muted {
+  color: #94a3b8;
+}
+
+.apexCol.highlight {
+  color: #fbbf24;
+}
+
+.apexCol.highlight strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.apexCol.highlight small {
+  display: block;
+  font-size: 10px;
+  color: #f59e0b;
+}
+
+/* Plan Selector */
+.apexPlanSection {
+  margin-top: 16px;
+}
+
+.apexPlanOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
 @media (max-width: 520px) {
-  .apexPerksGrid {
+  .apexPlanOptions {
     grid-template-columns: 1fr;
   }
 }
 
-.apexPerkCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 12px;
-  transition: transform 0.2s, border-color 0.2s;
-}
-
-.apexPerkCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(245, 158, 11, 0.3);
-}
-
-.apexPerkIconWrap {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.apexPerkIconWrap.green {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.apexPerkIconWrap.cyan {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.apexPerkIconWrap.gold {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.apexPerkIconWrap.red {
-  background: rgba(244, 63, 94, 0.15);
-  color: #f43f5e;
-  border: 1px solid rgba(244, 63, 94, 0.3);
-}
-
-.apexPerkContent h4 {
-  font-size: 13px;
-  font-weight: 700;
-  margin: 0 0 3px 0;
-  color: #f8fafc;
-}
-
-.apexPerkContent p {
-  font-size: 11px;
-  color: #94a3b8;
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* Plan Options */
-.apexPlanOptions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
 .apexPlanCard {
   position: relative;
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(15, 23, 42, 0.85);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: 16px;
+  padding: 16px 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
 }
 
+.apexPlanCard:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+}
+
 .apexPlanCard.selected {
-  border-color: #f59e0b;
-  background: rgba(245, 158, 11, 0.08);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+  border-color: #fbbf24;
+  background: linear-gradient(145deg, rgba(217, 119, 6, 0.15), rgba(15, 23, 42, 0.9));
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.25), inset 0 0 15px rgba(245, 158, 11, 0.1);
 }
 
 .apexPlanBestValue {
   position: absolute;
-  top: -10px;
+  top: -11px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #000;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  color: #0b0f19;
   font-size: 9px;
   font-weight: 900;
-  padding: 2px 8px;
-  border-radius: 10px;
-  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .apexPlanName {
-  font-size: 13px;
-  font-weight: 700;
-  color: #e2e8f0;
-  margin-bottom: 4px;
-}
-
-.apexPlanPrice {
-  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin-bottom: 6px;
 }
 
 .apexPlanPrice strong {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 900;
-  color: #f59e0b;
+  color: #fbbf24;
+  font-family: 'Cinzel', serif;
 }
 
 .apexPlanPrice span {
-  font-size: 12px;
+  font-size: 13px;
   color: #94a3b8;
+  font-family: 'Sora', sans-serif;
 }
 
 .apexPlanSub {
-  font-size: 10px;
+  font-size: 11px;
   color: #64748b;
   display: block;
+  margin-top: 4px;
 }
 
-/* Join Button */
+/* Premium Join Button */
 .apexJoinBtn {
   width: 100%;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #ffd700 0%, #f59e0b 50%, #d97706 100%);
   border: none;
-  border-radius: 12px;
-  color: #090e1a;
-  font-size: 14px;
+  border-radius: 14px;
+  color: #0b0f19;
+  font-size: 15px;
   font-weight: 900;
   font-family: 'Sora', sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
-  transition: all 0.2s;
-}
-
-.apexJoinBtn:hover {
-  transform: translateY(-2px);
+  gap: 10px;
   box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+  transition: all 0.25s;
 }
 
-.apexTrialNote {
-  font-size: 11px;
-  color: #94a3b8;
-  text-align: center;
-  margin: 10px 0 0 0;
+.apexJoinBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.6);
+  background: linear-gradient(135deg, #ffe033 0%, #fbbf24 50%, #ea580c 100%);
 }
 
-/* Manage Section */
-.apexManageSection {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 16px;
+.apexJoinBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-.apexManageInfo {
+.apexSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(11, 15, 25, 0.3);
+  border-top-color: #0b0f19;
+  border-radius: 50%;
+  animation: apexSpin 0.7s linear infinite;
+}
+
+@keyframes apexSpin {
+  to { transform: rotate(360deg); }
+}
+
+.apexTrustBadges {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.apexManageInfo strong {
-  display: block;
-  font-size: 13px;
-  color: #f59e0b;
-}
-
-.apexManageInfo p {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
   font-size: 11px;
-  color: #94a3b8;
-  margin: 2px 0 0 0;
+  color: #64748b;
+  margin-top: 12px;
+}
+
+.apexTrustBadges span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Metal VIP Card Preview for Active Members */
+.apexMetalCardPreview {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #020617 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.apexMetalCardPreview::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.metalCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.metalChip {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fbbf24;
+}
+
+.metalBadge {
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  color: #0b0f19;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+}
+
+.metalCardNumber {
+  font-family: monospace;
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+}
+
+.metalCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.metalCardFooter small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.metalCardFooter b {
+  font-size: 13px;
+  color: #f1f5f9;
+}
+
+.metalCardFooter b.metalStatus {
+  color: #fbbf24;
+  font-size: 11px;
 }
 
 .apexContinueShoppingBtn {
   flex: 1;
-  padding: 10px 14px;
+  padding: 12px 18px;
   background: linear-gradient(135deg, #ff3157, #e11d48);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #fff;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
+  font-family: 'Sora', sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.apexContinueShoppingBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 49, 87, 0.4);
 }
 
 .apexCancelBtn {
-  padding: 10px 14px;
+  padding: 12px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
   color: #94a3b8;
   font-size: 12px;
   font-weight: 600;
@@ -363,43 +487,212 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* Navbar Apex Pill */
-.navApexPill {
+/* ========================================================
+   Account Page Dedicated Apex VIP Membership Hero Section
+   ======================================================== */
+.accountApexCard {
+  position: relative;
+  margin-top: 24px;
+  background: linear-gradient(145deg, #0e1526 0%, #070a12 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 158, 11, 0.1);
+  overflow: hidden;
+  text-align: left;
+}
+
+.accountApexCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #d97706, #fbbf24, #d97706);
+}
+
+.accountApexHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.accountApexBadge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(225, 29, 72, 0.12));
-  border: 1px solid rgba(245, 158, 11, 0.45);
-  color: #f59e0b;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
   font-size: 11px;
   font-weight: 800;
-  padding: 6px 12px;
+  padding: 4px 12px;
   border-radius: 20px;
+  letter-spacing: 0.8px;
+}
+
+.accountApexTitle {
+  font-size: 20px;
+  font-weight: 900;
+  margin: 8px 0 4px 0;
+  color: #fff;
+  font-family: 'Cinzel', serif;
+}
+
+.accountApexTitle span {
+  color: #fbbf24;
+}
+
+.accountApexDesc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 540px;
+}
+
+.accountApexPerksList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.accountApexPerkItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.accountApexPerkItem svg {
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.accountApexActionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.accountApexPriceNote strong {
+  font-size: 20px;
+  color: #fbbf24;
+  font-family: 'Cinzel', serif;
+}
+
+.accountApexPriceNote span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.accountApexUpgradeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ffd700 0%, #f59e0b 50%, #d97706 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 22px;
+  color: #0b0f19;
+  font-size: 13px;
+  font-weight: 900;
+  font-family: 'Sora', sans-serif;
   cursor: pointer;
-  letter-spacing: 0.3px;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
   transition: all 0.2s;
-  animation: apexPulseGlow 3s infinite;
 }
 
-.navApexPill:hover {
-  transform: scale(1.04);
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(225, 29, 72, 0.2));
-  border-color: #f59e0b;
+.accountApexUpgradeBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
 }
 
-.navApexPill.activeMember {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #090e1a;
+.accountApexManageBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.accountApexManageBtn:hover {
+  background: rgba(245, 158, 11, 0.25);
   border-color: #fbbf24;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
 }
 
-@keyframes apexPulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 18px rgba(245, 158, 11, 0.45);
-  }
+/* ========================================================
+   Cart Upsell Banner (Amazon Prime Style)
+   ======================================================== */
+.cartApexPrimeBanner {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.16) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cartApexPrimeBanner:hover {
+  border-color: #fbbf24;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
+}
+
+.cartApexPrimeBanner .leftCol strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fbbf24;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cartApexPrimeBanner .leftCol small {
+  display: block;
+  color: #94a3b8;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.cartApexJoinPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  color: #0b0f19;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }

@@ -1,10 +1,11 @@
 import React,{useState,useEffect,useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
-import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,Phone,Clock} from 'lucide-react';
+import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,Phone,Clock,Crown,Zap} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import SlideToOrder, { triggerHaptic } from './SlideToOrder';
 import { isApexMember } from './ApexPass';
+import './apex-pass.css';
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const getCart=()=>{try{return JSON.parse(localStorage.getItem('motodc-cart')||'[]')}catch{return[]}};
@@ -497,6 +498,26 @@ export default function Checkout(){
                 )}
               </div>
             </div>
+
+            {!isApex && (
+              <div
+                className="cartApexPrimeBanner"
+                style={{ marginBottom: '16px' }}
+                onClick={() => window.dispatchEvent(new CustomEvent('motodc:open-apex'))}
+                role="button"
+                aria-label="Unlock ₹0 Free Delivery with MotoDC Apex VIP"
+              >
+                <div className="leftCol">
+                  <strong>
+                    <Crown size={15} color="#ffd700" /> Save ₹{STANDARD_DELIVERY_FEE} delivery fee today
+                  </strong>
+                  <small>Join MotoDC Apex VIP for ₹29/mo or ₹199/yr · Extra 10% Off</small>
+                </div>
+                <span className="cartApexJoinPill">
+                  <Zap size={12} /> Get ₹0 Delivery
+                </span>
+              </div>
+            )}
 
             {/* Items List */}
             <div className="checkoutItemsList">
