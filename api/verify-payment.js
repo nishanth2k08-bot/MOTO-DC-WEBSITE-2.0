@@ -83,12 +83,18 @@ export default async function handler(req,res){
     const deliveryPin=computePin(orderId);
     const orderCategoryRef=db.collection('orders').doc('online orders');
     const orderRef=orderCategoryRef.collection('records').doc();
-    let subtotal=0;
-    const FREE_DELIVERY_THRESHOLD=799;
-    const STANDARD_DELIVERY_FEE=99;
-    let tax=0,deliveryFee=0,grandTotal=0;
-    const finalItems=[];
+    const isApex = Boolean(req.body?.isApexMember);
+    const FREE_DELIVERY_THRESHOLD = 799;
+    const STANDARD_DELIVERY_FEE = 99;
+    let subtotal = 0;
+    let apexDiscount = 0;
+    let tax = 0;
+    let deliveryFee = 0;
+    let grandTotal = 0;
+    const finalItems = [];
     await db.runTransaction(async tx=>{
+      finalItems.length = 0;
+      subtotal = 0;
       const requestedItems=(intent.items||[]).map(item=>({id:String(item.id),qty:Math.max(1,Math.floor(Number(item.qty||1)))}));
       const productRefs=requestedItems.map(item=>db.collection('products').doc(item.id));
       const productSnaps=productRefs.length?await tx.getAll(...productRefs):[];
@@ -106,8 +112,7 @@ export default async function handler(req,res){
         const price=Number(p.price||0);subtotal+=price*qty;
         finalItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
       }
-            const isApex = Boolean(req.body?.isApexMember);
-      const apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
+      apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
       const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
       tax = Math.round(taxableSubtotal * 0.18 * 100) / 100;
       deliveryFee = isApex || subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : STANDARD_DELIVERY_FEE;

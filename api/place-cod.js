@@ -29,12 +29,18 @@ export default async function handler(req,res){
     const orderId=`MDC-${Date.now().toString().slice(-8)}`;
     function computePin(id){let hash=0;const s=String(id||'7482');for(let i=0;i<s.length;i++)hash=(hash*31+s.charCodeAt(i))>>>0;return String(1000+(hash%9000));}
     const deliveryPin=computePin(orderId);
-    let subtotal=0;
-    const FREE_DELIVERY_THRESHOLD=799;
-    const STANDARD_DELIVERY_FEE=99;
-    let tax=0,deliveryFee=0,grandTotal=0;
-    const safeItems=[];
+    const isApex = Boolean(req.body?.isApexMember);
+    const FREE_DELIVERY_THRESHOLD = 799;
+    const STANDARD_DELIVERY_FEE = 99;
+    let subtotal = 0;
+    let apexDiscount = 0;
+    let tax = 0;
+    let deliveryFee = 0;
+    let grandTotal = 0;
+    const safeItems = [];
     await db.runTransaction(async tx=>{
+      safeItems.length = 0;
+      subtotal = 0;
       const productRefs=items.map(item=>db.collection('products').doc(String(item.id)));
       const snapshots=await Promise.all(productRefs.map(ref=>tx.get(ref)));
       snapshots.forEach((snap,index)=>{
@@ -65,8 +71,7 @@ export default async function handler(req,res){
           });
         }
       });
-            const isApex = Boolean(req.body?.isApexMember);
-      const apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
+      apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
       const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
       tax = Math.round(taxableSubtotal * 0.18 * 100) / 100;
       deliveryFee = isApex || subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : STANDARD_DELIVERY_FEE;
@@ -121,6 +126,6 @@ export default async function handler(req,res){
     if(message.includes('FIREBASE_SERVICE_ACCOUNT_JSON')||message.includes('private key'))return send(res,500,{error:'Firebase server credentials are invalid. Check FIREBASE_SERVICE_ACCOUNT_JSON in Vercel.'});
     if(message.includes('verifyIdToken'))return send(res,401,{error:'Firebase authentication could not be verified'});
     if(message.startsWith('Insufficient stock')||message.includes('no longer available'))return send(res,409,{error:message});
-    return send(res,500,{error:'Could not place Cash on Delivery order'});
+    return send(res,500,{error:e?.message||'Could not place Cash on Delivery order'});
   }
 }
