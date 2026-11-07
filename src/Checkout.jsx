@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useRef} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate,useLocation} from 'react-router-dom';
 import {auth} from './firebase';
-import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,Phone,Clock,Crown,Zap} from 'lucide-react';
+import {ArrowLeft,CheckCircle,MapPin,Wallet,Truck,LogIn,Phone,Clock,Crown,Zap,Navigation,ShoppingCart,Trash2} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import SlideToOrder, { triggerHaptic } from './SlideToOrder';
 import { isApexMember } from './ApexPass';
@@ -56,13 +56,95 @@ const parseInitialPhone=(raw)=>{
 };
 
 export default function Checkout(){
-  const nav=useNavigate(),[items]=useState(getCart()),[placed,setPlaced]=useState(null),[loading,setLoading]=useState(false),user=auth.currentUser;
+  const nav=useNavigate(),location=useLocation(),[items]=useState(getCart()),[placed,setPlaced]=useState(null),[loading,setLoading]=useState(false),user=auth.currentUser;
   const formRef=useRef(null);
   const initialContact=parseInitialPhone(user?.phoneNumber);
   const [countryCode,setCountryCode]=useState(initialContact.code);
   const [form,setForm]=useState({name:user?.displayName||'',email:user?.email||'',phone:initialContact.phone,address:'',city:'',state:'',pincode:''});
   const [payment,setPayment]=useState('cod');
   const [processingState,setProcessingState]=useState(null);
+  const [gpsLocating,setGpsLocating]=useState(false);
+  const [gpsCoords,setGpsCoords]=useState(null);
+  const [showBuyNowModal,setShowBuyNowModal]=useState(false);
+
+  // Detect if user reached checkout via "Buy Now" flow
+  const buyNowPending=(()=>{
+    try{
+      const fromState=location.state?.fromBuyNow?location.state?.buyNowProduct:null;
+      if(fromState)return fromState;
+      const raw=sessionStorage.getItem('motodc_buy_now_pending');
+      return raw?JSON.parse(raw):null;
+    }catch(_){return null;}
+  })();
+
+  const handleBackClick=()=>{
+    if(buyNowPending){
+      setShowBuyNowModal(true);
+      return;
+    }
+    nav('/cart');
+  };
+
+  const handleKeepItemInCart=()=>{
+    try{sessionStorage.removeItem('motodc_buy_now_pending');}catch(_){}
+    setShowBuyNowModal(false);
+    toast.success('Item moved to your cart 🛒');
+    nav('/products');
+  };
+
+  const handleClearCart=()=>{
+    try{sessionStorage.removeItem('motodc_buy_now_pending');}catch(_){}
+    clearCart();
+    setShowBuyNowModal(false);
+    toast.success('Cart cleared 🗑️');
+    nav('/products');
+  };
+
+  const handleDetectGpsLocation=()=>{
+    if(!navigator.geolocation){
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+    setGpsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async(pos)=>{
+        const lat=pos.coords.latitude;
+        const lng=pos.coords.longitude;
+        setGpsCoords({lat,lng});
+        setGpsLocating(false);
+        triggerHaptic([50,50]);
+        toast.success('Exact doorstep GPS pinned!');
+        try{
+          const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          if(res.ok){
+            const data=await res.json();
+            const addr=data.address||{};
+            setForm(prev=>({
+              ...prev,
+              city:prev.city||addr.city||addr.town||addr.village||addr.suburb||'Karaikal',
+              state:prev.state||addr.state||'Puducherry',
+              pincode:prev.pincode||addr.postcode||''
+            }));
+          }
+        }catch(_){}
+      },
+      (err)=>{
+        setGpsLocating(false);
+        console.warn('Geolocation error:',err);
+        toast.error('Could not get GPS location. Please check location permissions.');
+      },
+      {enableHighAccuracy:true,timeout:10000,maximumAge:60000}
+    );
+  };
+
+  useEffect(()=>{
+    if(!buyNowPending)return;
+    const onPopState=()=>{
+      setShowBuyNowModal(true);
+    };
+    window.addEventListener('popstate',onPopState);
+    return()=>window.removeEventListener('popstate',onPopState);
+  },[buyNowPending]);
 
   useEffect(()=>{
     if(user){
@@ -191,11 +273,19 @@ export default function Checkout(){
         body:JSON.stringify({
           items:items.map(x=>({id:x.id,qty:x.qty})),
           customer:{name:form.name,email:form.email,phone:fullPhone},
-          shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode},
+          shipping:{
+            address:form.address,
+            city:form.city,
+            state:form.state,
+            pincode:form.pincode,
+            lat:gpsCoords?.lat||null,
+            lng:gpsCoords?.lng||null
+          },
           isApexMember: isApex
         })
       });
       const result=await readApiResponse(response);
+      try{sessionStorage.removeItem('motodc_buy_now_pending');}catch(_){}
       clearCart();
       triggerHaptic([100, 50, 150]);
       toast.success('Order placed successfully');
@@ -277,12 +367,20 @@ export default function Checkout(){
               razorpay_payment_id:response.razorpay_payment_id,
               razorpay_signature:response.razorpay_signature,
               customer:{name:form.name,email:form.email,phone:fullPhone},
-              shipping:{address:form.address,city:form.city,state:form.state,pincode:form.pincode},
+              shipping:{
+                address:form.address,
+                city:form.city,
+                state:form.state,
+                pincode:form.pincode,
+                lat:gpsCoords?.lat||null,
+                lng:gpsCoords?.lng||null
+              },
               paymentMethod:'online',
               isApexMember: isApex
             })
           });
           const result=await readApiResponse(verify);
+          try{sessionStorage.removeItem('motodc_buy_now_pending');}catch(_){}
           clearCart();
           triggerHaptic([100, 50, 150]);
           toast.success('Payment verified! Order confirmed.');
@@ -383,7 +481,7 @@ export default function Checkout(){
         </div>
       )}
       <section className="page checkoutPage">
-        <button type="button" className="backBtn" onClick={()=>nav('/cart')}><ArrowLeft size={16}/> Back to Cart</button>
+        <button type="button" className="backBtn" onClick={handleBackClick}><ArrowLeft size={16}/> {buyNowPending ? 'Back to Shop' : 'Back to Cart'}</button>
         <div className="pagehead">
           <p className="eyebrow">SECURE CHECKOUT</p>
           <h1>Complete your <span>order.</span></h1>
@@ -438,8 +536,59 @@ export default function Checkout(){
                 </label>
               </div>
             </div>
-            <div className="checkoutBlock">
-              <h2><MapPin size={19}/> Delivery address</h2>
+            <div className="checkoutBlock addressBlock">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'12px',flexWrap:'wrap',gap:'8px'}}>
+                <h2 style={{margin:0}}><MapPin size={19}/> Delivery address</h2>
+                <button
+                  type="button"
+                  className={`gpsDetectBtn ${gpsLocating?'loading':''} ${gpsCoords?'attached':''}`}
+                  onClick={handleDetectGpsLocation}
+                  title="Lock exact doorstep GPS pin for two-wheeler delivery riders"
+                  style={{
+                    display:'inline-flex',
+                    alignItems:'center',
+                    gap:'6px',
+                    padding:'6px 12px',
+                    borderRadius:'8px',
+                    fontSize:'0.82rem',
+                    fontWeight:600,
+                    background:gpsCoords?'rgba(16,185,129,0.14)':'rgba(56,189,248,0.12)',
+                    color:gpsCoords?'#10b981':'#38bdf8',
+                    border:gpsCoords?'1px solid rgba(16,185,129,0.3)':'1px solid rgba(56,189,248,0.3)',
+                    cursor:'pointer',
+                    transition:'all 0.2s ease'
+                  }}
+                >
+                  <Navigation size={14} className={gpsLocating?'spin':''}/>
+                  {gpsLocating ? 'Detecting GPS...' : gpsCoords ? '📍 Exact GPS Attached' : '📍 Use Current Location'}
+                </button>
+              </div>
+              {gpsCoords && (
+                <div style={{
+                  display:'flex',
+                  alignItems:'center',
+                  justifyContent:'space-between',
+                  background:'rgba(16,185,129,0.08)',
+                  border:'1px solid rgba(16,185,129,0.25)',
+                  borderRadius:'8px',
+                  padding:'8px 12px',
+                  marginBottom:'14px',
+                  fontSize:'0.8rem',
+                  color:'#10b981'
+                }}>
+                  <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                    <CheckCircle size={14}/>
+                    <span>Doorstep GPS locked ({gpsCoords.lat.toFixed(5)}, {gpsCoords.lng.toFixed(5)}) for accurate rider navigation.</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={()=>setGpsCoords(null)}
+                    style={{background:'none',border:'none',color:'#94a3b8',fontSize:'0.75rem',cursor:'pointer',textDecoration:'underline'}}
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
               <div className="formGrid">
                 <label className="full">Address<input required name="address" value={form.address} onChange={update} placeholder="House / street / area"/></label>
                 <label>City<input required name="city" value={form.city} onChange={update} placeholder="City"/></label>
@@ -571,6 +720,46 @@ export default function Checkout(){
           </aside>
         </div>
       </section>
+
+      {/* Buy Now Exit Decision Modal */}
+      {showBuyNowModal && (
+        <div className="buyNowModalOverlay" role="dialog" aria-modal="true" onClick={() => setShowBuyNowModal(false)}>
+          <div className="buyNowModalCard" onClick={e => e.stopPropagation()}>
+            <div className="buyNowModalIconWrap">
+              <ShoppingCart size={28} color="#f97316" />
+            </div>
+            <h3>Keep item in your cart?</h3>
+            <p>
+              You started this order via <strong>Buy Now</strong>
+              {buyNowPending?.name ? <> for <em>{buyNowPending.name}</em></> : ''}.
+              What would you like to do before returning?
+            </p>
+            <div className="buyNowModalActionGrid">
+              <button
+                type="button"
+                className="buyNowMoveCartBtn"
+                onClick={handleKeepItemInCart}
+              >
+                <ShoppingCart size={16} /> Move item to cart
+              </button>
+              <button
+                type="button"
+                className="buyNowClearCartBtn"
+                onClick={handleClearCart}
+              >
+                <Trash2 size={16} /> Clear cart
+              </button>
+            </div>
+            <button
+              type="button"
+              className="buyNowCancelLink"
+              onClick={() => setShowBuyNowModal(false)}
+            >
+              Stay on Checkout
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

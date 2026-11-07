@@ -131,11 +131,26 @@ export default async function handler(req,res){
           });
         }
       }
+      const cleanShipping = {
+        address: shipping?.address || '',
+        city: shipping?.city || '',
+        state: shipping?.state || '',
+        pincode: shipping?.pincode || '',
+        lat: shipping?.lat || null,
+        lng: shipping?.lng || null
+      };
       tx.set(orderCategoryRef,{name:'online orders',paymentMethod:'online',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
-      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,isApexMember:isApex,apexDiscount,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
+      tx.set(orderRef,{orderId,userId:decoded.uid,customer:customer||{},shipping:cleanShipping,items:finalItems,subtotal,isApexMember:isApex,apexDiscount,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',razorpayOrderId:razorpay_order_id,razorpayPaymentId:razorpay_payment_id,orderStatus:'placed',statusHistory:[{status:'placed',updatedAt:new Date().toISOString()}],createdAt:admin.firestore.FieldValue.serverTimestamp()});
       tx.update(intentRef,{status:'completed',paymentId:razorpay_payment_id,completedAt:admin.firestore.FieldValue.serverTimestamp(),orderDocId:orderRef.id});
     });
-    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:shipping||{},items:finalItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
+    const order={id:orderRef.id,orderId,userId:decoded.uid,customer:customer||{},shipping:{
+      address: shipping?.address || '',
+      city: shipping?.city || '',
+      state: shipping?.state || '',
+      pincode: shipping?.pincode || '',
+      lat: shipping?.lat || null,
+      lng: shipping?.lng || null
+    },items:finalItems,subtotal,tax,delivery:deliveryFee===0?'FREE':deliveryFee,total:grandTotal,deliveryPin,paymentMethod:'online',paymentStatus:'paid',orderStatus:'placed'};
     waitUntil(indexOrderInAlgolia(order));
     const templateId=process.env.MSG91_TEMPLATE_ONLINE_ORDER;
     if(templateId)waitUntil((async()=>{try{await sendCustomerTemplateEmail({order,templateId});}catch(emailError){console.error('Online order email error:',emailError);}})());

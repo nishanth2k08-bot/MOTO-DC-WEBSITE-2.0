@@ -349,6 +349,8 @@ export default async function handler(req, res) {
               city: o.shipping?.city || 'Karaikal',
               state: o.shipping?.state || '',
               pincode: o.shipping?.pincode || '',
+              lat: o.shipping?.lat || null,
+              lng: o.shipping?.lng || null,
             },
             items: (o.items || []).map((it) => ({
               name: it.name || 'Automotive Part',
@@ -508,6 +510,8 @@ export default async function handler(req, res) {
                   city: o.shipping?.city || 'Karaikal',
                   state: o.shipping?.state || '',
                   pincode: o.shipping?.pincode || '',
+                  lat: o.shipping?.lat || null,
+                  lng: o.shipping?.lng || null,
                 },
                 items: (o.items || []).map((it) => ({
                   name: it.name || 'Automotive Part',
@@ -559,6 +563,8 @@ export default async function handler(req, res) {
               city: o.shipping?.city || 'Karaikal',
               state: o.shipping?.state || '',
               pincode: o.shipping?.pincode || '',
+              lat: o.shipping?.lat || null,
+              lng: o.shipping?.lng || null,
             },
             items: (o.items || []).map((it) => ({
               name: it.name || 'Automotive Part',
@@ -626,6 +632,8 @@ export default async function handler(req, res) {
                 city: o.shipping?.city || 'Karaikal',
                 state: o.shipping?.state || '',
                 pincode: o.shipping?.pincode || '',
+                lat: o.shipping?.lat || null,
+                lng: o.shipping?.lng || null,
               },
               items: (o.items || []).map((it) => ({
                 name: it.name || 'Automotive Part',
@@ -776,6 +784,8 @@ export default async function handler(req, res) {
             city: foundDoc.shipping?.city || '',
             state: foundDoc.shipping?.state || '',
             pincode: foundDoc.shipping?.pincode || '',
+            lat: foundDoc.shipping?.lat || null,
+            lng: foundDoc.shipping?.lng || null,
           },
           items: (foundDoc.items || []).map((it) => ({
             name: it.name || 'Automotive Part',

@@ -80,7 +80,14 @@ export default async function handler(req,res){
         orderId,
         userId: decoded.uid,
         customer: customer || {},
-        shipping: shipping || {},
+        shipping: {
+          address: shipping?.address || '',
+          city: shipping?.city || '',
+          state: shipping?.state || '',
+          pincode: shipping?.pincode || '',
+          lat: shipping?.lat || null,
+          lng: shipping?.lng || null
+        },
         items: safeItems,
         subtotal,
         isApexMember: isApex,
@@ -101,7 +108,14 @@ export default async function handler(req,res){
       orderId,
       userId: decoded.uid,
       customer: customer || {},
-      shipping: shipping || {},
+      shipping: {
+        address: shipping?.address || '',
+        city: shipping?.city || '',
+        state: shipping?.state || '',
+        pincode: shipping?.pincode || '',
+        lat: shipping?.lat || null,
+        lng: shipping?.lng || null
+      },
       items: safeItems,
       subtotal,
       isApexMember: isApex,

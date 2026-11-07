@@ -316,21 +316,7 @@ function evaluateRiderCheckin(serviceMode, pData) {
     };
   }
 
-  // Check if rider is late for check-in
-  if (currentMinutes > activeWindow.checkinCutoffMinutes) {
-    return {
-      allowed: false,
-      code: 'LATE_CHECKIN_BLOCKED',
-      istTimeString,
-      activeWindow,
-      schedule,
-      shiftStartTime: activeWindow.shiftStartTime,
-      cutoffTime: activeWindow.cutoffTime,
-      minutesLate: currentMinutes - activeWindow.startMinutes,
-      error: `Late Check-In Blocked: Shift scheduled for ${activeWindow.shiftStartTime}. On-time check-in window closed at ${activeWindow.cutoffTime}.`,
-    };
-  }
-
+  // Shift check-in is open during scheduled shift operating window with no late penalties or strikes
   return {
     allowed: true,
     isLate: false,
@@ -390,110 +376,9 @@ export default async function handler(req, res) {
         return send(res, 401, { error: 'Invalid 6-digit PIN. Tap "Forgot PIN" if forgotten.' });
       }
 
-      // Shift Hour & On-Time Check-In Enforcement
+      // Shift Hour & Operating Window Check
       const checkinEval = evaluateRiderCheckin(pData.serviceMode, pData);
       if (!checkinEval.allowed) {
-        if (checkinEval.code === 'LATE_CHECKIN_BLOCKED') {
-          const lateStrikes = (pData.lateStrikes || 0) + 1;
-          const bonusCutoff = lateStrikes >= 3;
-          // Record late strike in Firestore
-          await partnerDoc.ref.update({
-            lateStrikes,
-            bonusCutoff,
-            lastLateDate: new Date().toISOString(),
-            lastLateTime: checkinEval.istTimeString,
-          });
-
-          // If 3 strikes reached: Send Bonus Forfeiture Email via MSG91
-          if (bonusCutoff && !pData.bonusCutoffEmailSent && pData.email) {
-            try {
-              const authKey = process.env.MSG91_AUTHKEY;
-              const domain = process.env.MSG91_EMAIL_DOMAIN;
-              const templateId = process.env.MSG91_TEMPLATE_BONUS_CANCEL || 'motodc_rider_bonus_cancelled_2';
-              const fromEmail = String(process.env.MSG91_FROM_EMAIL || `no-reply@${domain || 'motodc.in'}`).trim();
-              const currentMonth = new Date().toLocaleString('en-IN', { month: 'long', year: 'numeric' });
-              const riderName = pData.name || 'MotoDC Partner';
-
-              if (authKey && domain && templateId) {
-                await fetch('https://control.msg91.com/api/v5/email/send', {
-                  method: 'POST',
-                  headers: {
-                    accept: 'application/json',
-                    authkey: authKey,
-                    'content-type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    recipients: [
-                      {
-                        to: [{ name: riderName, email: pData.email }],
-                        variables: {
-                          rider_name: riderName,
-                          rider_id: pData.username || cleanUser,
-                          bonus_month: currentMonth,
-                          month: currentMonth,
-                          strikes_count: '3',
-                          bonus_amount: '₹2,500',
-                          policy_reason: 'Repeated unpunctuality and shift check-in cutoff violations',
-                          hub_location: 'Karaikal Central Fleet Hub',
-                          VAR1: riderName,
-                          VAR2: '₹2,500',
-                          VAR3: pData.username || cleanUser,
-                          VAR4: '3',
-                          VAR5: riderName,
-                          VAR6: 'Repeated unpunctuality and shift check-in cutoff violations',
-                          VAR7: '₹2,500',
-                          VAR8: currentMonth,
-                          VAR9: '3',
-                          VAR10: 'Karaikal Central Fleet Hub',
-                          var1: riderName,
-                          var2: '₹2,500',
-                          var3: pData.username || cleanUser,
-                          var4: '3',
-                          var5: riderName,
-                          var6: 'Repeated unpunctuality and shift check-in cutoff violations',
-                          var7: '₹2,500',
-                          var8: currentMonth,
-                          var9: '3',
-                          var10: 'Karaikal Central Fleet Hub',
-                        },
-                      },
-                    ],
-                    from: { name: process.env.MSG91_FROM_NAME || 'MOTO DC FLEET', email: fromEmail },
-                    domain,
-                    template_id: templateId,
-                    validate_before_send: true,
-                  }),
-                }).catch((err) => console.warn('MSG91 bonus cancel dispatch error:', err));
-
-                await partnerDoc.ref.update({
-                  bonusCutoffEmailSent: true,
-                  bonusCutoffEmailSentAt: new Date().toISOString(),
-                });
-              }
-            } catch (emailErr) {
-              console.warn('Bonus cancellation email error:', emailErr);
-            }
-          }
-
-          return send(res, 403, {
-            ok: false,
-            code: 'LATE_CHECKIN_BLOCKED',
-            error: checkinEval.error,
-            lateStrikes,
-            bonusCutoff,
-            shiftStartTime: checkinEval.shiftStartTime,
-            cutoffTime: checkinEval.cutoffTime,
-            istTimeString: checkinEval.istTimeString,
-            minutesLate: checkinEval.minutesLate,
-            message: `You attempted to check in late at ${checkinEval.istTimeString}. Your shift was scheduled for ${checkinEval.shiftStartTime} (check-in closed at ${checkinEval.cutoffTime}). You have accumulated ${lateStrikes}/3 late strikes. ${
-              bonusCutoff
-                ? '⚠️ ATTENDANCE PENALTY: Your monthly punctuality bonus (₹2,500) has been CUT OFF.'
-                : `You have ${3 - lateStrikes} strike(s) left before your monthly bonus is forfeited.`
-            } Contact your Karaikal Hub Manager for clearance.`,
-          });
-        }
-
-        // Outside operating hours
         return send(res, 403, {
           ok: false,
           code: 'OUTSIDE_OPERATING_HOURS',
