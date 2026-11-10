@@ -26,6 +26,42 @@ import QRCode from 'qrcode';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import './orders.css';
+import { majorSpareProducts } from './major-spares';
+
+// Lookup index for fast spare matching by id and name
+const sparesById = new Map();
+const sparesByName = new Map();
+majorSpareProducts.forEach(sp => {
+  if (sp.id) sparesById.set(String(sp.id).toLowerCase(), sp);
+  if (sp.name) sparesByName.set(String(sp.name).trim().toLowerCase(), sp);
+});
+
+export function getSafeOrderItemImage(item) {
+  if (!item) return '/images/products/sp-1_honda_activa_6g_air_filter.jpg';
+
+  const idKey = String(item.id || '').trim().toLowerCase();
+  const nameKey = String(item.name || '').trim().toLowerCase();
+
+  const matched = (idKey && sparesById.get(idKey)) ||
+                  (nameKey && sparesByName.get(nameKey)) ||
+                  majorSpareProducts.find(sp => {
+                    const spName = String(sp.name || '').toLowerCase();
+                    return nameKey && (spName.includes(nameKey) || nameKey.includes(spName));
+                  });
+
+  if (matched?.image && !matched.image.includes('images.unsplash.com')) {
+    return matched.image;
+  }
+
+  if (item.image && typeof item.image === 'string' && !item.image.includes('images.unsplash.com')) {
+    if (!item.image.startsWith('http') && !item.image.startsWith('/')) {
+      return `/${item.image}`;
+    }
+    return item.image;
+  }
+
+  return matched?.image || '/images/products/sp-1_honda_activa_6g_air_filter.jpg';
+}
 
 const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
 const steps = ['placed', 'confirmed', 'packed', 'shipped', 'out_for_delivery', 'delivered'];
@@ -1425,11 +1461,16 @@ export default function Orders() {
           {(o.items || []).map((x, i) => (
             <div className="inspectorItemRow" key={i}>
               <div className="inspectorItemImg">
-                {x.image ? (
-                  <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
-                ) : (
-                  <Package size={20} />
-                )}
+                <img
+                  src={getSafeOrderItemImage(x)}
+                  alt={x.name || 'Item'}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/products/sp-1_honda_activa_6g_air_filter.jpg';
+                  }}
+                />
               </div>
               <div className="inspectorItemInfo">
                 <b>{x.name}</b>
@@ -1534,11 +1575,16 @@ export default function Orders() {
         {/* Body Row: Thumbnail, Product Details, Total */}
         <div className="allOrderSummaryBody">
           <div className="allOrderSummaryThumb">
-            {firstItem.image ? (
-              <img src={firstItem.image} alt={firstItem.name || 'Product'} loading="lazy" />
-            ) : (
-              <Package size={26} />
-            )}
+            <img
+              src={getSafeOrderItemImage(firstItem)}
+              alt={firstItem.name || 'Product'}
+              loading="lazy"
+              decoding="async"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/images/products/sp-1_honda_activa_6g_air_filter.jpg';
+              }}
+            />
           </div>
 
           <div className="allOrderSummaryDetails">
@@ -1823,16 +1869,16 @@ export default function Orders() {
                   >
                     <div className="ordersSplitCardInner">
                       <div className="ordersSplitThumb">
-                        {o.items?.[0]?.image ? (
-                          <img
-                            src={o.items[0].image}
-                            alt={o.items[0].name || 'Product'}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          <Package size={24} />
-                        )}
+                        <img
+                          src={getSafeOrderItemImage(o.items?.[0])}
+                          alt={o.items?.[0]?.name || 'Product'}
+                          loading="lazy"
+                          decoding="async"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/images/products/sp-1_honda_activa_6g_air_filter.jpg';
+                          }}
+                        />
                       </div>
 
                       <div className="ordersSplitContent">
@@ -2077,11 +2123,16 @@ export default function Orders() {
                     {(activeOrder.items || []).map((x, i) => (
                       <div className="inspectorItemRow" key={i}>
                         <div className="inspectorItemImg">
-                          {x.image ? (
-                            <img src={x.image} alt={x.name || 'Item'} loading="lazy" />
-                          ) : (
-                            <Package size={20} />
-                          )}
+                          <img
+                            src={getSafeOrderItemImage(x)}
+                            alt={x.name || 'Item'}
+                            loading="lazy"
+                            decoding="async"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = '/images/products/sp-1_honda_activa_6g_air_filter.jpg';
+                            }}
+                          />
                         </div>
                         <div className="inspectorItemInfo">
                           <b>{x.name}</b>
