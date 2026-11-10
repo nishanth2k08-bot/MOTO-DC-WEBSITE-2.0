@@ -121,7 +121,7 @@ export default function AdminOrders({ activeTab = 'dashboard' }){
      <AdminReturns/>
     </>
    )}
-   {labelOrder && <ShippingLabelModal order={labelOrder} onClose={() => setLabelOrder(null)} onMarkPacked={(o) => updateStatus(o, 'packed')} />}
+   {labelOrder && <ShippingLabelModal order={labelOrder} onClose={() => setLabelOrder(null)} />}
   </div>
  );
 }
