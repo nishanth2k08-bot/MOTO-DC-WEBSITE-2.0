@@ -122,7 +122,7 @@ export default function RiderPartnerPage() {
   const rcInputRef = useRef(null);
 
   // App version constant - automatically synchronized across QR code, download URL, and release badges
-  const LATEST_APP_VERSION = '1.0.32';
+  const LATEST_APP_VERSION = '1.0.33';
   const GITHUB_RELEASE_APK_URL = `https://github.com/nishanth2k08-bot/MOTODC-APP/releases/download/v${LATEST_APP_VERSION}/MotoDC-Partner.apk`;
   const LOCAL_MIRROR_APK_URL = `/MotoDC-Partner.apk?v=${LATEST_APP_VERSION}`;
   const APK_DOWNLOAD_URL = GITHUB_RELEASE_APK_URL;
