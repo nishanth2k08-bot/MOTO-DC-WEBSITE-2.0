@@ -46,6 +46,28 @@ const unlockScroll=()=>{
   document.body.classList.remove('motodc-payment-modal-open');
 };
 
+// ITU-T E.164 Assigned International Calling Codes
+export const VALID_COUNTRY_CODES = new Set([
+  '1', '7', '20', '27', '30', '31', '32', '33', '34', '36', '39', '40', '41', '43', '44', '45', '46', '47', '48', '49',
+  '51', '52', '53', '54', '55', '56', '57', '58', '60', '61', '62', '63', '64', '65', '66', '81', '82', '84', '86', '90',
+  '91', '92', '93', '94', '95', '98', '211', '212', '213', '216', '218', '220', '221', '222', '223', '224', '225', '226',
+  '227', '228', '229', '230', '231', '232', '233', '234', '235', '236', '237', '238', '239', '240', '241', '242', '243',
+  '244', '245', '246', '247', '248', '249', '250', '251', '252', '253', '254', '255', '256', '257', '258', '260', '261',
+  '262', '263', '264', '265', '266', '267', '268', '269', '290', '291', '297', '298', '299', '350', '351', '352', '353',
+  '354', '355', '356', '357', '358', '359', '370', '371', '372', '373', '374', '375', '376', '377', '378', '379', '380',
+  '381', '382', '383', '385', '386', '387', '389', '420', '421', '423', '500', '501', '502', '503', '504', '505', '506',
+  '507', '508', '509', '590', '591', '592', '593', '594', '595', '596', '597', '598', '599', '670', '672', '673', '674',
+  '675', '676', '677', '678', '679', '680', '681', '682', '683', '685', '686', '687', '688', '689', '690', '691', '692',
+  '850', '852', '853', '855', '856', '880', '886', '960', '961', '962', '963', '964', '965', '966', '967', '968', '970',
+  '971', '972', '973', '974', '975', '976', '977', '992', '993', '994', '995', '996', '998'
+]);
+
+export function isValidCountryCode(raw) {
+  if (!raw) return false;
+  const digits = String(raw).replace(/\D/g, '');
+  return VALID_COUNTRY_CODES.has(digits);
+}
+
 const parseInitialPhone=(raw)=>{
   if(!raw)return {code:'+91',phone:''};
   const str=String(raw).trim();
@@ -115,18 +137,56 @@ export default function Checkout(){
         triggerHaptic([50,50]);
         toast.success('Exact doorstep GPS pinned!');
         try{
-          const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`);
           if(res.ok){
             const data=await res.json();
             const addr=data.address||{};
+            const county=addr.county||'';
+            const district=addr.state_district||'';
+            const isKaraikal=/karaikal/i.test(county) ||
+                             /karaikal/i.test(district) ||
+                             /karaikal/i.test(addr.city||'') ||
+                             /karaikal/i.test(data.display_name||'');
+
+            const resolvedCity=isKaraikal?'Karaikal':(addr.city||addr.town||addr.municipality||county||district||'Karaikal');
+            const resolvedState=addr.state||'Puducherry';
+            const resolvedPin=addr.postcode?addr.postcode.replace(/\D/g,'').slice(0,6):'';
+
+            const streetParts=[];
+            if(addr.house_number)streetParts.push(addr.house_number);
+            if(addr.building&&addr.building!==addr.house_number)streetParts.push(addr.building);
+            if(addr.road)streetParts.push(addr.road);
+            if(addr.neighbourhood&&!streetParts.includes(addr.neighbourhood))streetParts.push(addr.neighbourhood);
+            if(addr.suburb&&!streetParts.includes(addr.suburb))streetParts.push(addr.suburb);
+            if(addr.village&&!streetParts.includes(addr.village)&&addr.village.toLowerCase()!==resolvedCity.toLowerCase()){
+              streetParts.push(addr.village);
+            }
+            if(addr.hamlet&&!streetParts.includes(addr.hamlet))streetParts.push(addr.hamlet);
+
+            let resolvedStreet=streetParts.filter(Boolean).join(', ');
+
+            if(!resolvedStreet&&data.display_name){
+              const parts=data.display_name.split(',').map(s=>s.trim());
+              const cleanParts=parts.filter(p=>
+                !/india/i.test(p) &&
+                !/^\d{5,6}$/.test(p) &&
+                !/puducherry|pondicherry/i.test(p) &&
+                p.toLowerCase()!==resolvedCity.toLowerCase()
+              );
+              resolvedStreet=cleanParts.slice(0,3).join(', ');
+            }
+
             setForm(prev=>({
               ...prev,
-              city:prev.city||addr.city||addr.town||addr.village||addr.suburb||'Karaikal',
-              state:prev.state||addr.state||'Puducherry',
-              pincode:prev.pincode||addr.postcode||''
+              address:resolvedStreet||prev.address,
+              city:resolvedCity,
+              state:resolvedState||prev.state||'Puducherry',
+              pincode:resolvedPin||prev.pincode
             }));
           }
-        }catch(_){}
+        }catch(e){
+          console.warn('Reverse geocode error:',e);
+        }
       },
       (err)=>{
         setGpsLocating(false);
@@ -171,6 +231,13 @@ export default function Checkout(){
   const deliveryFee = isFreeDelivery ? 0 : STANDARD_DELIVERY_FEE;
   const grandTotal = Math.round((taxableSubtotal + totalGst + deliveryFee) * 100) / 100;
   const update=e=>setForm({...form,[e.target.name]:e.target.value});
+
+  const handleCountryCodeBlur=()=>{
+    const cleanCode=countryCode.trim();
+    if(cleanCode && cleanCode!=='+' && !isValidCountryCode(cleanCode)){
+      toast.error('incorrect country code !please enter the valid country code');
+    }
+  };
 
   const handleCountryCodeChange=(e)=>{
     let val=e.target.value.trim().replace(/[^\d+]/g,'');
@@ -243,13 +310,21 @@ export default function Checkout(){
       return false;
     }
     const cleanCode=countryCode.trim();
-    if(!cleanCode||cleanCode==='+'||!/^\+\d{1,4}$/.test(cleanCode)){
-      toast.error('Country code is compulsory (e.g. +91)');
+    if(!cleanCode||cleanCode==='+'||!isValidCountryCode(cleanCode)){
+      toast.error('incorrect country code !please enter the valid country code');
       return false;
     }
     const rawDigits=form.phone.replace(/\D/g,'');
     if(rawDigits.length!==10){
       toast.error('Mobile number must be exactly 10 digits');
+      return false;
+    }
+    if(!form.address || !form.address.trim()){
+      toast.error('Please enter your delivery address');
+      return false;
+    }
+    if(!form.city || !form.city.trim()){
+      toast.error('Please enter your city');
       return false;
     }
     if(!/^[0-9]{6}$/.test(form.pincode)){
@@ -483,7 +558,7 @@ export default function Checkout(){
       <section className="page checkoutPage">
         <button type="button" className="backBtn" onClick={handleBackClick}><ArrowLeft size={16}/> {buyNowPending ? 'Back to Shop' : 'Back to Cart'}</button>
         <div className="pagehead">
-          <p className="eyebrow">SECURE CHECKOUT</p>
+          <p className="eyebrow">CHECKOUT</p>
           <h1>Complete your <span>order.</span></h1>
           <p>Enter your delivery details and choose a payment method.</p>
         </div>
@@ -509,6 +584,7 @@ export default function Checkout(){
                         className="countryCodeInput"
                         value={countryCode}
                         onChange={handleCountryCodeChange}
+                        onBlur={handleCountryCodeBlur}
                         placeholder="+91"
                         maxLength={5}
                         aria-label="Country code"
