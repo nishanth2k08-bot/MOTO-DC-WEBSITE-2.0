@@ -216,24 +216,34 @@ header.scrolled {
 }
 
 /* ─── 6. PREMIUM LIGHT THEME ENHANCEMENTS ─────────────────── */
+html.light-theme,
+body.light-theme,
 .light-theme {
   color: #0f172a !important;
   background: #f8fafc !important;
 }
-.light-theme body {
+body.light-theme {
   background: #f8fafc !important;
 }
+body.light-theme header,
 .light-theme header {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: #ffffff !important;
   border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
 }
+body.light-theme header.scrolled,
 .light-theme header.scrolled {
-  background: rgba(255, 255, 255, 0.96) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
   border-bottom-color: rgba(225, 29, 72, 0.3) !important;
   box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08) !important;
 }
+body.light-theme .logo,
 .light-theme .logo {
   color: #0f172a !important;
+}
+body.light-theme .logo span,
+.light-theme .logo span {
+  color: #ff3157 !important;
 }
 .light-theme .nav nav a {
   color: #475569 !important;

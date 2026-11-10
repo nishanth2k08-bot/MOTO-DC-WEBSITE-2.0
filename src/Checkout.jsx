@@ -309,6 +309,10 @@ export default function Checkout(){
       nav('/products');
       return false;
     }
+    if(!form.name || !form.name.trim()){
+      toast.error('Please enter your full name');
+      return false;
+    }
     const cleanCode=countryCode.trim();
     if(!cleanCode||cleanCode==='+'||!isValidCountryCode(cleanCode)){
       toast.error('incorrect country code !please enter the valid country code');
@@ -340,19 +344,19 @@ export default function Checkout(){
       subtitle:'Recording your Cash on Delivery order and preparing express dispatch...'
     });
     try{
-      const token=await user.getIdToken();
+      const token=await user.getIdToken(true);
       const fullPhone=getFullPhone();
       const response=await fetch('/api/place-cod',{
         method:'POST',
         headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
         body:JSON.stringify({
           items:items.map(x=>({id:x.id,qty:x.qty})),
-          customer:{name:form.name,email:form.email,phone:fullPhone},
+          customer:{name:form.name?.trim()||'',email:form.email?.trim()||user?.email||'',phone:fullPhone},
           shipping:{
-            address:form.address,
-            city:form.city,
-            state:form.state,
-            pincode:form.pincode,
+            address:form.address?.trim()||'',
+            city:form.city?.trim()||'',
+            state:form.state?.trim()||'Puducherry',
+            pincode:form.pincode?.trim()||'',
             lat:gpsCoords?.lat||null,
             lng:gpsCoords?.lng||null
           },

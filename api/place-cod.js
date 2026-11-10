@@ -41,53 +41,110 @@ export default async function handler(req,res){
     await db.runTransaction(async tx=>{
       safeItems.length = 0;
       subtotal = 0;
-      const productRefs=items.map(item=>db.collection('products').doc(String(item.id)));
-      const snapshots=await Promise.all(productRefs.map(ref=>tx.get(ref)));
-      snapshots.forEach((snap,index)=>{
-        const item=items[index];
-        let p=snap.exists?snap.data():null;
-        if(!p){
-          const catP=getCatalogProduct(item.id);
-          if(catP) p=catP;
+      const requestedItems = items.map(item=>({
+        id: String(item.id),
+        qty: Math.max(1, Math.floor(Number(item.qty || 1)))
+      }));
+      const productRefs = requestedItems.map(item => db.collection('products').doc(item.id));
+      const snapshots = productRefs.length ? await tx.getAll(...productRefs) : [];
+      const productMap = new Map(snapshots.map(s => [s.id, s]));
+
+      for (const item of requestedItems) {
+        const snap = productMap.get(item.id);
+        let p = snap?.exists ? snap.data() : null;
+        const catP = getCatalogProduct(item.id);
+        if (!p && catP) {
+          p = catP;
         }
-        if(!p)throw new Error('A product is no longer available');
-        const qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
-        if(qty>stock)throw new Error(`Insufficient stock for ${p.name}`);
-        const price=Number(p.price||0);subtotal+=price*qty;
-        safeItems.push({id:String(item.id),name:p.name,category:p.category||'',price,qty,image:p.image||''});
-      });
-      tx.set(categoryRef,{name:'cod orders',paymentMethod:'cod',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
-      tx.set(paymentCategoryRef,{name:'cod payment intents',paymentMethod:'cod',note:'COD does not use a Razorpay payment intent.',updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
-      snapshots.forEach((snap,index)=>{
-        const item=items[index];
-        let p=snap.exists?snap.data():getCatalogProduct(item.id);
-        const qty=Math.max(1,Math.floor(Number(item.qty||1))),stock=Number(p.stock||0);
-        if(snap.exists){
-          tx.update(productRefs[index],{stock:stock-qty});
-        }else if(p){
-          tx.set(productRefs[index],{
-            name:p.name,category:p.category||'',brand:p.brand||'',price:p.price,
-            stock:Math.max(0,stock-qty),rating:p.rating||4.5,image:p.image||'',description:p.description||''
-          });
+        if (!p) throw new Error('A product is no longer available');
+
+        let stock = snap?.exists && typeof p.stock === 'number' ? p.stock : (Number(catP?.stock) || 50);
+        if (item.qty > stock) {
+          if (catP && Number(catP.stock) >= item.qty) {
+            stock = Number(catP.stock);
+          } else {
+            throw new Error(`Insufficient stock for ${p.name || item.id}`);
+          }
         }
-      });
+
+        const price = Number(p.price || catP?.price || 0);
+        subtotal += price * item.qty;
+        safeItems.push({
+          id: String(item.id),
+          name: p.name || catP?.name || 'Automotive Part',
+          category: p.category || catP?.category || '',
+          price,
+          qty: item.qty,
+          image: p.image || catP?.image || ''
+        });
+      }
+
+      for (const item of requestedItems) {
+        const snap = productMap.get(item.id);
+        const catP = getCatalogProduct(item.id);
+        const p = (snap?.exists ? snap.data() : null) || catP;
+        const ref = db.collection('products').doc(item.id);
+        const currentStock = snap?.exists && typeof p?.stock === 'number' ? p.stock : (Number(catP?.stock) || 50);
+        const remainingStock = Math.max(0, currentStock - item.qty);
+
+        if (snap?.exists) {
+          tx.set(ref, {
+            stock: remainingStock,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        } else if (p) {
+          tx.set(ref, {
+            name: p.name || catP?.name || '',
+            category: p.category || catP?.category || '',
+            brand: p.brand || catP?.brand || '',
+            price: Number(p.price || catP?.price || 0),
+            stock: remainingStock,
+            rating: Number(p.rating || catP?.rating || 4.5),
+            image: p.image || catP?.image || '',
+            description: p.description || catP?.description || ''
+          }, { merge: true });
+        }
+      }
+
       apexDiscount = isApex ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
       const taxableSubtotal = Math.max(0, subtotal - apexDiscount);
       tax = Math.round(taxableSubtotal * 0.18 * 100) / 100;
       deliveryFee = isApex || subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : STANDARD_DELIVERY_FEE;
       grandTotal = Math.round((taxableSubtotal + tax + deliveryFee) * 100) / 100;
+
+      const cleanShipping = {
+        address: String(shipping?.address || ''),
+        city: String(shipping?.city || ''),
+        state: String(shipping?.state || ''),
+        pincode: String(shipping?.pincode || ''),
+        lat: typeof shipping?.lat === 'number' ? shipping.lat : null,
+        lng: typeof shipping?.lng === 'number' ? shipping.lng : null
+      };
+
+      const cleanCustomer = {
+        name: String(customer?.name || ''),
+        email: String(customer?.email || ''),
+        phone: String(customer?.phone || '')
+      };
+
+      tx.set(categoryRef, {
+        name: 'cod orders',
+        paymentMethod: 'cod',
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      tx.set(paymentCategoryRef, {
+        name: 'cod payment intents',
+        paymentMethod: 'cod',
+        note: 'COD does not use a Razorpay payment intent.',
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
       tx.set(orderRef, {
         orderId,
         userId: decoded.uid,
-        customer: customer || {},
-        shipping: {
-          address: shipping?.address || '',
-          city: shipping?.city || '',
-          state: shipping?.state || '',
-          pincode: shipping?.pincode || '',
-          lat: shipping?.lat || null,
-          lng: shipping?.lng || null
-        },
+        customer: cleanCustomer,
+        shipping: cleanShipping,
         items: safeItems,
         subtotal,
         isApexMember: isApex,
@@ -107,14 +164,18 @@ export default async function handler(req,res){
       id: orderRef.id,
       orderId,
       userId: decoded.uid,
-      customer: customer || {},
+      customer: {
+        name: String(customer?.name || ''),
+        email: String(customer?.email || ''),
+        phone: String(customer?.phone || '')
+      },
       shipping: {
-        address: shipping?.address || '',
-        city: shipping?.city || '',
-        state: shipping?.state || '',
-        pincode: shipping?.pincode || '',
-        lat: shipping?.lat || null,
-        lng: shipping?.lng || null
+        address: String(shipping?.address || ''),
+        city: String(shipping?.city || ''),
+        state: String(shipping?.state || ''),
+        pincode: String(shipping?.pincode || ''),
+        lat: typeof shipping?.lat === 'number' ? shipping.lat : null,
+        lng: typeof shipping?.lng === 'number' ? shipping.lng : null
       },
       items: safeItems,
       subtotal,
@@ -135,11 +196,11 @@ export default async function handler(req,res){
     return send(res,200,{ok:true,orderId,subtotal,tax,delivery:deliveryFee,total:grandTotal,docId:orderRef.id});
   }catch(e){
     console.error('place-cod error:',e);
-    const message=String(e?.message||'');
+    const message=String(e?.message||e?.details||e?.error||(typeof e==='string'?e:'')||'');
     if(message.includes('NOT_FOUND'))return send(res,500,{error:'Firebase Firestore database was not found. The payment server is targeting asia-south1.'});
     if(message.includes('FIREBASE_SERVICE_ACCOUNT_JSON')||message.includes('private key'))return send(res,500,{error:'Firebase server credentials are invalid. Check FIREBASE_SERVICE_ACCOUNT_JSON in Vercel.'});
-    if(message.includes('verifyIdToken'))return send(res,401,{error:'Firebase authentication could not be verified'});
+    if(message.includes('verifyIdToken')||message.includes('auth/id-token-expired')||message.includes('expired'))return send(res,401,{error:'Firebase authentication expired or invalid. Please sign in again.'});
     if(message.startsWith('Insufficient stock')||message.includes('no longer available'))return send(res,409,{error:message});
-    return send(res,500,{error:e?.message||'Could not place Cash on Delivery order'});
+    return send(res,500,{error:message||'Could not place Cash on Delivery order'});
   }
 }
