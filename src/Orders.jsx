@@ -1116,15 +1116,43 @@ function TrackingRadarModal({ activeOrder, isOpen, onClose }) {
   );
 }
 
+const isOrderBannerSeen = (orderId) => {
+  if (!orderId) return true;
+  try {
+    const raw = sessionStorage.getItem('motodc_seen_order_banners');
+    const seen = raw ? JSON.parse(raw) : [];
+    return seen.includes(String(orderId));
+  } catch {
+    return false;
+  }
+};
+
+const markOrderBannerSeen = (orderId) => {
+  if (!orderId) return;
+  try {
+    const raw = sessionStorage.getItem('motodc_seen_order_banners');
+    const seen = raw ? JSON.parse(raw) : [];
+    if (!seen.includes(String(orderId))) {
+      seen.push(String(orderId));
+      sessionStorage.setItem('motodc_seen_order_banners', JSON.stringify(seen));
+    }
+  } catch (_) {}
+};
+
 /* ============================================================
    MAIN ORDERS COMPONENT (Option A — Split-View Command Center)
    ============================================================ */
 export default function Orders() {
   const nav = useNavigate(),
     location = useLocation(),
-    [justPlacedData, setJustPlacedData] = useState(() =>
-      location.state?.justPlaced ? location.state : null
-    ),
+    [justPlacedData, setJustPlacedData] = useState(() => {
+      const st = location.state;
+      if (st?.justPlaced && st?.orderId && !isOrderBannerSeen(st.orderId)) {
+        markOrderBannerSeen(st.orderId);
+        return st;
+      }
+      return null;
+    }),
     [orders, setOrders] = useState([]),
     [loading, setLoading] = useState(true),
     [activeOrderId, setActiveOrderId] = useState(() => location.state?.orderId || null),
@@ -1164,11 +1192,28 @@ export default function Orders() {
   };
 
   useEffect(() => {
-    if (location.state?.justPlaced && location.state?.orderId) {
-      setActiveOrderId(location.state.orderId);
+    if (location.state?.justPlaced) {
+      if (location.state?.orderId) {
+        setActiveOrderId(location.state.orderId);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Wipe state from history immediately so page reloads never re-trigger the banner
+      try {
+        nav(location.pathname, { replace: true, state: null });
+      } catch (_) {
+        window.history.replaceState({}, document.title);
+      }
     }
-  }, [location.state]);
+  }, []);
+
+  // Auto-dismiss confirmation banner after 8 seconds
+  useEffect(() => {
+    if (!justPlacedData) return;
+    const timer = setTimeout(() => {
+      setJustPlacedData(null);
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [justPlacedData]);
 
   useEffect(() => {
     const u = auth.currentUser;
